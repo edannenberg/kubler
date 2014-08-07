@@ -1,5 +1,5 @@
-Automated build environment that produces slim Docker images based on gentoo and busybox. Heavily based on wking's gentoo-docker repo.
-It's pretty much in a prototype state right now.
+Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
+It's pretty much in a prototype state right now, a simple web stack is all you get at the moment. Creating new base images should be pretty straight forward though.
 
 Why?
 
@@ -8,7 +8,7 @@ Why?
 What's different?
 
 * Images do not contain emerge or compiler chain = much smaller image size
-* Uses s6 instead of openrc as supervisor (no python dependency)
+* Uses [s6][] instead of openrc as supervisor (smaller footprint)
 * Added a few convenience flags to build.sh, use -h to display further details
 
 How much do i save?
@@ -25,7 +25,7 @@ How does it work?
 The catch?
 
 * Obv. you can't add packages in further docker builds based on those images
-* Running many different containers on the same host will diminish the size gains because images are not based on a common base image
+* Running many different gentoo-bb images on the same host will diminish the size gains because images are not based on a common base image
 
 Parts from the original gentoo-docker docs that still apply:
 
