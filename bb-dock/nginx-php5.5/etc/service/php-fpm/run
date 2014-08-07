@@ -1,0 +1,3 @@
+#!/bin/sh
+exec 2>&1
+exec /usr/bin/php-fpm5.5 -y /etc/php/fpm-php5.5/php-fpm.conf -F >> /var/log/php5-fpm.log

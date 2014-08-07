@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ ! "$(ls /var/lib/mysql)" ]; then
+    mysql_install_db && (/usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --log-bin=mysqld-bin &) ; sleep 5 && /usr/bin/mysqladmin -u root password 'root' && \
+    mysql -u root -proot << EOF
+DELETE FROM mysql.user WHERE User='';
+DROP DATABASE test;
+GRANT ALL ON *.* TO root@'%' IDENTIFIED BY 'root';
+FLUSH PRIVILEGES;
+EOF
+fi
+
+exec 2>&1
+exec /usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --user=mysql --log-bin=mysqld-bin

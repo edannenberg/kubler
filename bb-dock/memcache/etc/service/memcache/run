@@ -1,0 +1,33 @@
+#!/bin/sh
+
+CONFSRC="/etc/conf.d/memcached"
+if [ -f "${CONFSRC}" ]; then
+    source "${CONFSRC}"
+else
+    error "The configuration file $CONFSRC was not found!"
+fi
+
+PIDFILE="${PIDBASE}.pid"
+
+dir="$(dirname ${PIDFILE})"
+if [ ! -d "${dir}" ]; then
+        mkdir -p "${dir}"
+fi
+chown ${MEMCACHED_RUNAS} "${dir}"
+
+if [ -n "${SOCKET}" ]; then
+        CONNECTION="-s ${SOCKET}"
+        if [ -n "${SOCKET_MASK}" ]; then
+            CONNECTION="${CONNECTION} -a ${SOCKET_MASK}"
+        fi
+    else
+        CONNECTION="-p ${PORT} -U ${UDPPORT}"
+        if [ -n "${LISTENON}" ]; then
+            CONNECTION="${CONNECTION} -l ${LISTENON}"
+        fi
+fi
+
+exec 2>&1
+exec /usr/bin/memcached ${CONNECTION} -m ${MEMUSAGE}  \
+        -c ${MAXCONN} -u ${MEMCACHED_RUNAS} -P "${PIDFILE}" \
+        ${MISC_OPTS}
