@@ -1,0 +1,5 @@
+.project
+tmp/*
+bb-builder/portage-data/busybox
+Dockerfile
+
