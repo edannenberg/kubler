@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# Copyright (C) 2014 W. Erik Dannenberg <erik.dannenberg@bbe-consulting.de>
+#
 # Based on https://github.com/wking/dockerfile/blob/master/build.sh
 #
 # --- original license and (C):
@@ -30,7 +32,7 @@
 
 AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20140731}"
+DATE="${DATE:-20140904}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
