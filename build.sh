@@ -239,9 +239,11 @@ generate_provided_file()
             elif [ -f ${match}/package.installed ]; then
                 cat ${match}/package.installed > ${1}/package.provided
             fi
-            #if [ -f ${1}/package.provided ]; then
+            if [ -f ${1}/package.provided ]; then
+                # remove virtual package atoms
+                sed -i /^virtual/d ${1}/package.provided
             #    sort -u ${1}/package.provided
-            #fi
+            fi
         fi
     fi
 }
