@@ -8,24 +8,24 @@ Why?
 What's different?
 
 * Images do not contain emerge or compiler chain = much smaller image size
-* Uses [s6][] instead of openrc as supervisor (smaller footprint)
+* Uses [s6][] instead of openrc as supervisor (smaller footprint and proper docker SIGTERM handling)
 * Added a few convenience flags to build.sh, use -h to display further details
 
 How much do i save?
 
-* Quite a bit, the nginx-php image clocks in at ~108MB, compared to >1GB for a full gentoo version or ~350MB for a similiar ubuntu version
+* Quite a bit, the nginx-php image clocks in at ~110MB, compared to >1GB for a full gentoo version or ~350MB for a similiar ubuntu version
 
 How does it work?
 
 * build.sh iterates over bb-dock/ 
+* generates build order, and collects dependency lists in package.provided file
 * mounts each directory into a fresh bb-builder/bob container and executes build-root.sh inside bob
 * resulting rootfs.tar is placed in mounted directory
-* build.sh then starts a docker build that uses rootfs.tar to create a new image from scratch
+* build.sh then starts a docker build that uses rootfs.tar to create a new image
 
 The catch?
 
-* Obv. you can't add packages in further docker builds based on those images
-* Running many different gentoo-bb images on the same host will diminish the size gains because images are not based on a common base image
+* Obv. you can't add packages via portage in further docker builds based on those images, however you can now base repos in bb-dock on each other
 
 Parts from the original gentoo-docker docs that still apply:
 
