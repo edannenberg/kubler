@@ -3,4 +3,6 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
+RUN ldconfig
+
 CMD ["/bin/sh"]

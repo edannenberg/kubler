@@ -45,7 +45,7 @@ declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
 ln -s /run $EMERGE_ROOT/var/run
 
 # clean up
-rm -rf $EMERGE_ROOT/usr/include/* $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/*
+rm -rf $EMERGE_ROOT/usr/include/* $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
 find $EMERGE_ROOT/lib64 -name "*.a" -exec rm -rf {} \;
 
 # make rootfs tar ball
