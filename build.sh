@@ -219,9 +219,9 @@ build_repo()
 
     if ! repo_exists "${REPO}"; then
     if [ "${REPO}" = portage-data ]; then
-    extract_busybox "${REPO}"
+        extract_busybox "${REPO}"
     fi
-    
+
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
         "${DOCKER}" run --rm --volumes-from portage-data \
@@ -248,10 +248,11 @@ build_repo()
     fi
     msg "tag ${NAMESPACE}/${REPO}:latest"
     "${DOCKER}" tag -f "${NAMESPACE}/${REPO}:${DATE}" "${NAMESPACE}/${REPO}:latest" || die "failed to tag ${REPO}"
-
 }
 
-# Run a container
+# Run a docker container
+#
+# Arguments:
 #
 # 1: REPO
 # 2: CONTAINER_NAME
@@ -264,6 +265,48 @@ run_container()
     "${DOCKER}" run --name ${CONTAINER_NAME} "${NAMESPACE}/${REPO}:${DATE}"
 }
 
+# Populate $BUILD_ORDER by checking image dependencies
+#
+# Arguments:
+#
+# 1: REPOS
+generate_build_order()
+{
+    for REPO in $1; do
+        check_repo_dependencies ${REPO}
+        if [ -z "$BUILD_ORDER" ]; then
+            BUILD_ORDER="${REPO}"
+        else
+            regex="${REPO}"
+            if [[ ! ${BUILD_ORDER} =~ "$regex" ]];then
+                BUILD_ORDER="${BUILD_ORDER} ${REPO}"
+            fi
+        fi
+    done
+}
+
+# Check image dependencies. Recursive.
+#
+# Arguments:
+#
+# 1: REPOS
+check_repo_dependencies()
+{
+    dockerf=$(grep ^FROM $1/Dockerfile.template)
+    regex="^FROM (${NAMESPACE}/)?(.*)"
+    if [[ ${dockerf} =~ $regex ]]; then
+        match="${BASH_REMATCH[2]}"
+        if [ "$match" != "scratch" ]; then
+            regex="${match}"
+            # skip further checking if already processed
+            if [[ ! ${BUILD_ORDER} =~ "$regex" ]];then
+                BUILD_ORDER="${match} ${BUILD_ORDER}"
+                check_repo_dependencies $match
+            fi
+        fi
+    fi
+}
+
 build()
 {
     import_stage3
@@ -274,8 +317,12 @@ build()
     run_container "${REPO}" portage-data /bin/sh
     build_repo bob
 
+    msg "generate build order"
     cd ../$REPO_PATH
-    for REPO in $1; do
+    generate_build_order "$REPOS"
+
+    b=($BUILD_ORDER)
+    for REPO in "${b[@]}"; do
         build_repo "${REPO}"
     done
 }
