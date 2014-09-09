@@ -2,4 +2,7 @@
 tmp/*
 bb-builder/portage-data/busybox
 Dockerfile
+rootfs.tar
+package.installed
+package.provided
 
