@@ -305,6 +305,7 @@ run_container()
 generate_build_order()
 {
     for REPO in $1; do
+        msg "init ${REPO}"
         check_repo_dependencies ${REPO}
         if [ -z "$BUILD_ORDER" ]; then
             BUILD_ORDER="${REPO}"
@@ -322,19 +323,22 @@ generate_build_order()
 # Arguments:
 #
 # 1: REPO
+# 2: PREV_REPO
 check_repo_dependencies()
 {
+    if [ "${1}" != "scratch" ]; then
     generate_dockerfile $1
     dockerf=$(grep ^FROM $1/Dockerfile)
     regex="^FROM (${NAMESPACE}/)?(.*)"
     if [[ ${dockerf} =~ $regex ]]; then
-        match="${BASH_REMATCH[2]}"
-        if [ "$match" != "scratch" ]; then
-            regex="${match}"
+            match="${BASH_REMATCH[2]}"
+            regex="${1}"
             # skip further checking if already processed
             if [[ ! ${BUILD_ORDER} =~ "$regex" ]];then
-                BUILD_ORDER="${match} ${BUILD_ORDER}"
-                check_repo_dependencies $match
+                check_repo_dependencies $match $1
+                if [ "${2}" != "" ]; then
+                    BUILD_ORDER="${BUILD_ORDER} ${1}"
+                fi
             fi
         fi
     fi
