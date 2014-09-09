@@ -202,6 +202,48 @@ extract_busybox()
     "${DOCKER}" rm "${CONTAINER}"
 }
 
+# generate Dockerfile from template
+#
+# Arguments:
+# 1: REPO
+generate_dockerfile()
+{
+    env -i \
+    NAMESPACE="${NAMESPACE}" \
+    TAG="${DATE}" \
+    MAINTAINER="${AUTHOR}" \
+    envsubst '
+    ${NAMESPACE}
+    ${TAG}
+    ${MAINTAINER}
+    ' \
+    < "$1/Dockerfile.template" > "$1/Dockerfile"
+}
+
+# Generate package.provided file from image dependency for given REPO.
+#
+# Arguments:
+#
+# 1: REPO
+generate_provided_file()
+{
+    dockerf=$(grep ^FROM $1/Dockerfile)
+    regex="^FROM (${NAMESPACE}/)?(.*)"
+    if [[ ${dockerf} =~ $regex ]]; then
+        match="${BASH_REMATCH[2]}"
+        if [ "$match" != "scratch" ]; then
+            if [ -f ${match}/package.provided ] && [ -f ${match}/package.provided ]; then
+                cat ${match}/package.provided ${match}/package.installed > ${1}/package.provided
+            elif [ -f ${match}/package.installed ]; then
+                cat ${match}/package.installed > ${1}/package.provided
+            fi
+            #if [ -f ${1}/package.provided ]; then
+            #    sort -u ${1}/package.provided
+            #fi
+        fi
+    fi
+}
+
 # If it doesn't already exist:
 #
 # * create "${NAMESPACE}/${REPO}:${DATE}" from
@@ -222,6 +264,8 @@ build_repo()
         extract_busybox "${REPO}"
     fi
 
+    generate_provided_file ${REPO}
+
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
         "${DOCKER}" run --rm --volumes-from portage-data \
@@ -230,21 +274,9 @@ build_repo()
             -v $(realpath -s ../tmp/packages):/packages \
             -i -t "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
     fi
-    
-    env -i \
-    NAMESPACE="${NAMESPACE}" \
-    TAG="${DATE}" \
-    MAINTAINER="${AUTHOR}" \
-    envsubst '
-    ${NAMESPACE}
-    ${TAG}
-    ${MAINTAINER}
-    ' \
-    < "${REPO}/Dockerfile.template" > "${REPO}/Dockerfile"
-    
+
     msg "build ${NAMESPACE}/${REPO}:${DATE}"
     "${DOCKER}" build ${BUILD_OPTS} -t "${NAMESPACE}/${REPO}:${DATE}" "${REPO}" || die "failed to build ${REPO}"
-    rm "${REPO}/Dockerfile"
     fi
     msg "tag ${NAMESPACE}/${REPO}:latest"
     "${DOCKER}" tag -f "${NAMESPACE}/${REPO}:${DATE}" "${NAMESPACE}/${REPO}:latest" || die "failed to tag ${REPO}"
@@ -289,10 +321,11 @@ generate_build_order()
 #
 # Arguments:
 #
-# 1: REPOS
+# 1: REPO
 check_repo_dependencies()
 {
-    dockerf=$(grep ^FROM $1/Dockerfile.template)
+    generate_dockerfile $1
+    dockerf=$(grep ^FROM $1/Dockerfile)
     regex="^FROM (${NAMESPACE}/)?(.*)"
     if [[ ${dockerf} =~ $regex ]]; then
         match="${BASH_REMATCH[2]}"
@@ -313,13 +346,16 @@ build()
     import_portage
 
     cd $BUILDER_PATH
+    generate_dockerfile portage-data
     build_repo portage-data
     run_container "${REPO}" portage-data /bin/sh
+    generate_dockerfile bob
     build_repo bob
 
     msg "generate build order"
     cd ../$REPO_PATH
     generate_build_order "$REPOS"
+    msg "build sequence: ${BUILD_ORDER}"
 
     b=($BUILD_ORDER)
     for REPO in "${b[@]}"; do
