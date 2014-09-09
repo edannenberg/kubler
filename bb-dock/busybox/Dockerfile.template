@@ -1,0 +1,6 @@
+FROM scratch
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+CMD ["/bin/sh"]

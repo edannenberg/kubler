@@ -1,4 +1,4 @@
-FROM scratch
+FROM ${NAMESPACE}/s6
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
@@ -16,8 +16,5 @@ ADD www /var/www
 
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/* /service
 
-EXPOSE 80
+EXPOSE 80 443
 
-EXPOSE 443
-
-CMD ["/bin/s6-svscan", "/service"]
