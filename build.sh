@@ -305,7 +305,6 @@ run_container()
 generate_build_order()
 {
     for REPO in $1; do
-        msg "init ${REPO}"
         check_repo_dependencies ${REPO}
         if [ -z "$BUILD_ORDER" ]; then
             BUILD_ORDER="${REPO}"
