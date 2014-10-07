@@ -1,14 +1,15 @@
 #
 # build config
 #
-PACKAGES="sys-libs/glibc sys-apps/busybox"
+PACKAGES="sys-apps/busybox"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
 # 
 configure_rootfs_build()
 {
-    :
+    # -static to enable dns lookups
+    echo "sys-apps/busybox -static" > /etc/portage/package.use/busybox
 }
 
 #
