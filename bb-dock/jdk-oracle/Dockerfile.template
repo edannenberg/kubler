@@ -1,0 +1,10 @@
+FROM ${NAMESPACE}/s6
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+RUN ldconfig
+
+RUN eselect java-vm set system 1
+
+CMD ["/bin/sh"]

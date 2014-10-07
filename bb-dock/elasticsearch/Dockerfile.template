@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/java
+FROM ${NAMESPACE}/jre-oracle
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
