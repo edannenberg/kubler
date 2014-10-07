@@ -229,20 +229,27 @@ generate_dockerfile()
 # 1: REPO
 generate_provided_file()
 {
+    mkdir -p ${1}/tmp
     dockerf=$(grep ^FROM $1/Dockerfile)
     regex="^FROM (${NAMESPACE}/)?(.*)"
     if [[ ${dockerf} =~ $regex ]]; then
         match="${BASH_REMATCH[2]}"
         if [ "$match" != "scratch" ]; then
-            if [ -f ${match}/package.provided ] && [ -f ${match}/package.provided ]; then
-                cat ${match}/package.provided ${match}/package.installed > ${1}/package.provided
-            elif [ -f ${match}/package.installed ]; then
-                cat ${match}/package.installed > ${1}/package.provided
+            PARENT_TMP_PATH=${match}/tmp/
+            TMP_PATH=${1}/tmp/
+            if [ -f ${PARENT_TMP_PATH}/package.provided ] && [ -f ${PARENT_TMP_PATH}/package.provided ]; then
+                cat ${PARENT_TMP_PATH}/package.provided ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
+            elif [ -f ${PARENT_TMP_PATH}/package.installed ]; then
+                cat ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
             fi
-            if [ -f ${1}/package.provided ]; then
+            if [ -f ${TMP_PATH}/package.provided ]; then
                 # remove virtual package atoms
-                sed -i /^virtual/d ${1}/package.provided
+                sed -i /^virtual/d ${TMP_PATH}/package.provided
             #    sort -u ${1}/package.provided
+            fi
+            # copy passwd/group files
+            if [ -f ${PARENT_TMP_PATH}/passwd ]; then
+                cp ${PARENT_TMP_PATH}/{passwd,group} $TMP_PATH/
             fi
         fi
     fi

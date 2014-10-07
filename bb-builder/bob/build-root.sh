@@ -22,21 +22,33 @@ copy_gcc_libs() {
 # read config, mounted via build.sh
 source /config/Buildconfig.sh
 
-if [ -f /config/package.provided ]; then
-    cp /config/package.provided /etc/portage/profile/
+if [ -z "$PACKAGES" ]; then
+    exit
+fi
+
+mkdir -p /config/tmp
+
+if [ -f /config/tmp/package.provided ]; then
+    cp /config/tmp/package.provided /etc/portage/profile/
+fi
+
+if [ -f /config/tmp/passwd ]; then
+    cp /config/tmp/{passwd,group} /etc
 fi
 
 # call pre install hook
 declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
 # generate installed package list
-emerge -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $4}' > /config/package.installed
+emerge -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $4}' > /config/tmp/package.installed
 
 # install packages (see Buildconfig.sh in dock/*/)
 emerge -v baselayout $PACKAGES
 
 # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
 cp -f /etc/{passwd,group} $EMERGE_ROOT/etc
+# also copy to repo dir for further builds 
+cp -f /etc/{passwd,group} /config/tmp
 
 # call post install hook
 declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
@@ -50,4 +62,4 @@ find $EMERGE_ROOT/lib64 -name "*.a" -exec rm -rf {} \;
 
 # make rootfs tar ball
 tar -cpf /config/rootfs.tar -C $EMERGE_ROOT .
-chmod 777 /config/{package.installed,rootfs.tar}
+chmod 777 /config/{tmp/package.installed,rootfs.tar}
