@@ -40,7 +40,7 @@ fi
 declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
 # generate installed package list
-emerge -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $4}' > /config/tmp/package.installed
+emerge -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' > /config/tmp/package.installed
 
 # install packages (see Buildconfig.sh in dock/*/)
 emerge -v baselayout $PACKAGES
