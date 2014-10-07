@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/nginx
+FROM ${NAMESPACE}/s6
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
@@ -12,9 +12,7 @@ RUN mkdir -p /etc/ssl/private && \
 
 ADD etc /etc
 
-ADD www /var/www
-
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/php-fpm /service
+RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/* /service
 
 EXPOSE 80 443
 
