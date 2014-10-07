@@ -32,15 +32,15 @@
 
 AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20140904}"
+DATE="${DATE:-20141002}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
 STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
 PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
-#PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
-PORTAGE="${PORTAGE:-portage-latest.tar.xz}"
+PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
+#PORTAGE="${PORTAGE:-portage-latest.tar.xz}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
 DOCKER_IO=$(command -v docker.io)
