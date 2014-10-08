@@ -2,6 +2,7 @@
 # build config
 #
 PACKAGES="sys-apps/busybox"
+KEEP_HEADERS=true
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
@@ -17,5 +18,5 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    :
+    mkdir -p $EMERGE_ROOT/var/log
 }
