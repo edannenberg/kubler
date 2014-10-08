@@ -1,0 +1,9 @@
+FROM ${NAMESPACE}/nginx
+MAINTAINER ${MAINTAINER}
+
+RUN wget http://download.elasticsearch.org/kibana/kibana/kibana-3.1.1.tar.gz
+RUN tar -xvf kibana-3.1.1.tar.gz -C /var/www/localhost && mv /var/www/localhost/kibana-3.1.1/* /var/www/localhost && rm -r /var/www/localhost/kibana-3.1.1 /kibana-3.1.1.tar.gz
+RUN sed -i 's|"http://"+window.location.hostname+":9200"|"ELASTICSEARCH_URL"|' /var/www/localhost/config.js
+CMD sed -i "s|ELASTICSEARCH_URL|${ELASTICSEARCH_URL}|" /var/www/localhost/config.js && /bin/s6-svscan /service
+
+EXPOSE 80

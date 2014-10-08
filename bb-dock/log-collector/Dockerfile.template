@@ -1,0 +1,20 @@
+FROM ${NAMESPACE}/ruby-gcc
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+RUN gem install fluentd --no-ri --no-rdoc
+
+RUN gem install fluent-plugin-elasticsearch --no-ri --no-rdoc
+
+ADD etc /etc
+
+RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/* /service
+
+RUN mkdir -p /app/template
+WORKDIR /app
+ADD docker-gen /app/template
+RUN curl -O -J -L https://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz
+RUN tar xvzf docker-gen-linux-amd64-0.3.2.tar.gz
+
+CMD ["/bin/s6-svscan", "/service"]
