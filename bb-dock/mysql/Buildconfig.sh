@@ -17,4 +17,6 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     copy_gcc_libs
+    mkdir -p $EMERGE_ROOT/var/run/mysql $EMERGE_ROOT/var/run/mysqld
+    chown mysql:mysql $EMERGE_ROOT/var/run/mysql $EMERGE_ROOT/var/run/mysqld
 }
