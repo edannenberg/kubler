@@ -57,8 +57,13 @@ declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
 ln -s /run $EMERGE_ROOT/var/run
 
 # clean up
-rm -rf $EMERGE_ROOT/usr/include/* $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
-find $EMERGE_ROOT/lib64 -name "*.a" -exec rm -rf {} \;
+rm -rf $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
+if [ -z "$KEEP_HEADERS" ]; then
+    rm -rf $EMERGE_ROOT/usr/include/*
+fi
+if [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
+    find $EMERGE_ROOT/lib64/* -name "*.a" -exec rm -rf {} \;
+fi
 
 # make rootfs tar ball
 tar -cpf /config/rootfs.tar -C $EMERGE_ROOT .
