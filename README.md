@@ -1,5 +1,5 @@
 Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
-It's pretty much in a prototype state right now, a simple web stack is all you get at the moment. Creating new base images should be pretty straight forward though.
+This is still work in progress, creating new base images should be pretty straight forward though.
 
 Why?
 
@@ -7,13 +7,14 @@ Why?
 
 What's different?
 
-* Images do not contain emerge or compiler chain = much smaller image size
-* Uses [s6][] instead of openrc as supervisor (smaller footprint and proper docker SIGTERM handling)
+* Images do not contain portage or compiler chain = much smaller image size
+* [s6][] instead of openrc as supervisor (smaller footprint and proper docker SIGTERM handling)
+* No syslog daemon in favor of centralized approaches
 * Added a few convenience flags to build.sh, use -h to display further details
 
 How much do i save?
 
-* Quite a bit, the nginx-php image clocks in at ~110MB, compared to >1GB for a full gentoo version or ~350MB for a similiar ubuntu version
+* Quite a bit, the nginx image for example clocks in at ~63MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
 
 How does it work?
 
@@ -25,7 +26,15 @@ How does it work?
 
 The catch?
 
-* Obv. you can't add packages via portage in further docker builds based on those images, however you can now base repos in bb-dock on each other
+* Obv. you can't add packages via portage in further docker builds based on those images, unless they are built via build.sh
+
+Quickstart:
+
+* git clone https://github.com/edannenberg/gentoo-bb.git
+* run build.sh (if you don't have gpg setup use -s to skip downloaded file verification)
+* you will need to download the tar files for oracle jdk/jre and jce policy manually and place them into tmp/distfiles
+* bin/ contains some scripts to start/stop a few useful container chains
+* the folders in bb-dock and bb-builder have a README.md with image specific documentation
 
 Parts from the original gentoo-docker docs that still apply:
 

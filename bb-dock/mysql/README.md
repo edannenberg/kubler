@@ -9,11 +9,9 @@ Then [link][linking] to it from your client container:
 The container will check /var/lib/mysql/ on startup, if empty it will install a default mysql db. Default root pw: root
 
 [volume-mounting][volume-mount] your content under the container's
-`/var/www/localhost/htdocs`.  You can also mount volumes from other
+`/var/lib/mysql`.  You can also mount volumes from other
 containers and serve their data, although you may neet to tweak the
-config to serve from an alternative location.  Adjusting this image to
-serve from a configurable `$HTTP_ROOT` wouldn't be too difficult
-either.
+config to serve from an alternative location.
 
 > If you remove containers that mount volumes, including the initial
 > `DATA` container, or the middleman, the volumes will not be deleted

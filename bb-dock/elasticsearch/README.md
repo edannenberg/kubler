@@ -4,15 +4,12 @@ Run this [Elasticsearch][] image with:
 
 Then [link][linking] to it from your client container:
 
-    $ docker run --link elasticsearch-0:elasticsearch your-client
+    $ docker run --link elasticsearch-0:elastic your-client
 
-For example, we can use wget:
+For example, we can use the busybox image and wget to query the elasticsearch container:
 
-    $ docker run --link elasticsearch-0:elasticsearch -i -t gentoobb/bash /bin/bash
-    d30608cbc8a1 / # HOST_PORT="${ELASTICSEARCH_PORT#[a-z]*://}"
-    d30608cbc8a1 / # HOST="${HOST_PORT%:[0-9]*}"
-    d30608cbc8a1 / # PORT="${HOST_PORT#[0-9.]*:}"
-    d30608cbc8a1 / # wget --quiet -O - "http://${HOST}:${PORT}/"
+    $ docker run --link elasticsearch-0:es -it --rm gentoobb/busybox /bin/sh
+    $ wget --quiet -O - "http://es:9200/"
     {
       "status" : 200,
       "name" : "Puff Adder",

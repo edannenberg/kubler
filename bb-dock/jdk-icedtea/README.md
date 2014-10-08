@@ -1,7 +1,7 @@
 Run this [Java][] image with:
 
-    $ docker run -i -t --rm gentoobb/java
+    $ docker run -it --rm gentoobb/jdk-icedtea
 
-Comes with oracle-jdk 1.7.
+Comes with icedtea 1.6.
 
-[Java]: http://www.oracle.com/technetwork/java/index.html
+[Java]: http://icedtea.classpath.org/wiki/Main_Page
