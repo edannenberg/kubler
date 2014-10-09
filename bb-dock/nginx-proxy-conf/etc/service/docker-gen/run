@@ -1,0 +1,2 @@
+#!/bin/sh
+exec docker-gen -watch -only-exposed /config/template/nginx.tmpl /etc/nginx/sites-enabled/default.conf

@@ -1,0 +1,13 @@
+FROM ${NAMESPACE}/nginx
+MAINTAINER ${MAINTAINER}
+
+ADD etc /etc
+
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs"]
+
+ENV WATCHER_FS_CMD ls /etc/nginx/sites-enabled/default.conf
+ENV WATCHER_ONCHANGE pkill -HUP nginx
+ENV WATCHER_OPT -d
+RUN ln -s /etc/service/fs-watcher /service
+
+EXPOSE 80 443
