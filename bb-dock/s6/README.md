@@ -2,6 +2,16 @@ Run this [s6][] image with:
 
     $ docker run -d --name s6 gentoobb/s6
 
-It's not very useful on it's own though.
+Provides a generic filesystem watcher service that can be configured via env. Disabled per default.
+
+Example: The following snippet will fire a SIGHUP at nginx when /etc/nginx/sites-enabled/default.conf changes:
+
+    ENV WATCHER_FS_CMD ls /etc/nginx/sites-enabled/default.conf
+    ENV WATCHER_ONCHANGE pkill -HUP nginx
+    ENV WATCHER_OPT -d
+    RUN ln -s /etc/service/fs-watcher /service
+
+[entr][] is used as fs watcher.
 
 [s6]: http://skarnet.org/software/s6/
+[entr]: http://entrproject.org/

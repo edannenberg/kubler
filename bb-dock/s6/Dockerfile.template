@@ -3,9 +3,9 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-#ADD etc /etc
+ADD etc /etc
 
-#RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/* /service
+RUN chmod +x $(find /etc/service -name run)
 
 RUN ldconfig
 

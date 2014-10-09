@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ -n "$WATCHER_FS_CMD" ] && [ -n "$WATCHER_ONCHANGE" ]; then
+    exec $WATCHER_FS_CMD | entr $WATCHER_OPT $WATCHER_ONCHANGE
+fi
