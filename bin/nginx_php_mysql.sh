@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VHOST_URL=test.void,www.test.void
+
 start () {
     # mysql
     docker run -d \
@@ -11,6 +13,7 @@ start () {
 
     # nginx php
     docker run -d \
+    -e VIRTUAL_HOST="$VHOST_URL" \
     --link www_mysql:db \
     --name www_php \
     --hostname www_php \
@@ -18,8 +21,11 @@ start () {
 
     NGINX_IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' www_php`
 
-    echo -e "\nmysql:\t $MYSQL_IP:3306 login: root/root"
-    echo -e "nginx:\t http://$NGINX_IP/adminer.php?server=db"
+    echo -e "\nmysql:\t\t $MYSQL_IP:3306 login: root/root"
+    echo -e "nginx:\t\t http://$NGINX_IP/adminer.php?server=db"
+    if [ -n $VHOST_URL ]; then
+        echo -e "domain name(s):  $VHOST_URL"
+    fi
 }
 
 stop () {
