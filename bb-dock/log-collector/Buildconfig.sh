@@ -2,6 +2,7 @@
 # build config
 #
 PACKAGES="net-misc/curl"
+INSTALL_DOCKER_GEN=true
 KEEP_HEADERS=true
 
 #

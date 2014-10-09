@@ -9,12 +9,9 @@ RUN gem install fluent-plugin-elasticsearch --no-ri --no-rdoc
 
 ADD etc /etc
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/* /service
+WORKDIR /config
+ADD docker-gen /config/template
 
-RUN mkdir -p /app/template
-WORKDIR /app
-ADD docker-gen /app/template
-RUN curl -O -J -L https://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz
-RUN tar xvzf docker-gen-linux-amd64-0.3.2.tar.gz
+RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/{docker-gen,fluentd} /service
 
 CMD ["/bin/s6-svscan", "/service"]
