@@ -19,4 +19,9 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     mkdir -p $EMERGE_ROOT/var/log
+    # install entr
+    wget http://entrproject.org/code/entr-2.9.tar.gz
+    tar xzvf entr-2.9.tar.gz
+    cd eradman* && ./configure && make && make install
+    cp /usr/local/bin/entr $EMERGE_ROOT/bin
 }
