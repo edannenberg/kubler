@@ -34,20 +34,23 @@ Quickstart:
     $ cd gentoo-bb
     $ ./build.sh
 
-* if you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
+* If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
+
 
     $ ./build.sh -s
+
  
-* check the folders in bb-dock/ for image specific documentation
+* Check the folders in bb-dock/ for image specific documentation
 * bin/ contains some scripts to start/stop a few container chains
 
 Creating new images:
 
- * all images must be located in bb-dock, folder name = image name
+ * All images must be located in bb-dock, folder name = image name
  * Dockerfile.template and Buildconfig.sh are the only required files
  * Buildconfig.sh is used to configure the compiling stage, defining PACKAGES is the only requirement
  * build.sh will pick up your image on the next run
- * Some usefull options while working on an image:
+
+Some usefull options while working on an image:
 
     $ ./bob-interactive.sh # start an interactive build container, same as run by build.sh to produce the rootfs.tar
 
