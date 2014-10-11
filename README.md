@@ -35,11 +35,6 @@ Quickstart:
     $ ./build.sh
 
 * If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
-
-
-    $ ./build.sh -s
-
- 
 * Check the folders in bb-dock/ for image specific documentation
 * bin/ contains some scripts to start/stop a few container chains
 
