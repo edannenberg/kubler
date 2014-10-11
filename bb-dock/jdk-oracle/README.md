@@ -2,6 +2,6 @@ Run this [Java][] image with:
 
     $ docker run -it --rm gentoobb/jdk-oracle
 
-Comes with oracle jdk 1.7. Requires manual download of the tar file to tmp/distfiles.
+Comes with oracle jdk 1.7 and functional gcc.
 
 [Java]: https://www.oracle.com/java/index.html
