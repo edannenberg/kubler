@@ -5,6 +5,11 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
+# listen on 0.0.0.0, log to stderr
+RUN sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf && \
+    sed -i 's/\/var\/log\/mysql\/mysql.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf && \
+    sed -i 's/\/var\/log\/mysql\/mysqld.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf
+
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/mysql /service
 
 EXPOSE 3306
