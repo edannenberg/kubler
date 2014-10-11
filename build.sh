@@ -50,6 +50,7 @@ BUILDER_PATH="${REPO_PATH:-bb-builder}"
 REPO_PATH="${REPO_PATH:-bb-dock}"
 DL_PATH=tmp/downloads
 SKIP_GPG=false
+EXCLUDE="${EXCLUDE:-}"
 
 die()
 {
@@ -64,12 +65,12 @@ msg()
 
 REALPATH="${REALPATH:-$(command -v realpath)}"
 if [ -z "${REALPATH}" ]; then
-READLINK="${READLINK:-$(command -v readlink)}"
-if [ -n "${READLINK}" ]; then
-REALPATH="${READLINK} -f"
-else
-die "need realpath or readlink to canonicalize paths"
-fi
+    READLINK="${READLINK:-$(command -v readlink)}"
+    if [ -n "${READLINK}" ]; then
+        REALPATH="${READLINK} -f"
+    else
+        die "need realpath or readlink to canonicalize paths"
+    fi
 fi
 
 # Remove container from registry
@@ -326,6 +327,12 @@ generate_build_order()
             fi
         fi
     done
+    # remove excluded repos
+    IFS=', ' read -a EXCLUDE_ARRAY <<< "$EXCLUDE"
+    for excluded_repo in "${EXCLUDE_ARRAY[@]}";do
+        BUILD_ORDER=${BUILD_ORDER/$excluded_repo/}
+    done
+    read BUILD_ORDER <<< $BUILD_ORDER
 }
 
 # Check image dependencies. Recursive.
@@ -356,6 +363,19 @@ check_repo_dependencies()
 
 build()
 {
+    if [ $BUILD_WITHOUT_DEPS ] && [ "${1}" == "*" ]; then
+        die "error: -n does not support wildcards, specify one or more repo names."
+    fi
+
+    if [ $BUILD_WITHOUT_DEPS ]; then
+        cd $REPO_PATH
+        for REPO in $1; do
+            generate_dockerfile ${REPO}
+            build_repo ${REPO}
+        done
+        exit 0
+    fi
+
     import_stage3
     import_portage
 
@@ -370,6 +390,7 @@ build()
     cd ../$REPO_PATH
     generate_build_order "$REPOS"
     msg "build sequence: ${BUILD_ORDER}"
+    msg "excluded: ${EXCLUDE}"
 
     b=($BUILD_ORDER)
     for REPO in "${b[@]}"; do
@@ -391,8 +412,9 @@ FORCE_REBUILD=false
 FORCE_ROOTFS_REBUILD=false
 FORCE_BUILDER_REBUILD=false
 FORCE_FULL_REBUILD=false
+BUILD_WITHOUT_DEPS=false
 
-while getopts ":fFcCsh" opt; do
+while getopts ":fFcCnsh" opt; do
   case $opt in
     f)
       FORCE_REBUILD=true
@@ -405,6 +427,9 @@ while getopts ":fFcCsh" opt; do
       ;;
     C)
       FORCE_FULL_REBUILD=true
+      ;;
+    n)
+      BUILD_WITHOUT_DEPS=true
       ;;
     s)
       SKIP_GPG=true
@@ -429,6 +454,7 @@ case "${ACTION}" in
     -F also rebuild repo rootfs tar ball
     -c rebuild building containers
     -C also rebuild stage3/portage import containers
+    -n do not build repo dependencies for given repo(s)
     -s skip gpg validation on downloaded files
     -h help" ;;
 *) die "invalid action '${ACTION}'" ;;
