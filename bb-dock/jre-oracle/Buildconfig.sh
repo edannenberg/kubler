@@ -9,7 +9,19 @@ PACKAGES="dev-java/oracle-jre-bin"
 configure_rootfs_build()
 {
     echo "=virtual/jre-1.7.0 ~amd64" >> /etc/portage/package.keywords/java
-    echo "dev-java/oracle-jre-bin jce" > /etc/portage/package.use/java
+    # download oracle jre bin
+    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/7u65-b17/jre-7u65-linux-x64.tar.gz
+    #JRE_TAR=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
+    regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
+    if [[ ${JRE_URL} =~ $regex ]]; then
+        JRE_TAR="${BASH_REMATCH[1]}"
+    fi
+    if [ -n ${JRE_TAR} ] && [ ! -f /distfiles/${JRE_TAR} ]; then
+        wget --no-cookies --no-check-certificate \
+            --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
+            -P /distfiles \
+            "${JRE_URL}"
+    fi
 }
 
 #
