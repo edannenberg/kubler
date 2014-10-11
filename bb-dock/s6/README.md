@@ -4,11 +4,12 @@ Run this [s6][] image with:
 
 Provides a generic filesystem watcher service that can be configured via env. Disabled per default.
 
-Example: The following snippet will fire a SIGHUP at nginx when /etc/nginx/sites-enabled/default.conf changes:
+Example: The following snippet, used in a Dockerfile based on this image, will start a service that fires
+a SIGHUP at nginx when the file /etc/nginx/sites-enabled/default.conf changes:
 
     ENV WATCHER_FS_CMD ls /etc/nginx/sites-enabled/default.conf
     ENV WATCHER_ONCHANGE pkill -HUP nginx
-    ENV WATCHER_OPT -d
+    # ENV WATCHER_OPT -d # optional, pass options to [entr][], -d is handy for watching directories
     RUN ln -s /etc/service/fs-watcher /service
 
 [entr][] is used as fs watcher.

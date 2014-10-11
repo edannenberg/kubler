@@ -1,7 +1,7 @@
 This image collects logs from all running containers on the host and forwards them to an elasticsearch instance. [Fluentd][] is configured dynamically by using [docker-gen][].
 The provided log_collector.sh script in bin/ will start/stop the whole container chain including a kibana frontend.
 
-All credits go to Jason Wilder for his [jwilder][blog article] and @bprodoehl for the [bprodoehl][implementation].
+All credits go to Jason Wilder for his [blog article][jwilder] and @bprodoehl for the [implementation][bprodoehl].
 
 Run this [Fluentd][] image with:
 

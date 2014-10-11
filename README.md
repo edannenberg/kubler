@@ -30,11 +30,32 @@ The catch?
 
 Quickstart:
 
-* git clone https://github.com/edannenberg/gentoo-bb.git
-* run build.sh (if you don't have gpg setup use -s to skip downloaded file verification)
-* you will need to download the tar files for oracle jdk/jre and jce policy manually and place them into tmp/distfiles
-* bin/ contains some scripts to start/stop a few useful container chains
-* the folders in bb-dock and bb-builder have a README.md with image specific documentation
+    $ git clone https://github.com/edannenberg/gentoo-bb.git
+    $ cd gentoo-bb
+    $ ./build.sh
+
+* if you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
+
+    $ ./build.sh -s
+ 
+* check the folders in bb-dock/ for image specific documentation
+* bin/ contains some scripts to start/stop a few container chains
+
+Creating new images:
+
+ * all images must be located in bb-dock, folder name = image name
+ * Dockerfile.template and Buildconfig.sh are the only required files
+ * Buildconfig.sh is used to configure the compiling stage, defining PACKAGES is the only requirement
+ * build.sh will pick up your image on the next run
+ * Some usefull options while working on an image:
+
+    $ ./bob-interactive.sh # start an interactive build container, same as run by build.sh to produce the rootfs.tar
+
+    $ ./build.sh -f build myimage # force rebuild of myimage and all dependencies
+
+    $ ./build.sh -F build myimage # same as above, but also rebuild all rootfs.tar files
+
+    $ ./build.sh -n build myimage # ignore dependencies, only build given image. combine with the above
 
 Parts from the original gentoo-docker docs that still apply:
 

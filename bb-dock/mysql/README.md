@@ -6,7 +6,7 @@ Then [link][linking] to it from your client container:
 
     $ docker run --link db-0:db your-client
 
-The container will check /var/lib/mysql/ on startup, if empty it will install a default mysql db. Default root pw: root
+The container will check /var/lib/mysql/ on startup, if empty it will install a default database. Default root pw: root
 
 [volume-mounting][volume-mount] your content under the container's
 `/var/lib/mysql`.  You can also mount volumes from other

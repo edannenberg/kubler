@@ -1,6 +1,6 @@
-This image configures the vhost config file for gentoobb/nginx-proxy by listening to docker events on the host via [docker-gen][].
+This image generates the /etc/nginx/sites-enabled/default.conf file for gentoobb/nginx-proxy by listening to docker events on the host via [docker-gen][].
 
-See Jason Wilder's excellent blog [jwilder-blog][article] for further details.
+See Jason Wilder's excellent blog [article][jwilder-blog] for the full details.
 
 Run this [docker-gen][] image with:
 
