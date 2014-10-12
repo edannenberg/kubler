@@ -10,6 +10,8 @@ RUN sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf && \
     sed -i 's/\/var\/log\/mysql\/mysql.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf && \
     sed -i 's/\/var\/log\/mysql\/mysqld.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/mysql /service
+RUN chmod +x $(find /etc/service -name run) && \
+    ln -s /etc/s6_finish_default /etc/service/mysql/finish && \
+    ln -s /etc/service/mysql /service
 
 EXPOSE 3306

@@ -19,7 +19,7 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     # s6 folders
-    mkdir -p $EMERGE_ROOT/etc/service $EMERGE_ROOT/service
+    mkdir -p $EMERGE_ROOT/etc/service/.s6-svscan $EMERGE_ROOT/service
     # remove empty ld.so.conf
     echo "include ld.so.conf.d/*.conf" >> $EMERGE_ROOT/etc/ld.so.conf
     echo "/usr/x86_64-pc-linux-gnu/lib" >> $EMERGE_ROOT/etc/ld.so.conf

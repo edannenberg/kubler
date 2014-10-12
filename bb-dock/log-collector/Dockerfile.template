@@ -12,6 +12,9 @@ ADD etc /etc
 WORKDIR /config
 ADD docker-gen /config/template
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/{docker-gen,fluentd} /service
+RUN chmod +x $(find /etc/service -name run) && \
+    ln -s /etc/s6_finish_default /etc/service/docker-gen/finish && \
+    ln -s /etc/s6_finish_default /etc/service/fluentd/finish && \
+    ln -s /etc/service/{docker-gen,fluentd} /service
 
 CMD ["/bin/s6-svscan", "/service"]

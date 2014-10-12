@@ -5,7 +5,10 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
-RUN chmod +x $(find /etc/service -name run)
+RUN chmod +x $(find /etc/service -name run) && \
+    chmod +x /etc/s6_finish_default && \
+    ln -s /etc/s6_finish_default /etc/service/.s6-svscan/finish && \
+    ln -s /etc/service/.s6-svscan /service
 
 RUN ldconfig
 

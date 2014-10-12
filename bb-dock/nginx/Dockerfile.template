@@ -11,6 +11,8 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/nginx /service
+RUN chmod +x $(find /etc/service -name run) && \
+    ln -s /etc/s6_finish_default /etc/service/nginx/finish && \
+    ln -s /etc/service/nginx /service
 
 EXPOSE 80 443
