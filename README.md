@@ -1,34 +1,29 @@
-Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
-This is still work in progress, creating new base images should be pretty straight forward though.
+gentoobb
+========
 
-Why?
+Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
+Still work in progress.
+
+## Why?
 
 * Gentoo is great, shipping a full compiler stack with your containers not so much
 
-What's different?
+## What's different?
 
 * Images do not contain portage or compiler chain = much smaller image size
 * [s6][] instead of openrc as supervisor (smaller footprint and proper docker SIGTERM handling)
 * No syslog daemon in favor of centralized approaches
 * Added a few convenience flags to build.sh, use -h to display further details
 
-How much do i save?
+## How much do I save?
 
 * Quite a bit, the nginx image for example clocks in at ~63MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
 
-How does it work?
+## The catch?
 
-* build.sh iterates over bb-dock/ 
-* generates build order, and collects dependency lists in package.provided file
-* mounts each directory into a fresh bb-builder/bob container and executes build-root.sh inside bob
-* resulting rootfs.tar is placed in mounted directory
-* build.sh then starts a docker build that uses rootfs.tar to create a new image
+* You can't install packages via portage in further docker builds based on those images, unless they are built via build.sh
 
-The catch?
-
-* Obv. you can't add packages via portage in further docker builds based on those images, unless they are built via build.sh
-
-Quickstart:
+## Quickstart
 
     $ git clone https://github.com/edannenberg/gentoo-bb.git
     $ cd gentoo-bb
@@ -36,26 +31,42 @@ Quickstart:
 
 * If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
 * Check the folders in bb-dock/ for image specific documentation
-* bin/ contains some scripts to start/stop a few container chains
+* bin/ contains a few scripts to start/stop container chains
 
-Creating new images:
+## How does it work?
 
- * All images must be located in bb-dock, folder name = image name
+* build.sh iterates over bb-dock/ 
+* generates build order
+* mounts each directory into a fresh bb-builder/bob container and executes build-root.sh inside bob
+* each build produces a package.installed file that is used by depending images as package.provided
+* resulting rootfs.tar is placed in mounted directory
+* build.sh then starts a docker build that uses rootfs.tar to create the final image
+
+## Adding images
+
+ * All images must be located in bb-dock/, folder name = image name
  * Dockerfile.template and Buildconfig.sh are the only required files
- * Buildconfig.sh is used to configure the compiling stage, defining PACKAGES is the only requirement
  * build.sh will pick up your image on the next run
 
-Some usefull options while working on an image:
+Some useful options for build.sh while working on an image:
 
-    $ ./bob-interactive.sh # start an interactive build container, same as run by build.sh to produce the rootfs.tar
+Start an interactive build container, same as used to create the rootfs.tar:
 
-    $ ./build.sh -f build myimage # force rebuild of myimage and all dependencies
+    $ ./bob-interactive.sh
 
-    $ ./build.sh -F build myimage # same as above, but also rebuild all rootfs.tar files
+Force rebuild of myimage and all images it depends on:
 
-    $ ./build.sh -n build myimage # ignore dependencies, only build given image. combine with the above
+    $ ./build.sh -f build myimage
 
-Parts from the original gentoo-docker docs that still apply:
+Same as above, but also rebuild all rootfs.tar files:
+
+    $ ./build.sh -F build myimage
+
+Only rebuild myimage, ignore images it depends on:
+
+    $ ./build.sh -nF build myimage
+
+Parts from the original [gentoo docker][gentoo-docker] docs that still apply:
 
 =========
 
