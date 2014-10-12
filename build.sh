@@ -363,11 +363,11 @@ check_repo_dependencies()
 
 build()
 {
-    if [ $BUILD_WITHOUT_DEPS ] && [ "${1}" == "*" ]; then
+    if ($BUILD_WITHOUT_DEPS && [ "${1}" == "*" ]); then
         die "error: -n does not support wildcards, specify one or more repo names."
     fi
 
-    if [ $BUILD_WITHOUT_DEPS ]; then
+    if $BUILD_WITHOUT_DEPS; then
         cd $REPO_PATH
         for REPO in $1; do
             generate_dockerfile ${REPO}
