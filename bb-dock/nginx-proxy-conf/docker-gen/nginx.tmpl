@@ -46,8 +46,8 @@ server {
     listen 80;
     listen 443 ssl;
 
-    ssl_certificate /etc/ssl/certs/nginx.crt;
-    ssl_certificate_key /etc/ssl/private/nginx.key;
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
 
     server_name {{ $host }};
     proxy_buffering off;

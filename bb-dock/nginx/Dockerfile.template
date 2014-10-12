@@ -3,16 +3,14 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-RUN mkdir -p /etc/ssl/private && \
-    mkdir -p /etc/ssl/certs && \
-    openssl req -x509 -nodes -days 3650 -newkey rsa:4096 \
-        -subj "/C=DE/ST=SA/L=MD/O=DevOps/CN=*.web.local" \
-        -keyout /etc/ssl/private/nginx.key \
-        -out /etc/ssl/certs/nginx.crt 
+#RUN mkdir -p /etc/nginx/ssl && \
+#    openssl req -x509 -nodes -days 3650 -newkey rsa:4096 \
+#        -subj "/C=DE/ST=SA/L=MD/O=DevOps/CN=*.web.local" \
+#        -keyout /etc/nginx/ssl/nginx.key \
+#        -out /etc/nginx/ssl/nginx.crt 
 
 ADD etc /etc
 
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/nginx /service
 
 EXPOSE 80 443
-

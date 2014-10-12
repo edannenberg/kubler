@@ -1,13 +1,7 @@
 FROM ${NAMESPACE}/nginx
 MAINTAINER ${MAINTAINER}
 
-ADD etc /etc
+VOLUME ["/etc/nginx/sites-enabled"]
 
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs"]
-
-ENV WATCHER_FS_CMD ls /etc/nginx/sites-enabled/default.conf
-ENV WATCHER_ONCHANGE pkill -HUP nginx
-ENV WATCHER_OPT -d
-RUN ln -s /etc/service/fs-watcher /service
-
-EXPOSE 80 443
+# patch entr into s6 run file, restarts nginx when config changes
+RUN sed -i 's/exec \/usr\/sbin\/nginx/ls \/etc\/nginx\/sites-enabled\/default.conf | entr -r \/usr\/sbin\/nginx/g' /etc/service/nginx/run
