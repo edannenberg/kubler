@@ -211,6 +211,12 @@ extract_busybox()
 # 1: REPO
 generate_dockerfile()
 {
+    if [ ! -d ${1} ]; then
+        die "error: repo ${REPO_PATH}/${1} does not exist, typo?"
+    fi
+    if [ ! -f ${1}/Dockerfile.template ]; then
+        die "error: repo ${REPO_PATH}/${1} does not have a Dockerfile.template"
+    fi
     env -i \
     NAMESPACE="${NAMESPACE}" \
     TAG="${DATE}" \
