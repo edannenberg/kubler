@@ -1,0 +1,15 @@
+FROM ${NAMESPACE}/s6
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+ADD etc /etc
+
+RUN chmod +x $(find /etc/service -name run) && \
+    ln -s /etc/s6_finish_default /etc/service/redis/finish && \
+    ln -s /etc/service/redis /service 
+
+RUN sed -i 's/daemonize yes/#daemonize yes/g' /etc/redis.conf && \
+    sed -i 's/bind 127.0.0.1/#bind 127.0.0.1/g' /etc/redis.conf
+
+EXPOSE 6379
