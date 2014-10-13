@@ -23,11 +23,11 @@ port 9200
 index_name fluentd
 type_name {{ $value.Name }}
 logstash_format true
-#buffer_type memory
+buffer_type memory
 request_timeout 15s
 flush_interval 3s
 retry_limit 17
 retry_wait 1s
-#num_threads 1
+num_threads 1
 </match>
 {{end}}
