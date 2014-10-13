@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/s6
+FROM ${NAMESPACE}/bash
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
@@ -11,3 +11,4 @@ RUN chmod +x $(find /etc/service -name run) && \
 
 EXPOSE 11211
 
+CMD ["/bin/s6-svscan", "/service"]

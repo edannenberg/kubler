@@ -7,4 +7,3 @@ RUN ldconfig
 
 RUN eselect java-vm set system 1
 
-CMD ["/bin/sh"]

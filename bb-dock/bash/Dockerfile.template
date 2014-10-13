@@ -1,0 +1,6 @@
+FROM ${NAMESPACE}/openssl
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+CMD ["/bin/bash"]

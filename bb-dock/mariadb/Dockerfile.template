@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/s6
+FROM ${NAMESPACE}/bash
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
@@ -15,3 +15,5 @@ RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/service/mariadb /service
 
 EXPOSE 3306
+
+CMD ["/bin/s6-svscan", "/service"]

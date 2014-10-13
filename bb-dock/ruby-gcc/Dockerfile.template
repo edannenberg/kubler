@@ -6,5 +6,3 @@ ADD rootfs.tar /
 #RUN ldconfig
 
 RUN eselect ruby set 2
-
-CMD ["/bin/sh"]
