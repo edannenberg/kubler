@@ -10,7 +10,8 @@ KEEP_HEADERS=true
 # 
 configure_rootfs_build()
 {
-    :
+    # needed a build time, so we remove them from package.provided for reinstall
+    sed -i /^net-misc\\/curl/d /etc/portage/profile/package.provided
 }
 
 #

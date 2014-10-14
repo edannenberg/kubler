@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ -n "$WATCHER_FS_CMD" ] && [ -n "$WATCHER_ONCHANGE" ]; then
     while sleep 1; do
-        $WATCHER_FS_CMD | entr $WATCHER_OPT $WATCHER_ONCHANGE
+        exec $WATCHER_FS_CMD | entr $WATCHER_OPT $WATCHER_ONCHANGE
     done
 fi

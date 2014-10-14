@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="app-shells/bash dev-lang/ruby"
+PACKAGES="dev-lang/ruby"
 KEEP_HEADERS=true
 
 #

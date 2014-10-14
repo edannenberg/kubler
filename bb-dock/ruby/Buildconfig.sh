@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="app-shells/bash dev-lang/ruby"
+PACKAGES="dev-lang/ruby"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
