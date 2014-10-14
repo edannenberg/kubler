@@ -1,0 +1,4 @@
+FROM ${NAMESPACE}/bash
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
