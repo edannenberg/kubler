@@ -1,0 +1,14 @@
+# Copyright (C) 2013-2014 W. Trevor King <wking@tremily.us>
+FROM ${NAMESPACE}/python2
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+RUN pip install gunicorn
+
+RUN cd /docker-registry/depends/docker-registry-core/ && python setup.py install && \
+    cd /docker-registry && python setup.py install
+
+EXPOSE 5000
+
+CMD exec docker-registry
