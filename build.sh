@@ -315,6 +315,19 @@ run_container()
     "${DOCKER}" run --name ${CONTAINER_NAME} "${NAMESPACE}/${REPO}:${DATE}"
 }
 
+# Returns 0 if given string contains given word. Does not match substrings.
+#
+# 1: string
+# 2: word
+string_has_word() {
+    regex="(^| )${2}($| )"
+    if [[ ${BUILD_ORDER} =~ $regex ]];then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Populate $BUILD_ORDER by checking image dependencies
 #
 # Arguments:
@@ -327,8 +340,7 @@ generate_build_order()
         if [ -z "$BUILD_ORDER" ]; then
             BUILD_ORDER="${REPO}"
         else
-            regex="${REPO}"
-            if [[ ! ${BUILD_ORDER} =~ "$regex" ]];then
+            if ! string_has_word "${BUILD_ORDER}" ${REPO};then
                 BUILD_ORDER="${BUILD_ORDER} ${REPO}"
             fi
         fi
@@ -355,9 +367,8 @@ check_repo_dependencies()
     regex="^FROM (${NAMESPACE}/)?(.*)"
     if [[ ${dockerf} =~ $regex ]]; then
             match="${BASH_REMATCH[2]}"
-            regex="${1}"
             # skip further checking if already processed
-            if [[ ! ${BUILD_ORDER} =~ "$regex" ]];then
+            if ! string_has_word "${BUILD_ORDER}" ${1};then
                 check_repo_dependencies $match $1
                 if [ "${2}" != "" ]; then
                     BUILD_ORDER="${BUILD_ORDER} ${1}"
