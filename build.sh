@@ -321,7 +321,7 @@ run_container()
 # 2: word
 string_has_word() {
     regex="(^| )${2}($| )"
-    if [[ ${BUILD_ORDER} =~ $regex ]];then
+    if [[ "${1}" =~ $regex ]];then
         return 0
     else
         return 1
