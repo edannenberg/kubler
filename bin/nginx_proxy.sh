@@ -1,10 +1,14 @@
 #!/bin/bash
 
+# certificate path on host
+CERT_PATH=/etc/docker_nginx/certs/
+
 start () {
     # nginx-proxy
     docker run -d -t \
         -p 80:80 \
         -p 443:443 \
+        -v $CERT_PATH:/etc/nginx/ssl \
         --name www_proxy \
         --hostname www_proxy \
         gentoobb/nginx-proxy
@@ -22,7 +26,7 @@ start () {
 
     NGINX_IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' www_proxy_conf`
 
-    echo -e "\nnginx:\t $PROXY_IP port 80 and 443 are host mapped."
+    echo -e "\nnginx:\t ${PROXY_IP} port 80 and 443 are host mapped. Certificates are mounted from: ${CERT_PATH}"
 }
 
 stop () {
@@ -35,7 +39,7 @@ stop () {
 }
 
 case "${1}" in
-    start) start ${2} $3;;
+    start) start;;
     stop) stop;;
 *) echo  "
 Start or stop a nginx-proxy for vhosting.

@@ -3,5 +3,9 @@ MAINTAINER ${MAINTAINER}
 
 VOLUME ["/etc/nginx/sites-enabled"]
 
-# patch entr into s6 run file, restarts nginx when config changes
-RUN sed -i 's/exec \/usr\/sbin\/nginx/ls \/etc\/nginx\/sites-enabled\/default.conf | entr -r \/usr\/sbin\/nginx/g' /etc/service/nginx/run
+COPY fix_cert_links.sh /bin/fix_cert_links.sh
+
+# run fix_cert_links.sh when /etc/nginx/sites-enabled/default.conf changes
+ENV WATCHER_FS_CMD ls /etc/nginx/sites-enabled/default.conf
+ENV WATCHER_ONCHANGE fix_cert_links.sh
+RUN ln -s /etc/service/fs-watcher /service

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # create self signed certs if needed
-if [ ! -f /etc/nginx/ssl/nginx.crt ] || [ ! -f /etc/nginx/ssl/nginx.key ]; then
-    mkdir -p /etc/nginx/ssl
+if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhost/nginx.key ]; then
+    mkdir -p /etc/nginx/ssl/localhost
     CRT_COUNTRY="${CRT_COUNTRY:-DE}"
     CRT_STATE="${CRT_STATE:-SA}"
     CRT_LOCACTION="${CRT_LOCACTION:-MD}"
@@ -10,8 +10,8 @@ if [ ! -f /etc/nginx/ssl/nginx.crt ] || [ ! -f /etc/nginx/ssl/nginx.key ]; then
     CRT_CN="${CRT_CN:-nginx.local}"
     openssl req -x509 -nodes -days 3650 -newkey rsa:4096 \
         -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
-        -keyout /etc/nginx/ssl/nginx.key \
-        -out /etc/nginx/ssl/nginx.crt 
+        -keyout /etc/nginx/ssl/localhost/nginx.key \
+        -out /etc/nginx/ssl/localhost/nginx.crt 
 fi
 
 exec 2>&1

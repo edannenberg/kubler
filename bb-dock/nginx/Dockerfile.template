@@ -16,3 +16,5 @@ RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/service/nginx /service
 
 EXPOSE 80 443
+
+VOLUME [ "/etc/nginx/ssl" ]

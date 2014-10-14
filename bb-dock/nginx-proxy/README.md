@@ -9,6 +9,19 @@ Run this [Nginx][] proxy image with:
         --hostname www_proxy \
         gentoobb/nginx-proxy
 
+For persistent ssl certificates use:
+
+    $ docker run -d -t \
+        -p 80:80 \
+        -p 443:443 \
+        -v /docker_proxy_certs:/etc/nginx/ssl
+        --name www_proxy \
+        --hostname www_proxy \
+        gentoobb/nginx-proxy
+
+The default proxy certs are generated in localhost/, certs for each vhost are expected in $VIRTUAL_HOST/. Symlinks to the default cert are created
+on config change. Replace with your own certs as needed.
+
 Now start the required nginx-proxy-conf container that handles auto-configuration of the proxy:
 
     $ docker run -d \
@@ -22,7 +35,7 @@ Now start the required nginx-proxy-conf container that handles auto-configuratio
 For security reasons the conf container is separated from the nginx container because [docker-gen][] requires the host's docker socket.
 Check the nginx-proxy-conf documentation for more details.
 
-Finally start a regular nginx container, notice the -e flag:
+Finally start a regular nginx container(s), notice the -e flag:
 
     $ docker run -d \
         -e VIRTUAL_HOST=foo.void \
