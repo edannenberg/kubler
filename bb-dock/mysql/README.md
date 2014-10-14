@@ -4,9 +4,13 @@ Run this [Mysql][] image with:
 
 Then [link][linking] to it from your client container:
 
-    $ docker run --link db-0:db your-client
+    $ docker run --it --rm --link db-0:db your-client
 
-The container will check /var/lib/mysql/ on startup, if empty it will install a default database. Default root pw: root
+Alternatively you can use the mysql server socket directly:
+
+    $ docker run --it --rm --volumes-from db-0 gentoobb/mysql /bin/bash
+
+The container will check /var/lib/mysql/ on startup, if empty it will install a default database. Default login: root/root
 
 [volume-mounting][volume-mount] your content under the container's
 `/var/lib/mysql`.  You can also mount volumes from other
@@ -29,4 +33,3 @@ data to new PostgreSQL containers (e.g. if you upgrade PostgreSQL).
 [VOLUME]: http://docs.docker.io/en/latest/use/working_with_volumes/#getting-started
 [fd24041]: https://github.com/SvenDowideit/docker/commit/fd240413ff835ee72741d839dccbee24e5cc410c
 [3389]: https://github.com/dotcloud/docker/pull/3389
-

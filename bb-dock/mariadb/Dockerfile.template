@@ -16,4 +16,6 @@ RUN chmod +x $(find /etc/service -name run) && \
 
 EXPOSE 3306
 
+VOLUME [ "/var/run/mysqld" ]
+
 CMD ["/bin/s6-svscan", "/service"]
