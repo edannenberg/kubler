@@ -1,11 +1,14 @@
 #!/bin/sh
 # create default db if /var/lib/mysql is not mounted
 if [ ! "$(ls /var/lib/mysql)" ]; then
-    /usr/share/mysql/scripts/mysql_install_db --basedir=/usr --log-bin=mysqld-bin && (/usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --log-bin=mysqld-bin &) ; sleep 5 && /usr/bin/mysqladmin -u root password 'root' && \
-    mysql -u root -proot << EOF
+    MYSQL_ROOT_PW="${MYSQL_ROOT_PW:-root}"
+    MYSQL_ADMIN_USER="${MYSQL_ADMIN_USER:-root}"
+    MYSQL_ADMIN_PW="${MYSQL_ADMIN_PW:-root}"
+    /usr/share/mysql/scripts/mysql_install_db --basedir=/usr --log-bin=mysqld-bin && (/usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --log-bin=mysqld-bin &) ; sleep 5 && /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PW}" && \
+    mysql -u root --password="${MYSQL_ROOT_PW}" << EOF
 DELETE FROM mysql.user WHERE User='';
 DROP DATABASE test;
-GRANT ALL ON *.* TO root@'%' IDENTIFIED BY 'root';
+GRANT ALL ON *.* TO ${MYSQL_ADMIN_USER}@'%' IDENTIFIED BY "${MYSQL_ADMIN_PW}" WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
 killall mysqld && sleep 3

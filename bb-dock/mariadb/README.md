@@ -10,7 +10,21 @@ Alternatively you can use the mysql server socket directly:
 
     $ docker run --it --rm --volumes-from db-0 gentoobb/mysql /bin/bash
 
-The container will check /var/lib/mysql/ on startup, if empty it will install a default database. Default login: root/root
+The container will check /var/lib/mysql/ on startup, if empty it will install a default database.
+Admin credentials for the new database can be set via env:
+
+    $ docker run -d --name db-0 \
+        -e MYSQL_ROOT_PW=secret
+        -e MYSQL_ADMIN_USER=admin \
+        -e MYSQL_ADMIN_PW=secret \
+        gentoobb/mysql
+
+Defaults if omitted:
+
+    MYSQL_ROOT_PW=root
+    MYSQL_ADMIN_USER=root
+    MYSQL_ADMIN_PW=root
+
 
 [volume-mounting][volume-mount] your content under the container's
 `/var/lib/mysql`.  You can also mount volumes from other
@@ -22,9 +36,6 @@ config to serve from an alternative location.
 > until there are no containers still referencing those volumes. This
 > allows you to upgrade, or effectivly migrate data volumes between
 > containers.
-
-That means you should be able to migrate your `/var/lib/postgresql`
-data to new PostgreSQL containers (e.g. if you upgrade PostgreSQL).
 
 [MariaDB]: https://mariadb.org/
 [volume-mount]: http://docs.docker.io/en/latest/use/working_with_volumes/
