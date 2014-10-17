@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ "$XDEBUG_ENABLED" == 'yes' ]; then
+    if [ ! -f /etc/php/fpm-php5.5/ext-active/xdebug.ini ] && [ -f /etc/php/fpm-php5.5/ext/xdebug.ini ]; then
+        ln -s /etc/php/fpm-php5.5/ext/xdebug.ini /etc/php/fpm-php5.5/ext-active
+    fi
+fi
+
 if [ ! -z $NG_TMPL_ADMINER_URL ]; then
     if [ ! -f /etc/nginx/sites-enabled/adminer.conf ] && [ -f /etc/nginx/sites-all/adminer.conf ]; then
         ln -s /etc/nginx/sites-all/adminer.conf /etc/nginx/sites-enabled

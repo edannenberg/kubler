@@ -3,6 +3,10 @@
 VHOST_BASE=test.void
 ADMINER_URL=db.${VHOST_BASE}
 PHPINFO_URL=phpinfo.${VHOST_BASE}
+
+XDEBUG=yes
+XDEBUG_LOCAL_PORT=9000
+
 VHOST_URL=${VHOST_BASE},${ADMINER_URL},${PHPINFO_URL}
 
 USER_UID=$(id -u $(whoami))
@@ -24,6 +28,8 @@ start () {
         -e NG_TMPL_PHPINFO_URL="$PHPINFO_URL" \
         -e NGINX_UID="$USER_UID" \
         -e NGINX_GID="$USER_GID" \
+        -e XDEBUG_ENABLED="$XDEBUG" \
+        -p $XDEBUG_LOCAL_PORT:9000 \
         --link www_mysql:db \
         --name www_php \
         --hostname www_php \
@@ -33,6 +39,11 @@ start () {
 
     echo -e "\nmysql:\t\t $MYSQL_IP:3306 login: root/root"
     echo -e "nginx:\t\t http://$NGINX_IP/"
+    if [[ "$XDEBUG" == 'yes' ]]; then
+        echo -e "xdebug enabled:\t yes, mapped to host port: $XDEBUG_LOCAL_PORT"
+    else
+        echo -e "xdebug:\t\t no"
+    fi
     echo -e "vhost:\t\t http://$VHOST_BASE/"
     echo -e "adminer:\t http://$ADMINER_URL/adminer.php?server=db"
     echo -e "phpinfo:\t http://$PHPINFO_URL/"

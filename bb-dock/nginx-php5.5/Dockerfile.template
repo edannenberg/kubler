@@ -15,4 +15,4 @@ ADD www /var/www
 
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/php-fpm /service
 
-EXPOSE 80 443
+EXPOSE 80 443 9000

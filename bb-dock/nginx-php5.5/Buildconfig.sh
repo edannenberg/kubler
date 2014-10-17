@@ -21,5 +21,6 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    :
+    # disable xdebug
+    rm $EMERGE_ROOT/etc/php/fpm-php5.5/ext-active/xdebug.ini
 }
