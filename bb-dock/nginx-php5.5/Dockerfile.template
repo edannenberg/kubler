@@ -5,6 +5,9 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
+# add link script for adminer/phpinfo to nginx service
+RUN sed -i '3i source /etc/nginx/link_php_microsites.sh' /etc/service/nginx/run
+
 # env for cert creation: CRT_COUNTRY, CRT_STATE, CRT_LOCATION, CRT_ORG, CRT_CN
 ENV CRT_ORG ACME Inc - nginx-php
 

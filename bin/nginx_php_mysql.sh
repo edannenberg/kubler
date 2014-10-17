@@ -1,31 +1,41 @@
 #!/bin/bash
 
-VHOST_URL=test.void,www.test.void
+VHOST_BASE=test.void
+ADMINER_URL=db.${VHOST_BASE}
+PHPINFO_URL=phpinfo.${VHOST_BASE}
+VHOST_URL=${VHOST_BASE},${ADMINER_URL},${PHPINFO_URL}
+
+USER_UID=$(id -u $(whoami))
+USER_GID=$(id -g $(whoami))
 
 start () {
     # mysql
     docker run -d \
-    --name www_mysql \
-    --hostname www_mysql \
-    gentoobb/mysql
+        --name www_mysql \
+        --hostname www_mysql \
+        gentoobb/mysql
 
     MYSQL_IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' www_mysql`
 
     # nginx php
     docker run -d \
-    -e VIRTUAL_HOST="$VHOST_URL" \
-    --link www_mysql:db \
-    --name www_php \
-    --hostname www_php \
-    gentoobb/nginx-php5.5
+        -e VIRTUAL_HOST="$VHOST_URL" \
+        -e NG_TMPL_ADMINER_URL="$ADMINER_URL" \
+        -e NG_TMPL_PHPINFO_URL="$PHPINFO_URL" \
+        -e NGINX_UID="$USER_UID" \
+        -e NGINX_GID="$USER_GID" \
+        --link www_mysql:db \
+        --name www_php \
+        --hostname www_php \
+        gentoobb/nginx-php5.5
 
     NGINX_IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' www_php`
 
     echo -e "\nmysql:\t\t $MYSQL_IP:3306 login: root/root"
-    echo -e "nginx:\t\t http://$NGINX_IP/adminer.php?server=db"
-    if [ -n $VHOST_URL ]; then
-        echo -e "domain name(s):  $VHOST_URL"
-    fi
+    echo -e "nginx:\t\t http://$NGINX_IP/"
+    echo -e "vhost:\t\t http://$VHOST_BASE/"
+    echo -e "adminer:\t http://$ADMINER_URL/adminer.php?server=db"
+    echo -e "phpinfo:\t http://$PHPINFO_URL/"
 }
 
 stop () {
