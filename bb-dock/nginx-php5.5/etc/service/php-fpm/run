@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "php-fpm: waiting for nginx to start.."
-until ps -o comm | grep -q nginx; do
+until ps -a | grep -q '[n]ginx'; do
     sleep 1
 done
 
