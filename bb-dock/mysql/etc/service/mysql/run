@@ -11,7 +11,7 @@ DROP DATABASE test;
 GRANT ALL ON *.* TO ${MYSQL_ADMIN_USER}@'%' IDENTIFIED BY "${MYSQL_ADMIN_PW}" WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
-killall mysqld && sleep 3
+killall mysqld && while ps -a | grep -q '[m]ysqld'; do sleep 1; done
 fi
 
 exec 2>&1
