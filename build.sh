@@ -414,6 +414,13 @@ build()
     done
 }
 
+# Update DATE to latest stage3 build date
+update_stage3_date() {
+    S3DATE=$(curl -s http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3.txt | grep 'stage3-amd64-nomulti' | awk -F '/' '{print $1}')
+    msg "Updating DATE to $S3DATE in ./build.sh"
+    sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE}\}\"/g build.sh
+}
+
 missing()
 {
     cd $REPO_PATH
@@ -464,8 +471,9 @@ REPOS="${@:-"*"}"
 
 case "${ACTION}" in
     build) build "$REPOS";;
+    update) update_stage3_date;;
     missing) missing "$REPOS";;
-    help) msg "usage: ${0} [-f, -F, -c, -C, -h] {build|missing} [repo ...]
+    help) msg "usage: ${0} [-n, -f, -F, -c, -C, -h] {build|update|missing} [repo ...]
     -f force repo rebuild
     -F also rebuild repo rootfs tar ball
     -c rebuild building containers

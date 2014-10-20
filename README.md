@@ -27,6 +27,7 @@ Still work in progress.
 
     $ git clone https://github.com/edannenberg/gentoo-bb.git
     $ cd gentoo-bb
+    $ ./build.sh update
     $ ./build.sh
 
 * If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
@@ -52,7 +53,7 @@ Some useful options for build.sh while working on an image:
 
 Start an interactive build container, same as used to create the rootfs.tar:
 
-    $ ./bob-interactive.sh
+    $ ./bob-interactive.sh myimage
 
 Force rebuild of myimage and all images it depends on:
 
