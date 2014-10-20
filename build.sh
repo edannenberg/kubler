@@ -282,10 +282,9 @@ build_repo()
         extract_busybox "${REPO}"
     fi
 
-    generate_provided_file ${REPO}
-
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
+        generate_provided_file ${REPO}
         "${DOCKER}" run --rm --volumes-from portage-data \
             -v $(dirname $(realpath -s $0))/$REPO:/config \
             -v $(realpath -s ../tmp/distfiles):/distfiles \
