@@ -14,6 +14,6 @@ ENV CRT_ORG ACME Inc - nginx-php
 ADD www /var/www
 
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/php-fpm /service && \
-    ln -s /usr/bin/php5.5 /usr/bin/php
+    if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php5.5 /usr/bin/php; fi
 
 EXPOSE 80 443 9000
