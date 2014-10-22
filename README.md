@@ -30,7 +30,8 @@ Still work in progress.
     $ ./build.sh update
     $ ./build.sh
 
-* If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files 
+* If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files
+* Oracle downloads may or may not work, you can always download them manually to tmp/distfiles
 * Check the folders in bb-dock/ for image specific documentation
 * bin/ contains a few scripts to start/stop container chains
 
