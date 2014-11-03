@@ -24,5 +24,5 @@ finish_rootfs_build()
     # disable xdebug
     rm $EMERGE_ROOT/etc/php/fpm-php5.5/ext-active/xdebug.ini
     # required by null-mailer
-    copy_gcc_libs()
+    copy_gcc_libs
 }
