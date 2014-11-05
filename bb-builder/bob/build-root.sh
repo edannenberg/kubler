@@ -53,6 +53,12 @@ if [ -n "$PACKAGES" ]; then
     cp -f /etc/{passwd,group} $EMERGE_ROOT/etc
     # also copy to repo dir for further builds 
     cp -f /etc/{passwd,group} /config/tmp
+    # merge with ld.so.conf from parent image and copy for further builds depending on this image
+    if [ -f /config/tmp/ld.so.conf ]; then
+        cat /config/tmp/ld.so.conf >> $EMERGE_ROOT/etc/ld.so.conf
+        sort -u $EMERGE_ROOT/etc/ld.so.conf -o $EMERGE_ROOT/etc/ld.so.conf
+        cp -f $EMERGE_ROOT/etc/ld.so.conf /config/tmp
+    fi
 
     # call post install hook
     declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build

@@ -258,6 +258,10 @@ generate_provided_file()
             if [ -f ${PARENT_TMP_PATH}/passwd ]; then
                 cp ${PARENT_TMP_PATH}/{passwd,group} $TMP_PATH/
             fi
+            # copy ld.so.conf
+            if [ -f ${PARENT_TMP_PATH}/ld.so.conf ]; then
+                cp ${PARENT_TMP_PATH}/ld.so.conf $TMP_PATH/
+            fi
         fi
     fi
 }

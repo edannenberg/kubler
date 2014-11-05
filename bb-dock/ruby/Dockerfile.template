@@ -3,6 +3,4 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-#RUN ldconfig
-
 RUN eselect ruby set 2
