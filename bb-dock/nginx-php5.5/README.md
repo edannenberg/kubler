@@ -6,7 +6,7 @@ Run this [Nginx][] image with:
         gentoobb/nginx-php5.5
 
 Comes bundled with [php5.5][PHP] / [fpm][FPM] / [xdebug][] (disabled per default).
-To enable xdebug mapped to port 9000 on the host:
+To enable xdebug, mapped to port 9000 on the host:
 
     $ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost -p 80:80 -p 443:443 \
         -p 9000:9000 \

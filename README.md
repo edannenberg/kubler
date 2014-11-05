@@ -54,7 +54,7 @@ Some useful options for build.sh while working on an image:
 
 Start an interactive build container, same as used to create the rootfs.tar:
 
-    $ ./bob-interactive.sh myimage
+    $ ./bin/bob-interactive.sh myimage
 
 Force rebuild of myimage and all images it depends on:
 
