@@ -32,7 +32,7 @@
 
 AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141016}"
+DATE="${DATE:-20141030}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
