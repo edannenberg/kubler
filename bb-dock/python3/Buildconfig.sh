@@ -13,6 +13,8 @@ configure_rootfs_build()
     echo 'PYTHON_SINGLE_TARGET="python3_3"' >> /etc/portage/make.conf
     echo 'USE_PYTHON="3.3"' >> /etc/portage/make.conf
     echo 'USE="${USE} sqlite"' >> /etc/portage/make.conf
+    # mask 3.4 until pip supports pyhton3_4 target
+    echo '>=dev-lang/python-3.4.0' >> /etc/portage/package.mask/python
 }
 
 #
