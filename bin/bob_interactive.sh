@@ -13,11 +13,11 @@ if [ ! -d $REPO ]; then
     exit 1
 fi
 
-echo -e "starting interactive build container with ${1} config..\n\nto start the build run: build-root ${1}\n"
+echo -e "starting interactive build container with bb-dock/${1} mounted as /config..\n\nto start the build run: build-root ${1}\n"
 
-docker run -it --rm \
+docker run -it --rm --hostname bob-$1 \
     --volumes-from portage-data \
     -v $(realpath -s $SCRIPT_DIR/../tmp/distfiles):/distfiles \
     -v $(realpath -s $SCRIPT_DIR/../tmp/packages):/packages \
-    -v ${REPO}):/config \
+    -v ${REPO}:/config \
     "gentoobb/bob:latest"
