@@ -293,7 +293,7 @@ build_repo()
             -v $(dirname $(realpath -s $0))/$REPO:/config \
             -v $(realpath -s ../tmp/distfiles):/distfiles \
             -v $(realpath -s ../tmp/packages):/packages \
-            -i -t "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
+            -it --hostname bob-$REPO "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
     fi
 
     msg "build ${NAMESPACE}/${REPO}:${DATE}"
