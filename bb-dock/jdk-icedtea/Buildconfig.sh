@@ -8,7 +8,8 @@ PACKAGES="dev-java/icedtea-bin"
 # 
 configure_rootfs_build()
 {
-    echo "=virtual/jre-1.7.0 ~amd64" >> /etc/portage/package.keywords/java
+    # skip python
+    emerge -p dev-lang/python | grep dev-lang/python | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
 }
 
 #
@@ -16,7 +17,5 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    emerge -C python
-    echo "include ld.so.conf.d/*.conf" >> /$EMERGE_ROOT/etc/ld.so.conf
-    echo "/usr/x86_64-pc-linux-gnu/lib" >> /$EMERGE_ROOT/etc/ld.so.conf
+    :
 }

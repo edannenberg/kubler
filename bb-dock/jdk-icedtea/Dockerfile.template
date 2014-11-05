@@ -1,9 +1,7 @@
-FROM ${NAMESPACE}/bash
+FROM ${NAMESPACE}/gcc
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-RUN ldconfig
-
-RUN eselect java-vm set system 1
-
+RUN ldconfig && \
+    eselect java-vm set system 1

@@ -21,6 +21,10 @@ configure_rootfs_build()
             -P /distfiles \
             "${JDK_URL}"
     fi
+    # skip python
+    emerge -p dev-lang/python | grep dev-lang/python | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    # skip iced-tea
+    emerge -p dev-java/icedtea-bin | grep dev-java/icedtea-bin | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
 }
 
 #
@@ -28,8 +32,5 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    emerge -C icedtea-bin
-    emerge -C python
-    echo "include ld.so.conf.d/*.conf" >> /$EMERGE_ROOT/etc/ld.so.conf
-    echo "/usr/x86_64-pc-linux-gnu/lib" >> /$EMERGE_ROOT/etc/ld.so.conf
+    :
 }
