@@ -27,4 +27,7 @@ finish_rootfs_build()
     tar xzvf entr-2.9.tar.gz
     cd eradman* && ./configure && make && make install
     cp /usr/local/bin/entr $EMERGE_ROOT/bin
+    # busybox crond setup
+    mkdir -p $EMERGE_ROOT/var/spool/cron/crontabs
+    chmod 0600 $EMERGE_ROOT/var/spool/cron/crontabs
 }

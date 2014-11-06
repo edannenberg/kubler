@@ -12,7 +12,12 @@ a SIGHUP at nginx when the file /etc/nginx/sites-enabled/default.conf changes:
     # ENV WATCHER_OPT -d # optional, pass options to [entr][], -d is handy for watching directories
     RUN ln -s /etc/service/fs-watcher /service
 
-[entr][] is used as fs watcher.
+The service is just a simple wrapper for [entr][].
+
+Also includes a service to run [busybox-crond][]. Disabled per default. To enable the cron service in builds based on this image:
+
+    RUN echo '* * * * * echo hi' >> /var/spool/cron/crontabs/root && ln -s /etc/service/cron /service
 
 [s6]: http://skarnet.org/software/s6/
 [entr]: http://entrproject.org/
+[busybox-crond]: http://www.busybox.net/downloads/BusyBox.html
