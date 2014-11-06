@@ -5,7 +5,7 @@ Run this [Nginx][] image with:
         -p 80:80 -p 443:443 \
         gentoobb/nginx-php5.5
 
-Comes bundled with [php5.5][PHP] / [fpm][FPM] / [xdebug][] (disabled per default).
+Comes bundled with [php5.5][PHP] / [fpm][FPM] / [xdebug][] (disabled per default) / [composer][].
 To enable xdebug, mapped to port 9000 on the host:
 
     $ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost -p 80:80 -p 443:443 \
@@ -49,4 +49,5 @@ either.
 [FPM]: http://php-fpm.org/
 [xdebug]: http://xdebug.org/
 [adminer]: http://www.adminer.org/en/
+[composer]: https://getcomposer.org/
 [volume-mount]: http://docs.docker.io/en/latest/use/working_with_volumes/
