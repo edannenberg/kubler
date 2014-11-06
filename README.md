@@ -2,7 +2,7 @@ gentoobb
 ========
 
 Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
-Still work in progress.
+Check this [docker.io][gentoo-bb-docker] account for pushed images, due to the 2 phase build used by gentoo-bb automated docker.io builds are not possible for now.
 
 ## Why?
 
@@ -17,7 +17,7 @@ Still work in progress.
 
 ## How much do I save?
 
-* Quite a bit, the nginx image for example clocks in at ~63MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
+* Quite a bit, the nginx image, for example, clocks in at ~47MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
 
 ## The catch?
 
@@ -102,6 +102,7 @@ as you see fit.
 [s6]: http://skarnet.org/software/s6/
 [Docker]: http://www.docker.io/
 [Dockerfiles]: http://www.docker.io/learn/dockerfile/
+[gentoo-bb-docker]: https://hub.docker.com/u/gentoobb/
 [Gentoo]: http://www.gentoo.org/
 [envsubst]: http://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
 [parameter-expansion]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02

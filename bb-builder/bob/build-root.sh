@@ -51,6 +51,8 @@ if [ -n "$PACKAGES" ]; then
 
     # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
     cp -f /etc/{passwd,group} $EMERGE_ROOT/etc
+    #pwconv -R $EMERGE_ROOT
+    #grpconv -R $EMERGE_ROOT
     # also copy to repo dir for further builds 
     cp -f /etc/{passwd,group} /config/tmp
     # merge with ld.so.conf from parent image and copy for further builds depending on this image
@@ -71,8 +73,11 @@ if [ -n "$PACKAGES" ]; then
     if [ -z "$KEEP_HEADERS" ]; then
         rm -rf $EMERGE_ROOT/usr/include/*
     fi
-    if [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
-        find $EMERGE_ROOT/lib64/* -name "*.a" -exec rm -rf {} \;
+    if [ -z "$KEEP_STATIC_LIBS" ] && [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
+        find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -rf {} \;
+    fi
+    if [ -z "$KEEP_STATIC_LIBS" ] && [ "$(ls -A $EMERGE_ROOT/usr/lib64)" ]; then
+        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" ! -name "*libpthread*.a" ! -name "*libc_nonshared.a" -exec rm -rf {} \;
     fi
 fi
 
