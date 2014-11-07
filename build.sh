@@ -420,7 +420,7 @@ build()
 
 # Update DATE to latest stage3 build date
 update_stage3_date() {
-    S3DATE=$(curl -s http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3.txt | grep 'stage3-amd64-nomulti' | awk -F '/' '{print $1}')
+    S3DATE=$(curl -s ${MIRROR}/releases/amd64/autobuilds/latest-stage3.txt | grep 'stage3-amd64-nomulti' | awk -F '/' '{print $1}')
     msg "Updating DATE to $S3DATE in ./build.sh"
     sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE}\}\"/g build.sh
 }
