@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="dev-lang/ruby"
+PACKAGES="dev-libs/gmp dev-lang/ruby"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
