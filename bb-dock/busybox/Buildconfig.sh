@@ -3,6 +3,8 @@
 #
 PACKAGES="sys-apps/busybox"
 KEEP_HEADERS=true
+TIMEZONE="UTC"
+GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
@@ -11,6 +13,16 @@ configure_rootfs_build()
 {
     # -static to enable dns lookups
     echo "sys-apps/busybox -static" > /etc/portage/package.use/busybox
+    # set locales
+    mkdir -p $EMERGE_ROOT/etc
+    for LOCALE in "${GLIBC_LOCALES[@]}"; do
+        echo "$LOCALE" >> /etc/locale.gen
+    done
+    cp /etc/locale.gen $EMERGE_ROOT/etc/
+    # set timezone
+    echo "${TIMEZONE}" > /etc/timezone
+    cp /etc/timezone $EMERGE_ROOT/etc/
+    cp /usr/share/zoneinfo/$TIMEZONE $EMERGE_ROOT/etc/localtime
 }
 
 #
