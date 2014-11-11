@@ -43,4 +43,14 @@ finish_rootfs_build()
     # busybox crond setup
     mkdir -p $EMERGE_ROOT/var/spool/cron/crontabs
     chmod 0600 $EMERGE_ROOT/var/spool/cron/crontabs
+    # purge glibc locales/charmaps
+    for LOCALE in "${GLIBC_LOCALES[@]}"; do
+        locale=($LOCALE)
+        locales_filter+=('!' '-name' "${locale[0]}")
+        charmaps_filter+=('!' '-name' "${locale[1]}.gz")
+    done
+    find $EMERGE_ROOT/usr/share/i18n/locales -type f "${locales_filter[@]}" -exec rm -rf {} \;
+    find $EMERGE_ROOT/usr/share/i18n/charmaps -type f "${charmaps_filter[@]}" -exec rm -rf {} \;
+    # purge iconv
+    rm -rf $EMERGE_ROOT/usr/lib64/gconv/*
 }
