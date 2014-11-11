@@ -32,8 +32,8 @@ finish_rootfs_build()
 {
     # fake portage install
     emerge -p sys-apps/portage | grep sys-apps/portage | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /config/tmp/package.installed
-    # log dir
-    mkdir -p $EMERGE_ROOT/var/log
+    # log dir, root home dir
+    mkdir -p $EMERGE_ROOT/var/log $EMERGE_ROOT/root
     # install entr
     wget http://entrproject.org/code/entr-2.9.tar.gz
     tar xzvf entr-2.9.tar.gz
