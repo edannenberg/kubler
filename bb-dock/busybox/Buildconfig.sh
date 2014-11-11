@@ -3,7 +3,7 @@
 #
 PACKAGES="sys-apps/busybox"
 KEEP_HEADERS=true
-TIMEZONE="UTC"
+TIMEZONE="${BOB_TIMEZONE:-UTC}"
 GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 
 #
@@ -20,7 +20,7 @@ configure_rootfs_build()
     done
     cp /etc/locale.gen $EMERGE_ROOT/etc/
     # set timezone
-    echo "${TIMEZONE}" > /etc/timezone
+    echo $TIMEZONE > /etc/timezone
     cp /etc/timezone $EMERGE_ROOT/etc/
     cp /usr/share/zoneinfo/$TIMEZONE $EMERGE_ROOT/etc/localtime
 }

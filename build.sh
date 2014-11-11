@@ -43,6 +43,9 @@ PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
 #PORTAGE="${PORTAGE:-portage-latest.tar.xz}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
+# variables starting with BOB_ are exported as ENV to build container
+BOB_TIMEZONE="${BOB_TIMEZONE:-Europe/Berlin}"
+
 DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 BUILD_OPTS="${BUILD_OPTS:-}"
@@ -289,10 +292,17 @@ build_repo()
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
         generate_provided_file ${REPO}
+
+        # pass variables starting with BOB_ to build container as ENV
+        for bob_var in ${!BOB_*}; do 
+            BOB_ENV+=('-e' "${bob_var}=${!bob_var}")
+        done
+
         "${DOCKER}" run --rm --volumes-from portage-data \
             -v $(dirname $(realpath -s $0))/$REPO:/config \
             -v $(realpath -s ../tmp/distfiles):/distfiles \
             -v $(realpath -s ../tmp/packages):/packages \
+            "${BOB_ENV[@]}" \
             -it --hostname bob-$REPO "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
     fi
 
