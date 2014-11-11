@@ -2,6 +2,7 @@
 # build config
 #
 PACKAGES="dev-lang/php:5.5 dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu"
+PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
@@ -21,6 +22,9 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
+    # set php time zone
+    sed -i "s@^;date.timezone =@date.timezone = $PHP_TIMEZONE@g" $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini
+    sed -i "s@^;date.timezone =@date.timezone = $PHP_TIMEZONE@g" $EMERGE_ROOT/etc/php/cli-php5.5/php.ini
     # disable xdebug
     rm $EMERGE_ROOT/etc/php/fpm-php5.5/ext-active/xdebug.ini
     rm $EMERGE_ROOT/etc/php/cli-php5.5/ext-active/xdebug.ini
