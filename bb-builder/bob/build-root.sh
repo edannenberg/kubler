@@ -74,10 +74,10 @@ if [ -n "$PACKAGES" ]; then
         rm -rf $EMERGE_ROOT/usr/include/*
     fi
     if [ -z "$KEEP_STATIC_LIBS" ] && [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
-        find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -rf {} \;
+        find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -f {} \;
     fi
     if [ -z "$KEEP_STATIC_LIBS" ] && [ "$(ls -A $EMERGE_ROOT/usr/lib64)" ]; then
-        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" ! -name "*libpthread*.a" ! -name "*libc_nonshared.a" -exec rm -rf {} \;
+        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" ! -name "*libpthread*.a" ! -name "*libc_nonshared.a" -exec rm -f {} \;
     fi
 fi
 
