@@ -34,12 +34,6 @@ finish_rootfs_build()
     emerge -p sys-apps/portage | grep sys-apps/portage | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /config/tmp/package.installed
     # log dir, root home dir
     mkdir -p $EMERGE_ROOT/var/log $EMERGE_ROOT/root
-    # install entr
-    wget http://entrproject.org/code/entr-2.9.tar.gz
-    tar xzvf entr-2.9.tar.gz
-    cd eradman* && ./configure && make && make install
-    strip /usr/local/bin/entr
-    cp /usr/local/bin/entr $EMERGE_ROOT/bin
     # busybox crond setup
     mkdir -p $EMERGE_ROOT/var/spool/cron/crontabs
     chmod 0600 $EMERGE_ROOT/var/spool/cron/crontabs

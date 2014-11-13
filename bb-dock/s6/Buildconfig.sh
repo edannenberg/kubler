@@ -20,4 +20,10 @@ finish_rootfs_build()
 {
     # s6 folders
     mkdir -p $EMERGE_ROOT/etc/service/.s6-svscan $EMERGE_ROOT/service
+    # install entr
+    wget http://entrproject.org/code/entr-2.9.tar.gz
+    tar xzvf entr-2.9.tar.gz
+    cd eradman* && ./configure && make && make install
+    strip /usr/local/bin/entr
+    cp /usr/local/bin/entr $EMERGE_ROOT/bin
 }
