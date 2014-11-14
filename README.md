@@ -1,37 +1,35 @@
-gentoobb
-========
+gentoo-bb
+=========
 
-Automated build environment that produces slim [Docker][] base images using gentoo and busybox. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
-Check this [docker.io][gentoo-bb-docker] account for pushed images, due to the 2 phase build used by gentoo-bb automated docker.io builds are not possible for now.
+Automated build environment that produces slim [Docker][] base images using [Gentoo][] and [BusyBox][]. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
+Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build used by gentoo-bb automated docker.io builds are not possible for now.
 
 ## Why?
 
-* Gentoo is great, shipping a full compiler stack with your containers not so much
+* Docker containers should only contain the bare minimum to run
+* Gentoo's strong points are control and optimization, shipping a full compiler stack with your containers clashes with the previous point though
 
 ## What's different?
 
-* Images do not contain portage or compiler chain = much smaller image size
-* [s6][] instead of openrc as supervisor (smaller footprint and proper docker SIGTERM handling)
+* Images do not contain [Portage][] or compiler chain = much smaller image size
+* [s6][] instead of openrc as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
 * No syslog daemon in favor of centralized approaches
-* Added a few convenience flags to build.sh, use -h to display further details
 
 ## How much do I save?
 
-* Quite a bit, the nginx image, for example, clocks in at ~47MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
+* Quite a bit, the nginx image, for example, clocks in at ~29MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
 
 ## The catch?
 
-* You can't install packages via portage in further docker builds based on those images, unless they are built via build.sh
+* You can't install packages via [Portage][] in further docker builds based on those images, unless they are built via build.sh
 
-## Quickstart
+## Quick Start
 
     $ git clone https://github.com/edannenberg/gentoo-bb.git
     $ cd gentoo-bb
-    $ ./build.sh update
     $ ./build.sh
 
 * If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files
-* Oracle downloads may or may not work, you can always download them manually to tmp/distfiles
 * Check the folders in bb-dock/ for image specific documentation
 * bin/ contains a few scripts to start/stop container chains
 
@@ -40,7 +38,9 @@ Check this [docker.io][gentoo-bb-docker] account for pushed images, due to the 2
 * build.sh iterates over bb-dock/ 
 * generates build order
 * mounts each directory into a fresh bb-builder/bob container and executes build-root.sh inside bob
-* each build produces a package.installed file that is used by depending images as package.provided
+* Buildconfig.sh from the mounted directory is sourced by build-root.sh
+* package.installed file is generated which is used by depending images as package.provided
+* packages defined in Buildconfig.sh are installed at a custom root directory inside bob
 * resulting rootfs.tar is placed in mounted directory
 * build.sh then starts a docker build that uses rootfs.tar to create the final image
 
@@ -67,6 +67,18 @@ Same as above, but also rebuild all rootfs.tar files:
 Only rebuild myimage, ignore images it depends on:
 
     $ ./build.sh -nF build myimage
+
+## Updating to a newer gentoo stage3 release
+
+First check for a new release by running:
+
+    $ ./build.sh update
+
+If a new release was found simply rebuild the stack by running:
+
+    $ ./build.sh -F
+
+* Things might break, Oracle downloads, for example, may not work. You can always download them manually to tmp/distfiles.
 
 Parts from the original [gentoo docker][gentoo-docker] docs that still apply:
 
@@ -104,5 +116,7 @@ as you see fit.
 [Dockerfiles]: http://www.docker.io/learn/dockerfile/
 [gentoo-bb-docker]: https://hub.docker.com/u/gentoobb/
 [Gentoo]: http://www.gentoo.org/
+[BusyBox]: http://www.busybox.net/
+[Portage]: http://www.gentoo.org//doc/en/handbook/handbook-x86.xml?part=3
 [envsubst]: http://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
 [parameter-expansion]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02
