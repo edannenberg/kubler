@@ -32,7 +32,7 @@
 
 AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141106}"
+DATE="${DATE:-20141113}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
@@ -44,7 +44,7 @@ PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
 # variables starting with BOB_ are exported as ENV to build container
-BOB_TIMEZONE="${BOB_TIMEZONE:-Europe/Berlin}"
+BOB_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 
 DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
