@@ -2,7 +2,6 @@
 # build config
 #
 PACKAGES="dev-libs/openssl"
-#KEEP_HEADERS=true
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs

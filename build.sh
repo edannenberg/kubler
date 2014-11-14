@@ -269,6 +269,27 @@ generate_provided_file()
     fi
 }
 
+# Check if a variable named ${RESOURCE_SUFFIX}_FROM is defined in Buildconfig.sh
+# If it exists, copy tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar from each repo defined in ${RESOURCE_SUFFIX}_FROM
+#
+# Arguments:
+#
+# 1: REPO
+# 2: RESOURCE_SUFFIX
+copy_build_dependencies()
+{
+    REPO="${1}"
+    RESOURCE_SUFFIX="${2}"
+    if [ -f ${REPO}/Buildconfig.sh ]; then
+        local PARENT_REPOS="$(grep ^${RESOURCE_SUFFIX}_FROM= ${REPO}/Buildconfig.sh | awk -F"=" '{print $2}')"
+
+        for PARENT_REPO in ${PARENT_REPOS}; do
+            cp ${PARENT_REPO}/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar ${REPO}/tmp/ ||
+                die "failed to copy build dependency: ${PARENT_REPO}/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar for $REPO"
+        done
+    fi
+}
+
 # If it doesn't already exist:
 #
 # * create "${NAMESPACE}/${REPO}:${DATE}" from
@@ -292,6 +313,11 @@ build_repo()
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
         generate_provided_file ${REPO}
+
+        # collect any required headers or static libs from other images
+        for resource in "HEADERS" "STATIC_LIBS"; do
+            copy_build_dependencies ${REPO} ${resource}
+        done
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do 

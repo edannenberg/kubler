@@ -10,6 +10,8 @@ EMERGE_ROOT="/emerge-root"
     exit 1
 }
 
+REPO="${1}"
+
 copy_gcc_libs() {
     LIBGCC="$(find /usr/lib/ -name libgcc_s.so.1)"
     LIBSTDC="$(find /usr/lib/ -name libstdc++.so.6)"
@@ -17,6 +19,18 @@ copy_gcc_libs() {
     for lib in $LIBGCC $LIBSTDC; do
         cp $lib $EMERGE_ROOT/lib64/
     done
+}
+
+extract_build_dependencies() {
+    RESOURCE_SUFFIX="${1}"
+    RESOURCE_VAR="${RESOURCE_SUFFIX}_FROM"
+    if [ -n "${!RESOURCE_VAR}" ]; then
+        for PARENT_REPO in ${!RESOURCE_VAR}; do
+            if [ -f /config/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar ]; then
+                tar xpf /config/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar
+            fi
+        done
+    fi
 }
 
 install_docker_gen() {
@@ -27,7 +41,7 @@ install_docker_gen() {
 }
 
 # read config, mounted via build.sh
-source /config/Buildconfig.sh
+source /config/Buildconfig.sh || :
 
 if [ -n "$PACKAGES" ]; then
     mkdir -p /config/tmp
@@ -46,8 +60,21 @@ if [ -n "$PACKAGES" ]; then
     # generate installed package list
     emerge -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' > /config/tmp/package.installed
 
-    # install packages (see Buildconfig.sh in dock/*/)
+    # install packages (defined via Buildconfig.sh in bb-dock/*/)
     emerge -v baselayout $PACKAGES
+
+    # backup headers and static files, depending images can pull them in again
+    if [ -d $EMERGE_ROOT/usr/include ]; then 
+        find $EMERGE_ROOT/usr/include -type f -name '*.h' | tar -cpf /config/tmp/$REPO-HEADERS.tar --files-from -
+    fi
+    if [ -d $EMERGE_ROOT/usr/lib64 ]; then
+        find $EMERGE_ROOT/usr/lib64 -type f -name '*.a' | tar -cpf /config/tmp/$REPO-STATIC_LIBS.tar --files-from -
+    fi
+
+    # extract any possible required headers and static libs from other images, build.sh provides them at /config/tmp
+    for resource in "HEADERS" "STATIC_LIBS"; do
+        extract_build_dependencies ${resource}
+    done
 
     # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
     cp -f /etc/{passwd,group} $EMERGE_ROOT/etc
@@ -77,7 +104,7 @@ if [ -n "$PACKAGES" ]; then
         find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -f {} \;
     fi
     if [ -z "$KEEP_STATIC_LIBS" ] && [ "$(ls -A $EMERGE_ROOT/usr/lib64)" ]; then
-        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" ! -name "*libpthread*.a" ! -name "*libc_nonshared.a" -exec rm -f {} \;
+        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" -exec rm -f {} \;
     fi
 fi
 

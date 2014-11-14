@@ -4,6 +4,9 @@
 PACKAGES="sys-kernel/linux-headers sys-devel/make sys-devel/binutils sys-devel/gcc"
 KEEP_HEADERS=true
 KEEP_STATIC_LIBS=true
+# include glibc headers and static files from busybox image
+HEADERS_FROM=busybox
+STATIC_LIBS_FROM=busybox
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs

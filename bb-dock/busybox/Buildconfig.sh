@@ -2,7 +2,6 @@
 # build config
 #
 PACKAGES="sys-apps/busybox"
-KEEP_HEADERS=true
 TIMEZONE="${BOB_TIMEZONE:-UTC}"
 GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 
