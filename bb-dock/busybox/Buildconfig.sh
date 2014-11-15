@@ -44,6 +44,8 @@ finish_rootfs_build()
     done
     find $EMERGE_ROOT/usr/share/i18n/locales -type f "${locales_filter[@]}" -exec rm -f {} \;
     find $EMERGE_ROOT/usr/share/i18n/charmaps -type f "${charmaps_filter[@]}" -exec rm -f {} \;
+    # backup iconv encodings so other images can pull them in again via ICONV_FROM=busybox
+    tar -cpf /config/tmp/busybox-ICONV.tar $EMERGE_ROOT/usr/lib64/gconv/
     # purge iconv
     rm -f $EMERGE_ROOT/usr/lib64/gconv/*
 }

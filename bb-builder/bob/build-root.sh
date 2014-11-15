@@ -72,7 +72,7 @@ if [ -n "$PACKAGES" ]; then
     fi
 
     # extract any possible required headers and static libs from other images, build.sh provides them at /config/tmp
-    for resource in "HEADERS" "STATIC_LIBS"; do
+    for resource in "HEADERS" "STATIC_LIBS" "ICONV"; do
         extract_build_dependencies ${resource}
     done
 

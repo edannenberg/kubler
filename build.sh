@@ -315,7 +315,7 @@ build_repo()
         generate_provided_file ${REPO}
 
         # collect any required headers or static libs from other images
-        for resource in "HEADERS" "STATIC_LIBS"; do
+        for resource in "HEADERS" "STATIC_LIBS" "ICONV"; do
             copy_build_dependencies ${REPO} ${resource}
         done
 
