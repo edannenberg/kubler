@@ -14,6 +14,11 @@ if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhos
         -out /etc/nginx/ssl/localhost/nginx.crt 
 fi
 
+# create dh parameter for forward secrecy
+if [ ! -f /etc/nginx/dh1024.pem ]; then
+    openssl dhparam -out /etc/nginx/dh1024.pem 1024
+fi
+
 # change UID/GID of nginx user if requested and not matching with actual values
 # useful for dev setups to avoid permission headaches with mounted volumes
 if [ ! -z ${NGINX_UID} ] && [ ! -z ${NGINX_GID} ]; then
