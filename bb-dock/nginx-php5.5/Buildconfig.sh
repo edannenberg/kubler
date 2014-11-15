@@ -3,6 +3,7 @@
 #
 PACKAGES="dev-lang/php:5.5 dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
+#ICONV_FROM=busybox
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
@@ -22,9 +23,14 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
+    # set php iconv default to UTF-8, if you need full iconv functionality set ICONV_FROM=busybox above
+    sed -i 's/^;iconv.input_encoding = ISO-8859-1/iconv.input_encoding = UTF-8/g' $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini
+    sed -i 's/^;iconv.internal_encoding = ISO-8859-1/iconv.internal_encoding = UTF-8/g' $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini
+    sed -i 's/^;iconv.output_encoding = ISO-8859-1/iconv.output_encoding = UTF-8/g' $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini
     # set php time zone
     sed -i "s@^;date.timezone =@date.timezone = $PHP_TIMEZONE@g" $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini
-    sed -i "s@^;date.timezone =@date.timezone = $PHP_TIMEZONE@g" $EMERGE_ROOT/etc/php/cli-php5.5/php.ini
+    # use above changes also for php cli config
+    cp $EMERGE_ROOT/etc/php/fpm-php5.5/php.ini $EMERGE_ROOT/etc/php/cli-php5.5/php.ini
     # disable xdebug
     rm $EMERGE_ROOT/etc/php/fpm-php5.5/ext-active/xdebug.ini
     rm $EMERGE_ROOT/etc/php/cli-php5.5/ext-active/xdebug.ini
