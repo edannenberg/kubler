@@ -3,4 +3,5 @@ tmp/
 bb-builder/portage-data/busybox
 Dockerfile
 rootfs.tar
+push.conf
 
