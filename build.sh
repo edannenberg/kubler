@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2014 W. Erik Dannenberg <erik.dannenberg@bbe-consulting.de>
+# Copyright (C) 2014 Erik Dannenberg <erik.dannenberg@bbe-consulting.de>
 #
 # Based on https://github.com/wking/dockerfile/blob/master/build.sh
 #
@@ -32,7 +32,7 @@
 
 AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141113}"
+DATE="${DATE:-20141120}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
@@ -40,7 +40,6 @@ STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
 PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
 PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
-#PORTAGE="${PORTAGE:-portage-latest.tar.xz}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
 # variables starting with BOB_ are exported as ENV to build container
@@ -51,8 +50,8 @@ DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 BUILD_OPTS="${BUILD_OPTS:-}"
 BUILDER_PATH="${REPO_PATH:-bb-builder}"
 REPO_PATH="${REPO_PATH:-bb-dock}"
-DL_PATH=tmp/downloads
-SKIP_GPG=false
+DL_PATH="${DL_PATH:-tmp/downloads}"
+SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
 
 die()
