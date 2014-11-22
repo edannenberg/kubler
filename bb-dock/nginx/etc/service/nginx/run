@@ -14,9 +14,10 @@ if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhos
         -out /etc/nginx/ssl/localhost/nginx.crt 
 fi
 
-# create dh parameter for forward secrecy
-if [ ! -f /etc/nginx/dh1024.pem ]; then
+# create dh parameters and enable forward secrecy
+if [ "${NGINX_FORWARD_SECRECY}" = true ] && [ ! -f /etc/nginx/dh1024.pem ]; then
     openssl dhparam -out /etc/nginx/dh1024.pem 1024
+    ln -s /etc/nginx/ssl_forward_secrecy.conf /etc/nginx/conf.d/
 fi
 
 # change UID/GID of nginx user if requested and not matching with actual values

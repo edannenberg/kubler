@@ -4,11 +4,19 @@ Run this [Nginx][] image with:
 
 Default SSL certificates are expected at: 
 
-    /etc/nginx/ssl/nginx.{crt,key}
+    /etc/nginx/ssl/localhost/nginx.{crt,key}
 
-If they are missing a self signed certificate is created on container start.
+If missing a self signed certificate is created on container start.
 
-The nginx config reads *.conf files in /etc/nginx/sites-enabled if you want to add further config. 
+In the lights of the recent [POODLE][] exploit SSL3 is disabled per default.
+
+To enable [forward-secrecy][] set NGINX_FORWARD_SECRECY on container start:
+
+    $ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost -p 80:80  -p 443:443 \
+        -e NGINX_FORWARD_SECRECY=true
+        gentoobb/nginx
+
+The nginx main config sources *.conf files in /etc/nginx/conf.d/ and /etc/nginx/sites-enabled/
 
 Default server{} config is in: 
 
@@ -30,12 +38,6 @@ The nginx startup script also provides a simple templating mechanism for site co
 This would replace the marker named ##_NG_TMPL_MY_VAR_## with the provided value in all .conf files in /etc/nginx/sites-enabled.
 Template variable names must start with NG_TMPL_.
 
-[volume-mounting][volume-mount] your content under the container's
-`/var/www/localhost`.  You can also mount volumes from other
-containers and serve their data, although you may neet to tweak the
-config to serve from an alternative location.  Adjusting this image to
-serve from a configurable `$HTTP_ROOT` wouldn't be too difficult
-either.
-
 [Nginx]: http://nginx.org/
-[volume-mount]: http://docs.docker.io/en/latest/use/working_with_volumes/
+[forward-secrecy]: http://en.wikipedia.org/wiki/Forward_secrecy
+[POODLE]: http://en.wikipedia.org/wiki/POODLE

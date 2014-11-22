@@ -17,5 +17,5 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    :
+    mkdir -p $EMERGE_ROOT/etc/nginx/conf.d
 }
