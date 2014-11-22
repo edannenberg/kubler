@@ -463,8 +463,9 @@ update_stage3_date() {
         die "Could not parse DATE in build.sh"
     fi
     if [ "$S3DATE_LOCAL" -lt "$S3DATE_REMOTE" ]; then
-        msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.sh"
+        msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.sh and /push.sh"
         sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE_REMOTE}\}\"/g build.sh
+        sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE_REMOTE}\}\"/g push.sh
     else
         msg "Already up to date. ($S3DATE_LOCAL)"
     fi
