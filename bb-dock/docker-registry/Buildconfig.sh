@@ -31,9 +31,9 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     # prepare docker-registry, final setup in Dockerfile
-    wget http://github.com/docker/docker-registry/archive/0.8.1.tar.gz
-    tar xzvf 0.8.1.tar.gz
-    mv docker-registry-0.8.1 $EMERGE_ROOT/docker-registry
+    wget http://github.com/docker/docker-registry/archive/0.9.0.tar.gz
+    tar xzvf 0.9.0.tar.gz
+    mv docker-registry-0.9.0 $EMERGE_ROOT/docker-registry
     cp --no-clobber $EMERGE_ROOT/docker-registry/config/config_sample.yml $EMERGE_ROOT/docker-registry/config/config.yml
     # Disable strict dependencies (see dotcloud/docker-registry#466)
     sed -i 's/\(install_requires=\)/#\1/' $EMERGE_ROOT/docker-registry/setup.py \
