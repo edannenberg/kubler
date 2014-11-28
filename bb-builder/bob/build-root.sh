@@ -154,11 +154,11 @@ if [ -n "$PACKAGES" ]; then
     # also copy to repo dir for further builds 
     cp -f /etc/{passwd,group} ${CONFIG_TMP}
     # merge with ld.so.conf from parent image and copy for further builds depending on this image
-    if [ -f ${CONFIG_TMP}/ld.so.conf ]; then
-        cat ${CONFIG_TMP}/ld.so.conf >> $EMERGE_ROOT/etc/ld.so.conf
+    if [ -f ${CONFIG_TMP}/ld.so.conf.parent ]; then
+        cat ${CONFIG_TMP}/ld.so.conf.parent >> $EMERGE_ROOT/etc/ld.so.conf
         sort -u $EMERGE_ROOT/etc/ld.so.conf -o $EMERGE_ROOT/etc/ld.so.conf
-        cp -f $EMERGE_ROOT/etc/ld.so.conf ${CONFIG_TMP}
     fi
+    cp -f $EMERGE_ROOT/etc/ld.so.conf ${CONFIG_TMP}
 
     generate_documentation_footer
 

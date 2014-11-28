@@ -281,7 +281,7 @@ prepare_build_config()
             fi
             # copy ld.so.conf
             if [ -f ${PARENT_TMP_PATH}/ld.so.conf ]; then
-                cp ${PARENT_TMP_PATH}/ld.so.conf $TMP_PATH/
+                cp ${PARENT_TMP_PATH}/ld.so.conf $TMP_PATH/ld.so.conf.parent
             fi
         fi
     fi
