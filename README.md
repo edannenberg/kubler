@@ -7,21 +7,22 @@ Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build use
 ## Why?
 
 * Docker containers should only contain the bare minimum to run
-* Gentoo's strong points are control and optimization, shipping a full compiler stack with your containers clashes with the previous point though
+* Gentoo shines when it comes to control and optimization, shipping a full compiler stack with your containers clashes with the previous point though
 
 ## What's different?
 
 * Images do not contain [Portage][] or compiler chain = much smaller image size
 * [s6][] instead of openrc as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
 * No syslog daemon in favor of centralized approaches
+* Automated image documentation ([example][nginx-packages])
 
 ## How much do I save?
 
-* Quite a bit, the nginx image, for example, clocks in at ~29MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
+* Quite a bit, the nginx image, for example, clocks in at ~26MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
 
 ## The catch?
 
-* You can't install packages via [Portage][] in further docker builds based on those images, unless they are built via build.sh
+* You can't install packages via [Portage][] in further docker builds based on those images, unless they are built via `build.sh`
 
 ## Quick Start
 
@@ -29,28 +30,28 @@ Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build use
     $ cd gentoo-bb
     $ ./build.sh
 
-* If you don't have gpg available (you should!) you can use -s to skip verification of downloaded files
-* Check the folders in bb-dock/ for image specific documentation
-* bin/ contains a few scripts to start/stop container chains
+* If you don't have gpg available you can use `-s` to skip verification of downloaded files
+* Check the folders in `bb-dock/` for image specific documentation
+* `bin/` contains a few scripts to start/stop container chains
 
 ## How does it work?
 
-* build.sh iterates over bb-dock/ 
+* `build.sh` iterates over `bb-dock/`
 * generates build order
-* mounts each directory into a fresh bb-builder/bob container and executes build-root.sh inside bob
-* Buildconfig.sh from the mounted directory is sourced by build-root.sh
-* package.installed file is generated which is used by depending images as package.provided
-* packages defined in Buildconfig.sh are installed at a custom root directory inside bob
-* resulting rootfs.tar is placed in mounted directory
-* build.sh then starts a docker build that uses rootfs.tar to create the final image
+* mounts each directory into a fresh `bb-builder/bob` container and executes `build-root.sh` inside bob
+* `Buildconfig.sh` from the mounted directory is sourced by `build-root.sh`
+* `package.installed` file is generated which is used by depending images as `package.provided`
+* packages defined in `Buildconfig.sh` are installed at a custom empty root directory inside bob
+* resulting `rootfs.tar` is placed in mounted directory
+* `build.sh` then starts a docker build that uses `rootfs.tar` to create the final image
 
 ## Adding images
 
- * All images must be located in bb-dock/, folder name = image name
- * Dockerfile.template and Buildconfig.sh are the only required files
- * build.sh will pick up your image on the next run
-
-Some useful options for build.sh while working on an image:
+ * All images must be located in `bb-dock/`, folder name = image name
+ * `Dockerfile.template` and `Buildconfig.sh` are the only required files
+ * `build.sh` will pick up your image on the next run
+ 
+Some useful options for `build.sh` while working on an image:
 
 Start an interactive build container, same as used to create the rootfs.tar:
 
@@ -78,7 +79,7 @@ If a new release was found simply rebuild the stack by running:
 
     $ ./build.sh -F
 
-* Things might break, Oracle downloads, for example, may not work. You can always download them manually to tmp/distfiles.
+* Things might break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
 
 Parts from the original [gentoo docker][gentoo-docker] docs that still apply:
 
@@ -115,6 +116,7 @@ as you see fit.
 [Docker]: http://www.docker.io/
 [Dockerfiles]: http://www.docker.io/learn/dockerfile/
 [gentoo-bb-docker]: https://hub.docker.com/u/gentoobb/
+[nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/bb-dock/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
 [BusyBox]: http://www.busybox.net/
 [Portage]: http://www.gentoo.org//doc/en/handbook/handbook-x86.xml?part=3

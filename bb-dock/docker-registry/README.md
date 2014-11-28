@@ -20,6 +20,9 @@ Assuming the [nginx-proxy][] container is running, just start the registry with 
        -v /var/lib/docker-registry:/tmp/registry \
        gentoobb/docker-registry
 
+When using a self signed CA for the proxy you need to either pass `--insecure-registry docker.local` to your docker daemon
+or copy the CA to `/etc/docker/certs.d/docker.local/ca.crt` on each box that wants to use the registry.
+
 You can now search the registry like this:
 
     $ docker search docker.local/test

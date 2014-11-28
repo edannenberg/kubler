@@ -35,7 +35,7 @@ Now start the required nginx-proxy-conf container that handles auto-configuratio
 For security reasons the conf container is separated from the nginx container because [docker-gen][] requires the host's docker socket.
 Check the nginx-proxy-conf documentation for more details.
 
-Finally to use the proxy container pass VIRTUAL_HOST and VIRTUAL_PORT ENV to containers you wish to proxy:
+Finally to use the proxy container simply pass VIRTUAL_HOST and VIRTUAL_PORT ENVs to containers you wish to proxy:
 
     $ docker run -d \
         -e VIRTUAL_HOST=foo.void \
@@ -43,7 +43,7 @@ Finally to use the proxy container pass VIRTUAL_HOST and VIRTUAL_PORT ENV to con
         --hostname www \
         gentoobb/nginx-php5.5
 
-Provided your dns resolves foo.void to the host the nginx-proxy container is running on, you can now access the www container
+Provided your dns resolves foo.void to the host the www_proxy container is running on, you can now access the www container
 via http://foo.void in your browser. VIRTUAL_PORT defaults to 80 and can be omitted.
 
 You can also use the provided nginx_proxy.sh script, from the top level directory execute:
