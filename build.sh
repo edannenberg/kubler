@@ -369,7 +369,7 @@ generate_image_documentation() {
     IMAGE_SIZE="$(get_image_size ${NAMESPACE} ${REPO} ${DATE})"
     echo "### ${NAMESPACE}/${REPO}:${DATE}" > $DOC_FILE
     echo "Built: $(date)" >> $DOC_FILE
-    echo "Image Size: $IMAGE_SIZE" >> $DOC_FILE
+    echo -e "\nImage Size: $IMAGE_SIZE" >> $DOC_FILE
     echo "#### Installed" >> $DOC_FILE
     if [[ -f ${REPO}/tmp/doc.package.installed ]]; then
         echo -e "$TABLE_HEADER" >> $DOC_FILE
