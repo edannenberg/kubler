@@ -367,7 +367,7 @@ generate_image_documentation() {
     DOC_FILE="${REPO}/PACKAGES.md"
     TABLE_HEADER="Package | USE Flags\n--------|----------"
     IMAGE_SIZE="$(get_image_size ${NAMESPACE} ${REPO} ${DATE})"
-    echo "### ${REPO}:${DATE}" > $DOC_FILE
+    echo "### ${NAMESPACE}/${REPO}:${DATE}" > $DOC_FILE
     echo "Built: $(date)" >> $DOC_FILE
     echo "Image Size: $IMAGE_SIZE" >> $DOC_FILE
     echo "#### Installed" >> $DOC_FILE
