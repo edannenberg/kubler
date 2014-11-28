@@ -7,7 +7,7 @@
 # Usage: ./push.sh [my-registry.org:5000]
 
 NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141120}"
+DATE="${DATE:-20141127}"
 REPO_PATH="${REPO_PATH:-bb-dock}"
 
 DOCKER_IO=$(command -v docker.io)
