@@ -86,6 +86,16 @@ remove_image()
     "${DOCKER}" rmi -f "${NAMESPACE}/$REPO:${DATE}" || die "failed to remove image"
 }
 
+# Get docker image size for given ${NAMESPACE}/${IMAGE}:${TAG}
+#
+# Arguments:
+# 1: NAMESPACE
+# 2: IMAGE
+# 3: TAG
+get_image_size() {
+    echo "$(${DOCKER} images ${1}/${2} | grep ${3} | awk '{print $(NF-1)" "$NF}')"
+}
+
 # Does "${NAMESPACE}/${REPO}:${DATE}" exist?
 # Returns 0 (exists) or 1 (missing).
 #
@@ -231,22 +241,24 @@ generate_dockerfile()
     < "$1/Dockerfile.template" > "$1/Dockerfile"
 }
 
-# Generate package.provided file from image dependency for given REPO.
+# Generate package.provided, doc.package.provided and copy req. files from parent image for given REPO.
 #
 # Arguments:
 #
 # 1: REPO
-generate_provided_file()
+prepare_build_config()
 {
-    mkdir -p ${1}/tmp
+    TMP_PATH="${1}/tmp/"
+    mkdir -p ${TMP_PATH}
     dockerf=$(grep ^FROM $1/Dockerfile)
     regex="^FROM (${NAMESPACE}/)?(.*)"
     if [[ ${dockerf} =~ $regex ]]; then
         match="${BASH_REMATCH[2]}"
         if [ "$match" != "scratch" ]; then
-            PARENT_TMP_PATH=${match}/tmp/
-            TMP_PATH=${1}/tmp/
-            if [ -f ${PARENT_TMP_PATH}/package.provided ] && [ -f ${PARENT_TMP_PATH}/package.provided ]; then
+            PARENT_REPO=${match}
+            PARENT_TMP_PATH="${PARENT_REPO}/tmp/"
+            # package.provided
+            if [ -f ${PARENT_TMP_PATH}/package.installed ] && [ -f ${PARENT_TMP_PATH}/package.provided ]; then
                 cat ${PARENT_TMP_PATH}/package.provided ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
             elif [ -f ${PARENT_TMP_PATH}/package.installed ]; then
                 cat ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
@@ -254,7 +266,14 @@ generate_provided_file()
             if [ -f ${TMP_PATH}/package.provided ]; then
                 # remove virtual package atoms
                 sed -i /^virtual/d ${TMP_PATH}/package.provided
-            #    sort -u ${1}/package.provided
+            fi
+            # doc.package.provided
+            if [ -f ${PARENT_TMP_PATH}/doc.package.installed ]; then
+                echo "**FROM ${PARENT_REPO}** |" > $TMP_PATH/doc.package.provided
+                cat ${PARENT_TMP_PATH}/doc.package.installed >> $TMP_PATH/doc.package.provided
+                if [ -f ${PARENT_TMP_PATH}/doc.package.provided ]; then
+                    cat ${PARENT_TMP_PATH}/doc.package.provided >> $TMP_PATH/doc.package.provided
+                fi
             fi
             # copy passwd/group files
             if [ -f ${PARENT_TMP_PATH}/passwd ]; then
@@ -311,7 +330,7 @@ build_repo()
 
     if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
-        generate_provided_file ${REPO}
+        prepare_build_config ${REPO}
 
         # collect any required headers or static libs from other images
         for resource in "HEADERS" "STATIC_LIBS" "ICONV"; do
@@ -330,12 +349,47 @@ build_repo()
             "${BOB_ENV[@]}" \
             -it --hostname bob-$REPO "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
     fi
-
     msg "build ${NAMESPACE}/${REPO}:${DATE}"
     "${DOCKER}" build ${BUILD_OPTS} -t "${NAMESPACE}/${REPO}:${DATE}" "${REPO}" || die "failed to build ${REPO}"
     fi
     msg "tag ${NAMESPACE}/${REPO}:latest"
     "${DOCKER}" tag -f "${NAMESPACE}/${REPO}:${DATE}" "${NAMESPACE}/${REPO}:latest" || die "failed to tag ${REPO}"
+
+    generate_image_documentation "${REPO}" || die "failed to generate PACKAGES.md for ${REPO}"
+}
+
+# Generate PACKAGES.md
+#
+# Arguments:
+# 1: REPO
+generate_image_documentation() {
+    REPO="${1}"
+    DOC_FILE="${REPO}/PACKAGES.md"
+    TABLE_HEADER="Package | USE Flags\n--------|----------"
+    IMAGE_SIZE="$(get_image_size ${NAMESPACE} ${REPO} ${DATE})"
+    echo "### ${REPO}:${DATE}" > $DOC_FILE
+    echo "Built: $(date)" >> $DOC_FILE
+    echo "Image Size: $IMAGE_SIZE" >> $DOC_FILE
+    echo "#### Installed" >> $DOC_FILE
+    if [[ -f ${REPO}/tmp/doc.package.installed ]]; then
+        echo -e "$TABLE_HEADER" >> $DOC_FILE
+        cat ${REPO}/tmp/doc.package.installed >> $DOC_FILE
+    else
+        echo "None." >> $DOC_FILE
+    fi
+    echo "#### Inherited" >> $DOC_FILE
+    echo -e "$TABLE_HEADER" >> $DOC_FILE
+    if [[ -f ${REPO}/tmp/doc.package.provided ]]; then
+        cat ${REPO}/tmp/doc.package.provided >> $DOC_FILE
+    else
+        echo "**FROM scratch** |" >> $DOC_FILE
+    fi
+    if [[ -f ${REPO}/tmp/doc.footer.purged ]]; then
+        cat ${REPO}/tmp/doc.footer.purged >> $DOC_FILE
+    fi
+    if [[ -f ${REPO}/tmp/doc.footer.includes ]]; then
+        cat ${REPO}/tmp/doc.footer.includes >> $DOC_FILE
+    fi
 }
 
 # Run a docker container
