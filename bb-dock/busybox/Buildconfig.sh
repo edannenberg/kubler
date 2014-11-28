@@ -48,4 +48,6 @@ finish_rootfs_build()
     tar -cpf /config/tmp/busybox-ICONV.tar $EMERGE_ROOT/usr/lib64/gconv/
     # purge iconv
     rm -f $EMERGE_ROOT/usr/lib64/gconv/*
+    # add entry to purged section in PACKAGES.md
+    write_checkbox_line "Glibc Iconv Encodings" "checked" "${DOC_FOOTER_PURGED}"
 }

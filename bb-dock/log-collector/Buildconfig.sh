@@ -1,17 +1,18 @@
 #
 # build config
 #
-PACKAGES="net-misc/curl"
+PACKAGES="net-misc/curl" # just to trigger the rootfs build, curl is already provided and ignored
 INSTALL_DOCKER_GEN=true
 KEEP_HEADERS=true
+# need curl headers for fluentd gem installs
+HEADERS_FROM=bash
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
 # 
 configure_rootfs_build()
 {
-    # needed a build time, so we remove them from package.provided for reinstall
-    sed -i /^net-misc\\/curl/d /etc/portage/profile/package.provided
+    :
 }
 
 #
@@ -19,5 +20,6 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    :
+    log_as_installed "gem install" "fluentd" "--no-ri --no-rdoc"
+    log_as_installed "gem install" "fluent-plugin-elasticsearch" "--no-ri --no-rdoc"
 }

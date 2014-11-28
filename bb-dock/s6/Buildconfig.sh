@@ -26,4 +26,5 @@ finish_rootfs_build()
     cd eradman* && ./configure && make && make install
     strip /usr/local/bin/entr
     cp /usr/local/bin/entr $EMERGE_ROOT/bin
+    log_as_installed "manual install" "entr-2.9" "http://entrproject.org/"
 }

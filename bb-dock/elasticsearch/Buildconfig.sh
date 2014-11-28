@@ -18,5 +18,7 @@ configure_rootfs_build()
 # 
 finish_rootfs_build()
 {
-    :
+    emerge -C app-shells/bash
+    # reflect uninstall in docs
+    sed -i /^app-shells\\/bash/d "${DOC_PACKAGE_INSTALLED}"
 }

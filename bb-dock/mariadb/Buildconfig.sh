@@ -22,4 +22,6 @@ finish_rootfs_build()
     chown mysql:mysql $EMERGE_ROOT/var/run/mysql $EMERGE_ROOT/var/run/mysqld
     # remove curl again
     emerge -C net-misc/curl
+    # reflect uninstall in docs
+    sed -i /^net-misc\\/curl/d "${DOC_PACKAGE_INSTALLED}"
 }

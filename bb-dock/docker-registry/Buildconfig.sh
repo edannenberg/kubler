@@ -38,6 +38,11 @@ finish_rootfs_build()
     # Disable strict dependencies (see dotcloud/docker-registry#466)
     sed -i 's/\(install_requires=\)/#\1/' $EMERGE_ROOT/docker-registry/setup.py \
         $EMERGE_ROOT/docker-registry/depends/docker-registry-core/setup.py
+    log_as_installed "pip install" "gunicorn" "http://gunicorn.org/"
+    log_as_installed "manual install" "docker-registry-0.9.0" "http://github.com/docker/docker-registry/"
     # remove packages that were only needed at build time
-    emerge -C dev-lang/python dev-python/setuptools
+    emerge -C dev-lang/python dev-lang/python-exec dev-python/setuptools
+    # reflect uninstall in docs
+    sed -i /^dev-lang\\/python/d "${DOC_PACKAGE_INSTALLED}"
+    sed -i /^dev-python\\/setuptools/d "${DOC_PACKAGE_INSTALLED}"
 }
