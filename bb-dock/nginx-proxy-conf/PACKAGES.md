@@ -1,10 +1,10 @@
-### gentoobb/nginx-proxy-conf:20141127
-Built: Fri Nov 28 14:27:49 CET 2014
+### gentoobb/nginx-proxy-conf:20141204
+Built: Sun Dec  7 17:56:48 CET 2014
+
 Image Size: 23.97 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: docker-gen-0.3.2 | http://github.com/jwilder/docker-gen/
 *manual install*: docker-gen-0.3.2 | http://github.com/jwilder/docker-gen/
 #### Inherited
 Package | USE Flags

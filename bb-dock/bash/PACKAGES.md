@@ -1,5 +1,6 @@
-### gentoobb/bash:20141127
-Built: Fri Nov 28 14:09:00 CET 2014
+### gentoobb/bash:20141204
+Built: Sun Dec  7 17:37:25 CET 2014
+
 Image Size: 32.78 MB
 #### Installed
 Package | USE Flags

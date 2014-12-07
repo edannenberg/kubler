@@ -1,5 +1,6 @@
-### gentoobb/nginx:20141127
-Built: Fri Nov 28 14:17:34 CET 2014
+### gentoobb/nginx:20141204
+Built: Sun Dec  7 17:45:51 CET 2014
+
 Image Size: 26.29 MB
 #### Installed
 Package | USE Flags

@@ -1,6 +1,7 @@
-### gentoobb/nginx-php5.5:20141127
-Built: Fri Nov 28 14:27:19 CET 2014
-Image Size: 81.39 MB
+### gentoobb/nginx-php5.5:20141204
+Built: Sun Dec  7 17:56:12 CET 2014
+
+Image Size: 81.38 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -13,7 +14,7 @@ dev-libs/libmcrypt-2.5.8-r2 | ``
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libtasn1-3.6 | `-doc -static-libs`
 dev-libs/libxml2-2.9.2 | `ipv6 readline -debug -examples -icu -lzma -python -static-libs {-test}`
-dev-libs/nettle-2.7.1 | `gmp -doc (-neon) -static-libs {-test}`
+dev-libs/nettle-2.7.1-r1 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.1-r1 | `lock`
 dev-php/pecl-memcache-3.0.8 | `session`
@@ -34,7 +35,7 @@ sys-libs/gdbm-1.11 | `berkdb nls -exporter -static-libs`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
 sys-libs/readline-6.2_p5-r1 | `-static-libs`
 x11-libs/libICE-1.0.8-r1 | `ipv6 -doc -static-libs`
-x11-libs/libSM-1.2.2 | `ipv6 uuid -doc -static-libs`
+x11-libs/libSM-1.2.2-r1 | `ipv6 uuid -doc -static-libs`
 x11-libs/libX11-1.6.2 | `ipv6 -doc -static-libs {-test}`
 x11-libs/libXau-1.0.8 | `-static-libs`
 x11-libs/libXdmcp-1.1.1-r1 | `-doc -static-libs`

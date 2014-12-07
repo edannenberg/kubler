@@ -1,6 +1,7 @@
-### gentoobb/docker-registry:20141127
-Built: Fri Nov 28 14:12:19 CET 2014
-Image Size: 131.3 MB
+### gentoobb/docker-registry:20141204
+Built: Sun Dec  7 17:40:31 CET 2014
+
+Image Size: 134.9 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -20,7 +21,7 @@ dev-python/jinja-2.7.3 | `-doc -examples`
 dev-python/markupsafe-0.23 | ` `
 dev-python/pyasn1-0.1.7 | `-doc`
 dev-python/pyyaml-3.11 | `-examples -libyaml`
-dev-python/redis-py-2.7.4 | `{-test}`
+dev-python/redis-py-2.10.3 | `{-test}`
 dev-python/requests-2.3.0 | ` `
 dev-python/rsa-3.1.1 | `{-test}`
 dev-python/simplejson-3.6.4 | ` `
@@ -43,8 +44,8 @@ dev-lang/python-2.7.7 | `gdbm ipv6 ncurses readline sqlite ssl threads (wide-uni
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r3 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `-debug -pax`
-dev-python/pip-1.4.1 | ` `
-dev-python/setuptools-2.2 | ` `
+dev-python/pip-1.5.6 | ` `
+dev-python/setuptools-7.0 | `{-test}`
 sys-libs/gdbm-1.11 | `berkdb nls -exporter -static-libs`
 **FROM bash** |
 app-admin/eselect-1.4.3 | `-doc -emacs -vim-syntax`

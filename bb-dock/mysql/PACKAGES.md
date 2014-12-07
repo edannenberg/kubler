@@ -1,5 +1,6 @@
-### gentoobb/mysql:20141127
-Built: Fri Nov 28 14:24:43 CET 2014
+### gentoobb/mysql:20141204
+Built: Sun Dec  7 17:53:32 CET 2014
+
 Image Size: 168.1 MB
 #### Installed
 Package | USE Flags

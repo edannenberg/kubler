@@ -1,5 +1,6 @@
-### gentoobb/memcache:20141127
-Built: Fri Nov 28 14:23:13 CET 2014
+### gentoobb/memcache:20141204
+Built: Sun Dec  7 17:51:58 CET 2014
+
 Image Size: 77.79 MB
 #### Installed
 Package | USE Flags

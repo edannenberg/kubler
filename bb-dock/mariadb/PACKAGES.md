@@ -1,5 +1,6 @@
-### gentoobb/mariadb:20141127
-Built: Fri Nov 28 14:22:28 CET 2014
+### gentoobb/mariadb:20141204
+Built: Sun Dec  7 17:51:11 CET 2014
+
 Image Size: 190.5 MB
 #### Installed
 Package | USE Flags

@@ -1,5 +1,6 @@
-### gentoobb/openssl:20141127
-Built: Fri Nov 28 14:08:22 CET 2014
+### gentoobb/openssl:20141204
+Built: Sun Dec  7 17:36:46 CET 2014
+
 Image Size: 24.87 MB
 #### Installed
 Package | USE Flags

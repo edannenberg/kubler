@@ -1,6 +1,7 @@
-### gentoobb/python3:20141127
-Built: Fri Nov 28 14:29:06 CET 2014
-Image Size: 116.2 MB
+### gentoobb/python3:20141204
+Built: Sun Dec  7 17:58:09 CET 2014
+
+Image Size: 114.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -10,12 +11,12 @@ app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-arch/xz-utils-5.0.5-r1 | `nls threads -static-libs`
 app-misc/mime-types-9 | ``
 dev-db/sqlite-3.8.6 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test}`
-dev-lang/python-3.3.5-r1 | `gdbm ipv6 ncurses readline sqlite ssl threads xml -build -doc -examples -hardened -tk -wininst`
+dev-lang/python-3.4.1 | `gdbm ipv6 ncurses readline sqlite ssl threads xml -build -examples -hardened -tk -wininst`
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r3 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `-debug -pax`
-dev-python/pip-1.4.1 | ` `
-dev-python/setuptools-2.2 | ` `
+dev-python/pip-1.5.6 | ` `
+dev-python/setuptools-7.0 | `{-test}`
 sys-libs/gdbm-1.11 | `berkdb nls -exporter -static-libs`
 #### Inherited
 Package | USE Flags

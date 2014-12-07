@@ -1,5 +1,6 @@
-### gentoobb/jdk-oracle:20141127
-Built: Fri Nov 28 14:17:07 CET 2014
+### gentoobb/jdk-oracle:20141204
+Built: Sun Dec  7 17:45:25 CET 2014
+
 Image Size: 467.3 MB
 #### Installed
 Package | USE Flags

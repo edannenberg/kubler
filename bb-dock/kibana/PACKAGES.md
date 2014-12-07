@@ -1,6 +1,7 @@
-### gentoobb/kibana:20141127
-Built: Fri Nov 28 14:17:46 CET 2014
-Image Size: 30.25 MB
+### gentoobb/kibana:20141204
+Built: Sun Dec  7 17:46:04 CET 2014
+
+Image Size: 30.24 MB
 #### Installed
 None.
 #### Inherited

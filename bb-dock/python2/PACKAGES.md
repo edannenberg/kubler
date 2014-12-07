@@ -1,6 +1,7 @@
-### gentoobb/python2:20141127
-Built: Fri Nov 28 14:10:15 CET 2014
-Image Size: 96.26 MB
+### gentoobb/python2:20141204
+Built: Sun Dec  7 17:38:21 CET 2014
+
+Image Size: 99.66 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -13,8 +14,8 @@ dev-lang/python-2.7.7 | `gdbm ipv6 ncurses readline sqlite ssl threads (wide-uni
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r3 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `-debug -pax`
-dev-python/pip-1.4.1 | ` `
-dev-python/setuptools-2.2 | ` `
+dev-python/pip-1.5.6 | ` `
+dev-python/setuptools-7.0 | `{-test}`
 sys-libs/gdbm-1.11 | `berkdb nls -exporter -static-libs`
 #### Inherited
 Package | USE Flags

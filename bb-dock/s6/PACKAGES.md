@@ -1,5 +1,6 @@
-### gentoobb/s6:20141127
-Built: Fri Nov 28 14:07:52 CET 2014
+### gentoobb/s6:20141204
+Built: Sun Dec  7 17:36:16 CET 2014
+
 Image Size: 16.24 MB
 #### Installed
 Package | USE Flags

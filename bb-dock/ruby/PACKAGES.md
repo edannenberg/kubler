@@ -1,5 +1,6 @@
-### gentoobb/ruby:20141127
-Built: Fri Nov 28 14:30:24 CET 2014
+### gentoobb/ruby:20141204
+Built: Sun Dec  7 17:59:27 CET 2014
+
 Image Size: 61.4 MB
 #### Installed
 Package | USE Flags
