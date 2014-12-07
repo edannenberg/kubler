@@ -110,6 +110,9 @@ install_docker_gen() {
 # read config, mounted via build.sh
 source ${CONFIG}/Buildconfig.sh || :
 
+# call configure bob hook if declared in Buildconfig.sh
+declare -F configure_bob &>/dev/null && configure_bob
+
 if [ -n "$PACKAGES" ]; then
     mkdir -p ${CONFIG_TMP}
 
@@ -121,7 +124,10 @@ if [ -n "$PACKAGES" ]; then
         cp ${CONFIG_TMP}/{passwd,group} /etc
     fi
 
-    # call pre install hook
+    # set ROOT env for emerge calls
+    export ROOT="${EMERGE_ROOT}"
+
+    # call pre install hook if declared in Buildconfig.sh
     declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
     # generate installed package list
@@ -162,8 +168,10 @@ if [ -n "$PACKAGES" ]; then
 
     generate_documentation_footer
 
-    # call post install hook
+    # call post install hook if declared in Buildconfig.sh
     declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
+
+    unset ROOT
 
     # /run symlink
     ln -s /run $EMERGE_ROOT/var/run
