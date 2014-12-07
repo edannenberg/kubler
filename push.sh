@@ -50,10 +50,10 @@ for REPO in *; do
         echo "skipping ${NAMESPACE}/${REPO}:${DATE}"
         continue
     fi
-    PUSH_ARGS="${NAMESPACE}/${REPO}:${DATE}"
+    PUSH_ARGS="${NAMESPACE}/${REPO}"
     if [[ ! -z "${REGISTRY}" ]]; then
         IMAGE_ID=$("${DOCKER}" images "${NAMESPACE}/${REPO}" | grep "${DATE}" | awk '{print $3}')
-        PUSH_ARGS="${REGISTRY}/${NAMESPACE}/${REPO}:${DATE}"
+        PUSH_ARGS="${REGISTRY}/${NAMESPACE}/${REPO}"
         echo "${DOCKER}" tag -f "${IMAGE_ID}" ${PUSH_ARGS}
         "${DOCKER}" tag -f "${IMAGE_ID}" "${PUSH_ARGS}" || exit 1
     fi
