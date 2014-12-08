@@ -39,7 +39,7 @@ STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
 STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
 PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
-PORTAGE="${PORTAGE:-portage-${DATE}.tar.xz}"
+PORTAGE="${PORTAGE:-portage-${DATE}.tar.bz2}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
 # variables starting with BOB_ are exported as ENV to build container
