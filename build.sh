@@ -54,6 +54,9 @@ DL_PATH="${DL_PATH:-tmp/downloads}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
 
+REQUIRED_BINARIES="bzip2 docker sha512sum wget"
+[ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
+
 die()
 {
     echo "$1"
@@ -540,6 +543,12 @@ FORCE_ROOTFS_REBUILD=false
 FORCE_BUILDER_REBUILD=false
 FORCE_FULL_REBUILD=false
 BUILD_WITHOUT_DEPS=false
+
+for BINARY in ${REQUIRED_BINARIES}; do
+    if ! [ -x "$(command -v ${BINARY})" ]; then
+        die "${BINARY} is required for this script to run. Please install and try again"
+    fi
+done
 
 while getopts ":fFcCnsh" opt; do
   case $opt in
