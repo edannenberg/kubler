@@ -2,7 +2,7 @@ Run this [Nginx][] image with:
 
     $ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost -p 80:80 -p 443:443 gentoobb/nginx
 
-Default SSL certificates are expected at: 
+Default SSL certificates are expected at:
 
     /etc/nginx/ssl/localhost/nginx.{crt,key}
 
@@ -18,7 +18,7 @@ To enable [forward-secrecy][] set NGINX_FORWARD_SECRECY on container start:
 
 The nginx main config sources *.conf files in /etc/nginx/conf.d/ and /etc/nginx/sites-enabled/
 
-Default server{} config is in: 
+Default server{} config is in:
 
     /etc/nginx/sites-enabled/default.conf
 

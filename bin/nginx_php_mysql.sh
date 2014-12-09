@@ -63,6 +63,6 @@ case "${1}" in
     stop) stop;;
 *) echo  "
 Start or stop a simple nginx php5.5 mysql webstack.
- 
+
 usage: ${0} start|stop [local_web_dir] [local_mysql_dir]";;
 esac

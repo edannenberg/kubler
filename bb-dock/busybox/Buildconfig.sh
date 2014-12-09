@@ -7,7 +7,7 @@ GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
-# 
+#
 configure_rootfs_build()
 {
     # -static to enable dns lookups
@@ -26,7 +26,7 @@ configure_rootfs_build()
 
 #
 # this method runs in the bb builder container just before tar'ing the rootfs
-# 
+#
 finish_rootfs_build()
 {
     # fake portage install

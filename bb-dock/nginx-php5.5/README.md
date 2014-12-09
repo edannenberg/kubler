@@ -23,7 +23,7 @@ The image also provides optional phpinfo.php and [adminer][] micro sites. To ena
 This will result in 2 vhost config files for:
 
     http://db.test.void
-    http://phpinfo.test.void 
+    http://phpinfo.test.void
 
 Your dns must resolve {db,phpinfo}.test.void to the localhost for this to work, which can be painful if you have many different sites.
 It's much easier to have the nginx-proxy image running and resolve *.void with something like dnsmasq to your localhost instead:

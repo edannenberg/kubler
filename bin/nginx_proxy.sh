@@ -43,6 +43,6 @@ case "${1}" in
     stop) stop;;
 *) echo  "
 Start or stop a nginx-proxy for vhosting.
- 
+
 usage: ${0} start|stop";;
 esac
