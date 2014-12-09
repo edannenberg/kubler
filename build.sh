@@ -229,16 +229,11 @@ generate_dockerfile()
     if [ ! -f ${1}/Dockerfile.template ]; then
         die "error: repo ${REPO_PATH}/${1} does not have a Dockerfile.template"
     fi
-    env -i \
-    NAMESPACE="${NAMESPACE}" \
-    TAG="${DATE}" \
-    MAINTAINER="${AUTHOR}" \
-    envsubst '
-    ${NAMESPACE}
-    ${TAG}
-    ${MAINTAINER}
-    ' \
-    < "$1/Dockerfile.template" > "$1/Dockerfile"
+
+    sed \
+        -e 's/${NAMESPACE}/'"${NAMESPACE}"'/' \
+        -e 's/${TAG}/'"${DATE}"'/' \
+        -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "$1/Dockerfile.template" > "$1/Dockerfile"
 }
 
 # Generate package.provided, doc.package.provided and copy req. files from parent image for given REPO.

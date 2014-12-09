@@ -90,8 +90,7 @@ suggested repository.  To avoid duplicating ephemeral data (namespace,
 timestamp tag, …), they appear in the `Dockerfile.template` as markers
 (`${NAMESPACE}`, `${TAG}`, …).  The `build.sh` script replaces the
 markers with values while generating a `Dockerfile` from each
-`Dockerfile.template` (using [envsubst][]), and then builds each tag
-with:
+`Dockerfile.template` (using sed), and then builds each tag with:
 
     $ docker build -t $NAMESPACE/$REPO:$TAG $REPO
 
@@ -120,5 +119,4 @@ as you see fit.
 [Gentoo]: http://www.gentoo.org/
 [BusyBox]: http://www.busybox.net/
 [Portage]: http://www.gentoo.org//doc/en/handbook/handbook-x86.xml?part=3
-[envsubst]: http://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
 [parameter-expansion]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02
