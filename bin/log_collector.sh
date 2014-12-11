@@ -55,6 +55,6 @@ case "${1}" in
     stop) stop;;
 *) echo "
 Start or stop a container log collector.
- 
+
 usage: ${0} start|stop";;
 esac

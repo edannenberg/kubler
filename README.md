@@ -50,7 +50,7 @@ Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build use
  * All images must be located in `bb-dock/`, folder name = image name
  * `Dockerfile.template` and `Buildconfig.sh` are the only required files
  * `build.sh` will pick up your image on the next run
- 
+
 Some useful options for `build.sh` while working on an image:
 
 Start an interactive build container, same as used to create the rootfs.tar:

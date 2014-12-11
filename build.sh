@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (C) 2014 Erik Dannenberg <erik.dannenberg@bbe-consulting.de>
 #
@@ -53,6 +53,9 @@ REPO_PATH="${REPO_PATH:-bb-dock}"
 DL_PATH="${DL_PATH:-tmp/downloads}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
+
+REQUIRED_BINARIES="bzip2 docker sha512sum wget"
+[ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
 
 die()
 {
@@ -160,11 +163,11 @@ import_stage3()
     if [ -n "${SHA512_FAILED}" ]; then
         die "${SHA512_FAILED}"
     fi
-    
+
     msg "import ${NAMESPACE}/stage3-import:${DATE}"
     bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${NAMESPACE}/stage3-import:${DATE}" || die "failed to import"
     fi
-    
+
     msg "tag ${NAMESPACE}/stage3-import:latest"
     "${DOCKER}" tag -f "${NAMESPACE}/stage3-import:${DATE}" "${NAMESPACE}/stage3-import:latest" || die "failed to tag"
 }
@@ -189,15 +192,15 @@ import_portage()
         die "failed to download ${PORTAGE_URL}${FILE}"
     fi
     done
-    
+
     if [ "$SKIP_GPG" = false ]; then
         gpg --verify "$DL_PATH/${PORTAGE_SIG}" "$DL_PATH/${PORTAGE}" || die "insecure digests"
     fi
-    
+
     msg "import ${NAMESPACE}/portage-import:${DATE}"
     "${DOCKER}" import - "${NAMESPACE}/portage-import:${DATE}" < "$DL_PATH/${PORTAGE}" || die "failed to import"
     fi
-    
+
     msg "tag ${NAMESPACE}/portage-data:latest"
     "${DOCKER}" tag -f "${NAMESPACE}/portage-import:${DATE}" "${NAMESPACE}/portage-import:latest" || die "failed to tag"
 }
@@ -333,7 +336,7 @@ build_repo()
         done
 
         # pass variables starting with BOB_ to build container as ENV
-        for bob_var in ${!BOB_*}; do 
+        for bob_var in ${!BOB_*}; do
             BOB_ENV+=('-e' "${bob_var}=${!bob_var}")
         done
 
@@ -536,6 +539,12 @@ FORCE_BUILDER_REBUILD=false
 FORCE_FULL_REBUILD=false
 BUILD_WITHOUT_DEPS=false
 
+for BINARY in ${REQUIRED_BINARIES}; do
+    if ! [ -x "$(command -v ${BINARY})" ]; then
+        die "${BINARY} is required for this script to run. Please install and try again"
+    fi
+done
+
 while getopts ":fFcCnsh" opt; do
   case $opt in
     f)
@@ -562,7 +571,7 @@ while getopts ":fFcCnsh" opt; do
 done
 shift $(( $OPTIND -1 ))
 
-if [ -z "$ACTION" ]; then 
+if [ -z "$ACTION" ]; then
     ACTION="${1:-build}"
 fi
 shift

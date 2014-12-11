@@ -6,7 +6,7 @@ PACKAGES="dev-python/blinker dev-python/boto dev-python/backports-lzma dev-pytho
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
-# 
+#
 configure_rootfs_build()
 {
     # only use python 2.7
@@ -27,7 +27,7 @@ configure_rootfs_build()
 
 #
 # this method runs in the bb builder container just before tar'ing the rootfs
-# 
+#
 finish_rootfs_build()
 {
     # prepare docker-registry, final setup in Dockerfile

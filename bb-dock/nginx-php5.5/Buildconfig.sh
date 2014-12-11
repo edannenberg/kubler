@@ -7,7 +7,7 @@ PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
-# 
+#
 configure_rootfs_build()
 {
     echo 'PHP_TARGETS="php5-5"' >> /etc/portage/make.conf
@@ -20,7 +20,7 @@ configure_rootfs_build()
 
 #
 # this method runs in the bb builder container just before tar'ing the rootfs
-# 
+#
 finish_rootfs_build()
 {
     # set php iconv default to UTF-8, if you need full iconv functionality set ICONV_FROM=busybox above

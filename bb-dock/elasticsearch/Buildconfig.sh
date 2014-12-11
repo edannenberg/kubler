@@ -5,7 +5,7 @@ PACKAGES="app-shells/bash app-misc/elasticsearch"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
-# 
+#
 configure_rootfs_build()
 {
     echo "=virtual/jre-1.7.0 ~amd64" >> /etc/portage/package.keywords/elastic
@@ -15,7 +15,7 @@ configure_rootfs_build()
 
 #
 # this method runs in the bb builder container just before tar'ing the rootfs
-# 
+#
 finish_rootfs_build()
 {
     emerge -C app-shells/bash

@@ -14,4 +14,3 @@ Run this [docker-gen][] image with:
 
 [docker-gen]: https://github.com/jwilder/docker-gen
 [jwilder-blog]: http://jasonwilder.com/blog/2014/03/25/automated-nginx-reverse-proxy-for-docker/
- 
