@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/busybox
+FROM ${NAMESPACE}/glibc
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
