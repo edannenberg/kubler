@@ -1,5 +1,0 @@
-FROM gentoobb/busybox
-MAINTAINER ${MAINTAINER}
-
-ADD rootfs.tar /
-RUN ldconfig

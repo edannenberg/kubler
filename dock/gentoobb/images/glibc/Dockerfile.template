@@ -1,0 +1,6 @@
+#BUILD_FROM ${NAMESPACE}/bob
+FROM ${NAMESPACE}/busybox
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+RUN ldconfig

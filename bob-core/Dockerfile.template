@@ -1,0 +1,16 @@
+FROM ${NAMESPACE}/stage3-import
+MAINTAINER ${MAINTAINER}
+
+RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
+    mkdir -p /usr/portage && \
+    chown -R portage:portage /usr/portage && \
+    #emerge-webrsync --revert=${TAG} && \
+    emerge-webrsync && \
+    eselect news read new && \
+    mkdir -p /etc/portage/package.{mask,unmask,use,keywords} /etc/portage/profile
+
+ADD make.conf /etc/portage/make.conf
+
+ADD build-root.sh /bin/build-root
+
+CMD ["/bin/bash"]

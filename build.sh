@@ -35,21 +35,26 @@ NAMESPACE="${NAMESPACE:-gentoobb}"
 DATE="${DATE:-20141204}"
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
 ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
+#ARCH_URL="${ARCH_URL:-${MIRROR}experimental/amd64/musl/}"
 STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
+#STAGE3="${STAGE3:-stage3-amd64-musl-vanilla-20141107.tar.bz2}"
 STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
 PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
 PORTAGE="${PORTAGE:-portage-${DATE}.tar.bz2}"
 PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
+BUILD_CONTAINER="${BUILD_CONTAINER:-bob-core}"
 # variables starting with BOB_ are exported as ENV to build container
 BOB_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 
 DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 BUILD_OPTS="${BUILD_OPTS:-}"
-BUILDER_PATH="${REPO_PATH:-bb-builder}"
-REPO_PATH="${REPO_PATH:-bb-dock}"
+REPO_PATH="${REPO_PATH:-dock}"
+IMAGE_PATH="images/"
+BUILDER_PATH="builder/"
+
 DL_PATH="${DL_PATH:-tmp/downloads}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
@@ -78,6 +83,8 @@ if [ -z "${REALPATH}" ]; then
     fi
 fi
 
+PROJECT_ROOT=$(dirname $(realpath -s $0))
+
 # Remove container from registry
 #
 # Arguments:
@@ -86,17 +93,16 @@ fi
 remove_image()
 {
     REPO="${1}"
-    "${DOCKER}" rmi -f "${NAMESPACE}/$REPO:${DATE}" || die "failed to remove image"
+    "${DOCKER}" rmi -f "$REPO:${DATE}" || die "failed to remove image"
 }
 
 # Get docker image size for given ${NAMESPACE}/${IMAGE}:${TAG}
 #
 # Arguments:
-# 1: NAMESPACE
-# 2: IMAGE
-# 3: TAG
+# 1: IMAGE
+# 2: TAG
 get_image_size() {
-    echo "$(${DOCKER} images ${1}/${2} | grep ${3} | awk '{print $(NF-1)" "$NF}')"
+    echo "$(${DOCKER} images ${1} | grep ${2} | awk '{print $(NF-1)" "$NF}')"
 }
 
 # Does "${NAMESPACE}/${REPO}:${DATE}" exist?
@@ -105,10 +111,12 @@ get_image_size() {
 # Arguments:
 #
 # 1: REPO
+# 2: TYPE (images/|builder/)
 repo_exists()
 {
-    REPO="${1}"
-    IMAGES=$("${DOCKER}" images "${NAMESPACE}/${REPO}")
+    local REPO="${1}"
+    [[ "${REPO}" == ${BUILDER_CORE##*/} ]] && REPO=${BUILDER_CORE}
+    IMAGES=$("${DOCKER}" images "${REPO}")
     MATCHES=$(echo "${IMAGES}" | grep "${DATE}")
     if [ -z "${MATCHES}" ]; then
         return 1
@@ -116,19 +124,12 @@ repo_exists()
     if $FORCE_FULL_REBUILD; then
         remove_image "$REPO"
         return 1
-    elif $FORCE_BUILDER_REBUILD && [ "$REPO" = "bob" ]; then
+    elif $FORCE_BUILDER_REBUILD && [ "${2}" == "${BUILDER_PATH}" ]; then
         remove_image "$REPO"
         return 1
-    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "$REPO" != "portage-data" ] && [ "$REPO" != "bob" ] && [ "$REPO" != "stage3-import" ] && [ "$REPO" != "portage-import" ]; then
-        case "$REPO" in
-            "stage3-import"|"portage-import"|"portage-data"|"bob")
-                return 0
-                ;;
-            *)
-                remove_image "$REPO"
-                return 1
-                ;;
-        esac
+    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${2}" != "${BUILDER_PATH}" ] && [ "$REPO" != "${NAMESPACE}/stage3-import" ] && [ "$REPO" != "${BUILDER_CORE}" ]; then
+        remove_image "$REPO"
+        return 1
     fi
     return 0
 }
@@ -142,7 +143,7 @@ repo_exists()
 import_stage3()
 {
     msg "import stage3"
-    if ! repo_exists stage3-import; then
+    if ! repo_exists "${NAMESPACE}/stage3-import"; then
     # import stage3 image from Gentoo mirrors
 
     [ -d $DL_PATH ] || mkdir -p $DL_PATH
@@ -172,54 +173,6 @@ import_stage3()
     "${DOCKER}" tag -f "${NAMESPACE}/stage3-import:${DATE}" "${NAMESPACE}/stage3-import:latest" || die "failed to tag"
 }
 
-# If they don't already exist:
-#
-# * download a portage snapshot and
-# * create "${NAMESPACE}/portage-import:${DATE}"
-#
-# Forcibly tag "${NAMESPACE}/portage-import:${DATE}" with "latest"
-import_portage()
-{
-    msg " portage"
-    if ! repo_exists portage-import; then
-    # import portage image from Gentoo mirrors
-
-    [ -d $DL_PATH ] || mkdir $DL_PATH
-
-    for FILE in "${PORTAGE}" "${PORTAGE_SIG}"; do
-    if [ ! -f "$DL_PATH/${FILE}" ]; then
-        wget -O "$DL_PATH/${FILE}" "${PORTAGE_URL}${FILE}" ||
-        die "failed to download ${PORTAGE_URL}${FILE}"
-    fi
-    done
-
-    if [ "$SKIP_GPG" = false ]; then
-        gpg --verify "$DL_PATH/${PORTAGE_SIG}" "$DL_PATH/${PORTAGE}" || die "insecure digests"
-    fi
-
-    msg "import ${NAMESPACE}/portage-import:${DATE}"
-    "${DOCKER}" import - "${NAMESPACE}/portage-import:${DATE}" < "$DL_PATH/${PORTAGE}" || die "failed to import"
-    fi
-
-    msg "tag ${NAMESPACE}/portage-data:latest"
-    "${DOCKER}" tag -f "${NAMESPACE}/portage-import:${DATE}" "${NAMESPACE}/portage-import:latest" || die "failed to tag"
-}
-
-# extract Busybox for the portage image
-#
-# Arguments:
-#
-# 1: SUBDIR target subdirectory for the busybox binary
-extract_busybox()
-{
-    SUBDIR="${1}"
-    msg "extract Busybox binary to ${SUBDIR}"
-    THIS_DIR=$(dirname $($REALPATH $0))
-    CONTAINER="${NAMESPACE}-gentoo-${DATE}-extract-busybox"
-    "${DOCKER}" run --name "${CONTAINER}" -v "${THIS_DIR}/${SUBDIR}/":/tmp "${NAMESPACE}/stage3-import:${DATE}" cp /bin/busybox /tmp/
-    "${DOCKER}" rm "${CONTAINER}"
-}
-
 # generate Dockerfile from template
 #
 # Arguments:
@@ -239,71 +192,59 @@ generate_dockerfile()
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "$1/Dockerfile.template" > "$1/Dockerfile"
 }
 
-# Generate package.provided, doc.package.provided and copy req. files from parent image for given REPO.
+# Returns image given REPO is based on by parsing FROM
 #
 # Arguments:
-#
 # 1: REPO
-prepare_build_config()
-{
-    TMP_PATH="${1}/tmp/"
-    mkdir -p ${TMP_PATH}
-    dockerf=$(grep ^FROM $1/Dockerfile)
-    regex="^FROM (${NAMESPACE}/)?(.*)"
+# 2: TYPE (builder/|images/)
+get_parent_repo() {
+    dockerf=$(grep ^FROM ${1/\//\/$2}/Dockerfile)
+    regex="^FROM (.*)"
     if [[ ${dockerf} =~ $regex ]]; then
-        match="${BASH_REMATCH[2]}"
-        if [ "$match" != "scratch" ]; then
-            PARENT_REPO=${match}
-            PARENT_TMP_PATH="${PARENT_REPO}/tmp/"
-            # package.provided
-            if [ -f ${PARENT_TMP_PATH}/package.installed ] && [ -f ${PARENT_TMP_PATH}/package.provided ]; then
-                cat ${PARENT_TMP_PATH}/package.provided ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
-            elif [ -f ${PARENT_TMP_PATH}/package.installed ]; then
-                cat ${PARENT_TMP_PATH}/package.installed > ${TMP_PATH}/package.provided
-            fi
-            if [ -f ${TMP_PATH}/package.provided ]; then
-                # remove virtual package atoms
-                sed -i /^virtual/d ${TMP_PATH}/package.provided
-            fi
-            # doc.package.provided
-            if [ -f ${PARENT_TMP_PATH}/doc.package.installed ]; then
-                echo "**FROM ${PARENT_REPO}** |" > $TMP_PATH/doc.package.provided
-                cat ${PARENT_TMP_PATH}/doc.package.installed >> $TMP_PATH/doc.package.provided
-                if [ -f ${PARENT_TMP_PATH}/doc.package.provided ]; then
-                    cat ${PARENT_TMP_PATH}/doc.package.provided >> $TMP_PATH/doc.package.provided
-                fi
-            fi
-            # copy passwd/group files
-            if [ -f ${PARENT_TMP_PATH}/passwd ]; then
-                cp ${PARENT_TMP_PATH}/{passwd,group} $TMP_PATH/
-            fi
-            # copy ld.so.conf
-            if [ -f ${PARENT_TMP_PATH}/ld.so.conf ]; then
-                cp ${PARENT_TMP_PATH}/ld.so.conf $TMP_PATH/ld.so.conf.parent
-            fi
-        fi
+        echo "${BASH_REMATCH[1]}"
+    else
+        die "error parsing FROM tag in {$1/\//\/$2}/Dockerfile"
     fi
 }
 
-# Check if a variable named ${RESOURCE_SUFFIX}_FROM is defined in Buildconfig.sh
-# If it exists, copy tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar from each repo defined in ${RESOURCE_SUFFIX}_FROM
+# Returns builder given REPO should use by parsing BUILD_FROM
 #
 # Arguments:
-#
 # 1: REPO
-# 2: RESOURCE_SUFFIX
-copy_build_dependencies()
-{
-    REPO="${1}"
-    RESOURCE_SUFFIX="${2}"
-    if [ -f ${REPO}/Buildconfig.sh ]; then
-        local PARENT_REPOS="$(grep ^${RESOURCE_SUFFIX}_FROM= ${REPO}/Buildconfig.sh | awk -F"=" '{print $2}')"
-
-        for PARENT_REPO in ${PARENT_REPOS}; do
-            cp ${PARENT_REPO}/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar ${REPO}/tmp/ ||
-                die "failed to copy build dependency: ${PARENT_REPO}/tmp/${PARENT_REPO}-${RESOURCE_SUFFIX}.tar for $REPO"
-        done
+# 2: TYPE (builder/|images/)
+get_build_from() {
+    dockerf=$(grep ^#BUILD_FROM ${1/\//\/$2}/Dockerfile)
+    regex="^#BUILD_FROM (.*)"
+    if [[ ${dockerf} =~ $regex ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        echo "false"
     fi
+}
+
+# Returns 0 if given REPO's Dockerfile has a #SKIP_ROOTFS pseudo tag
+#
+# Arguments:
+# 1: REPO
+# 2: TYPE (images/|builder/)
+has_skip_rootfs_tag() {
+    return $(grep -q ^#SKIP_ROOTFS ${1/\//\/$2}/Dockerfile)
+}
+
+# Read namespace build.conf for given REPO
+#
+# Arguments:
+# 1: REPO
+source_namespace_conf() {
+    # reset to global defaults first..
+    [[ -f ${PROJECT_ROOT}/build.conf ]] && source ${PROJECT_ROOT}/build.conf
+    # ..then read namespace build.conf if passed args have a namespace
+    [[ ${1} != *"/"* ]] && return 0
+    local CURRENT_NS=${1%%/*}
+    [[ -f $CURRENT_NS/build.conf ]] && source $CURRENT_NS/build.conf
+    # prevent setting namespace and date via namespace build.conf
+    NAMESPACE=${CURRENT_NS}
+    DATE=${DATE_ROOT}
 }
 
 # If it doesn't already exist:
@@ -316,94 +257,103 @@ copy_build_dependencies()
 # Arguments:
 #
 # 1: REPO
+# 2: SUB_PATH (images/|builder/)
 build_repo()
 {
     REPO="${1}"
+    REPO_TYPE="${2}"
+    REPO_EXPANDED=${REPO/\//\/${REPO_TYPE}}
     msg "build repo ${REPO}"
 
-    if ! repo_exists "${REPO}"; then
-    if [ "${REPO}" = portage-data ]; then
-        extract_busybox "${REPO}"
-    fi
+    repo_exists "${REPO}" "${REPO_TYPE}" && return 0
+    source_namespace_conf ${REPO}
+    if ([ ! -f $REPO_EXPANDED/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && \
+        [ "${REPO}" != ${BUILDER_CORE##*/} ] && \
+        ! has_skip_rootfs_tag ${REPO} ${REPO_TYPE}; then
 
-    if ([ ! -f $REPO/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && [ "${REPO}" != "bob" ] && [ "${REPO}" != "portage-data" ]; then
         msg "building rootfs"
-        prepare_build_config ${REPO}
 
-        # collect any required headers or static libs from other images
-        for resource in "HEADERS" "STATIC_LIBS" "ICONV"; do
-            copy_build_dependencies ${REPO} ${resource}
-        done
+        # determine build container
+        local BUILD_FROM=$(get_build_from ${REPO} ${2})
+        local PARENT_REPO=$(get_parent_repo ${REPO} ${2})
+        local PARENT_IMAGE=${PARENT_REPO##*/}
+        local CURRENT_IMAGE=${REPO##*/}
+
+        if [[ "$BUILD_FROM" != "false" ]]; then
+            BUILD_CONTAINER="${BUILD_FROM}"
+            BUILDER_COMMIT_ID="${BUILD_CONTAINER##*/}-${CURRENT_IMAGE}"
+        elif [[ "${2}" == "${IMAGE_PATH}" ]]; then
+            BUILDER_COMMIT_ID="${BUILD_CONTAINER##*/}-${CURRENT_IMAGE}"
+            [[ "${PARENT_IMAGE}" != "scratch" ]] && repo_exists "${BUILD_CONTAINER}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
+                BUILD_CONTAINER="${BUILD_CONTAINER}-${PARENT_IMAGE}"
+        fi
+
+        if [[ "${PARENT_REPO}" == "${BUILD_CONTAINER}" ]] && [[ "${BUILD_FROM}" == "false" ]]; then
+            BUILD_CONTAINER=${BUILDER_CORE}
+            BUILDER_COMMIT_ID=${REPO##*/}
+        fi
+
+        if [ "$PARENT_REPO" == "$REPO" ]; then
+            BUILDER_COMMIT_ID="${CURRENT_IMAGE}"
+        fi
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do
             BOB_ENV+=('-e' "${bob_var}=${!bob_var}")
         done
 
-        "${DOCKER}" run --rm --volumes-from portage-data \
-            -v $(dirname $(realpath -s $0))/$REPO:/config \
+        msg "run ${BUILD_CONTAINER}:${DATE}"
+        "${DOCKER}" run \
+            -v $(dirname $(realpath -s $0))/$REPO_EXPANDED:/config \
             -v $(realpath -s ../tmp/distfiles):/distfiles \
             -v $(realpath -s ../tmp/packages):/packages \
             "${BOB_ENV[@]}" \
-            -it --hostname bob-$REPO "${NAMESPACE}/bob:${DATE}" build-root $REPO || die "failed to build rootfs for $REPO"
-    fi
-    msg "build ${NAMESPACE}/${REPO}:${DATE}"
-    "${DOCKER}" build ${BUILD_OPTS} -t "${NAMESPACE}/${REPO}:${DATE}" "${REPO}" || die "failed to build ${REPO}"
-    fi
-    msg "tag ${NAMESPACE}/${REPO}:latest"
-    "${DOCKER}" tag -f "${NAMESPACE}/${REPO}:${DATE}" "${NAMESPACE}/${REPO}:latest" || die "failed to tag ${REPO}"
+            -it --hostname "${BUILDER_ID}" "${BUILD_CONTAINER}:${DATE}" build-root $REPO_EXPANDED || die "failed to build rootfs for $REPO_EXPANDED"
 
-    generate_image_documentation "${REPO}" || die "failed to generate PACKAGES.md for ${REPO}"
+        local RUN_ID="$(${DOCKER} ps -a | grep -m1 ${BUILD_CONTAINER}:${DATE} | awk '{print $1}')"
+
+        msg "commit ${RUN_ID} ${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}"
+        "${DOCKER}" commit "${RUN_ID}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}"
+
+        "${DOCKER}" rm "${RUN_ID}" || die "failed to remove container ${RUN_ID}"
+
+        msg "tag ${NAMESPACE}/${BUILDER_COMMIT_ID}:latest"
+        "${DOCKER}" tag -f "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" || die "failed to tag ${BUILDER_COMMIT_ID}"
+    fi
+
+    REPO_ID=$REPO
+    [[ "$REPO" == ${BUILDER_CORE##*/} ]] && REPO_ID=${BUILDER_CORE}
+
+    msg "build ${REPO}:${DATE}"
+    "${DOCKER}" build ${BUILD_OPTS} -t "${REPO_ID}:${DATE}" "${REPO_EXPANDED}" || die "failed to build ${REPO_EXPANDED}"
+
+    msg "tag ${REPO}:latest"
+    "${DOCKER}" tag -f "${REPO_ID}:${DATE}" "${REPO_ID}:latest" || die "failed to tag ${REPO_EXPANDED}"
+
+    add_documentation_header "${REPO}" "${REPO_TYPE}" || die "failed to generate PACKAGES.md for ${REPO_EXPANDED}"
 }
 
-# Generate PACKAGES.md
+# Generate PACKAGES.md header
 #
 # Arguments:
 # 1: REPO
-generate_image_documentation() {
+# 2: TYPE (images/|builder/)
+add_documentation_header() {
     REPO="${1}"
-    DOC_FILE="${REPO}/PACKAGES.md"
-    TABLE_HEADER="Package | USE Flags\n--------|----------"
-    IMAGE_SIZE="$(get_image_size ${NAMESPACE} ${REPO} ${DATE})"
-    echo "### ${NAMESPACE}/${REPO}:${DATE}" > $DOC_FILE
-    echo "Built: $(date)" >> $DOC_FILE
-    echo -e "\nImage Size: $IMAGE_SIZE" >> $DOC_FILE
-    echo "#### Installed" >> $DOC_FILE
-    if [[ -f ${REPO}/tmp/doc.package.installed ]]; then
-        echo -e "$TABLE_HEADER" >> $DOC_FILE
-        cat ${REPO}/tmp/doc.package.installed >> $DOC_FILE
+    REPO_EXPANDED=${REPO/\//\/${2}}
+    DOC_FILE="${REPO_EXPANDED}/PACKAGES.md"
+    HEADER="### ${REPO}:${DATE}"
+    IMAGE_SIZE="$(get_image_size ${REPO} ${DATE})"
+    # remove existing header
+    if [[ -f ${DOC_FILE} ]]; then
+        $(grep -q "^${HEADER}" ${DOC_FILE}) && sed -i '1,4d' ${DOC_FILE}
     else
-        echo "None." >> $DOC_FILE
+        echo -e "" > ${DOC_FILE}
     fi
-    echo "#### Inherited" >> $DOC_FILE
-    echo -e "$TABLE_HEADER" >> $DOC_FILE
-    if [[ -f ${REPO}/tmp/doc.package.provided ]]; then
-        cat ${REPO}/tmp/doc.package.provided >> $DOC_FILE
-    else
-        echo "**FROM scratch** |" >> $DOC_FILE
-    fi
-    if [[ -f ${REPO}/tmp/doc.footer.purged ]]; then
-        cat ${REPO}/tmp/doc.footer.purged >> $DOC_FILE
-    fi
-    if [[ -f ${REPO}/tmp/doc.footer.includes ]]; then
-        cat ${REPO}/tmp/doc.footer.includes >> $DOC_FILE
-    fi
+    # add header
+    sed -i "1i${HEADER}\nBuilt: $(date)\n\nImage Size: $IMAGE_SIZE" $DOC_FILE
 }
 
-# Run a docker container
-#
-# Arguments:
-#
-# 1: REPO
-# 2: CONTAINER_NAME
-run_container()
-{
-    REPO="${1}"
-    CONTAINER_NAME="${2}"
-    msg "running repo ${REPO} as ${CONTAINER_NAME}"
-
-    "${DOCKER}" run --name ${CONTAINER_NAME} "${NAMESPACE}/${REPO}:${DATE}"
-}
 
 # Returns 0 if given string contains given word. Does not match substrings.
 #
@@ -425,14 +375,24 @@ string_has_word() {
 # 1: REPOS
 generate_build_order()
 {
+    # generate image build order
+    REQUIRED_BUILDER=""
     for REPO in $1; do
         check_repo_dependencies ${REPO}
         if [ -z "$BUILD_ORDER" ]; then
             BUILD_ORDER="${REPO}"
         else
-            if ! string_has_word "${BUILD_ORDER}" ${REPO};then
-                BUILD_ORDER="${BUILD_ORDER} ${REPO}"
-            fi
+            ! string_has_word "${BUILD_ORDER}" ${REPO} && BUILD_ORDER+=" ${REPO}"
+        fi
+    done
+    # generate builder build order
+    BUILD_ORDER_BUILDER=""
+    for BUILDER in $REQUIRED_BUILDER; do
+        check_builder_dependencies ${BUILDER}
+        if [ -z "$BUILD_ORDER_BUILDER" ]; then
+            BUILD_ORDER_BUILDER="${BUILDER}"
+        else
+            ! string_has_word "${BUILD_ORDER_BUILDER}" ${BUILDER} && BUILD_ORDER_BUILDER+=" ${BUILDER}"
         fi
     done
     # remove excluded repos
@@ -443,7 +403,7 @@ generate_build_order()
     read BUILD_ORDER <<< $BUILD_ORDER
 }
 
-# Check image dependencies. Recursive.
+# Check image dependencies and populate BUILD_ORDER/REQUIRED_BUILDER. Recursive.
 #
 # Arguments:
 #
@@ -451,21 +411,74 @@ generate_build_order()
 # 2: PREV_REPO
 check_repo_dependencies()
 {
+    local REPO_EXPANDED="${1}"
+    # add image path if missing
+    [[ $REPO_EXPANDED != *"/${IMAGE_PATH}"* ]] && REPO_EXPANDED=${REPO_EXPANDED/\//\/${IMAGE_PATH}}
     if [ "${1}" != "scratch" ]; then
-    generate_dockerfile $1
-    dockerf=$(grep ^FROM $1/Dockerfile)
-    regex="^FROM (${NAMESPACE}/)?(.*)"
-    if [[ ${dockerf} =~ $regex ]]; then
-            match="${BASH_REMATCH[2]}"
+        source_namespace_conf $REPO_EXPANDED
+        generate_dockerfile $REPO_EXPANDED
+        # collect #BUILD_FROM tags
+        local BUILD_FROM=$(get_build_from $1 $IMAGE_PATH)
+        if [[ "$BUILD_FROM" != "false" ]] && ! string_has_word "${REQUIRED_BUILDER}" ${BUILD_FROM}; then
+             REQUIRED_BUILDER+=" ${BUILD_FROM}"
+        else
+            # add default build container of current namespace
+            ! string_has_word "${REQUIRED_BUILDER}" ${BUILD_CONTAINER} && REQUIRED_BUILDER+=" ${BUILD_CONTAINER}"
+        fi
+        dockerf=$(grep ^FROM ${REPO_EXPANDED}/Dockerfile)
+        regex="^FROM (.*)"
+        if [[ ${dockerf} =~ $regex ]]; then
+            match=${BASH_REMATCH[1]}
             # skip further checking if already processed
-            if ! string_has_word "${BUILD_ORDER}" ${1};then
+            if ! string_has_word "${BUILD_ORDER}" ${1}; then
+                # add parent image dependencies
                 check_repo_dependencies $match $1
-                if [ "${2}" != "" ]; then
-                    BUILD_ORDER="${BUILD_ORDER} ${1}"
-                fi
+                [[ "${2}" != "" ]] && BUILD_ORDER+=" ${1}"
             fi
         fi
     fi
+}
+
+# Check builder dependencies and populate BUILD_ORDER_BUILDER. Recursive.
+#
+# Arguments:
+#
+# 1: BUILDER_REPO
+# 2: PREV_BUILDER_REPO
+check_builder_dependencies() {
+    local REPO_EXPANDED="${1}"
+    # add builder path if missing
+    [[ $REPO_EXPANDED != *"/${BUILDER_PATH}"* ]] && REPO_EXPANDED=${REPO_EXPANDED/\//\/${BUILDER_PATH}}
+    if [ "${1}" != "${BUILDER_CORE}" ]; then
+        source_namespace_conf "$REPO_EXPANDED"
+        generate_dockerfile "$REPO_EXPANDED"
+        # skip further checking if already processed
+        if ! string_has_word "${BUILD_ORDER_BUILDER}" ${1}; then
+            local BUILD_FROM=$(get_build_from $1 $BUILDER_PATH)
+            # if defined, add parent builder dependencies
+            [[ "$BUILD_FROM" != "false" ]] && [[ "$BUILD_FROM" != "$BUILDER_CORE" ]] && check_builder_dependencies $BUILD_FROM $1
+            [[ "${2}" != "" ]] && BUILD_ORDER_BUILDER+=" ${1}"
+        fi
+    fi
+}
+
+# Expand requested namespace/image mix to build command, i.e. build gentoobb/busybox mynamespace othernamespace/myimage
+#
+# Arguments:
+# 1: REPO(S)/NAMESPACE(S)
+expand_requested_repos() {
+    REPO_ARGS="${1}"
+    EXPANDED=""
+    for REPO in ${REPO_ARGS}; do
+        if [[ $REPO == *"/"* ]]; then
+            EXPANDED+=" ${REPO}"
+        else
+           for IMAGE in ${REPO}/${IMAGE_PATH}*; do
+               EXPANDED+=" ${IMAGE/${IMAGE_PATH}/}"
+            done
+        fi
+    done
+    echo $EXPANDED
 }
 
 build()
@@ -474,34 +487,43 @@ build()
         die "error: -n does not support wildcards, specify one or more repo names."
     fi
 
+    # read global build.conf
+    [[ -f ${PROJECT_ROOT}/build.conf ]] && source ${PROJECT_ROOT}/build.conf
+    DATE_ROOT="${DATE}"
+    NAMESPACE_ROOT="${NAMESPACE}"
+    BUILDER_CORE="${NAMESPACE_ROOT}/bob-core"
+
     if $BUILD_WITHOUT_DEPS; then
         cd $REPO_PATH
         for REPO in $1; do
-            generate_dockerfile ${REPO}
-            build_repo ${REPO}
+            source_namespace_conf ${REPO}
+            generate_dockerfile ${REPO/\//\/${IMAGE_PATH}}
+            build_repo ${REPO} ${IMAGE_PATH}
         done
         exit 0
     fi
 
     import_stage3
-    import_portage
 
-    cd $BUILDER_PATH
-    generate_dockerfile portage-data
-    build_repo portage-data
-    run_container "${REPO}" portage-data /bin/sh
-    generate_dockerfile bob
-    build_repo bob
+    generate_dockerfile ${BUILDER_CORE##*/}
+    build_repo ${BUILDER_CORE##*/}
 
     msg "generate build order"
-    cd ../$REPO_PATH
-    generate_build_order "$REPOS"
+    cd $REPO_PATH
+    REPOS=$(expand_requested_repos "$REPOS")
+    generate_build_order "${REPOS}"
+    msg "required builders: ${BUILD_ORDER_BUILDER}"
     msg "build sequence: ${BUILD_ORDER}"
     msg "excluded: ${EXCLUDE}"
 
+    b=($BUILD_ORDER_BUILDER)
+    for REPO in "${b[@]}"; do
+        build_repo "${REPO}" "${BUILDER_PATH}"
+    done
+
     b=($BUILD_ORDER)
     for REPO in "${b[@]}"; do
-        build_repo "${REPO}"
+        build_repo "${REPO}" "${IMAGE_PATH}"
     done
 }
 
@@ -585,7 +607,7 @@ case "${ACTION}" in
     -f force repo rebuild
     -F also rebuild repo rootfs tar ball
     -c rebuild building containers
-    -C also rebuild stage3/portage import containers
+    -C also rebuild stage3 import containers
     -n do not build repo dependencies for given repo(s)
     -s skip gpg validation on downloaded files
     -h help" ;;

@@ -1,0 +1,4 @@
+FROM ${NAMESPACE}/bob
+MAINTAINER ${MAINTAINER}
+
+CMD ["/bin/bash"]
