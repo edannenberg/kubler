@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="glibc sys-apps/s6"
+PACKAGES="sys-apps/s6"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
