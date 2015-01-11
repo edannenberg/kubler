@@ -9,15 +9,15 @@ KEEP_HEADERS=true
 #
 configure_rootfs_build()
 {
-    sed -i /^app-shells\\/bash/d /etc/portage/profile/package.provided
-    echo 'RUBY_TARGETS="ruby19 ruby21"' >> /etc/portage/make.conf
+    echo 'RUBY_TARGETS="ruby22"' >> /etc/portage/make.conf
     echo 'dev-lang/ruby ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=app-admin/eselect-ruby-20141227 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/racc-1.4.12 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=virtual/rubygems-7 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=virtual/rubygems-8 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/rdoc-4.1.2 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/rubygems-2.2.2 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/json-1.8.1 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/rake-10.3.2 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/rubygems-2.4.5 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/json-1.8.2 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/rake-10.4.2 ~amd64' >> /etc/portage/package.keywords/ruby
 }
 
 #
