@@ -30,19 +30,20 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@bbe-consulting.de>}"
-NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141204}"
+# read global build.conf
+[[ ! -f ./build.conf ]] && die error: could not find build.conf!
+source ./build.conf
+
+DATE_ROOT="${DATE}"
+NAMESPACE_ROOT="${NAMESPACE:-gentoobb}"
+
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
-ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/}"
-#ARCH_URL="${ARCH_URL:-${MIRROR}experimental/amd64/musl/}"
-STAGE3="${STAGE3:-stage3-amd64-nomultilib-${DATE}.tar.bz2}"
-#STAGE3="${STAGE3:-stage3-amd64-musl-vanilla-20141107.tar.bz2}"
+ARCH_URL="${ARCH_URL:-${MIRROR}releases/amd64/autobuilds/${DATE}/hardened/}"
+STAGE3_BASE="${STAGE3_BASE:-stage3-amd64-hardened+nomultilib}"
+STAGE3="${STAGE3:-${STAGE3_BASE}-${DATE}.tar.bz2}"
+
 STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
-PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
-PORTAGE="${PORTAGE:-portage-${DATE}.tar.bz2}"
-PORTAGE_SIG="${PORTAGE_SIG:-${PORTAGE}.gpgsig}"
 
 BUILD_CONTAINER="${BUILD_CONTAINER:-bob-core}"
 # variables starting with BOB_ are exported as ENV to build container
@@ -54,6 +55,7 @@ BUILD_OPTS="${BUILD_OPTS:-}"
 REPO_PATH="${REPO_PATH:-dock}"
 IMAGE_PATH="images/"
 BUILDER_PATH="builder/"
+BUILDER_CORE="${NAMESPACE_ROOT}/bob-core"
 
 DL_PATH="${DL_PATH:-tmp/downloads}"
 SKIP_GPG="${SKIP_GPG:-false}"
@@ -487,12 +489,6 @@ build()
         die "error: -n does not support wildcards, specify one or more repo names."
     fi
 
-    # read global build.conf
-    [[ -f ${PROJECT_ROOT}/build.conf ]] && source ${PROJECT_ROOT}/build.conf
-    DATE_ROOT="${DATE}"
-    NAMESPACE_ROOT="${NAMESPACE}"
-    BUILDER_CORE="${NAMESPACE_ROOT}/bob-core"
-
     if $BUILD_WITHOUT_DEPS; then
         cd $REPO_PATH
         for REPO in $1; do
@@ -529,17 +525,16 @@ build()
 
 # Update DATE to latest stage3 build date
 update_stage3_date() {
-    S3DATE_REMOTE="$(curl -s ${MIRROR}/releases/amd64/autobuilds/latest-stage3.txt | grep 'stage3-amd64-nomulti' | awk -F '/' '{print $1}')"
-    regex='DATE="\$\{DATE:-([0-9]+)\}"'
-    if [[ "$(grep ^DATE= build.sh)" =~ $regex ]]; then
+    S3DATE_REMOTE="$(curl -s ${MIRROR}/releases/amd64/autobuilds/latest-stage3.txt | grep ${STAGE3_BASE} | awk -F '/' '{print $1}')"
+    regex='DATE="?([0-9]+)"?'
+    if [[ "$(grep ^DATE= build.conf)" =~ $regex ]]; then
         S3DATE_LOCAL="${BASH_REMATCH[1]}"
     else
-        die "Could not parse DATE in build.sh"
+        die "Could not parse DATE in build.conf"
     fi
     if [ "$S3DATE_LOCAL" -lt "$S3DATE_REMOTE" ]; then
-        msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.sh and /push.sh"
-        sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE_REMOTE}\}\"/g build.sh
-        sed -i s/^DATE=\"$\{DATE:-[0-9]*\}\"/DATE=\"$\{DATE:-${S3DATE_REMOTE}\}\"/g push.sh
+        msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.conf"
+        sed -i s/^DATE=\"[0-9]*\"/DATE=\"${S3DATE_REMOTE}\"/g build.conf
     else
         msg "Already up to date. ($S3DATE_LOCAL)"
     fi
