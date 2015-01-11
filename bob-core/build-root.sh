@@ -160,7 +160,7 @@ if [ -n "$PACKAGES" ]; then
     [[ -f ${DOC_PACKAGE_INSTALLED} ]] && \
         echo -e "$(cat ${DOC_PACKAGE_INSTALLED})\n$(cat ${DOC_PACKAGE_PROVIDED})" > ${DOC_PACKAGE_PROVIDED}
 
-    echo "**FROM ${REPO}** |" > ${DOC_PACKAGE_INSTALLED}
+    echo "**FROM ${REPO/\images\//}** |" > ${DOC_PACKAGE_INSTALLED}
     # generate installed package list with use flags for auto docs
     "${EMERGE_BIN}" -p $PACKAGES | perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
@@ -168,7 +168,7 @@ if [ -n "$PACKAGES" ]; then
     # install packages (defined via Buildconfig.sh)
     "${EMERGE_BIN}" -v baselayout $PACKAGES
 
-    cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
+    [[ -f ${PACKAGE_INSTALLED} ]] && cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
 
     # backup headers and static files, depending images can pull them in again
     if [ -d $EMERGE_ROOT/usr/include ]; then 
