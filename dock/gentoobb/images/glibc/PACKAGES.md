@@ -1,11 +1,11 @@
-### gentoobb/glibc:20141204
-Built: Fri Dec 19 22:02:06 CET 2014
+### gentoobb/glibc:20150108
+Built: Sun Jan 11 22:55:53 CET 2015
 
-Image Size: 8.555 MB
+Image Size: 8.802 MB
 #### Installed
 Package | USE Flags
 --------|----------
-sys-libs/glibc-2.19-r1 | `-debug -gd (-hardened) (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.19-r1 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2014i-r1 | `nls -right`
 #### Inherited
 Package | USE Flags

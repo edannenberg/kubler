@@ -1,7 +1,7 @@
-### gentoobb/nginx-proxy-conf:20141204
-Built: Fri Dec 19 22:57:40 CET 2014
+### gentoobb/nginx-proxy-conf:20150108
+Built: Sun Jan 11 23:47:56 CET 2015
 
-Image Size: 17.28 MB
+Image Size: 17.53 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -13,8 +13,8 @@ sys-apps/s6-1.1.3.2 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
-**FROM gentoobb/images/glibc** |
-sys-libs/glibc-2.19-r1 | `-debug -gd (-hardened) (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
+**FROM gentoobb/glibc** |
+sys-libs/glibc-2.19-r1 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2014i-r1 | `nls -right`
 
 #### Purged

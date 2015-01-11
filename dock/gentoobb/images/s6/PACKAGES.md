@@ -1,7 +1,7 @@
-### gentoobb/s6:20141204
-Built: Fri Dec 19 22:03:07 CET 2014
+### gentoobb/s6:20150108
+Built: Sun Jan 11 22:56:54 CET 2015
 
-Image Size: 9.549 MB
+Image Size: 9.8 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,8 +12,8 @@ sys-apps/s6-1.1.3.2 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
-**FROM gentoobb/images/glibc** |
-sys-libs/glibc-2.19-r1 | `-debug -gd (-hardened) (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
+**FROM gentoobb/glibc** |
+sys-libs/glibc-2.19-r1 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2014i-r1 | `nls -right`
 
 #### Purged
