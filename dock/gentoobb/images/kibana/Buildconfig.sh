@@ -16,5 +16,5 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    log_as_installed "manual install" "kibana-3.1.1" "http://www.elasticsearch.org/overview/kibana/"
+    log_as_installed "manual install" "kibana-3.1.2" "http://www.elasticsearch.org/overview/kibana/"
 }
