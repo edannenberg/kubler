@@ -11,4 +11,4 @@ RUN chmod +x $(find /etc/service -name run) && \
 
 EXPOSE 11211
 
-CMD ["/bin/s6-svscan", "/service"]
+CMD ["/bin/s6-svscan", "-t0", "/service"]

@@ -22,4 +22,4 @@ EXPOSE 3306
 
 VOLUME [ "/var/run/mysqld" ]
 
-CMD ["/bin/s6-svscan", "/service"]
+CMD ["/bin/s6-svscan", "-t0", "/service"]
