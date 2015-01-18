@@ -137,6 +137,8 @@ install_docker_gen() {
     log_as_installed "manual install" "docker-gen-0.3.2" "http://github.com/jwilder/docker-gen/"
 }
 
+source /etc/profile
+
 mkdir -p $EMERGE_ROOT
 
 # read config, mounted via build.sh
@@ -154,28 +156,37 @@ if [ -n "$PACKAGES" ]; then
     # call pre install hook if declared in Buildconfig.sh
     declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
-    # generate installed package list
-    "${EMERGE_BIN}" -p $PACKAGES | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
+    # when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
+    [[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR
 
+    # generate installed package list
+    "${EMERGE_BIN}" --binpkg-respect-use=y -p $PACKAGES | \
+        grep -Eow "\[.*\] (.*) to" | \
+        awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
+
+    touch -a ${DOC_PACKAGE_PROVIDED}
     [[ -f ${DOC_PACKAGE_INSTALLED} ]] && \
         echo -e "$(cat ${DOC_PACKAGE_INSTALLED})\n$(cat ${DOC_PACKAGE_PROVIDED})" > ${DOC_PACKAGE_PROVIDED}
 
     echo "**FROM ${REPO/\images\//}** |" > ${DOC_PACKAGE_INSTALLED}
     # generate installed package list with use flags for auto docs
-    "${EMERGE_BIN}" -p $PACKAGES | perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
+    "${EMERGE_BIN}" --binpkg-respect-use=y -p $PACKAGES | \
+        perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
 
     # install packages (defined via Buildconfig.sh)
-    "${EMERGE_BIN}" -v baselayout $PACKAGES
+    "${EMERGE_BIN}" --binpkg-respect-use=y -v baselayout $PACKAGES
 
     [[ -f ${PACKAGE_INSTALLED} ]] && cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
 
     # backup headers and static files, depending images can pull them in again
     if [ -d $EMERGE_ROOT/usr/include ]; then 
-        find $EMERGE_ROOT/usr/include -type f -name '*.h' | tar -cpf ${ROOTFS_BACKUP}/${IMAGE_NS}_${IMAGE_ID}-HEADERS.tar --files-from -
+        find $EMERGE_ROOT/usr/include -type f -name '*.h' | \
+            tar -cpf ${ROOTFS_BACKUP}/${IMAGE_NS}_${IMAGE_ID}-HEADERS.tar --files-from -
     fi
     if [ -d $EMERGE_ROOT/usr/lib64 ]; then
-        find $EMERGE_ROOT/usr/lib64 -type f -name '*.a' | tar -cpf ${ROOTFS_BACKUP}/${IMAGE_NS}_${IMAGE_ID}-STATIC_LIBS.tar --files-from -
+        find $EMERGE_ROOT/usr/lib64 -type f -name '*.a' | \
+            tar -cpf ${ROOTFS_BACKUP}/${IMAGE_NS}_${IMAGE_ID}-STATIC_LIBS.tar --files-from -
     fi
 
     # extract any possible required headers and static libs from previous builds

@@ -14,20 +14,25 @@ configure_bob() {
     ln -s /usr/portage/profiles/uclibc/amd64/ /usr/${CROSSDEV_UCLIBC}/etc/portage/make.profile
 
     head -n -3 /etc/portage/make.conf > /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
-    sed -i '10i CBUILD=x86_64-pc-linux-gnu \
+    sed -i '7i CHOST=x86_64-pc-linux-uclibc \
+CBUILD=x86_64-pc-linux-gnu \
 HOSTCC=x86_64-pc-linux-gnu-gcc \
 ROOT=/usr/${CHOST}/ \
 ACCEPT_KEYWORDS="*" \
 PORTAGE_TMPDIR=${ROOT}tmp/ \
 ELIBC="uclibc" \
-PKG_CONFIG_PATH="${ROOT}usr/lib/pkgconfig/"' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
+PKG_CONFIG_PATH="${ROOT}usr/lib/pkgconfig/" \
+PKGDIR="/packages/${CHOST}"' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
 
-    sed -i -e 's/^CHOST="x86_64-pc-linux-gnu"/CHOST="x86_64-pc-linux-uclibc"/g' \
-           -e 's/^ACCEPT_KEYWORDS=" ~"/ACCEPT_KEYWORDS="*"/g' \
-        /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
+    sed -i -e 's/^ACCEPT_KEYWORDS=" ~"/ACCEPT_KEYWORDS="amd64"/g' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
 
     # quick'n'dirty workaround as libsanitize currently breaks the tool chain build
     echo "cross-x86_64-pc-linux-uclibc/gcc -sanitize" > /etc/portage/package.use/gcc
+
+    # init portage env defaults..
+    source /etc/profile
+    # ..but unset CHOST as it overrides make.conf
+    unset CHOST
 
     crossdev --target ${CROSSDEV_UCLIBC}
 

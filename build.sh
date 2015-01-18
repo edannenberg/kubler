@@ -34,7 +34,7 @@
 [[ ! -f ./build.conf ]] && die error: could not find build.conf!
 source ./build.conf
 
-DATE_ROOT="${DATE}"
+DATE_ROOT="${DATE?Error \$DATE is not defined.}"
 NAMESPACE_ROOT="${NAMESPACE:-gentoobb}"
 
 MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
@@ -45,9 +45,18 @@ STAGE3="${STAGE3:-${STAGE3_BASE}-${DATE}.tar.bz2}"
 STAGE3_CONTENTS="${STAGE3_CONTENTS:-${STAGE3}.CONTENTS}"
 STAGE3_DIGESTS="${STAGE3_DIGESTS:-${STAGE3}.DIGESTS.asc}"
 
-BUILD_CONTAINER="${BUILD_CONTAINER:-bob-core}"
+DEF_BUILD_CONTAINER="${DEF_BUILD_CONTAINER:-bob-core}"
 # variables starting with BOB_ are exported as ENV to build container
 BOB_TIMEZONE="${BOB_TIMEZONE:-UTC}"
+# make.conf defaults
+BOB_CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}"
+BOB_CXXFLAGS="${BOB_CXXFLAGS:-${BOB_CFLAGS}}"
+BOB_CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}"
+BOB_GENTOO_MIRRORS="${BOB_GENTOO_MIRRORS:-ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/gentoo/}"
+BOB_SYNC="${BOB_SYNC:-rsync://rsync.europe.gentoo.org/gentoo-portage}"
+BOB_MAKEOPTS="${BOB_MAKEOPTS:--j9}"
+BOB_FEATURES="${BOB_FEATURES:-parallel-fetch nodoc noinfo noman}"
+BOB_EMERGE_DEFAULT_OPTS="${BOB_EMERGE_DEFAULT_OPTS:--b -k}"
 
 DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
@@ -117,6 +126,7 @@ get_image_size() {
 repo_exists()
 {
     local REPO="${1}"
+    local REPO_TYPE="${2}"
     [[ "${REPO}" == ${BUILDER_CORE##*/} ]] && REPO=${BUILDER_CORE}
     IMAGES=$("${DOCKER}" images "${REPO}")
     MATCHES=$(echo "${IMAGES}" | grep "${DATE}")
@@ -126,10 +136,10 @@ repo_exists()
     if $FORCE_FULL_REBUILD; then
         remove_image "$REPO"
         return 1
-    elif $FORCE_BUILDER_REBUILD && [ "${2}" == "${BUILDER_PATH}" ]; then
+    elif $FORCE_BUILDER_REBUILD && [ "${REPO_TYPE}" == "${BUILDER_PATH}" ]; then
         remove_image "$REPO"
         return 1
-    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${2}" != "${BUILDER_PATH}" ] && [ "$REPO" != "${NAMESPACE}/stage3-import" ] && [ "$REPO" != "${BUILDER_CORE}" ]; then
+    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${REPO_TYPE}" != "${BUILDER_PATH}" ] && [ "$REPO" != "${NAMESPACE}/stage3-import" ] && [ "$REPO" != "${BUILDER_CORE}" ]; then
         remove_image "$REPO"
         return 1
     fi
@@ -243,6 +253,7 @@ source_namespace_conf() {
     # ..then read namespace build.conf if passed args have a namespace
     [[ ${1} != *"/"* ]] && return 0
     local CURRENT_NS=${1%%/*}
+    NAMESPACE=${CURRENT_NS}
     [[ -f $CURRENT_NS/build.conf ]] && source $CURRENT_NS/build.conf
     # prevent setting namespace and date via namespace build.conf
     NAMESPACE=${CURRENT_NS}
@@ -276,15 +287,16 @@ build_repo()
         msg "building rootfs"
 
         # determine build container
-        local BUILD_FROM=$(get_build_from ${REPO} ${2})
-        local PARENT_REPO=$(get_parent_repo ${REPO} ${2})
+        local BUILD_CONTAINER=${DEF_BUILD_CONTAINER}
+        local BUILD_FROM=$(get_build_from ${REPO} ${REPO_TYPE})
+        local PARENT_REPO=$(get_parent_repo ${REPO} ${REPO_TYPE})
         local PARENT_IMAGE=${PARENT_REPO##*/}
         local CURRENT_IMAGE=${REPO##*/}
 
         if [[ "$BUILD_FROM" != "false" ]]; then
             BUILD_CONTAINER="${BUILD_FROM}"
             BUILDER_COMMIT_ID="${BUILD_CONTAINER##*/}-${CURRENT_IMAGE}"
-        elif [[ "${2}" == "${IMAGE_PATH}" ]]; then
+        elif [[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]; then
             BUILDER_COMMIT_ID="${BUILD_CONTAINER##*/}-${CURRENT_IMAGE}"
             [[ "${PARENT_IMAGE}" != "scratch" ]] && repo_exists "${BUILD_CONTAINER}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
                 BUILD_CONTAINER="${BUILD_CONTAINER}-${PARENT_IMAGE}"
@@ -295,7 +307,7 @@ build_repo()
             BUILDER_COMMIT_ID=${REPO##*/}
         fi
 
-        if [ "$PARENT_REPO" == "$REPO" ]; then
+        if [ "${PARENT_REPO}" == "${REPO}" ]; then
             BUILDER_COMMIT_ID="${CURRENT_IMAGE}"
         fi
 
@@ -310,7 +322,8 @@ build_repo()
             -v $(realpath -s ../tmp/distfiles):/distfiles \
             -v $(realpath -s ../tmp/packages):/packages \
             "${BOB_ENV[@]}" \
-            -it --hostname "${BUILDER_ID}" "${BUILD_CONTAINER}:${DATE}" build-root $REPO_EXPANDED || die "failed to build rootfs for $REPO_EXPANDED"
+            -it --hostname "${BUILDER_ID}" "${BUILD_CONTAINER}:${DATE}" build-root $REPO_EXPANDED || \
+            die "failed to build rootfs for $REPO_EXPANDED"
 
         local RUN_ID="$(${DOCKER} ps -a | grep -m1 ${BUILD_CONTAINER}:${DATE} | awk '{print $1}')"
 
@@ -320,7 +333,8 @@ build_repo()
         "${DOCKER}" rm "${RUN_ID}" || die "failed to remove container ${RUN_ID}"
 
         msg "tag ${NAMESPACE}/${BUILDER_COMMIT_ID}:latest"
-        "${DOCKER}" tag -f "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" || die "failed to tag ${BUILDER_COMMIT_ID}"
+        "${DOCKER}" tag -f "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" || \
+            die "failed to tag ${BUILDER_COMMIT_ID}"
     fi
 
     REPO_ID=$REPO
@@ -425,7 +439,7 @@ check_repo_dependencies()
              REQUIRED_BUILDER+=" ${BUILD_FROM}"
         else
             # add default build container of current namespace
-            ! string_has_word "${REQUIRED_BUILDER}" ${BUILD_CONTAINER} && REQUIRED_BUILDER+=" ${BUILD_CONTAINER}"
+            ! string_has_word "${REQUIRED_BUILDER}" ${DEF_BUILD_CONTAINER} && REQUIRED_BUILDER+=" ${DEF_BUILD_CONTAINER}"
         fi
         dockerf=$(grep ^FROM ${REPO_EXPANDED}/Dockerfile)
         regex="^FROM (.*)"
@@ -510,7 +524,7 @@ build()
     generate_build_order "${REPOS}"
     msg "required builders: ${BUILD_ORDER_BUILDER}"
     msg "build sequence: ${BUILD_ORDER}"
-    msg "excluded: ${EXCLUDE}"
+    [[ -n ${EXCLUDE} ]] && msg "excluded: ${EXCLUDE}"
 
     b=($BUILD_ORDER_BUILDER)
     for REPO in "${b[@]}"; do
