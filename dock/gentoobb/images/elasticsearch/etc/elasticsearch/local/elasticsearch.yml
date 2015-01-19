@@ -310,3 +310,6 @@
 #monitor.jvm.gc.old.warn: 10s
 #monitor.jvm.gc.old.info: 5s
 #monitor.jvm.gc.old.debug: 2s
+
+#http.cors.allow-origin: "/.*/"
+http.cors.enabled: true
