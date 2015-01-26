@@ -7,4 +7,5 @@ bob-core/PACKAGES.md
 dock/*/builder/PACKAGES.md
 dock/*
 !dock/gentoobb
+!dock/dummy
 
