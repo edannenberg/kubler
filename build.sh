@@ -151,7 +151,7 @@ check_builder_dependencies() {
         source_namespace_conf "$REPO_EXPANDED"
         # skip further checking if already processed
         if ! string_has_word "${BUILD_ORDER_BUILDER}" ${1}; then
-            PARENT_BUILDER=$(get_parent_builder "${1}" "${BUILDER_PATH}")
+            PARENT_BUILDER=$(get_build_container "${1}" "${BUILDER_PATH}")
             [[ $? == 1 ]] && die "error executing get_parent_builder(): ${PARENT_BUILDER}"
             # if defined, add parent builder dependencies
             [[ "${PARENT_BUILDER}" != "" ]] && [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && \
