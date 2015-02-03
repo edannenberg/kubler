@@ -5,7 +5,8 @@ PACKAGES=""
 
 configure_bob() {
     # install default packages
-    echo 'app-crypt/pinentry ncurses' > /etc/portage/package.use/git
+    echo 'dev-vcs/git -perl' > /etc/portage/package.use/git
+    echo 'app-crypt/pinentry ncurses' >> /etc/portage/package.use/git
     emerge sys-devel/crossdev dev-vcs/git app-portage/layman
     # setup layman
     layman -L
