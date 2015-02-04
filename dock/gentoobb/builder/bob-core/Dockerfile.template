@@ -1,10 +1,11 @@
 FROM ${NAMESPACE}/stage3-import
 MAINTAINER ${MAINTAINER}
 
+COPY portage*.tar.* /usr/portage/distfiles/
+
 RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
-    mkdir -p /usr/portage && \
     chown -R portage:portage /usr/portage && \
-    (emerge-webrsync --revert=${TAG} || emerge-webrsync) && \
+    (emerge-webrsync -k --revert=${TAG} || emerge-webrsync -k) && \
     eselect news read new 1>/dev/null && \
     mkdir -p /etc/portage/package.{mask,unmask,use,keywords} /etc/portage/profile
 

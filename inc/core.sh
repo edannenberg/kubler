@@ -73,7 +73,7 @@ download_stage3() {
     for FILE in "${STAGE3}" "${STAGE3_CONTENTS}" "${STAGE3_DIGESTS}"; do
         [ -f "$DL_PATH/${FILE}" ] && continue
         wget -O "$DL_PATH/${FILE}" "${ARCH_URL}${FILE}" || \
-            die "failed to download ${ARCH_URL}${FILE}"
+            rm "$DL_PATH/${FILE}" && die "failed to download ${ARCH_URL}${FILE}"
     done
 
     if [ "$SKIP_GPG" = false ]; then
@@ -85,7 +85,23 @@ download_stage3() {
     if [ -n "${SHA512_FAILED}" ]; then
         die "${SHA512_FAILED}"
     fi
-    
+}
+
+# Download and verify portage snapshot
+download_portage_snapshot()
+{
+    [ -d ${DL_PATH} ] || mkdir ${DL_PATH}
+
+    for FILE in "${PORTAGE}" "${PORTAGE_SIG}" "${PORTAGE_MD5}"; do
+        if [ ! -f "${DL_PATH}/${FILE}" ]; then
+            wget -O "${DL_PATH}/${FILE}" "${PORTAGE_URL}${FILE}" ||
+                msg "failed to download ${PORTAGE_URL}${FILE}" && rm "${DL_PATH}/${FILE}"
+        fi
+    done
+
+    if [ "$SKIP_GPG" = false ] && [ -f "${DL_PATH}/${PORTAGE_SIG}" ]; then
+        gpg --verify "${DL_PATH}/${PORTAGE_SIG}" "${DL_PATH}/${PORTAGE}" || die "insecure digests"
+    fi
 }
 
 # Generate PACKAGES.md header
