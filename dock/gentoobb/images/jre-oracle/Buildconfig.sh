@@ -10,7 +10,7 @@ configure_rootfs_build()
 {
     echo "=virtual/jre-1.7.0 ~amd64" >> /etc/portage/package.keywords/java
     # download oracle jre bin
-    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jre-7u71-linux-x64.tar.gz
+    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/7u76-b13/jre-7u76-linux-x64.tar.gz
     #JRE_TAR=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
     regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
     if [[ ${JRE_URL} =~ $regex ]]; then

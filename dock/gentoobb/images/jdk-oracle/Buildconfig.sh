@@ -9,7 +9,7 @@ PACKAGES="dev-java/oracle-jdk-bin"
 configure_rootfs_build()
 {
     # download oracle jre bin
-    JDK_URL=http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.tar.gz
+    JDK_URL=http://download.oracle.com/otn-pub/java/jdk/7u76-b13/jdk-7u76-linux-x64.tar.gz
     #JDK_TAR=$(emerge -pf oracle-jdk-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
     regex="(jdk-[0-9a-z]*-linux-x64\.tar\.gz)"
     if [[ ${JDK_URL} =~ $regex ]]; then
