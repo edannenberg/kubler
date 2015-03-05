@@ -111,8 +111,9 @@ If a new release was found simply rebuild the stack by running:
 
 ## Thanks
 
-@wking for his [gentoo-docker][] repo which served as an excellent starting point
-@jbergstroem for tons of feedback, irc discussions and testing on [CoreOS][] <3
+[@wking][] for his [gentoo-docker][] repo which served as an excellent starting point
+
+[@jbergstroem][] for tons of feedback, irc discussions and testing on [CoreOS][] <3
 
 [LXC]: http://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
@@ -124,3 +125,5 @@ If a new release was found simply rebuild the stack by running:
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/bb-dock/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
 [CoreOS]: https://coreos.com/
+[@wking]: https://github.com/wking
+[@jbergstroem]: https://github.com/jbergstroem
