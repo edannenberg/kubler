@@ -12,11 +12,14 @@ configure_rootfs_build()
     echo 'dev-lang/ruby ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=app-admin/eselect-ruby-20141227 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/racc-1.4.12 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=virtual/rubygems-8 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/rdoc-4.1.2 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/rubygems-2.4.5 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/json-1.8.2 ~amd64' >> /etc/portage/package.keywords/ruby
     echo '=dev-ruby/rake-10.4.2 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/power_assert-0.2.2 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/minitest-5.5.1 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/test-unit-3.0.9-r1 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=virtual/rubygems-10 ~amd64' >> /etc/portage/package.keywords/ruby
+    echo '=dev-ruby/json-1.8.2-r1 ~amd64' >> /etc/portage/package.keywords/ruby
 }
 
 #
