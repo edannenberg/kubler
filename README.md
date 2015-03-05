@@ -1,28 +1,41 @@
 gentoo-bb
 =========
 
-Automated build environment that produces slim [Docker][] base images using [Gentoo][] and [BusyBox][]. Heavily based on [wking's gentoo docker][gentoo-docker] repo.
-Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build used by gentoo-bb automated docker.io builds are not possible for now.
+Build framework to produce minimal root file systems based on [Gentoo][]. It's primarily intended for maintaining [LXC][] base image stacks,
+but can probably fairly easy (ab)used for other use cases involving a custom root fs, cross compiling comes to mind.
+
+Currently supported build engines:
+
+* [Docker][]
+
+Planned support:
+
+* [Rocket][]
+
+Adding new engines should be fairly easy. PR are always welcome. ;)
 
 ## Why?
 
-* Docker containers should only contain the bare minimum to run
-* Gentoo shines when it comes to control and optimization, shipping a full compiler stack with your containers clashes with the previous point though
+* Containers should only contain the bare minimum to run
+* Gentoo shines when it comes to control and optimization
 
-## What's different?
+## Features
 
-* Images do not contain [Portage][] or compiler chain = much smaller image size
-* [s6][] instead of openrc as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
-* No syslog daemon in favor of centralized approaches
-* Automated image documentation ([example][nginx-packages])
+* Supports 2 phase builds to produce a minimal rootfs via seperate build containers
+* Maintain multiple image stacks with differing build engines
+* Image/Builder dependencies, if supported by build implementation (i.e. Docker's layering)
+* Automated image [documentation][nginx-packages] and history when utilizing a CVS
+
+### Docker Features
+
+* Tiny static busybox-uclibc image (~1.2mb) as base
+* Full layering support for final images, images are not squashed
+* [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
+* Images are available on [docker.io][gentoo-bb-docker]
 
 ## How much do I save?
 
-* Quite a bit, the nginx image, for example, clocks in at ~26MB, compared to >1GB for a full gentoo version or ~300MB for a similiar ubuntu version
-
-## The catch?
-
-* You can't install packages via [Portage][] in further docker builds based on those images, unless they are built via `build.sh`
+* Quite a bit, the Nginx Docker image, for example, clocks in at ~20MB, compared to >1GB for a full Gentoo version or ~300MB for a similiar Ubuntu version
 
 ## Quick Start
 
@@ -30,44 +43,59 @@ Images are pushed to [docker.io][gentoo-bb-docker]. Due to the 2 phase build use
     $ cd gentoo-bb
     $ ./build.sh
 
-* If you don't have gpg available you can use `-s` to skip verification of downloaded files
-* Check the folders in `bb-dock/` for image specific documentation
+* If you don't have GPG available use `-s` to skip verification of downloaded files
+* Check the directories in `dock/gentoobb/images/` for image specific documentation
 * `bin/` contains a few scripts to start/stop container chains
 
 ## How does it work?
 
-* `build.sh` iterates over `bb-dock/`
-* generates build order
-* mounts each directory into a fresh `bb-builder/bob` container and executes `build-root.sh` inside bob
-* `Buildconfig.sh` from the mounted directory is sourced by `build-root.sh`
+* `build.sh` reads global defaults from `build.conf`
+* iterates over `dock/`
+* reads `build.conf` in each `dock/<namespace>/` directory and imports defined `CONTAINER_ENGINE` from `inc/engine/`
+* generates build order by iterating over `dock/<namespace>/images/`
+* executes `build_core()` for each required engine to bootstrap the initial build container
+* executes `build_builder()` for any other required build containers in `dock/<namespace>/builder/<repo>`
+* executes `build_image()` to build each `dock/<namespace>/images/<repo>` 
+
+Each implementation is allowed to only implement parts of the build process, if no build containers are required thats fine too.
+
+### Docker specific build details
+
+* `build_core()` builds a clean stage 3 image with portage snapshot and helper files from `./bob-core/`
+* `build_image()` mounts each `dock/<namespace>/images/<repo>` directory into a fresh build container as `/config`
+* executes `build-root.sh` inside build container
+* `build-root.sh` reads `Buildconfig.sh` from the mounted `/config` directory
 * `package.installed` file is generated which is used by depending images as `package.provided`
-* packages defined in `Buildconfig.sh` are installed at a custom empty root directory inside bob
-* resulting `rootfs.tar` is placed in mounted directory
-* `build.sh` then starts a docker build that uses `rootfs.tar` to create the final image
+* if `configure_rootfs_build()` hook is defined in `Buildconfig.sh`, execute it
+* `PACKAGES` defined in `Buildconfig.sh` are installed at a custom empty root directory
+* if `finish_rootfs_build()` hook is defined in `Buildconfig.sh`, execute it
+* resulting `rootfs.tar` is placed in `/config`, end of first build phase
+* used build container gets committed as a new builder image which will be used by other builds depending on this image, this preserves exact build state
+* `build.sh` then starts a normal docker build that uses `rootfs.tar` to create the final image
 
-## Adding images
+## Adding Docker images
 
- * All images must be located in `bb-dock/`, folder name = image name
+ * All images must be located in `dock/<namespace>/images/`, directory name = image name
  * `Dockerfile.template` and `Buildconfig.sh` are the only required files
- * `build.sh` will pick up your image on the next run
+ * `build.sh` will pick up the image on the next run
 
 Some useful options for `build.sh` while working on an image:
 
 Start an interactive build container, same as used to create the rootfs.tar:
 
-    $ ./bin/bob-interactive.sh myimage
+    $ ./bin/bob-interactive.sh mynamespace/myimage
 
 Force rebuild of myimage and all images it depends on:
 
-    $ ./build.sh -f build myimage
+    $ ./build.sh -f build mynamespace/myimage
 
 Same as above, but also rebuild all rootfs.tar files:
 
-    $ ./build.sh -F build myimage
+    $ ./build.sh -F build mynamespace/myimage
 
-Only rebuild myimage, ignore images it depends on:
+Only rebuild myimage1 and myimage2, ignore images they depend on:
 
-    $ ./build.sh -nF build myimage
+    $ ./build.sh -nF build mynamespace/myimage1 mynamespace/myimage2
 
 ## Updating to a newer gentoo stage3 release
 
@@ -79,44 +107,20 @@ If a new release was found simply rebuild the stack by running:
 
     $ ./build.sh -F
 
-* Things might break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
+* Minor things might break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
 
-Parts from the original [gentoo docker][gentoo-docker] docs that still apply:
+## Thanks
 
-=========
+@wking for his [gentoo-docker][] repo which served as an excellent starting point
+@jbergstroem for tons of feedback, irc discussions and testing on [CoreOS][] <3
 
-Dockerfiles are sorted into directories with names matching the
-suggested repository.  To avoid duplicating ephemeral data (namespace,
-timestamp tag, …), they appear in the `Dockerfile.template` as markers
-(`${NAMESPACE}`, `${TAG}`, …).  The `build.sh` script replaces the
-markers with values while generating a `Dockerfile` from each
-`Dockerfile.template` (using sed), and then builds each tag with:
-
-    $ docker build -t $NAMESPACE/$REPO:$TAG $REPO
-
-for example:
-
-    $ docker build -t wking/gentoo-en-us:20131205 gentoo-en-us
-
-Run:
-
-    $ ./build.sh
-
-to seed from the Gentoo mirrors and build all images.  There are a
-number of variables in the `build.sh` script that configure the build
-(`AUTHOR`, `NAMESPACE`, …).  We use [POSIX parameter
-expansion][parameter-expansion] to make it easy to override variables
-as you see fit.
-
-    $ NAMESPACE=jdoe DATE=20131210 ./build.sh
-
+[LXC]: http://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
 [s6]: http://skarnet.org/software/s6/
+[OpenRC]: http://wiki.gentoo.org/wiki/OpenRC
 [Docker]: http://www.docker.io/
-[Dockerfiles]: http://www.docker.io/learn/dockerfile/
+[Rocket]: https://github.com/coreos/rocket
 [gentoo-bb-docker]: https://hub.docker.com/u/gentoobb/
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/bb-dock/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
-[BusyBox]: http://www.busybox.net/
-[Portage]: http://www.gentoo.org//doc/en/handbook/handbook-x86.xml?part=3
-[parameter-expansion]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02
+[CoreOS]: https://coreos.com/
