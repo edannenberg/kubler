@@ -138,15 +138,20 @@ get_parent_image() {
     exit 3
 }
 
-# Handle image registry auth
-push_auth() {
-    msg "logging into dummy registry"
-}
-
-# Push image to a image registry
+# Handle image repository auth
 #
 # Arguments:
-# 1: IMAGE (i.e. gentoobb/busybox)
+# 1: NAMESPACE (i.e. gentoobb)
+# 2: REPOSITORY_URL
+push_auth() {
+    msg "logging into dummy repository"
+}
+
+# Push image to a repository
+#
+# Arguments:
+# 1: IMAGE_ID (i.e. gentoobb/busybox)
+# 2: REPOSITORY_URL
 push_image() {
-    msg "pushing ${1} to dummy registry"
+    msg "pushing ${1} to dummy repository at ${2}"
 }
