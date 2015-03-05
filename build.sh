@@ -232,15 +232,15 @@ build()
 # Update DATE to latest stage3 build date
 update_stage3_date() {
     S3DATE_REMOTE="$(curl -s ${MIRROR}/releases/amd64/autobuilds/latest-stage3.txt | grep ${STAGE3_BASE} | awk -F '/' '{print $1}')"
-    regex='DATE="?([0-9]+)"?'
+    regex='^DATE=("?([0-9]+)"?)|("\$\{DATE:-([0-9]+)\}")'
     if [[ "$(grep ^DATE= build.conf)" =~ $regex ]]; then
-        S3DATE_LOCAL="${BASH_REMATCH[1]}"
+        S3DATE_LOCAL="${BASH_REMATCH[4]}"
     else
         die "Could not parse DATE in build.conf"
     fi
     if [ "$S3DATE_LOCAL" -lt "$S3DATE_REMOTE" ]; then
         msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.conf"
-        sed -i s/^DATE=\"[0-9]*\"/DATE=\"${S3DATE_REMOTE}\"/g build.conf
+        sed -i s/^DATE=\"\${DATE:-[0-9]*}\"/DATE=\"\${DATE:-${S3DATE_REMOTE}}\"/g build.conf
     else
         msg "Already up to date. ($S3DATE_LOCAL)"
     fi
