@@ -5,6 +5,8 @@ ADD rootfs.tar /
 
 COPY etc /etc
 
+ENV NG_TMPL_DEFAULT_ROOT /var/www/localhost
+
 RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/nginx/finish && \
     ln -s /etc/service/nginx /service && \

@@ -36,7 +36,7 @@ if $(printenv | grep -q "^NG_TMPL_"); then
     for config in $(find /etc/nginx/sites-enabled/ -name '*.conf'); do
         for tmpl_var in $(printenv | grep "^NG_TMPL_" | awk -F"=" '{print $1}'); do
             value=$(eval echo \$$tmpl_var)
-            sed -i "s/##_${tmpl_var}_##/${value}/g" ${config}
+            sed -i "s|##_${tmpl_var}_##|${value}|g" ${config}
         done
     done
 fi
