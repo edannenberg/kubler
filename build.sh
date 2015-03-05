@@ -161,27 +161,6 @@ check_builder_dependencies() {
     fi
 }
 
-# Expand requested namespace/image mix of build command, i.e. build gentoobb/busybox mynamespace othernamespace/myimage
-#
-# Arguments:
-# 1: REPO(S)/NAMESPACE(S)
-expand_requested_repos() {
-    local REPO_ARGS="${1}"
-    EXPANDED=""
-    for REPO in $REPO_ARGS; do
-        if [[ $REPO == *"/"* ]]; then
-            [[ ! -d ${REPO/\//\/${IMAGE_PATH}} ]] && return 1
-            EXPANDED+=" ${REPO}"
-        else
-           [[ ! -d ${REPO}/${IMAGE_PATH} ]] && return 1
-           for IMAGE in ${REPO}/${IMAGE_PATH}*; do
-               EXPANDED+=" ${IMAGE/${IMAGE_PATH}/}"
-            done
-        fi
-    done
-    echo $EXPANDED
-}
-
 build()
 {
     if ($BUILD_WITHOUT_DEPS && [ "${1}" == "*" ]); then

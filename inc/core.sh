@@ -29,9 +29,13 @@ has_required_binaries() {
 }
 
 LAST_SOURCED_NS=""
+LAST_SOURCED_PUSH_CONF=""
 LAST_SOURCED_ENGINE=""
 
-# Read namespace build.conf for given REPO
+# Read namespace build.conf for given REPO_ID
+#
+# Arguments:
+# 1: REPO_ID (i.e. gentoobb/busybox)
 source_namespace_conf() {
     # exit if we just sourced the given NS
     [[ "${LAST_SOURCED_NS}" == ${1%%/*} ]] && return 0
@@ -46,15 +50,28 @@ source_namespace_conf() {
     NAMESPACE=${CURRENT_NS}
     LAST_SOURCED_NS=${NAMESPACE}
     DATE=${DATE_ROOT}
-    if [[ "${LAST_SOURCED_ENGINE}" != ${CONTAINER_ENGINE} ]]; then
+    if [[ "${LAST_SOURCED_ENGINE}" != "${CONTAINER_ENGINE}" ]]; then
         source "${PROJECT_ROOT}/inc/engine/${CONTAINER_ENGINE}.sh" ||
             die "failed to source engine file ${PROJECT_ROOT}/inc/engine/${CONTAINER_ENGINE}.sh"
         LAST_SOURCED_ENGINE="${CONTAINER_ENGINE}"
     fi
 }
 
+# Read namespace push.conf for given REPO_ID
+#
+# Arguments:
+# 1: REPO_ID (i.e. gentoobb/busybox)
+source_push_conf() {
+    local NAMESPACE=${1%%/*}
+    # exit if we just sourced for this NS
+    [[ "${LAST_SOURCED_PUSH_CONF}" == "${NAMESPACE}" ]] && return 0
+    [[ -f "${NAMESPACE}/push.conf" ]] && source "${NAMESPACE}/push.conf"
+    LAST_SOURCED_PUSH_CONF="${NAMESPACE}"
+}
+
 # Returns 0 if given string contains given word. Does not match substrings.
 #
+# Arguments:
 # 1: string
 # 2: word
 string_has_word() {
@@ -102,6 +119,27 @@ download_portage_snapshot()
     if [ "$SKIP_GPG" = false ] && [ -f "${DL_PATH}/${PORTAGE_SIG}" ]; then
         gpg --verify "${DL_PATH}/${PORTAGE_SIG}" "${DL_PATH}/${PORTAGE}" || die "insecure digests"
     fi
+}
+
+# Expand requested namespace/image mix of build command, i.e. build gentoobb/busybox mynamespace othernamespace/myimage
+#
+# Arguments:
+# 1: REPO(S)/NAMESPACE(S)
+expand_requested_repos() {
+    local REPO_ARGS="${1}"
+    EXPANDED=""
+    for REPO in $REPO_ARGS; do
+        if [[ $REPO == *"/"* ]]; then
+            [[ ! -d ${REPO/\//\/${IMAGE_PATH}} ]] && return 1
+            EXPANDED+=" ${REPO}"
+        else
+           [[ ! -d ${REPO}/${IMAGE_PATH} ]] && return 1
+           for IMAGE in ${REPO}/${IMAGE_PATH}*; do
+               EXPANDED+=" ${IMAGE/${IMAGE_PATH}/}"
+            done
+        fi
+    done
+    echo $EXPANDED
 }
 
 # Generate PACKAGES.md header
