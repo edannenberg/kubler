@@ -305,15 +305,46 @@ build_image()
     add_documentation_header "${REPO}" "${REPO_TYPE}" || die "failed to generate PACKAGES.md for ${REPO_EXPANDED}"
 }
 
-# Handle docker registry auth
-push_auth() {
-    :
-}
-
-# Push image to a docker registry
+# Handle docker registry login
 #
 # Arguments:
-# 1: IMAGE (i.e. gentoobb/busybox)
+# 1: NAMESPACE (i.e. gentoobb)
+# 2: REPOSITORY_URL
+push_auth() {
+    local NAMESPACE="${1}"
+    local REPOSITORY_URL="${2}"
+    if [[ -z "${REPOSITORY_URL}" ]]; then
+        DOCKER_LOGIN="${DOCKER_LOGIN:-${NAMESPACE}}"
+        echo "pushing to docker.io/u/${DOCKER_LOGIN}"
+        LOGIN_ARGS="-u ${DOCKER_LOGIN}"
+        if [ ! -z ${DOCKER_PW} ]; then
+            LOGIN_ARGS+=" -p ${DOCKER_PW}"
+        fi
+        if [ ! -z ${DOCKER_EMAIL} ]; then
+            LOGIN_ARGS+=" -e ${DOCKER_EMAIL}"
+        fi
+        echo "login $LOGIN_ARGS"
+        ${DOCKER} login $LOGIN_ARGS || exit 1
+    else
+        echo "pushing to ${REPOSITORY_URL}"
+    fi
+}
+
+# Push image to official or private docker registry, creates required tagging for private registries
+#
+# Arguments:
+# 1: IMAGE_ID (i.e. gentoobb/busybox)
+# 2: REPOSITORY_URL
 push_image() {
-    :
+    local IMAGE_ID="${1}"
+    local REPOSITORY_URL="${2}"
+    PUSH_ARGS="${IMAGE_ID}"
+    if [[ ! -z "${REPOSITORY_URL}" ]]; then
+        IMAGE_DOCKER_ID=$("${DOCKER}" images "${IMAGE_ID}" | grep "${DATE}" | awk '{print $3}')
+        PUSH_ARGS="${REPOSITORY_URL}/${IMAGE_ID}"
+        echo "${DOCKER}" tag -f "${IMAGE_DOCKER_ID}" ${PUSH_ARGS}
+        "${DOCKER}" tag -f "${IMAGE_DOCKER_ID}" "${PUSH_ARGS}" || exit 1
+    fi
+    echo "pushing ${PUSH_ARGS}"
+    "${DOCKER}" push "${PUSH_ARGS}" || exit 1
 }

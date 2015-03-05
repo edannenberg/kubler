@@ -1,62 +1,65 @@
 #!/bin/bash
 #
-# Push all images in $REPO_PATH to docker.io or a private registry, if no argument is passed docker.io is assumed
+# Copyright (C) 2014-2015 Erik Dannenberg <erik.dannenberg@bbe-consulting.de>
 #
-# To avoid login prompts for docker.io put the credentials into push.conf alongside push.sh. DOCKER_LOGIN, DOCKER_PW, DOCKER_EMAIL
+# Push images to repository, auth credentials are read from dock/<namespace>/push.conf
 #
-# Usage: ./push.sh [my-registry.org:5000]
+# Docker specific: 
+#    If -h param is omitted docker.io is assumed as repository
+#    vars for push.conf: DOCKER_LOGIN, DOCKER_PW, DOCKER_EMAIL
+#
+# Usage: ./push.sh -h my-repository.org:5000 [namespace/image] or [namespace] ...
 
-NAMESPACE="${NAMESPACE:-gentoobb}"
-DATE="${DATE:-20141204}"
-REPO_PATH="${REPO_PATH:-bb-dock}"
-
-DOCKER_IO=$(command -v docker.io)
-DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
-
-if [ -f push.conf ]; then
-    source push.conf
-fi
-
-REGISTRY="${1}"
-if [[ -z "${REGISTRY}" ]]; then
-    DOCKER_LOGIN="${DOCKER_LOGIN:-${NAMESPACE}}"
-    echo "pushing to docker.io/u/${DOCKER_LOGIN}"
-    LOGIN_ARGS="-u ${DOCKER_LOGIN}"
-    if [ ! -z ${DOCKER_PW} ]; then
-        LOGIN_ARGS+=" -p ${DOCKER_PW}"
-    fi
-    if [ ! -z ${DOCKER_EMAIL} ]; then
-        LOGIN_ARGS+=" -e ${DOCKER_EMAIL}"
-    fi
-    ${DOCKER} login $LOGIN_ARGS || exit 1
-else
-    echo "pushing to ${REGISTRY}"
-fi
-
-image_exists()
-{
-    REPO="${1}"
-    IMAGES=$("${DOCKER}" images "${NAMESPACE}/${REPO}")
-    MATCHES=$(echo "${IMAGES}" | grep "${DATE}")
-    if [ -z "${MATCHES}" ]; then
-        return 1
-    fi
-    return 0
+show_help() {
+    echo -e "usage: ./push.sh -h my-repository.org:5000 [namespace/image] or [namespace] ...\n"
+    exit 0
 }
 
-cd $REPO_PATH
-for REPO in *; do
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT=$(realpath -s $SCRIPT_DIR)
+
+[ ! -f "${PROJECT_ROOT}/inc/core.sh" ] && echo "error: failed to read ${PROJECT_ROOT}/inc/core.sh" && exit 1
+source "${PROJECT_ROOT}/inc/core.sh"
+
+[[ ! -f "${PROJECT_ROOT}/build.conf" ]] && die "error: failed to read build.conf"
+source "${PROJECT_ROOT}/build.conf"
+
+DATE_ROOT="${DATE?Error \$DATE is not defined.}"
+
+REPOSITORY_URL=""
+while getopts "h:" opt; do
+  case $opt in
+    h)
+      REPOSITORY_URL=${OPTARG}
+      ;;
+  esac
+done
+shift $(( $OPTIND -1 ))
+
+[ "$1" = "--" ] && shift
+
+[ -z "${1}" ] && show_help
+
+REPO_ARGS="${@:-"*"}"
+
+cd "${REPO_PATH}"
+REPOS=$(expand_requested_repos "${REPO_ARGS}") || die "error expanding repos: ${REPO_ARGS}"
+
+for REPO in $REPOS; do
+    NAMESPACE=${REPO%%/*}
+    REPO_EXPANDED=${REPO/\//\/${IMAGE_PATH}}
+    source_namespace_conf "$REPO_EXPANDED"
+    source_push_conf "${REPO}"
+
     if ! image_exists $REPO; then
-        echo "skipping ${NAMESPACE}/${REPO}:${DATE}"
+        echo "skipping ${REPO}:${DATE}, image is not build yet"
         continue
     fi
-    PUSH_ARGS="${NAMESPACE}/${REPO}"
-    if [[ ! -z "${REGISTRY}" ]]; then
-        IMAGE_ID=$("${DOCKER}" images "${NAMESPACE}/${REPO}" | grep "${DATE}" | awk '{print $3}')
-        PUSH_ARGS="${REGISTRY}/${NAMESPACE}/${REPO}"
-        echo "${DOCKER}" tag -f "${IMAGE_ID}" ${PUSH_ARGS}
-        "${DOCKER}" tag -f "${IMAGE_ID}" "${PUSH_ARGS}" || exit 1
+
+    if [[ "${LAST_PUSH_AUTH_NS}" != ${NAMESPACE} ]]; then
+        push_auth "${NAMESPACE}" "${REPOSITORY_URL}" || die "error while logging into repository"
+        LAST_PUSH_AUTH_NS=${NAMESPACE}
     fi
-    echo "pushing ${PUSH_ARGS}"
-    "${DOCKER}" push "${PUSH_ARGS}" || exit 1
+
+    push_image "${REPO}" "${REPOSITORY_URL}"
 done
