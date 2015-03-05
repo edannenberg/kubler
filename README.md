@@ -12,7 +12,7 @@ Planned support:
 
 * [Rocket][]
 
-Adding new engines should be fairly easy. PR are always welcome. ;)
+PR are always welcome. ;)
 
 ## Why?
 
@@ -21,15 +21,17 @@ Adding new engines should be fairly easy. PR are always welcome. ;)
 
 ## Features
 
-* Supports 2 phase builds to produce a minimal rootfs via seperate build containers
+* Decoupled build logic for swappable build engines
 * Maintain multiple image stacks with differing build engines
-* Image/Builder dependencies, if supported by build implementation (i.e. Docker's layering)
+* Generic [root-fs][bob-core] build script, with hooks, to quickly bootstrap a build container
+* Generic image and builder dependencies that can be utilized by build implementations
 * Automated image [documentation][nginx-packages] and history when utilizing a CVS
 
 ### Docker Features
 
 * Tiny static busybox-uclibc image (~1.2mb) as base
-* Full layering support for final images, images are not squashed
+* 2 phase builds to produce a minimal rootfs via seperate build containers
+* Shared layer support for final images, images are not squashed and can depend on other images
 * [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
 * Images are available on [docker.io][gentoo-bb-docker]
 
@@ -72,6 +74,9 @@ Each implementation is allowed to only implement parts of the build process, if 
 * resulting `rootfs.tar` is placed in `/config`, end of first build phase
 * used build container gets committed as a new builder image which will be used by other builds depending on this image, this preserves exact build state
 * `build.sh` then starts a normal docker build that uses `rootfs.tar` to create the final image
+
+Build container names generally start with `gentoobb/bob`, when a new build container state is committed the current image name gets appended.
+For example `gentoobb/bob-openssl` refers to the container used to build the `gentoobb/openssl` image.
 
 ## Adding Docker images
 
@@ -117,6 +122,7 @@ If a new release was found simply rebuild the stack by running:
 
 [LXC]: http://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
+[bob-core]: https://github.com/edannenberg/gentoo-bb/tree/master/bob-core
 [s6]: http://skarnet.org/software/s6/
 [OpenRC]: http://wiki.gentoo.org/wiki/OpenRC
 [Docker]: http://www.docker.io/
