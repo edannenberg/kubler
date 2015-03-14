@@ -23,13 +23,14 @@ PR are always welcome. ;)
 
 * Decoupled build logic for swappable build engines
 * Maintain multiple image stacks with differing build engines
-* Generic [root-fs][bob-core] build script, with hooks, to quickly bootstrap a build container
-* Generic image and builder dependencies that can be utilized by build implementations
-* Automated image [documentation][nginx-packages] and history when utilizing a CVS
+* Generic [root-fs][bob-core] build script to quickly bootstrap a build container
+* Simple hook system allows for full control of the build process while retaining modularity
+* Generic image and builder dependencies that can be utilized by build engines
+* Automated image [documentation][nginx-packages] and history when using a CVS
 
 ### Docker Features
 
-* Tiny static busybox-uclibc image (~1.2mb) as base
+* Tiny static busybox-uclibc root image (~1.2mb)
 * 2 phase builds to produce a minimal rootfs via seperate build containers
 * Shared layer support for final images, images are not squashed and can depend on other images
 * [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
@@ -67,6 +68,7 @@ Each implementation is allowed to only implement parts of the build process, if 
 * `build_image()` mounts each `dock/<namespace>/images/<repo>` directory into a fresh build container as `/config`
 * executes `build-root.sh` inside build container
 * `build-root.sh` reads `Buildconfig.sh` from the mounted `/config` directory
+* if `configure_bob()` hook is defined in `Buildconfig.sh`, execute it
 * `package.installed` file is generated which is used by depending images as `package.provided`
 * if `configure_rootfs_build()` hook is defined in `Buildconfig.sh`, execute it
 * `PACKAGES` defined in `Buildconfig.sh` are installed at a custom empty root directory
@@ -100,7 +102,7 @@ Same as above, but also rebuild all rootfs.tar files:
 
 Only rebuild myimage1 and myimage2, ignore images they depend on:
 
-    $ ./build.sh -nF build mynamespace/myimage1 mynamespace/myimage2
+    $ ./build.sh -nF build mynamespace/{myimage1,myimage2}
 
 ## Updating to a newer gentoo stage3 release
 
@@ -118,7 +120,7 @@ If a new release was found simply rebuild the stack by running:
 
 [@wking][] for his [gentoo-docker][] repo which served as an excellent starting point
 
-[@jbergstroem][] for tons of feedback, irc discussions and testing on [CoreOS][] <3
+[@jbergstroem][] for all his contributions and feedback to this project <3
 
 [LXC]: http://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
@@ -127,7 +129,7 @@ If a new release was found simply rebuild the stack by running:
 [OpenRC]: http://wiki.gentoo.org/wiki/OpenRC
 [Docker]: http://www.docker.io/
 [Rocket]: https://github.com/coreos/rocket
-[gentoo-bb-docker]: https://hub.docker.com/u/gentoobb/
+[gentoo-bb-docker]: https://registry.hub.docker.com/repos/gentoobb/?&s=alphabetical
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/bb-dock/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
 [CoreOS]: https://coreos.com/
