@@ -129,6 +129,33 @@ log_as_installed() {
     echo "*${1}*: ${2} | ${3}" >> "${DOC_PACKAGE_INSTALLED}"
 }
 
+# Thin wrapper for app-portage/flaggie, a tool for managing portage keywords and use flags
+#
+# Examples:
+#
+# global use flags: update_use -readline +ncurses
+# per package: update_use app-shells/bash +readline -ncurses
+# same syntax for keywords: update_use app-shells/bash +~amd64
+# target package versions as usual, remember to use quotes for < or >: update_use '>=app-text/docbook-sgml-utils-0.6.14-r1' +jadetex
+# reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
+# reset all use flags: update_use app-shells/bash %
+update_use() {
+    flaggie --strict --destructive-cleanup "${@}"
+}
+
+# Just for better readabilty of Buildconfig.sh
+update_keywords() {
+    update_use "${@}"
+}
+
+mask_package() {
+    echo "${1}" >> /etc/portage/package.mask/bob
+}
+
+unmask_package() {
+    echo "${1}" >> /etc/portage/package.unmask/bob
+}
+
 install_docker_gen() {
     wget http://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz
     mkdir -p $EMERGE_ROOT/bin

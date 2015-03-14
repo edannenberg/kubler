@@ -4,9 +4,13 @@
 PACKAGES=""
 
 configure_bob() {
+    # install flaggie, required for update_use() helper
+    emerge app-portage/flaggie
+    mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
+    touch /etc/portage/package.accept_keywords/flaggie
     # install default packages
-    echo 'dev-vcs/git -perl' > /etc/portage/package.use/git
-    echo 'app-crypt/pinentry ncurses' >> /etc/portage/package.use/git
+    update_use 'dev-vcs/git' '-perl'
+    update_use 'app-crypt/pinentry' '+ncurses'
     emerge sys-devel/crossdev dev-vcs/git app-portage/layman
     # setup layman
     layman -L

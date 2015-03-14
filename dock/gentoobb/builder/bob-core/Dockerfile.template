@@ -7,7 +7,7 @@ RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.co
     chown -R portage:portage /usr/portage && \
     (emerge-webrsync -k --revert=${TAG} || emerge-webrsync -k) && \
     eselect news read new 1>/dev/null && \
-    mkdir -p /etc/portage/package.{mask,unmask,use,keywords} /etc/portage/profile
+    mkdir -p /etc/portage/profile
 
 COPY make.conf /etc/portage/make.conf
 
