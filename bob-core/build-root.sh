@@ -140,12 +140,12 @@ log_as_installed() {
 # reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
 # reset all use flags: update_use app-shells/bash %
 update_use() {
-    flaggie --strict --destructive-cleanup "${@}"
+    flaggie --strict --destructive-cleanup ${@}
 }
 
 # Just for better readabilty of Buildconfig.sh
 update_keywords() {
-    update_use "${@}"
+    update_use ${@}
 }
 
 mask_package() {
