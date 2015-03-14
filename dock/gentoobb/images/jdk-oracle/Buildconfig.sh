@@ -22,10 +22,8 @@ configure_rootfs_build()
             -P /distfiles \
             "${JDK_URL}"
     fi
-    # skip python
-    emerge -p dev-lang/python | grep dev-lang/python | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
-    # skip iced-tea
-    emerge -p dev-java/icedtea-bin | grep dev-java/icedtea-bin | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    # skip python and iced-tea
+    provide_package dev-lang/python dev-java/icedtea-bin
 }
 
 #

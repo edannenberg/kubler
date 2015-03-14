@@ -11,7 +11,7 @@ GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 configure_rootfs_build()
 {
     # fake portage install
-    emerge -p sys-apps/portage | grep sys-apps/portage | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    provide_package sys-apps/portage
     # set locales
     mkdir -p $EMERGE_ROOT/etc
     for LOCALE in "${GLIBC_LOCALES[@]}"; do

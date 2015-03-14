@@ -9,7 +9,7 @@ PACKAGES="dev-java/icedtea-bin"
 configure_rootfs_build()
 {
     # skip python
-    emerge -p dev-lang/python | grep dev-lang/python | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    provide_package dev-lang/python
 }
 
 #

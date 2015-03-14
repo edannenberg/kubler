@@ -19,9 +19,7 @@ configure_rootfs_build()
     update_use 'dev-php/pecl-apcu' '+mmap'
 
     # skip bash, perl, autogen. pulled in as dep since php 5.5.22
-    emerge -p app-shells/bash | grep app-shells/bash | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
-    emerge -p dev-lang/perl | grep dev-lang/perl | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
-    emerge -p sys-devel/autogen | grep sys-devel/autogen | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    provide_package app-shells/bash dev-lang/perl sys-devel/autogen
 }
 
 #

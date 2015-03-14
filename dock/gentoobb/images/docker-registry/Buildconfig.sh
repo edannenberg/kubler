@@ -21,9 +21,7 @@ configure_rootfs_build()
     update_keywords 'dev-python/backports-lzma' '+~amd64'
     update_keywords 'dev-python/flask-cors' '+~amd64'
     # needed a build time, so we remove them from package.provided for reinstall
-    sed -i /^dev-lang\\/python/d /etc/portage/profile/package.provided
-    sed -i /^dev-python\\/setuptools/d /etc/portage/profile/package.provided
-    sed -i /^net-misc\\/curl/d /etc/portage/profile/package.provided
+    unprovide_package dev-lang/python dev-python/setuptools net-misc/curl
 }
 
 #
@@ -42,9 +40,6 @@ finish_rootfs_build()
     log_as_installed "pip install" "gunicorn" "http://gunicorn.org/"
     log_as_installed "manual install" "docker-registry-${REGISTRY_VERSION}" "http://github.com/docker/docker-registry/"
     # remove packages that were only needed at build time
-    emerge -C dev-lang/python dev-lang/python-exec dev-python/setuptools
+    uninstall_package dev-lang/python dev-lang/python-exec dev-python/setuptools
     rm $EMERGE_ROOT/usr/lib64/libpython2.7.*
-    # reflect uninstall in docs
-    sed -i /^dev-lang\\/python/d "${DOC_PACKAGE_INSTALLED}"
-    sed -i /^dev-python\\/setuptools/d "${DOC_PACKAGE_INSTALLED}"
 }

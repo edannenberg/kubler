@@ -10,7 +10,7 @@ configure_rootfs_build()
 {
     update_keywords 'app-misc/elasticsearch' '+~amd64'
     # install bash again, needed at build time
-    sed -i /^app-shells\\/bash/d /etc/portage/profile/package.provided
+    unprovide_package app-shells/bash
 }
 
 #
@@ -18,7 +18,5 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    emerge -C app-shells/bash
-    # reflect uninstall in docs
-    sed -i /^app-shells\\/bash/d "${DOC_PACKAGE_INSTALLED}"
+    uninstall_package app-shells/bash
 }
