@@ -278,7 +278,7 @@ build_image()
         local CONTAINER_CMD=("build-root" ${REPO_EXPANDED})
 
         msg "run ${BUILD_CONTAINER}:${DATE}"
-        run_image "${BUILD_CONTAINER}:${DATE}" "${BUILDER_ID}" "false" || die "failed to build rootfs for $REPO_EXPANDED"
+        run_image "${BUILD_CONTAINER}:${DATE}" "${REPO}" "false" || die "failed to build rootfs for $REPO_EXPANDED"
 
         RUN_ID="$(${DOCKER} ps -a | grep -m1 ${BUILD_CONTAINER}:${DATE} | awk '{print $1}')"
 
@@ -323,7 +323,6 @@ push_auth() {
         if [ ! -z ${DOCKER_EMAIL} ]; then
             LOGIN_ARGS+=" -e ${DOCKER_EMAIL}"
         fi
-        echo "login $LOGIN_ARGS"
         ${DOCKER} login $LOGIN_ARGS || exit 1
     else
         echo "pushing to ${REPOSITORY_URL}"
