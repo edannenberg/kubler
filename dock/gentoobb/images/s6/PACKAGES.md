@@ -1,20 +1,20 @@
-### gentoobb/s6:20150108
-Built: Sun Jan 11 22:56:54 CET 2015
+### gentoobb/s6:20150312
+Built: Sat Mar 14 23:35:05 CET 2015
 
-Image Size: 9.8 MB
+Image Size: 10.01 MB
 #### Installed
 Package | USE Flags
 --------|----------
-dev-lang/execline-1.3.1.1 | `-static-libs`
-dev-libs/skalibs-1.6.0.0 | `-doc -static-libs`
-sys-apps/s6-1.1.3.2 | ``
+dev-lang/execline-2.0.2.1 | `-static -static-libs`
+dev-libs/skalibs-2.3.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.1.1.1 | `-static`
 *manual install*: entr-2.9 | http://entrproject.org/
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/glibc** |
 sys-libs/glibc-2.19-r1 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2014i-r1 | `nls -right`
+sys-libs/timezone-data-2014j | `nls -right`
 
 #### Purged
 - [x] Headers
