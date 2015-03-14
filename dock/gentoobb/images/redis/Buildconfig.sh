@@ -8,7 +8,7 @@ PACKAGES="dev-db/redis"
 #
 configure_rootfs_build()
 {
-    echo 'dev-lang/lua -readline' >> /etc/portage/package.use/redis
+    update_use 'dev-lang/lua' '-readline'
 }
 
 #

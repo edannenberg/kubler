@@ -12,8 +12,8 @@ configure_rootfs_build()
     echo 'PYTHON_TARGETS="python2_7"' >> /etc/portage/make.conf
     echo 'PYTHON_SINGLE_TARGET="python2_7"' >> /etc/portage/make.conf
     echo 'USE_PYTHON="2.7"' >> /etc/portage/make.conf
-    echo '>=dev-lang/python-3.2.5-r6' >> /etc/portage/package.mask/python
-    echo 'USE="${USE} sqlite"' >> /etc/portage/make.conf
+    mask_package '>=dev-lang/python-3.2.5-r6'
+    update_use '+sqlite'
 }
 
 #

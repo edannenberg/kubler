@@ -8,6 +8,8 @@ PACKAGES="net-misc/curl dev-db/mysql"
 #
 configure_rootfs_build()
 {
+    # sadly perl is required for db init scripts
+    #update_use 'dev-db/mysql' '-perl'
     # reinstall curl, need at build time
     sed -i /^net-misc\\/curl/d /etc/portage/profile/package.provided
 }

@@ -8,9 +8,9 @@ PACKAGES="sys-apps/s6"
 #
 configure_rootfs_build()
 {
-    echo "sys-apps/s6 ~amd64" > /etc/portage/package.keywords/s6
-    echo "dev-lang/execline ~amd64" >> /etc/portage/package.keywords/s6
-    echo "dev-libs/skalibs ~amd64" >> /etc/portage/package.keywords/s6
+    update_keywords 'sys-apps/s6' '+~amd64'
+    update_keywords 'dev-lang/execline' '+~amd64'
+    update_keywords 'dev-libs/skalibs' '+~amd64'
 }
 
 #

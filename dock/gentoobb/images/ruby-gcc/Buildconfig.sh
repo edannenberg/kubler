@@ -10,17 +10,17 @@ KEEP_HEADERS=true
 configure_rootfs_build()
 {
     echo 'RUBY_TARGETS="ruby22"' >> /etc/portage/make.conf
-    echo 'dev-lang/ruby ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=app-admin/eselect-ruby-20141227 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/racc-1.4.12 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/rdoc-4.1.2 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/rubygems-2.4.5 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/rake-10.4.2 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/power_assert-0.2.2 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/minitest-5.5.1 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/test-unit-3.0.9-r1 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=virtual/rubygems-10 ~amd64' >> /etc/portage/package.keywords/ruby
-    echo '=dev-ruby/json-1.8.2-r1 ~amd64' >> /etc/portage/package.keywords/ruby
+    update_keywords 'dev-lang/ruby' '+~amd64'
+    update_keywords '=app-admin/eselect-ruby-20141227' '+~amd64'
+    update_keywords '=dev-ruby/racc-1.4.12' '+~amd64'
+    update_keywords '=dev-ruby/rdoc-4.1.2' '+~amd64'
+    update_keywords '=dev-ruby/rubygems-2.4.5' '+~amd64'
+    update_keywords '=dev-ruby/rake-10.4.2' '+~amd64'
+    update_keywords '=dev-ruby/power_assert-0.2.2' '+~amd64'
+    update_keywords '=dev-ruby/minitest-5.5.1' '+~amd64'
+    update_keywords '=dev-ruby/test-unit-3.0.9-r1' '+~amd64'
+    update_keywords '=virtual/rubygems-10' '+~amd64'
+    update_keywords '=dev-ruby/json-1.8.2-r1' '+~amd64'
 }
 
 #

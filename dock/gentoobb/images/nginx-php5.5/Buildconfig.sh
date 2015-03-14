@@ -13,9 +13,10 @@ configure_rootfs_build()
     echo 'PHP_TARGETS="php5-5"' >> /etc/portage/make.conf
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
 
-    echo 'dev-lang/php bcmath calendar curl curlwrappers fpm gd mhash mysql mysqli pdo soap sockets xmlreader xmlrpc xmlwriter xpm xsl zip' > /etc/portage/package.use/php
-    echo 'app-admin/eselect-php fpm' >> /etc/portage/package.use/php
-    echo 'dev-php/pecl-apcu mmap' > /etc/portage/package.use/apcu
+    update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+curlwrappers' '+fpm' '+gd' '+mhash' \
+               '+mysql' '+mysqli' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xsl' '+zip'
+    update_use 'app-admin/eselect-php' '+fpm'
+    update_use 'dev-php/pecl-apcu' '+mmap'
 
     # skip bash, perl, autogen. pulled in as dep since php 5.5.22
     emerge -p app-shells/bash | grep app-shells/bash | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided

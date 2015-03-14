@@ -8,8 +8,8 @@ PACKAGES="app-shells/bash app-misc/elasticsearch"
 #
 configure_rootfs_build()
 {
-    echo "=virtual/jre-1.7.0 ~amd64" >> /etc/portage/package.keywords/elastic
-    echo "app-misc/elasticsearch ~amd64" >> /etc/portage/package.keywords/elastic
+    update_keywords 'app-misc/elasticsearch' '+~amd64'
+    # install bash again, needed at build time
     sed -i /^app-shells\\/bash/d /etc/portage/profile/package.provided
 }
 

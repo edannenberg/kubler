@@ -14,12 +14,12 @@ configure_rootfs_build()
     echo 'PYTHON_TARGETS="python2_7"' >> /etc/portage/make.conf
     echo 'PYTHON_SINGLE_TARGET="python2_7"' >> /etc/portage/make.conf
     echo 'USE_PYTHON="2.7"' >> /etc/portage/make.conf
-    echo '>=dev-lang/python-3.2.5-r6' >> /etc/portage/package.mask/python
+    mask_package '>=dev-lang/python-3.2.5-r6'
     # docker registry dependencies
-    echo 'USE="${USE} sqlite"' >> /etc/portage/make.conf
-    echo "dev-python/backports ~amd64" > /etc/portage/package.keywords/docker-registry
-    echo "dev-python/backports-lzma ~amd64" >> /etc/portage/package.keywords/docker-registry
-    echo "dev-python/flask-cors ~amd64" >> /etc/portage/package.keywords/docker-registry
+    update_use '+sqlite'
+    update_keywords 'dev-python/backports' '+amd64'
+    update_keywords 'dev-python/backports-lzma' '+~amd64'
+    update_keywords 'dev-python/flask-cors' '+~amd64'
     # needed a build time, so we remove them from package.provided for reinstall
     sed -i /^dev-lang\\/python/d /etc/portage/profile/package.provided
     sed -i /^dev-python\\/setuptools/d /etc/portage/profile/package.provided
