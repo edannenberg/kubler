@@ -156,6 +156,44 @@ unmask_package() {
     echo "${1}" >> /etc/portage/package.unmask/bob
 }
 
+# Fake package install by adding it to package.provided
+# Usually called from configure_rootfs_build() hook.
+#
+# Arguments:
+# 1: package atom (i.e. app-shells/bash)
+# n: more package atoms
+provide_package() {
+    for P in ${@}; do
+        emerge -p "${P}" | grep "${P}" | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+    done
+}
+
+# Mark package atom for reinstall.
+# Usually called from configure_rootfs_build() hook.
+#
+# Arguments:
+# 1: package atom (i.e. app-shells/bash)
+# n: more package atoms
+unprovide_package() {
+    for P in ${@}; do
+        sed -i /^${P//\//\\\/}/d /etc/portage/profile/package.provided
+    done
+}
+
+# Remove packages that were only needed at build time, also cleans ${DOC_PACKAGE_INSTALLED}
+# Usually called from finish_rootfs_build() hook.
+#
+# Arguments:
+# 1: package atom (i.e. app-shells/bash)
+# n: more package atoms
+uninstall_package() {
+    emerge -C ${@}
+    for P in ${@}; do
+        # reflect uninstall in docs
+        sed -i /^${P//\//\\\/}/d "${DOC_PACKAGE_INSTALLED}"
+    done
+}
+
 install_docker_gen() {
     wget http://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz
     mkdir -p $EMERGE_ROOT/bin
