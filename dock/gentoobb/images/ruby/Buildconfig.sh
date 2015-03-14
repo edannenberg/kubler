@@ -9,6 +9,8 @@ PACKAGES="dev-libs/gmp dev-lang/ruby"
 configure_rootfs_build()
 {
     echo 'RUBY_TARGETS="ruby22"' >> /etc/portage/make.conf
+    # 2.2.1 segfaults
+    mask_package '>=dev-lang/ruby-2.2.1'
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=app-admin/eselect-ruby-20141227' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.12' '+~amd64'
