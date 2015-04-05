@@ -130,7 +130,7 @@ If a new release was found simply rebuild the stack by running:
 [Docker]: http://www.docker.io/
 [Rocket]: https://github.com/coreos/rocket
 [gentoo-bb-docker]: https://registry.hub.docker.com/repos/gentoobb/?&s=alphabetical
-[nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/bb-dock/nginx/PACKAGES.md
+[nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/dock/gentoobb/images/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
 [CoreOS]: https://coreos.com/
 [@wking]: https://github.com/wking
