@@ -12,7 +12,7 @@ configure_rootfs_build()
     # 2.2.1 segfaults
     mask_package '>=dev-lang/ruby-2.2.1'
     update_keywords 'dev-lang/ruby' '+~amd64'
-    update_keywords '=app-admin/eselect-ruby-20141227' '+~amd64'
+    update_keywords '=app-eselect/eselect-ruby-20141227' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.12' '+~amd64'
     update_keywords '=dev-ruby/rdoc-4.1.2' '+~amd64'
     update_keywords '=dev-ruby/rubygems-2.4.5' '+~amd64'
