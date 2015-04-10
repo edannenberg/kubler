@@ -15,7 +15,7 @@ configure_rootfs_build()
 
     update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+curlwrappers' '+fpm' '+gd' '+mhash' \
                '+mysql' '+mysqli' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+zip'
-    update_use 'app-admin/eselect-php' '+fpm'
+    update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'dev-php/pecl-apcu' '+mmap'
 
     # skip bash, perl, autogen. pulled in as dep since php 5.5.22
