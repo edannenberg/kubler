@@ -195,11 +195,12 @@ uninstall_package() {
 }
 
 install_docker_gen() {
-    wget http://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz
+    local DOCKERGEN_VERSION="0.3.9"
+    wget "http://github.com/jwilder/docker-gen/releases/download/${DOCKERGEN_VERSION}/docker-gen-linux-amd64-${DOCKERGEN_VERSION}.tar.gz"
     mkdir -p $EMERGE_ROOT/bin
-    tar -C $EMERGE_ROOT/bin -xvzf docker-gen-linux-amd64-0.3.2.tar.gz
+    tar -C $EMERGE_ROOT/bin -xvzf "docker-gen-linux-amd64-${DOCKERGEN_VERSION}.tar.gz"
     mkdir -p $EMERGE_ROOT/config/template
-    log_as_installed "manual install" "docker-gen-0.3.2" "http://github.com/jwilder/docker-gen/"
+    log_as_installed "manual install" "docker-gen-${DOCKERGEN_VERSION}" "http://github.com/jwilder/docker-gen/"
 }
 
 source /etc/profile
