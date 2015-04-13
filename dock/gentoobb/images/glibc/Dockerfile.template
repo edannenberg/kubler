@@ -2,5 +2,7 @@
 FROM ${NAMESPACE}/busybox
 MAINTAINER ${MAINTAINER}
 
+ENV LANG en_US.utf8
+
 ADD rootfs.tar /
 RUN ldconfig

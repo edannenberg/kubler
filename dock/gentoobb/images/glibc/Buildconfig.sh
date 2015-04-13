@@ -5,6 +5,16 @@ PACKAGES="sys-libs/glibc"
 TIMEZONE="${BOB_TIMEZONE:-UTC}"
 GLIBC_LOCALES=("en_US ISO-8859-1" "en_US.UTF-8 UTF-8")
 
+configure_bob() {
+     # set locales
+    for LOCALE in "${GLIBC_LOCALES[@]}"; do
+        echo "$LOCALE" >> /etc/locale.gen
+    done
+    locale-gen
+    # set timezone
+    echo $TIMEZONE > /etc/timezone
+}
+
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
 #
@@ -14,12 +24,8 @@ configure_rootfs_build()
     provide_package sys-apps/portage
     # set locales
     mkdir -p $EMERGE_ROOT/etc
-    for LOCALE in "${GLIBC_LOCALES[@]}"; do
-        echo "$LOCALE" >> /etc/locale.gen
-    done
     cp /etc/locale.gen $EMERGE_ROOT/etc/
     # set timezone
-    echo $TIMEZONE > /etc/timezone
     cp /etc/timezone $EMERGE_ROOT/etc/
     cp /usr/share/zoneinfo/$TIMEZONE $EMERGE_ROOT/etc/localtime
 }
