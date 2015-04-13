@@ -1,15 +1,15 @@
-### gentoobb/jre-oracle:20150312
-Built: Sat Mar 14 23:40:34 CET 2015
+### gentoobb/jre-oracle:20150409
+Built: Mon Apr 13 22:22:53 CEST 2015
 
-Image Size: 212.2 MB
+Image Size: 243.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/eselect-java-0.1.0 | ``
+app-eselect/eselect-java-0.1.0 | ``
 app-portage/portage-utils-0.53 | `nls -static`
 dev-java/java-config-2.2.0 | ` `
 dev-java/java-config-wrapper-0.16 | ``
-dev-java/oracle-jre-bin-1.7.0.76 | `pax`
+dev-java/oracle-jre-bin-1.8.0.40 | `pax`
 dev-lang/python-exec-2.0.1-r1 | ` `
 sys-apps/baselayout-java-0.1.0 | ``
 #### Inherited
@@ -24,21 +24,22 @@ sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
 sys-libs/readline-6.2_p5-r1 | `-static-libs`
 **FROM gentoobb/openssl** |
-app-misc/ca-certificates-20130906-r1 | ``
-dev-libs/openssl-1.0.1k | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+app-misc/ca-certificates-20140927.3.17.2 | `cacert`
+dev-libs/openssl-1.0.1l-r1 | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r1 | `nls -static-libs`
 sys-apps/coreutils-8.21 | `acl nls (xattr) -caps -gmp (-selinux) -static -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
-dev-lang/execline-2.0.2.1 | `-static -static-libs`
-dev-libs/skalibs-2.3.0.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.1.1.1 | `-static`
-*manual install*: entr-2.9 | http://entrproject.org/
+dev-lang/execline-2.1.1.0 | `-static -static-libs`
+dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.1.3.0 | `-static`
+*manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
-sys-libs/glibc-2.19-r1 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2014j | `nls -right`
+sys-apps/gentoo-functions-0.8 | ``
+sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2015a | `nls -right`
 #### Purged
 - [x] Headers
 - [x] Static Libs

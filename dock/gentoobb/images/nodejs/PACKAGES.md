@@ -1,13 +1,11 @@
-### gentoobb/nginx-proxy:20150409
-Built: Mon Apr 13 22:38:56 CEST 2015
+### gentoobb/nodejs:20150409
+Built: Mon Apr 13 22:40:05 CEST 2015
 
-Image Size: 20.81 MB
+Image Size: 33.44 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
-dev-libs/libpcre-8.35 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.7.6 | `http http-cache pcre ssl -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+net-libs/nodejs-0.10.30 | `npm snapshot`
 #### Inherited
 Package | USE Flags
 --------|----------

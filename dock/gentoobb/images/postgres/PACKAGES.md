@@ -1,23 +1,17 @@
-### gentoobb/ruby:20150409
-Built: Mon Apr 13 22:48:17 CEST 2015
+### gentoobb/postgres:20150409
+Built: Mon Apr 13 22:41:28 CEST 2015
 
-Image Size: 48.09 MB
+Image Size: 50.62 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-eselect/eselect-ruby-20141227 | ``
-dev-lang/ruby-2.2.0-r1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -ncurses -rubytests -socks5 -xemacs`
-dev-libs/gmp-5.1.3-r1 | `cxx -doc -pgo -static-libs`
-dev-libs/libffi-3.0.13-r1 | `pax`
-dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
-dev-ruby/json-1.8.2-r1 | `-doc {-test}`
-dev-ruby/minitest-5.5.1 | `-doc {-test}`
-dev-ruby/power_assert-0.2.2 | `-doc {-test}`
-dev-ruby/rake-10.4.2 | `-doc {-test}`
-dev-ruby/rdoc-4.1.2 | `-doc {-test}`
-dev-ruby/rubygems-2.4.5 | `-server {-test}`
-dev-ruby/test-unit-3.0.9-r1 | `-doc {-test}`
-sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
+app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
+app-eselect/eselect-postgresql-1.2.1 | ``
+app-misc/editor-wrapper-4 | ``
+dev-db/postgresql-9.4.1 | `nls readline server ssl threads zlib -doc -kerberos -ldap -pam -perl -pg`
+dev-libs/libpcre-8.35 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+sys-apps/less-458 | `pcre unicode`
+*manual install*: gosu-1.2 | https://github.com/tianon/gosu/
 #### Inherited
 Package | USE Flags
 --------|----------
