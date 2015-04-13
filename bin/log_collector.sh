@@ -16,6 +16,8 @@ start () {
         -e KIBANA_SECURE=false \
         -e ELASTICSEARCH_URL=http://${ES_IP}:9200 \
         -e VIRTUAL_HOST="$VHOST_URL" \
+        -e VIRTUAL_PORT=5601 \
+        -p 5601:5601 \
         --name log_kibana \
         --hostname log_kibana \
         gentoobb/kibana
