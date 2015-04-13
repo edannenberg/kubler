@@ -43,7 +43,7 @@ finish_rootfs_build()
     chmod 0640 $EMERGE_ROOT/etc/nullmailer/remotes
     # prepare adminer / phpinfo micro sites
     mkdir -p $EMERGE_ROOT/var/www/{adminer,phpinfo}
-    wget -O $EMERGE_ROOT/var/www/adminer/adminer.php https://downloads.sourceforge.net/adminer/adminer-4.1.0-en.php
+    wget -O $EMERGE_ROOT/var/www/adminer/adminer.php https://downloads.sourceforge.net/adminer/adminer-4.2.1-en.php
     wget -O $EMERGE_ROOT/var/www/adminer/adminer.css https://raw.github.com/vrana/adminer/master/designs/bueltge/adminer.css
     echo "<?php phpinfo(); ?>" > $EMERGE_ROOT/var/www/phpinfo/phpinfo.php
 }
