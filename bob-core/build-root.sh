@@ -5,6 +5,7 @@ set -e
 
 EMERGE_ROOT="/emerge-root"
 EMERGE_BIN="${EMERGE_BIN:-emerge}"
+EMERGE_OPT="${EMERGE_OPT:-}"
 CONFIG="/config"
 CONFIG_TMP="${CONFIG}/tmp"
 ROOTFS_BACKUP="/backup-rootfs"
@@ -234,7 +235,7 @@ if [ -n "$PACKAGES" ]; then
     [[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR
 
     # generate installed package list
-    "${EMERGE_BIN}" --binpkg-respect-use=y -p $PACKAGES | \
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
         grep -Eow "\[.*\] (.*) to" | \
         awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
 
@@ -244,12 +245,12 @@ if [ -n "$PACKAGES" ]; then
 
     echo "**FROM ${REPO/\images\//}** |" > ${DOC_PACKAGE_INSTALLED}
     # generate installed package list with use flags for auto docs
-    "${EMERGE_BIN}" --binpkg-respect-use=y -p $PACKAGES | \
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
         perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
 
     # install packages (defined via Buildconfig.sh)
-    "${EMERGE_BIN}" --binpkg-respect-use=y -v baselayout $PACKAGES
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v baselayout $PACKAGES
 
     [[ -f ${PACKAGE_INSTALLED} ]] && cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
 
