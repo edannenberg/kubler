@@ -1,14 +1,16 @@
 #
 # build config
 #
-PACKAGES=""
+PACKAGES="www-apps/kibana-bin"
+# skip all dependencies of kibana
+EMERGE_OPT="--nodeps"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
 #
 configure_rootfs_build()
 {
-    :
+    update_keywords 'www-apps/kibana-bin' '+~amd64'
 }
 
 #
@@ -16,5 +18,5 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    log_as_installed "manual install" "kibana-3.1.2" "http://www.elasticsearch.org/overview/kibana/"
+    copy_gcc_libs
 }
