@@ -212,6 +212,15 @@ install_docker_gen() {
     log_as_installed "manual install" "docker-gen-${DOCKERGEN_VERSION}" "http://github.com/jwilder/docker-gen/"
 }
 
+install_gosu()
+{
+    local GOSU_VERSION=1.2
+    mkdir -p ${EMERGE_ROOT}/usr/local/bin
+    curl -o ${EMERGE_ROOT}/usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64"
+    chmod +x ${EMERGE_ROOT}/usr/local/bin/gosu
+    log_as_installed "manual install" "gosu-${GOSU_VERSION}" "https://github.com/tianon/gosu/"
+}
+
 source /etc/profile
 
 mkdir -p $EMERGE_ROOT
