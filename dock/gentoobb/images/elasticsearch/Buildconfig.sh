@@ -10,7 +10,6 @@ configure_rootfs_build()
 {
     update_keywords 'app-misc/elasticsearch' '+~amd64'
     # elasticsearch ebuild still is wired to jre7 but we already use jre8
-    update_keywords '=virtual/jre-1.7.0' '+~amd64'
     echo 'dev-java/oracle-jre-bin-1.7.0.76' >> /etc/portage/profile/package.provided
     # install bash again, needed at build time
     unprovide_package app-shells/bash
