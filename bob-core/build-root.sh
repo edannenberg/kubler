@@ -25,11 +25,12 @@ IMAGE_NS="${REPO%%/*}"
 IMAGE_ID="${REPO##*/}"
 
 copy_gcc_libs() {
+    mkdir -p ${EMERGE_ROOT}/lib64
     LIBGCC="$(find /usr/lib/ -name libgcc_s.so.1)"
     LIBSTDC="$(find /usr/lib/ -name libstdc++.so.6)"
 
-    for lib in $LIBGCC $LIBSTDC; do
-        cp $lib $EMERGE_ROOT/lib64/
+    for lib in ${LIBGCC} ${LIBSTDC}; do
+        cp $lib ${EMERGE_ROOT}/lib64/
     done
 }
 
@@ -125,6 +126,46 @@ write_checkbox_line() {
         CHECKBOX="- [ ]"
     fi
     echo "${CHECKBOX} ${LABEL}" >> "${3}"
+}
+
+# Generates $PACKAGE_INSTALLED from provided portage package atoms,
+# should only get called from configure_rootfs_build() hook
+#
+# Arguments:
+# 1: PACKAGES (i.e. "sys-apps/busybox dev-vcs/git")
+generate_package_installed() {
+    local PACKAGES=${1}
+    # generate installed package list
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
+    grep -Eow "\[.*\] (.*) to" | \
+    awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
+}
+
+# Append DOC_PACKAGE_INSTALLED from last build to DOC_PACKAGE_PROVIDED, overwrite DOC_PACKAGE_INSTALLED with header for current build
+# Should only get called from configure_bob() or configure_rootfs_build() hooks
+#
+# Arguments:
+# 1: IMAGE_NAME (only used in header)
+init_docs() {
+    local IMAGE_NAME="${1}"
+    touch -a ${DOC_PACKAGE_PROVIDED}
+    [[ -f ${DOC_PACKAGE_INSTALLED} ]] && \
+            echo -e "$(cat ${DOC_PACKAGE_INSTALLED})\n$(cat ${DOC_PACKAGE_PROVIDED})" > ${DOC_PACKAGE_PROVIDED}
+
+    echo "**FROM ${IMAGE_NAME}** |" > ${DOC_PACKAGE_INSTALLED}
+}
+
+# Generates $DOC_PACKAGE_INSTALLED from provided portage package atoms,
+# should only get called from configure_rootfs_build() hook
+#
+# Arguments:
+# 1: PACKAGES (i.e. "shell/bash dev-vcs/git")
+generate_doc_package_installed() {
+    local PACKAGES=${1}
+    # generate installed package list with use flags
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
+        perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
+        sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
 }
 
 # Adds a package entry in $DOC_PACKAGE_INSTALLED to document non-Portage package installs.
@@ -231,32 +272,22 @@ mkdir -p $EMERGE_ROOT
 # call configure bob hook if declared in Buildconfig.sh
 declare -F configure_bob &>/dev/null && configure_bob
 
+mkdir -p ${ROOTFS_BACKUP} 
+
+# set ROOT env for emerge calls
+export ROOT="${EMERGE_ROOT}"
+
+# call pre install hook if declared in Buildconfig.sh
+declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
+
+# when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
+[[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR
+
 if [ -n "$PACKAGES" ]; then
-    mkdir -p ${ROOTFS_BACKUP} 
 
-    # set ROOT env for emerge calls
-    export ROOT="${EMERGE_ROOT}"
-
-    # call pre install hook if declared in Buildconfig.sh
-    declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
-
-    # when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
-    [[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR
-
-    # generate installed package list
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
-        grep -Eow "\[.*\] (.*) to" | \
-        awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
-
-    touch -a ${DOC_PACKAGE_PROVIDED}
-    [[ -f ${DOC_PACKAGE_INSTALLED} ]] && \
-        echo -e "$(cat ${DOC_PACKAGE_INSTALLED})\n$(cat ${DOC_PACKAGE_PROVIDED})" > ${DOC_PACKAGE_PROVIDED}
-
-    echo "**FROM ${REPO/\images\//}** |" > ${DOC_PACKAGE_INSTALLED}
-    # generate installed package list with use flags for auto docs
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
-        perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
-        sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
+    generate_package_installed $PACKAGES
+    init_docs ${REPO/\images\//}
+    generate_doc_package_installed $PACKAGES
 
     # install packages (defined via Buildconfig.sh)
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v baselayout $PACKAGES
@@ -284,27 +315,28 @@ if [ -n "$PACKAGES" ]; then
     cat /etc/ld.so.conf >> $EMERGE_ROOT/etc/ld.so.conf
     sort -u $EMERGE_ROOT/etc/ld.so.conf -o $EMERGE_ROOT/etc/ld.so.conf
 
-    # call post install hook if declared in Buildconfig.sh
-    declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
+fi
 
-    generate_documentation_footer
+# call post install hook if declared in Buildconfig.sh
+declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
 
-    unset ROOT
+generate_documentation_footer
 
-    # /run symlink
-    ln -s /run $EMERGE_ROOT/var/run
+unset ROOT
 
-    # clean up
-    rm -rf $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
-    if [ -z "$KEEP_HEADERS" ]; then
-        rm -rf $EMERGE_ROOT/usr/include/*
-    fi
-    if [ -z "$KEEP_STATIC_LIBS" ] && [ -d $EMERGE_ROOT/lib64 ] && [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
-        find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -f {} \;
-    fi
-    if [ -z "$KEEP_STATIC_LIBS" ] && [ -d $EMERGE_ROOT/usr/lib64 ] && [ "$(ls -A $EMERGE_ROOT/usr/lib64)" ]; then
-        find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" -exec rm -f {} \;
-    fi
+# /run symlink
+mkdir -p $EMERGE_ROOT/var/run && ln -s /run $EMERGE_ROOT/var/run
+
+# clean up
+rm -rf $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
+if [ -z "$KEEP_HEADERS" ]; then
+    rm -rf $EMERGE_ROOT/usr/include/*
+fi
+if [ -z "$KEEP_STATIC_LIBS" ] && [ -d $EMERGE_ROOT/lib64 ] && [ "$(ls -A $EMERGE_ROOT/lib64)" ]; then
+    find $EMERGE_ROOT/lib64/* -type f -name "*.a" -exec rm -f {} \;
+fi
+if [ -z "$KEEP_STATIC_LIBS" ] && [ -d $EMERGE_ROOT/usr/lib64 ] && [ "$(ls -A $EMERGE_ROOT/usr/lib64)" ]; then
+    find $EMERGE_ROOT/usr/lib64/* -type f -name "*.a" -exec rm -f {} \;
 fi
 
 if [ -n "$INSTALL_DOCKER_GEN" ]; then
