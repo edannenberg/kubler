@@ -1,14 +1,14 @@
-# Copyright (C) 2013-2014 W. Trevor King <wking@tremily.us>
-FROM ${NAMESPACE}/python2
+FROM ${NAMESPACE}/openssl
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-RUN pip install gunicorn
+ENV DISTRIBUTION_DIR /go/src/github.com/docker/distribution
+ENV GOPATH $DISTRIBUTION_DIR/Godeps/_workspace:/go
 
-RUN cd /docker-registry/depends/docker-registry-core/ && python setup.py install && \
-    cd /docker-registry && python setup.py install
+WORKDIR $DISTRIBUTION_DIR
 
 EXPOSE 5000
 
-CMD exec docker-registry
+ENTRYPOINT ["registry"]
+CMD ["cmd/registry/config.yml"]

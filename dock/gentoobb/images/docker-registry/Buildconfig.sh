@@ -1,27 +1,32 @@
 #
 # build config
 #
-PACKAGES="dev-python/m2crypto dev-python/blinker dev-python/boto dev-python/backports-lzma dev-python/flask dev-python/flask-cors dev-python/gevent dev-python/pyyaml dev-python/redis-py dev-python/requests dev-python/rsa dev-python/simplejson dev-python/sqlalchemy"
-#KEEP_HEADERS=true
-REGISTRY_VERSION=0.9.1
+PACKAGES=""
+REGISTRY_VERSION=2.0.0
+
+configure_bob()
+{
+    emerge -v go
+    mkdir -p /go/src/github.com/docker/
+    export DISTRIBUTION_DIR=/go/src/github.com/docker/distribution
+    export GOPATH=${DISTRIBUTION_DIR}/Godeps/_workspace:/go
+    git clone https://github.com/docker/distribution.git ${DISTRIBUTION_DIR}
+    cd ${DISTRIBUTION_DIR}
+    git checkout tags/v${REGISTRY_VERSION}
+    make PREFIX=/go clean binaries
+
+    mkdir -p ${EMERGE_ROOT}/bin
+    cp /go/bin/* ${EMERGE_ROOT}/bin
+    mkdir -p ${EMERGE_ROOT}/go/src/github.com/docker
+    cp -rfp ${DISTRIBUTION_DIR} ${EMERGE_ROOT}/go/src/github.com/docker/
+}
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
 #
 configure_rootfs_build()
 {
-    # only use python 2.7
-    echo 'PYTHON_TARGETS="python2_7"' >> /etc/portage/make.conf
-    echo 'PYTHON_SINGLE_TARGET="python2_7"' >> /etc/portage/make.conf
-    echo 'USE_PYTHON="2.7"' >> /etc/portage/make.conf
-    mask_package '>=dev-lang/python-3.2.5-r6'
-    # docker registry dependencies
-    update_use '+sqlite'
-    update_keywords 'dev-python/backports' '+amd64'
-    update_keywords 'dev-python/backports-lzma' '+~amd64'
-    update_keywords 'dev-python/flask-cors' '+~amd64'
-    # needed a build time, so we remove them from package.provided for reinstall
-    unprovide_package dev-lang/python dev-python/setuptools net-misc/curl
+    init_docs "gentoobb/docker-registry"
 }
 
 #
@@ -29,17 +34,5 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    # prepare docker-registry, final setup in Dockerfile
-    wget http://github.com/docker/docker-registry/archive/${REGISTRY_VERSION}.tar.gz
-    tar xzvf ${REGISTRY_VERSION}.tar.gz
-    mv docker-registry-${REGISTRY_VERSION} $EMERGE_ROOT/docker-registry
-    cp --no-clobber $EMERGE_ROOT/docker-registry/config/config_sample.yml $EMERGE_ROOT/docker-registry/config/config.yml
-    # Disable strict dependencies (see dotcloud/docker-registry#466)
-    sed -i 's/\(install_requires=\)/#\1/' $EMERGE_ROOT/docker-registry/setup.py \
-        $EMERGE_ROOT/docker-registry/depends/docker-registry-core/setup.py
-    log_as_installed "pip install" "gunicorn" "http://gunicorn.org/"
-    log_as_installed "manual install" "docker-registry-${REGISTRY_VERSION}" "http://github.com/docker/docker-registry/"
-    # remove packages that were only needed at build time
-    uninstall_package dev-lang/python dev-lang/python-exec dev-python/setuptools
-    rm $EMERGE_ROOT/usr/lib64/libpython2.7.*
+    log_as_installed "manual install" "docker-registry-${REGISTRY_VERSION}" "http://github.com/docker/distribution/"
 }
