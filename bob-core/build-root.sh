@@ -134,9 +134,9 @@ write_checkbox_line() {
 # Arguments:
 # 1: PACKAGES (i.e. "sys-apps/busybox dev-vcs/git")
 generate_package_installed() {
-    local PACKAGES=${1}
+    local PACKAGES="${1}"
     # generate installed package list
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
     grep -Eow "\[.*\] (.*) to" | \
     awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
 }
@@ -161,9 +161,9 @@ init_docs() {
 # Arguments:
 # 1: PACKAGES (i.e. "shell/bash dev-vcs/git")
 generate_doc_package_installed() {
-    local PACKAGES=${1}
+    local PACKAGES="${1}"
     # generate installed package list with use flags
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p $PACKAGES | \
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
         perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
 }
@@ -285,9 +285,9 @@ declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
 if [ -n "$PACKAGES" ]; then
 
-    generate_package_installed $PACKAGES
+    generate_package_installed "${PACKAGES}"
     init_docs ${REPO/\images\//}
-    generate_doc_package_installed $PACKAGES
+    generate_doc_package_installed "${PACKAGES}"
 
     # install packages (defined via Buildconfig.sh)
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v baselayout $PACKAGES
