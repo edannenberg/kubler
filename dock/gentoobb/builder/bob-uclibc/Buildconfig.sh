@@ -34,6 +34,9 @@ PKGDIR="/packages/${CHOST}"' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
     # ..but unset CHOST as it overrides make.conf
     unset CHOST
 
+    # fix regression in latest toolchain.eclass - see https://bugs.gentoo.org/show_bug.cgi?id=548782
+    sed -i 's/\.\/\${dir}\/\*\.la || die/\.\/\${dir}\/\*\.la/g' /usr/portage/eclass/toolchain.eclass
+
     crossdev --target ${CROSSDEV_UCLIBC}
 
     rm /etc/portage/package.use/gcc
