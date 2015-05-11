@@ -1,7 +1,7 @@
-### gentoobb/jre-oracle:20150409
-Built: Mon Apr 13 22:22:53 CEST 2015
+### gentoobb/jre-oracle:20150507
+Built: Mon May 11 21:41:20 CEST 2015
 
-Image Size: 243.2 MB
+Image Size: 243.3 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,7 +9,7 @@ app-eselect/eselect-java-0.1.0 | ``
 app-portage/portage-utils-0.53 | `nls -static`
 dev-java/java-config-2.2.0 | ` `
 dev-java/java-config-wrapper-0.16 | ``
-dev-java/oracle-jre-bin-1.8.0.40 | `pax`
+dev-java/oracle-jre-bin-1.8.0.45 | `pax`
 dev-lang/python-exec-2.0.1-r1 | ` `
 sys-apps/baselayout-java-0.1.0 | ``
 #### Inherited
@@ -18,7 +18,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-shells/bash-4.2_p53 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
-net-misc/curl-7.39.0 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -ssh -static-libs {-test}`
+net-misc/curl-7.42.1 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/file-5.22 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
@@ -39,7 +39,9 @@ sys-apps/s6-2.1.3.0 | `-static`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.8 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015a | `nls -right`
+sys-libs/timezone-data-2015b | `nls -right`
+**FROM gentoobb/busybox** |
+sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

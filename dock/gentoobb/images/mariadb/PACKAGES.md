@@ -1,7 +1,7 @@
-### gentoobb/mariadb:20150409
-Built: Mon Apr 13 22:32:23 CEST 2015
+### gentoobb/mariadb:20150507
+Built: Mon May 11 21:50:44 CEST 2015
 
-Image Size: 217.5 MB
+Image Size: 217.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,7 +12,7 @@ dev-db/mariadb-10.0.16 | `bindist community perl ssl (-cluster) -debug -embedded
 dev-db/mysql-init-scripts-2.0-r1 | ``
 dev-lang/perl-5.20.2 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
-dev-libs/libpcre-8.35 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+dev-libs/libpcre-8.36 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-perl/DBD-mysql-4.20.0-r1 | `-embedded`
 dev-perl/DBI-1.628.0 | `{-test}`
 dev-perl/Net-Daemon-0.480.0-r1 | ``
@@ -29,7 +29,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-shells/bash-4.2_p53 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
-net-misc/curl-7.39.0 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -ssh -static-libs {-test}`
+net-misc/curl-7.42.1 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/file-5.22 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
@@ -50,7 +50,9 @@ sys-apps/s6-2.1.3.0 | `-static`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.8 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015a | `nls -right`
+sys-libs/timezone-data-2015b | `nls -right`
+**FROM gentoobb/busybox** |
+sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

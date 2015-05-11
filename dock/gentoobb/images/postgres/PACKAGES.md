@@ -1,7 +1,7 @@
-### gentoobb/postgres:20150409
-Built: Mon Apr 13 22:41:28 CEST 2015
+### gentoobb/postgres:20150507
+Built: Mon May 11 22:00:20 CEST 2015
 
-Image Size: 50.62 MB
+Image Size: 50.69 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,7 +9,7 @@ app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
 dev-db/postgresql-9.4.1 | `nls readline server ssl threads zlib -doc -kerberos -ldap -pam -perl -pg`
-dev-libs/libpcre-8.35 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+dev-libs/libpcre-8.36 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-458 | `pcre unicode`
 *manual install*: gosu-1.2 | https://github.com/tianon/gosu/
 #### Inherited
@@ -18,7 +18,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-shells/bash-4.2_p53 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
-net-misc/curl-7.39.0 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -ssh -static-libs {-test}`
+net-misc/curl-7.42.1 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/file-5.22 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
@@ -39,7 +39,9 @@ sys-apps/s6-2.1.3.0 | `-static`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.8 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015a | `nls -right`
+sys-libs/timezone-data-2015b | `nls -right`
+**FROM gentoobb/busybox** |
+sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

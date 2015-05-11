@@ -1,15 +1,15 @@
-### gentoobb/python2:20150409
-Built: Mon Apr 13 22:19:54 CEST 2015
+### gentoobb/python2:20150507
+Built: Mon May 11 22:01:35 CEST 2015
 
-Image Size: 97.1 MB
+Image Size: 97.19 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/eselect-python-20111108 | ``
 app-admin/python-updater-0.11 | ``
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
+app-eselect/eselect-python-20111108 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.8.7.4 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test}`
+dev-db/sqlite-3.8.9 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test}`
 dev-lang/python-2.7.9-r1 | `hardened readline sqlite ssl threads (wide-unicode) xml -berkdb -build -doc -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r4 | `unicode -examples -static-libs`
@@ -22,7 +22,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-shells/bash-4.2_p53 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
-net-misc/curl-7.39.0 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -ssh -static-libs {-test}`
+net-misc/curl-7.42.1 | `ssl threads -adns -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/file-5.22 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
@@ -43,7 +43,9 @@ sys-apps/s6-2.1.3.0 | `-static`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.8 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015a | `nls -right`
+sys-libs/timezone-data-2015b | `nls -right`
+**FROM gentoobb/busybox** |
+sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs
