@@ -90,13 +90,23 @@ run_image() {
         die "failed to run image ${IMAGE}"
 }
 
-# generate Dockerfile from template
+# Generate Dockerfile from Dockerfile.template
+#
+# Arguments:
+# 1: Path to Dockerfile.template
 generate_dockerfile()
 {
-    sed \
+    local SED_PARAM=()
+    # also make variables starting with BOB_ available in Dockerfile.template
+    for bob_var in ${!BOB_*}; do
+        SED_PARAM+=(-e "s|\${${bob_var}}|${!bob_var}|")
+    done
+
+    sed "${SED_PARAM[@]}" \
         -e 's/${NAMESPACE}/'"${NAMESPACE}"'/' \
         -e 's/${TAG}/'"${DATE}"'/' \
-        -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "$1/Dockerfile.template" > "$1/Dockerfile"
+        -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "${1}/Dockerfile.template" > "${1}/Dockerfile" || \
+            die "error while generating ${1}/Dockerfile"
 }
 
 # Returns given TAG value from DOCKERFILE or exit signal 3 if TAG was not found
