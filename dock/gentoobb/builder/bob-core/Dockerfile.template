@@ -4,6 +4,10 @@ MAINTAINER ${MAINTAINER}
 COPY portage*.tar.* /usr/portage/distfiles/
 
 RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
+    mkdir -p /etc/portage/repos.conf && \
+    sed -e 's|^sync-uri =.*|sync-uri = ${BOB_SYNC_URI}|' \
+        -e 's|^sync-type =.*|sync-type = ${BOB_SYNC_TYPE}|' \
+        /usr/share/portage/config/repos.conf > /etc/portage/repos.conf/gentoo.conf && \
     chown -R portage:portage /usr/portage && \
     (emerge-webrsync -k --revert=${TAG} || emerge-webrsync -k) && \
     eselect news read new 1>/dev/null && \

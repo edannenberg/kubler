@@ -11,7 +11,6 @@ export FEATURES="${BOB_FEATURES:-parallel-fetch nodoc noinfo noman}"
 export EMERGE_DEFAULT_OPTS="${BOB_EMERGE_DEFAULT_OPTS:--b -k}"
 
 export GENTOO_MIRRORS="${BOB_GENTOO_MIRRORS:-ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/gentoo/}"
-export SYNC="${BOB_SYNC:-rsync://rsync.europe.gentoo.org/gentoo-portage}"
 
 export DISTDIR="/distfiles"
 export PKGDIR="/packages/${CHOST}"
