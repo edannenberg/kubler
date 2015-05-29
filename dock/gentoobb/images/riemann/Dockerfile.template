@@ -1,0 +1,12 @@
+FROM ${NAMESPACE}/clojure
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+WORKDIR /riemann
+
+EXPOSE 5555 5556
+
+VOLUME ["/riemann/etc"]
+ENTRYPOINT ["/riemann/bin/riemann"]
+CMD ["etc/riemann.config"]

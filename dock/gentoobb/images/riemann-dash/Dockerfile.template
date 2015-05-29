@@ -1,0 +1,15 @@
+FROM ${NAMESPACE}/ruby-gcc
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+RUN mkdir -p /riemann-dash/config && gem install --no-ri --no-rdoc riemann-client riemann-tools riemann-dash
+
+COPY config.rb /riemann-dash/
+
+VOLUME ["/riemann-dash/config"]
+WORKDIR /riemann-dash
+
+EXPOSE 4567
+
+CMD ["riemann-dash"]
