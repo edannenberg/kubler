@@ -21,9 +21,10 @@ PR are always welcome. ;)
 
 ## Features
 
-* Decoupled build logic for swappable build engines
+* Decoupled build logic
 * Maintain multiple image stacks with differing build engines
 * Generic [root-fs][bob-core] build script to quickly bootstrap a build container
+* Build script seeds/utilizes a binary package cache on the build host to avoid unnecessary compiling
 * Simple hook system allows for full control of the build process while retaining modularity
 * Generic image and builder dependencies that can be utilized by build engines
 * Automated image [documentation][nginx-packages] and history when using a CVS
