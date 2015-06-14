@@ -1,28 +1,31 @@
-### gentoobb/nginx-php5.5:20150507
-Built: Mon May 11 21:57:03 CEST 2015
+### gentoobb/nginx-php5.5:20150611
+Built: Sun Jun 14 15:49:21 CEST 2015
 
-Image Size: 87.96 MB
+Image Size: 97.76 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.7.1-r4 | `fpm -apache2`
-dev-lang/php-5.5.24 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -pcntl -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite (-sybase-ct) -systemd -sysvipc -tidy -truetype -vpx -wddx -xslt`
+dev-lang/php-5.5.25-r1 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -pcntl -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite (-sybase-ct) -systemd -sysvipc -tidy -truetype -vpx -wddx -xslt`
 dev-libs/expat-2.1.0-r4 | `unicode -examples -static-libs`
 dev-libs/gmp-5.1.3-r1 | `cxx -doc -pgo -static-libs`
+dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r2 | ``
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libtasn1-4.5 | `-doc -static-libs`
 dev-libs/libxml2-2.9.2-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
-dev-libs/nettle-2.7.1-r1 | `gmp -doc (-neon) -static-libs {-test}`
+dev-libs/nettle-2.7.1-r4 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.7 | `lock`
-dev-php/pecl-memcache-3.0.8 | `session`
+dev-php/pecl-imagick-3.1.2 | `-examples`
+dev-php/pecl-memcache-3.0.8-r1 | `session`
 dev-php/pecl-redis-2.2.3 | `-igbinary`
 dev-php/xdebug-2.2.6 | ` `
 dev-php/xdebug-client-2.2.6 | `-libedit`
 mail-mta/nullmailer-1.13-r5 | `ssl`
+media-gfx/imagemagick-6.9.0.3 | `bzip2 cxx openmp zlib -`
 media-libs/libjpeg-turbo-1.3.1 | `-java -static-libs`
 media-libs/libpng-1.6.16 | `-apng (-neon) -static-libs`
 net-dns/libidn-1.29 | `nls -doc -emacs -java -mono -static-libs`
@@ -36,7 +39,7 @@ sys-devel/gettext-0.19.3 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncur
 sys-libs/cracklib-2.9.1-r1 | `nls zlib -python -static-libs {-test}`
 sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
 sys-libs/ncurses-5.9-r3 | `cxx unicode -ada -debug -doc -gpm -minimal -profile -static-libs -tinfo -trace`
-sys-libs/readline-6.2_p5-r1 | `-static-libs`
+sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 x11-libs/libICE-1.0.9 | `-doc -ipv6 -static-libs`
 x11-libs/libSM-1.2.2-r1 | `uuid -doc -ipv6 -static-libs`
 x11-libs/libX11-1.6.2 | `-doc -ipv6 -static-libs {-test}`
@@ -61,7 +64,7 @@ dev-libs/libpcre-8.36 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit 
 www-servers/nginx-1.7.6 | `http http-cache pcre ssl -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.1l-r1 | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.1m | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r1 | `nls -static-libs`
 sys-apps/coreutils-8.21 | `acl nls (xattr) -caps -gmp (-selinux) -static -vanilla`

@@ -1,7 +1,7 @@
-### gentoobb/nginx:20150507
-Built: Mon May 11 21:54:24 CEST 2015
+### gentoobb/nginx:20150611
+Built: Sun Jun 14 15:06:56 CEST 2015
 
-Image Size: 20.92 MB
+Image Size: 20.93 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -13,7 +13,7 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.1l-r1 | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.1m | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r1 | `nls -static-libs`
 sys-apps/coreutils-8.21 | `acl nls (xattr) -caps -gmp (-selinux) -static -vanilla`

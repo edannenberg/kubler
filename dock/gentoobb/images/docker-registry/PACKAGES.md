@@ -1,17 +1,17 @@
-### gentoobb/docker-registry:20150507
-Built: Mon May 11 21:40:14 CEST 2015
+### gentoobb/docker-registry:20150611
+Built: Sun Jun 14 14:52:57 CEST 2015
 
-Image Size: 50.56 MB
+Image Size: 51.09 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: docker-registry-2.0.0 | http://github.com/docker/distribution/
+*manual install*: docker-registry-2.0.1 | http://github.com/docker/distribution/
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.1l-r1 | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.1m | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r1 | `nls -static-libs`
 sys-apps/coreutils-8.21 | `acl nls (xattr) -caps -gmp (-selinux) -static -vanilla`

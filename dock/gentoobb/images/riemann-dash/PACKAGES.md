@@ -1,24 +1,38 @@
-### gentoobb/python2:20150611
-Built: Sun Jun 14 15:14:11 CEST 2015
+### gentoobb/riemann-dash:20150611
+Built: Sun Jun 14 15:22:48 CEST 2015
 
-Image Size: 98.43 MB
+Image Size: 213.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/python-updater-0.11 | ``
-app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
-app-eselect/eselect-python-20111108 | ``
-app-misc/mime-types-9 | ``
-dev-db/sqlite-3.8.10.1 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
-dev-lang/python-2.7.9-r1 | `hardened readline sqlite ssl threads (wide-unicode) xml (-berkdb) -build -doc -examples -gdbm -ipv6 -ncurses -tk -wininst`
-dev-lang/python-exec-2.0.1-r1 | ` `
-dev-libs/expat-2.1.0-r4 | `unicode -examples -static-libs`
-dev-libs/libffi-3.0.13-r1 | `pax`
-dev-python/pip-1.5.6 | ` `
-dev-python/setuptools-12.0.1 | `{-test}`
+sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
+*gem install*: riemann-client riemann-tools riemann-dash | https://github.com/aphyr/riemann
 #### Inherited
 Package | USE Flags
 --------|----------
+**FROM gentoobb/ruby-gcc** |
+app-eselect/eselect-ruby-20141227 | ``
+dev-lang/ruby-2.2.2-r1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -ncurses -rubytests -socks5 -xemacs`
+dev-libs/libffi-3.0.13-r1 | `pax`
+dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
+dev-ruby/json-1.8.3 | `-doc {-test}`
+dev-ruby/minitest-5.5.1 | `-doc {-test}`
+dev-ruby/power_assert-0.2.2 | `-doc {-test}`
+dev-ruby/rake-10.4.2 | `-doc {-test}`
+dev-ruby/rdoc-4.1.2 | `-doc {-test}`
+dev-ruby/rubygems-2.4.6 | `-server {-test}`
+dev-ruby/test-unit-3.0.9-r1 | `-doc {-test}`
+sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
+**FROM gentoobb/gcc** |
+dev-libs/gmp-5.1.3-r1 | `cxx -doc -pgo -static-libs`
+dev-libs/mpc-1.0.2-r1 | `-static-libs`
+dev-libs/mpfr-3.1.2_p10 | `-static-libs`
+sys-devel/binutils-2.24-r3 | `cxx nls zlib (-multislot) -multitarget -static-libs {-test} -vanilla`
+sys-devel/binutils-config-4-r2 | ``
+sys-devel/gcc-4.8.4 | `cxx hardened nls nptl openmp (-altivec) (-awt) -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) -mudflap (-multilib) (-multislot) -nopie -nossp -objc -objc`
+sys-devel/gcc-config-1.7.3 | ``
+sys-devel/make-4.1-r1 | `nls -guile -static`
+sys-kernel/linux-headers-3.18 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.56 | `nls -static`
@@ -49,5 +63,9 @@ sys-libs/timezone-data-2015b | `nls -right`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
-- [x] Headers
+- [ ] Headers
 - [x] Static Libs
+
+#### Included
+- [x] Headers from gentoobb/glibc
+- [x] Static Libs from gentoobb/glibc
