@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="dev-lang/php:5.5 dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu"
+PACKAGES="dev-lang/php:5.5 dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu pecl-imagick"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 #ICONV_FROM=gentoobb/glibc
 
@@ -41,6 +41,8 @@ finish_rootfs_build()
     # required by null-mailer
     copy_gcc_libs
     chmod 0640 $EMERGE_ROOT/etc/nullmailer/remotes
+    # required by imagick
+    find /usr/lib64/gcc/x86_64-pc-linux-gnu -name libgomp.so.* -exec cp {} $EMERGE_ROOT/usr/lib64/ \;
     # prepare adminer / phpinfo micro sites
     mkdir -p $EMERGE_ROOT/var/www/{adminer,phpinfo}
     wget -O $EMERGE_ROOT/var/www/adminer/adminer.php https://downloads.sourceforge.net/adminer/adminer-4.2.1-en.php
