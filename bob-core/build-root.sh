@@ -289,8 +289,9 @@ if [ -n "$PACKAGES" ]; then
     init_docs ${REPO/\images\//}
     generate_doc_package_installed "${PACKAGES}"
 
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v sys-apps/baselayout
     # install packages (defined via Buildconfig.sh)
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v baselayout $PACKAGES
+    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v $PACKAGES
 
     [[ -f ${PACKAGE_INSTALLED} ]] && cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
 
