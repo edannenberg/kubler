@@ -1,0 +1,11 @@
+FROM ${NAMESPACE}/openssl
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+EXPOSE 3000
+
+VOLUME ["/opt/grafana/data"]
+
+WORKDIR /opt/grafana
+ENTRYPOINT ["./bin/grafana-server", "web"]

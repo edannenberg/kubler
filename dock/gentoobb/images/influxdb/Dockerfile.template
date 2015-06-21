@@ -1,0 +1,11 @@
+FROM ${NAMESPACE}/glibc
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+EXPOSE 8083 8086 8090 8099
+
+VOLUME ["/var/opt/influxdb/"]
+
+ENTRYPOINT ["influxd"]
+CMD ["-config=/etc/influxdb.conf"]
