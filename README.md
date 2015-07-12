@@ -18,8 +18,8 @@ PR are always welcome. ;)
 
 * Provide a full inhouse base image stack, built from scratch, maximize shared layer utilization
 * Containers should only contain the bare minimum to run:
-** Separate build and runtime dependencies
-** Only deploy runtime dependencies
+  * Separate build and runtime dependencies
+  * Only deploy runtime dependencies
 * Maximum flexibility while assembling the roots, but with minimal effort
 * Keep things maintainable while the stack grows
 
