@@ -14,28 +14,33 @@ Planned support:
 
 PR are always welcome. ;)
 
-## Why?
+## Goals
 
-* Containers should only contain the bare minimum to run
-* Gentoo shines when it comes to control and optimization
+* Provide a full inhouse base image stack, built from scratch, maximize shared layer utilization
+* Containers should only contain the bare minimum to run:
+** Separate build and runtime dependencies
+** Only deploy runtime dependencies
+* Maximum flexibility while assembling the roots, but with minimal effort
+* Keep things maintainable while the stack grows
 
 ## Features
 
 * Decoupled build logic
 * Maintain multiple image stacks with differing build engines
 * Generic [root-fs][bob-core] build script to quickly bootstrap a build container
-* Build script seeds/utilizes a binary package cache on the build host to avoid unnecessary compiling
+* Utilizes Gentoo's [binary package][] features for quick rebuilds
 * Simple hook system allows for full control of the build process while retaining modularity
 * Generic image and builder dependencies that can be utilized by build engines
 * Automated image [documentation][nginx-packages] and history when using a CVS
 
 ### Docker Features
 
+* Mimics a [nested](https://github.com/docker/docker/issues/7115) docker build
 * Tiny static busybox-uclibc root image (~1.2mb)
-* 2 phase builds to produce a minimal rootfs via seperate build containers
 * Shared layer support for final images, images are not squashed and can depend on other images
 * [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
-* Images are available on [docker.io][gentoo-bb-docker]
+* Reference images are available on [docker.io][gentoo-bb-docker]
+* Push an image stack to a public or private docker registry
 
 ## How much do I save?
 
@@ -80,6 +85,25 @@ Each implementation is allowed to only implement parts of the build process, if 
 
 Build container names generally start with `gentoobb/bob`, when a new build container state is committed the current image name gets appended.
 For example `gentoobb/bob-openssl` refers to the container used to build the `gentoobb/openssl` image.
+
+## Starting your own image stack
+
+```bash
+    $ cd gentoo-bb/
+    $ mkdir -p dock/mynamespace/images/
+    $ cat <<END > dock/mynamespace/build.conf \
+AUTHOR="My Name <my@mail.org>" \
+DEF_BUILD_CONTAINER="gentoobb/bob" \
+CONTAINER_ENGINE="docker" \
+END
+    # optional
+    $ cd dock/mynamespace
+    $ git init # then setup remote origin to your git server/github as usual
+```
+
+You are now ready to work on your shiny new image stack. The `build.conf` above defines the `gentoobb/bob` image
+as `default build container`. Yep, you can set any build container from other namespaces or roll your own of course.
+For most tasks the gentoobb/bob image should do just fine though.
 
 ## Adding Docker images
 
@@ -133,6 +157,7 @@ If a new release was found simply rebuild the stack by running:
 [gentoo-bb-docker]: https://registry.hub.docker.com/repos/gentoobb/?&s=alphabetical
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/dock/gentoobb/images/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
+[binary package]: https://wiki.gentoo.org/wiki/Binary_package_guide
 [CoreOS]: https://coreos.com/
 [@wking]: https://github.com/wking
 [@jbergstroem]: https://github.com/jbergstroem
