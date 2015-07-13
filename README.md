@@ -90,8 +90,8 @@ END
     $ ./build.sh build mynamespace
 ```
 
-Pretty straight forward, pass a Gentoo package atom to be installed in the first build phase and setup a Dockerfile that
-includes the build artifact from the first phase. Again we use an image from another namespace as base for final image. (gentoobb/glibc)
+Pretty straight forward, pass a Gentoo `package atom` to be installed in the first build phase and setup a `Dockerfile` that
+assembles the final image. Again we use an image from another namespace as base for the final image. (gentoobb/glibc)
 
 See the 'how does it work' section below for more details on the build process.
 
