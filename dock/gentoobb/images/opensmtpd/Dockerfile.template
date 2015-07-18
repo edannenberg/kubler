@@ -1,0 +1,8 @@
+FROM ${NAMESPACE}/openssl
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+EXPOSE 25
+
+CMD ["/usr/sbin/smtpd", "-d"]
