@@ -77,17 +77,17 @@ For most tasks the `gentoobb/bob` image should do just fine though.
 Let's setup a test image in our new namespace:
 
 ```bash
-    $ cd gentoo-bb/
-    $ mkdir -p dock/mynamespace/images/figlet
-    $ cat <<END > dock/mynamespace/images/figlet/Buildconfig.sh
+ $ cd gentoo-bb/
+ $ mkdir -p dock/mynamespace/images/figlet
+ $ cat <<END > dock/mynamespace/images/figlet/Buildconfig.sh
 PACKAGES="app-misc/figlet"
 END
-    $ cat <<END > dock/mynamespace/images/figlet/Dockerfile.template
+ $ cat <<END > dock/mynamespace/images/figlet/Dockerfile.template
 FROM gentoobb/glibc
 ADD rootfs.tar /
 CMD ["figlet", "gentoo-bb"]
 END
-    $ ./build.sh build mynamespace
+ $ ./build.sh build mynamespace
 ```
 
 Pretty straight forward, pass a Gentoo `package atom` to be installed in the first build phase and setup a `Dockerfile` that
