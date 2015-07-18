@@ -11,10 +11,10 @@ configure_bob() {
     # install default packages
     update_use 'dev-vcs/git' '-perl'
     update_use 'app-crypt/pinentry' '+ncurses'
+    update_keywords 'app-portage/layman' '+~amd64'
     emerge sys-devel/crossdev dev-vcs/git app-portage/layman
     # setup layman
     layman -L
-    echo source /var/lib/layman/make.conf >> /etc/portage/make.conf
 }
 
 #
