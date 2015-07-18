@@ -1,15 +1,11 @@
-### gentoobb/nginx-proxy-conf:20150709
-Built: Sat Jul 18 21:13:10 CEST 2015
+### gentoobb/cadvisor:20150709
+Built: Sat Jul 18 20:11:49 CEST 2015
 
-Image Size: 18.92 MB
+Image Size: 28.35 MB
 #### Installed
 Package | USE Flags
 --------|----------
-dev-lang/execline-2.1.1.0 | `-static -static-libs`
-dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.1.3.0 | `-static`
-*manual install*: entr-3.2 | http://entrproject.org/
-*manual install*: docker-gen-0.4.0 | http://github.com/jwilder/docker-gen/
+*manual install*: cadvisor-0.16.0 | https://github.com/google/cadvisor/
 #### Inherited
 Package | USE Flags
 --------|----------

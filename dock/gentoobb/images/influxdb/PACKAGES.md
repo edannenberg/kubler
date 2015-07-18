@@ -1,15 +1,11 @@
-### gentoobb/nginx-proxy-conf:20150709
-Built: Sat Jul 18 21:13:10 CEST 2015
+### gentoobb/influxdb:20150709
+Built: Sat Jul 18 20:31:18 CEST 2015
 
-Image Size: 18.92 MB
+Image Size: 41.12 MB
 #### Installed
 Package | USE Flags
 --------|----------
-dev-lang/execline-2.1.1.0 | `-static -static-libs`
-dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.1.3.0 | `-static`
-*manual install*: entr-3.2 | http://entrproject.org/
-*manual install*: docker-gen-0.4.0 | http://github.com/jwilder/docker-gen/
+*manual install*: influxdb-0.9.1 | https://github.com/influxdb/influxdb/
 #### Inherited
 Package | USE Flags
 --------|----------
