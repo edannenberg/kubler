@@ -6,12 +6,20 @@ CROSSDEV_UCLIBC="x86_64-pc-linux-uclibc"
 
 configure_bob() {
     # setup crossdev
-    echo PORTDIR_OVERLAY="/usr/local/portage $PORTDIR_OVERLAY" >> /etc/portage/make.conf
-    mkdir -p /usr/local/portage
-    crossdev --init-target --target ${CROSSDEV_UCLIBC}
+    mkdir -p /usr/local/portage-crossdev/profiles
+    echo 'local-crossdev' > /usr/local/portage-crossdev/profiles/repo_name
+    echo "[local-crossdev]
+location=/usr/local/portage-crossdev
+priority=9999
+masters = gentoo
+auto-sync = no" > /etc/portage/repos.conf/crossdev.conf
+
+    crossdev -S --init-target --target ${CROSSDEV_UCLIBC}
     mkdir -p /usr/${CROSSDEV_UCLIBC}/etc/portage/package.{mask,unmask,use,keywords} /usr/${CROSSDEV_UCLIBC}/tmp/
     rm /usr/${CROSSDEV_UCLIBC}/etc/portage/make.profile
     ln -s /usr/portage/profiles/uclibc/amd64/ /usr/${CROSSDEV_UCLIBC}/etc/portage/make.profile
+
+    cp -rfp /etc/portage/repos.conf/ /usr/${CROSSDEV_UCLIBC}/etc/portage/
 
     head -n -3 /etc/portage/make.conf > /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
     sed -i '7i CHOST=x86_64-pc-linux-uclibc \
@@ -37,7 +45,7 @@ PKGDIR="/packages/${CHOST}"' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
     # fix regression in latest toolchain.eclass - see https://bugs.gentoo.org/show_bug.cgi?id=548782
     sed -i 's/\.\/\${dir}\/\*\.la || die/\.\/\${dir}\/\*\.la/g' /usr/portage/eclass/toolchain.eclass
 
-    crossdev --target ${CROSSDEV_UCLIBC}
+    crossdev -S --target ${CROSSDEV_UCLIBC}
 
     rm /etc/portage/package.use/gcc
 }
