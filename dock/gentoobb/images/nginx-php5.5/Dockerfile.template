@@ -11,7 +11,11 @@ RUN sed -i '3i source /etc/nginx/link_php_microsites.sh' /etc/service/nginx/run
 # env for cert creation: CRT_COUNTRY, CRT_STATE, CRT_LOCATION, CRT_ORG, CRT_CN
 ENV CRT_ORG ACME Inc - nginx-php
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/php-fpm /service && \
+RUN chmod +x $(find /etc/service -name run) && \
+    ln -s /etc/service/php-fpm /service && \
+    ln -s /etc/s6_finish_default /etc/service/php-fpm/finish && \
+    ln -s /etc/service/nullmailer /service && \
+    ln -s /etc/s6_finish_default /etc/service/nullmailer/finish && \
     if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php5.5 /usr/bin/php; fi && \
     curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/bin/composer
 
