@@ -11,6 +11,8 @@ configure_bob() {
         echo "$LOCALE" >> /etc/locale.gen
     done
     locale-gen
+    mkdir -p $EMERGE_ROOT/usr/lib64/locale
+    cp /usr/lib64/locale/locale-archive $EMERGE_ROOT/usr/lib64/locale/
     # set timezone
     echo $TIMEZONE > /etc/timezone
 }
