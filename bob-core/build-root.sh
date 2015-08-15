@@ -46,6 +46,18 @@ extract_build_dependencies() {
     fi
 }
 
+# Find package version of given gentoo package atom
+#
+# Arguments:
+# 1: package_atom
+get_package_version()
+{
+    local PACKAGE="${1}"
+    exec 2>/dev/null
+    echo $(emerge -p "${PACKAGE}" | grep ${PACKAGE} | sed -e "s|${PACKAGE}-|${PACKAGE}§|" -e 's/[\s]*USE=/§USE=/g' | awk -F§ '{print $2}')
+    exec 2>&1
+}
+
 generate_documentation_footer() {
     echo "#### Purged" > "${DOC_FOOTER_PURGED}"
     write_checkbox_line "Headers" "${KEEP_HEADERS}" "${DOC_FOOTER_PURGED}" "negate"
