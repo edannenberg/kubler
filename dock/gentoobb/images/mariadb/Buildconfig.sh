@@ -20,7 +20,6 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     copy_gcc_libs
-    copy_locale_data
     mkdir -p $EMERGE_ROOT/var/run/mysql $EMERGE_ROOT/var/run/mysqld
     chown mysql:mysql $EMERGE_ROOT/var/run/mysql $EMERGE_ROOT/var/run/mysqld
     # remove curl again

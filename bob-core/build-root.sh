@@ -34,14 +34,6 @@ copy_gcc_libs() {
     done
 }
 
-# copy glibc locale-archive from build container to custom root, locale-gen lacks support for custom ROOT
-# enables proper locale support via LANG ENV, default: en_US.UTF-8 UTF-8 incl. en_US ISO-8859-1
-# see glibc configure_bob() hook for details on how to configure different locales
-copy_locale_data() {
-    mkdir -p ${EMERGE_ROOT}/usr/lib64/locale
-    cp /usr/lib64/locale/locale-archive ${EMERGE_ROOT}/usr/lib64/locale/
-}
-
 extract_build_dependencies() {
     RESOURCE_SUFFIX="${1}"
     RESOURCE_VAR="${RESOURCE_SUFFIX}_FROM"

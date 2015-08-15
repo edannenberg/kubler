@@ -16,7 +16,6 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    copy_locale_data
     install_gosu
     uninstall_package app-shells/bash
 }
