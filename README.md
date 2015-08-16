@@ -178,7 +178,7 @@ For example `gentoobb/bob-openssl` refers to the container used to build the `ge
 [OpenRC]: http://wiki.gentoo.org/wiki/OpenRC
 [Docker]: http://www.docker.io/
 [Rocket]: https://github.com/coreos/rocket
-[gentoo-bb-docker]: https://registry.hub.docker.com/repos/gentoobb/?&s=alphabetical
+[gentoo-bb-docker]: https://hub.docker.com/search/?q=gentoobb&page=1&isAutomated=0&isOfficial=0&starCount=0&pullCount=0
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/dock/gentoobb/images/nginx/PACKAGES.md
 [Gentoo]: http://www.gentoo.org/
 [binary package]: https://wiki.gentoo.org/wiki/Binary_package_guide
