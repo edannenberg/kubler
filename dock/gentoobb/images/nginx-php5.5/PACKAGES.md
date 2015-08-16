@@ -1,15 +1,15 @@
-### gentoobb/nginx-php5.5:20150709
-Built: Sat Jul 18 21:12:05 CEST 2015
+### gentoobb/nginx-php5.5:20150813
+Built: Sun Aug 16 16:42:40 CEST 2015
 
-Image Size: 97.81 MB
+Image Size: 99.74 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.7.1-r4 | `fpm -apache2`
-dev-lang/php-5.5.26 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -pcntl -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite (-sybase-ct) -systemd -sysvipc -tidy -truetype -vpx -wddx -xslt`
-dev-libs/expat-2.1.0-r4 | `unicode -examples -static-libs`
+dev-lang/php-5.5.28 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -pcntl -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite (-sybase-ct) -systemd -sysvipc -tidy -truetype -vpx -wddx -xslt`
+dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/gmp-5.1.3-r1 | `cxx -doc -pgo -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r2 | ``
@@ -21,7 +21,7 @@ dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminato
 dev-php/pecl-apcu-4.0.7 | `lock`
 dev-php/pecl-imagick-3.1.2 | `-examples`
 dev-php/pecl-memcache-3.0.8-r1 | `session`
-dev-php/pecl-redis-2.2.3 | `-igbinary`
+dev-php/pecl-redis-2.2.7 | `-igbinary`
 dev-php/xdebug-2.2.6 | ` `
 dev-php/xdebug-client-2.2.6 | `-libedit`
 mail-mta/nullmailer-1.13-r5 | `ssl`
@@ -61,12 +61,12 @@ Package | USE Flags
 **FROM gentoobb/nginx** |
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 dev-libs/libpcre-8.36 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.7.6 | `http http-cache pcre ssl -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.8.0 | `http http-cache pcre ssl -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
 dev-libs/openssl-1.0.1p | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
-sys-apps/attr-2.4.47-r1 | `nls -static-libs`
+sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
@@ -76,9 +76,9 @@ dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
-sys-apps/gentoo-functions-0.8 | ``
+sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015b | `nls -right`
+sys-libs/timezone-data-2015e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

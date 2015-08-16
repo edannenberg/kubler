@@ -1,7 +1,7 @@
-### gentoobb/s6:20150709
-Built: Sat Jul 18 19:55:08 CEST 2015
+### gentoobb/s6:20150813
+Built: Sun Aug 16 15:25:56 CEST 2015
 
-Image Size: 9.931 MB
+Image Size: 11.79 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -13,9 +13,9 @@ sys-apps/s6-2.1.3.0 | `-static`
 Package | USE Flags
 --------|----------
 **FROM gentoobb/glibc** |
-sys-apps/gentoo-functions-0.8 | ``
+sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015b | `nls -right`
+sys-libs/timezone-data-2015e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
