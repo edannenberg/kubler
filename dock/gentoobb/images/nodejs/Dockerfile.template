@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/openssl
+FROM ${NAMESPACE}/s6
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
