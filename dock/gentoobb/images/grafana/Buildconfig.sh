@@ -2,11 +2,17 @@
 # build config
 #
 PACKAGES=""
-GRAFANA_VERSION=2.0.2
+GRAFANA_VERSION=2.1.1
 
 configure_bob()
 {
-    emerge -v go nodejs
+    # nodejs currently requires openssl with ECDH :/
+    emerge -C net-misc/openssh
+    update_use 'dev-libs/openssl' '-bindist'
+    unprovide_package 'dev-libs/openssl'
+    emerge dev-libs/openssl
+
+    emerge -v dev-lang/go net-libs/nodejs
     export DISTRIBUTION_DIR=/go/src/github.com/grafana/grafana
     mkdir -p ${DISTRIBUTION_DIR}
     export GOPATH=/go
