@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-RIEMANN_VERSION=0.2.9
+RIEMANN_VERSION=0.2.10
 
 configure_bob() {
     wget https://aphyr.com/riemann/riemann-${RIEMANN_VERSION}.tar.bz2
