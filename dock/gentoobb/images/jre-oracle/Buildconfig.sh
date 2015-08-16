@@ -9,7 +9,7 @@ PACKAGES="dev-java/oracle-jre-bin"
 configure_rootfs_build()
 {
     # download oracle jre bin
-    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jre-8u45-linux-x64.tar.gz
+    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jre-8u51-linux-x64.tar.gz
     #JRE_TAR=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
     regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
     if [[ ${JRE_URL} =~ $regex ]]; then
@@ -21,6 +21,7 @@ configure_rootfs_build()
             -P /distfiles \
             "${JRE_URL}"
     fi
+    update_use 'dev-java/oracle-jre-bin' '-awt -fontconfig'
     # skip python and iced-tea
     provide_package dev-lang/python dev-java/icedtea-bin
 }
