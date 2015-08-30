@@ -107,7 +107,7 @@ download_stage3() {
 # Download and verify portage snapshot
 download_portage_snapshot()
 {
-    [ -d ${DL_PATH} ] || mkdir ${DL_PATH}
+    [ -d ${DL_PATH} ] || mkdir -p ${DL_PATH}
 
     for FILE in "${PORTAGE}" "${PORTAGE_SIG}" "${PORTAGE_MD5}"; do
         if [ ! -f "${DL_PATH}/${FILE}" ]; then
