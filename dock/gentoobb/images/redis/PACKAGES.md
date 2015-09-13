@@ -1,5 +1,5 @@
-### gentoobb/redis:20150813
-Built: Sun Aug 16 16:51:31 CEST 2015
+### gentoobb/redis:20150910
+Built: Sun Sep 13 00:17:35 CEST 2015
 
 Image Size: 13.33 MB
 #### Installed

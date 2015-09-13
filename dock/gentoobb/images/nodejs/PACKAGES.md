@@ -1,13 +1,13 @@
-### gentoobb/nodejs:20150813
-Built: Sun Aug 16 19:15:03 CEST 2015
+### gentoobb/nodejs:20150910
+Built: Sun Sep 13 00:02:33 CEST 2015
 
-Image Size: 42.25 MB
+Image Size: 42.75 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
 dev-libs/libuv-1.4.2 | `-static-libs`
-dev-libs/openssl-1.0.1p | `tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2d | `asm tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 net-libs/http-parser-2.3 | `-static-libs`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`

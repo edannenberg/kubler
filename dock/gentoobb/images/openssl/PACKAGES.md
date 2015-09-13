@@ -1,12 +1,12 @@
-### gentoobb/openssl:20150813
-Built: Sun Aug 16 15:28:41 CEST 2015
+### gentoobb/openssl:20150910
+Built: Sat Sep 12 21:37:03 CEST 2015
 
-Image Size: 21.43 MB
+Image Size: 21.74 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.1p | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2d | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`

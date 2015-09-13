@@ -1,7 +1,7 @@
-### gentoobb/opensmtpd:20150813
-Built: Sun Aug 16 16:46:11 CEST 2015
+### gentoobb/opensmtpd:20150910
+Built: Sun Sep 13 00:04:06 CEST 2015
 
-Image Size: 28.39 MB
+Image Size: 28.7 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -15,7 +15,7 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.1p | `bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2d | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`

@@ -1,7 +1,7 @@
-### gentoobb/nginx-proxy-conf:20150813
-Built: Sun Aug 16 16:43:48 CEST 2015
+### gentoobb/nginx-proxy-conf:20150910
+Built: Sun Sep 13 00:00:16 CEST 2015
 
-Image Size: 20.77 MB
+Image Size: 20.73 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,7 +9,7 @@ dev-lang/execline-2.1.1.0 | `-static -static-libs`
 dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
-*manual install*: docker-gen-0.4.0 | http://github.com/jwilder/docker-gen/
+*manual install*: docker-gen-0.4.1 | http://github.com/jwilder/docker-gen/
 #### Inherited
 Package | USE Flags
 --------|----------
