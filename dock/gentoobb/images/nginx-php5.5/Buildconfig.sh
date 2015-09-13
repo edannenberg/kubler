@@ -41,6 +41,8 @@ finish_rootfs_build()
     # required by null-mailer
     copy_gcc_libs
     chmod 0640 $EMERGE_ROOT/etc/nullmailer/remotes
+    # apparently a bug with nullmailer? links to non existing gnutls lib
+    ln -r -s $EMERGE_ROOT/usr/lib64/libgnutls.so.28 $EMERGE_ROOT/usr/lib64/libgnutls.so.26
     # required by imagick
     find /usr/lib64/gcc/x86_64-pc-linux-gnu -name libgomp.so.* -exec cp {} $EMERGE_ROOT/usr/lib64/ \;
     # prepare adminer / phpinfo micro sites
