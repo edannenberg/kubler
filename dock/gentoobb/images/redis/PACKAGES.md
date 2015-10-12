@@ -1,7 +1,7 @@
-### gentoobb/redis:20150910
-Built: Sun Sep 13 00:17:35 CEST 2015
+### gentoobb/redis:20151008
+Built: Mon Oct 12 20:17:23 CEST 2015
 
-Image Size: 13.33 MB
+Image Size: 13.32 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -18,8 +18,8 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd -profile (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015e | `nls -leaps`
+sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
