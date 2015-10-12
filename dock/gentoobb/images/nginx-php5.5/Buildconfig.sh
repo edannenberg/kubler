@@ -14,7 +14,7 @@ configure_rootfs_build()
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
 
     update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+curlwrappers' '+fpm' '+gd' '+mhash' \
-               '+mysql' '+mysqli' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+zip'
+               '+mysql' '+mysqli' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'dev-php/pecl-apcu' '+mmap'
 
