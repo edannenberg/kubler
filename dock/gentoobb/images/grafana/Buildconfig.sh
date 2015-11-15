@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-GRAFANA_VERSION=2.1.3
+GRAFANA_VERSION="2.5.0"
 
 configure_bob()
 {
@@ -31,7 +31,7 @@ configure_bob()
     go run build.go build
 
     npm install
-    npm install -g grunt-cli
+    npm install -g grunt-cli gyp
     #TODO: release fails due to not being able to execute phantomjs tests, figure out how to skip those for release target
     #grunt release
     grunt
