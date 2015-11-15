@@ -16,7 +16,7 @@ configure_rootfs_build()
     update_keywords '=dev-ruby/rdoc-4.1.2' '+~amd64'
     update_keywords '=dev-ruby/rubygems-2.4.8' '+~amd64'
     update_keywords '=dev-ruby/rake-10.4.2' '+~amd64'
-    update_keywords '=dev-ruby/power_assert-0.2.2' '+~amd64'
+    update_keywords '=dev-ruby/power_assert-0.2.6' '+~amd64'
     update_keywords '=dev-ruby/minitest-5.5.1' '+~amd64'
     update_keywords '=dev-ruby/test-unit-3.1.4' '+~amd64'
     update_keywords '=virtual/rubygems-11' '+~amd64'
