@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-CADVISOR_VERSION=0.18.0
+CADVISOR_VERSION="0.19.3"
 
 configure_bob()
 {
@@ -13,7 +13,7 @@ configure_bob()
     export PATH=$PATH:/go/bin
     git clone https://github.com/google/cadvisor.git ${DISTRIBUTION_DIR}
     cd ${DISTRIBUTION_DIR}
-    git checkout tags/${CADVISOR_VERSION}
+    git checkout tags/v${CADVISOR_VERSION}
     # occasionally fetch might fail due to exceeded rate limits from github, lets retry up to 5 times before giving up
     echo "fetching deps.."
     for i in {1..5}; 
