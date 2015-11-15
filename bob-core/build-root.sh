@@ -249,7 +249,7 @@ uninstall_package() {
 }
 
 install_docker_gen() {
-    local DOCKERGEN_VERSION="0.4.2"
+    local DOCKERGEN_VERSION="0.4.3"
     wget "http://github.com/jwilder/docker-gen/releases/download/${DOCKERGEN_VERSION}/docker-gen-linux-amd64-${DOCKERGEN_VERSION}.tar.gz"
     mkdir -p $EMERGE_ROOT/bin
     tar -C $EMERGE_ROOT/bin -xvzf "docker-gen-linux-amd64-${DOCKERGEN_VERSION}.tar.gz"
