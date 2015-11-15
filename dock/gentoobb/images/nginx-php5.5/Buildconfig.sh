@@ -18,6 +18,8 @@ configure_rootfs_build()
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'dev-php/pecl-apcu' '+mmap'
 
+    update_use 'media-gfx/imagemagick' '-openmp'
+
     # skip bash, perl, autogen. pulled in as dep since php 5.5.22
     provide_package app-shells/bash dev-lang/perl sys-devel/autogen
 }
