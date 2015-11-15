@@ -37,7 +37,7 @@ configure_bob()
     grunt
 
     mkdir -p ${EMERGE_ROOT}/opt/grafana/{bin,conf,data}
-    cp -rp "${DISTRIBUTION_DIR}/public" "${EMERGE_ROOT}/opt/grafana/"
+    cp -rp "${DISTRIBUTION_DIR}/public_gen" "${EMERGE_ROOT}/opt/grafana/"
     cp "${DISTRIBUTION_DIR}/conf/defaults.ini" "${EMERGE_ROOT}/opt/grafana/conf/"
     cp "${DISTRIBUTION_DIR}/conf/sample.ini" "${EMERGE_ROOT}/opt/grafana/conf/custom.ini"
     cp ${DISTRIBUTION_DIR}/bin/* ${EMERGE_ROOT}/opt/grafana/bin
