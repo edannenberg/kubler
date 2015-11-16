@@ -1,7 +1,7 @@
-### gentoobb/jdk-icedtea:20151008
-Built: Mon Oct 12 19:01:22 CEST 2015
+### gentoobb/jdk-icedtea:20151112
+Built: Sun Nov 15 20:29:09 CET 2015
 
-Image Size: 276.6 MB
+Image Size: 275.3 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,13 +12,12 @@ dev-java/icedtea-bin-7.2.6.1 | `-alsa -awt -cjk -cups -doc -examples -gtk -nsplu
 dev-java/java-config-2.2.0 | ` `
 dev-java/java-config-wrapper-0.16 | ``
 dev-lang/python-exec-2.0.1-r1 | ` `
-dev-libs/elfutils-0.158 | `bzip2 nls utils zlib -lzma -static-libs {-test} (-threads)`
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
-dev-libs/glib-2.44.1 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
+dev-libs/glib-2.44.1-r1 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.44.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.44.0 | ``
 dev-libs/libffi-3.0.13-r1 | `pax`
-dev-libs/libxml2-2.9.2-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/libxml2-2.9.2-r4 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-util/pkgconfig-0.28-r2 | `hardened -internal-glib`
 gnome-base/gsettings-desktop-schemas-3.16.1 | `introspection`
 media-fonts/dejavu-2.34 | `-`
@@ -67,7 +66,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

@@ -1,18 +1,18 @@
-### gentoobb/ruby:20151008
-Built: Mon Oct 12 20:25:24 CEST 2015
+### gentoobb/ruby:20151112
+Built: Sun Nov 15 22:44:34 CET 2015
 
-Image Size: 50.94 MB
+Image Size: 51.49 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-eselect/eselect-ruby-20141227 | ``
-dev-lang/ruby-2.2.3 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -ncurses -rubytests -socks5 -xemacs`
+dev-lang/ruby-2.2.3-r1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -ncurses -rubytests -socks5 -xemacs`
 dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
 dev-libs/libffi-3.0.13-r1 | `pax`
 dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
 dev-ruby/json-1.8.3 | `-doc {-test}`
 dev-ruby/minitest-5.5.1 | `-doc {-test}`
-dev-ruby/power_assert-0.2.2 | `-doc {-test}`
+dev-ruby/power_assert-0.2.6 | `-doc {-test}`
 dev-ruby/rake-10.4.2 | `-doc {-test}`
 dev-ruby/rdoc-4.1.2 | `-doc {-test}`
 dev-ruby/rubygems-2.4.8 | `-server {-test}`
@@ -47,7 +47,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

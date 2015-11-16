@@ -1,13 +1,13 @@
-### gentoobb/mariadb:20151008
-Built: Mon Oct 12 19:21:06 CEST 2015
+### gentoobb/mariadb:20151112
+Built: Sun Nov 15 21:06:15 CET 2015
 
-Image Size: 223.8 MB
+Image Size: 224.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/perl-cleaner-2.19 | ``
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
-dev-db/mariadb-10.0.21 | `bindist community perl ssl (-cluster) -debug -embedded -extraengine -jemalloc -latin1 -minimal -odbc -oqgraph -pam -profiling (-selinux) -sphinx -static -static-libs -systemtap -tcmalloc {-test} -tokudb -xml`
+dev-db/mariadb-10.0.22 | `bindist openssl perl -debug -embedded -extraengine -jemalloc -latin1 (-libressl) -minimal -odbc -oqgraph -pam -profiling (-selinux) -sphinx -static -static-libs -systemtap -tcmalloc {-test} -tokudb -xml -yassl`
 dev-db/mysql-init-scripts-2.0-r1 | ``
 dev-lang/perl-5.20.2 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
@@ -25,7 +25,7 @@ perl-core/Data-Dumper-2.154.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-5.2 | `nls -static`
 sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
-sys-process/procps-3.3.9-r2 | `nls unicode -ncurses (-selinux) -static-libs -systemd {-test}`
+sys-process/procps-3.3.10-r1 | `nls unicode -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -55,7 +55,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

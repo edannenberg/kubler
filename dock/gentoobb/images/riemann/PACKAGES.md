@@ -1,7 +1,7 @@
-### gentoobb/riemann:20151008
-Built: Mon Oct 12 20:19:33 CEST 2015
+### gentoobb/riemann:20151112
+Built: Sun Nov 15 22:38:02 CET 2015
 
-Image Size: 234.6 MB
+Image Size: 235.8 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -15,7 +15,7 @@ Package | USE Flags
 app-eselect/eselect-java-0.1.0 | ``
 dev-java/java-config-2.2.0 | ` `
 dev-java/java-config-wrapper-0.16 | ``
-dev-java/oracle-jre-bin-1.8.0.51 | `pax`
+dev-java/oracle-jre-bin-1.8.0.66 | `pax`
 dev-lang/python-exec-2.0.1-r1 | ` `
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM gentoobb/bash** |
@@ -44,7 +44,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

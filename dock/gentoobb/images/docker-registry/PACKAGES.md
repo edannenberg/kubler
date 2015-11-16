@@ -1,11 +1,11 @@
-### gentoobb/docker-registry:20151008
-Built: Mon Oct 12 18:03:30 CEST 2015
+### gentoobb/docker-registry:20151112
+Built: Sun Nov 15 23:05:58 CET 2015
 
-Image Size: 47.43 MB
+Image Size: 91.45 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: docker-registry-2.1.1 | http://github.com/docker/distribution/
+*manual install*: docker-registry-2.2.0 | http://github.com/docker/distribution/
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -21,7 +21,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

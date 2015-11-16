@@ -1,12 +1,12 @@
-### gentoobb/glibc:20151008
-Built: Mon Oct 12 17:39:39 CEST 2015
+### gentoobb/glibc:20151112
+Built: Sun Nov 15 19:16:34 CET 2015
 
 Image Size: 10.42 MB
 #### Installed
 Package | USE Flags
 --------|----------
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 #### Inherited
 Package | USE Flags

@@ -1,24 +1,24 @@
-### gentoobb/log-collector:20151008
-Built: Mon Oct 12 19:17:31 CEST 2015
+### gentoobb/log-collector:20151112
+Built: Sun Nov 15 20:51:07 CET 2015
 
-Image Size: 197.8 MB
+Image Size: 198.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
 *gem install*: fluentd | --no-ri --no-rdoc
 *gem install*: fluent-plugin-elasticsearch | --no-ri --no-rdoc
-*manual install*: docker-gen-0.4.2 | http://github.com/jwilder/docker-gen/
+*manual install*: docker-gen-0.4.3 | http://github.com/jwilder/docker-gen/
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/ruby-gcc** |
 app-eselect/eselect-ruby-20141227 | ``
-dev-lang/ruby-2.2.3 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -ncurses -rubytests -socks5 -xemacs`
+dev-lang/ruby-2.2.3-r1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -ncurses -rubytests -socks5 -xemacs`
 dev-libs/libffi-3.0.13-r1 | `pax`
 dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
 dev-ruby/json-1.8.3 | `-doc {-test}`
 dev-ruby/minitest-5.5.1 | `-doc {-test}`
-dev-ruby/power_assert-0.2.2 | `-doc {-test}`
+dev-ruby/power_assert-0.2.6 | `-doc {-test}`
 dev-ruby/rake-10.4.2 | `-doc {-test}`
 dev-ruby/rdoc-4.1.2 | `-doc {-test}`
 dev-ruby/rubygems-2.4.8 | `-server {-test}`
@@ -60,7 +60,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

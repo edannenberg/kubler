@@ -1,7 +1,7 @@
-### gentoobb/python3:20151008
-Built: Mon Oct 12 20:15:43 CEST 2015
+### gentoobb/python3:20151112
+Built: Sun Nov 15 22:34:01 CET 2015
 
-Image Size: 114.3 MB
+Image Size: 124.9 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -15,8 +15,30 @@ dev-lang/python-3.4.3 | `hardened readline sqlite ssl threads xml -build -exampl
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `pax`
-dev-python/pip-1.5.6 | ` `
-dev-python/setuptools-12.0.1 | `{-test}`
+dev-python/CacheControl-0.11.5 | `{-test}`
+dev-python/certifi-2015.9.6.2 | ` `
+dev-python/cffi-1.2.1 | `-doc`
+dev-python/chardet-2.2.1 | ` `
+dev-python/colorama-0.3.3 | `-examples`
+dev-python/cryptography-1.0.2 | `(-libressl) {-test}`
+dev-python/distlib-0.2.1 | ` `
+dev-python/html5lib-0.9999999 | `{-test}`
+dev-python/idna-2.0 | ` `
+dev-python/lockfile-0.11.0-r1 | `-doc {-test}`
+dev-python/ndg-httpsclient-0.4.0 | ` `
+dev-python/packaging-15.3-r2 | `{-test}`
+dev-python/pip-7.1.2 | ` `
+dev-python/ply-3.6-r1 | `-examples`
+dev-python/progress-1.2 | ` `
+dev-python/py-1.4.30 | `-doc {-test}`
+dev-python/pyasn1-0.1.8 | `-doc`
+dev-python/pycparser-2.14 | `{-test}`
+dev-python/pyopenssl-0.14 | `-doc -examples`
+dev-python/pytest-2.8.2 | `-doc {-test}`
+dev-python/requests-2.8.1 | `{-test}`
+dev-python/retrying-1.3.3 | ` `
+dev-python/setuptools-18.4 | `{-test}`
+dev-python/six-1.10.0 | `-doc {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -46,7 +68,7 @@ sys-apps/s6-2.1.3.0 | `-static`
 *manual install*: entr-3.2 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.20-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
