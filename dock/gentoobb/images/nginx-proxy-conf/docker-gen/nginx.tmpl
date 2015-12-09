@@ -44,7 +44,10 @@ server {
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
     listen 80;
-    listen 443 ssl;
+    listen 443 ssl spdy;
+
+    add_header Alternate-Protocol  443:npn-spdy/3;
+    #add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
 
     ssl_certificate /etc/nginx/ssl/{{ $host }}/nginx.crt;
     ssl_certificate_key /etc/nginx/ssl/{{ $host }}/nginx.key;
