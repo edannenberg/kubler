@@ -5,14 +5,12 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
-ENV ES_CLASSPATH /usr/share/elasticsearch/lib/*:/usr/share/elasticsearch/lib/sigar/*
+ENV ES_CLASSPATH /usr/share/elasticsearch/lib/*
 
 RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/elasticsearch/finish && \
     ln -s /etc/service/elasticsearch /service
 
-#RUN /usr/share/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-analysis-icu/2.0.0
+EXPOSE 9200 9300
 
-EXPOSE 9200
-
-CMD ["/bin/s6-svscan", "/service"]
+CMD ["/bin/s6-svscan", "-t0", "/service"]
