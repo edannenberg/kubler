@@ -1,8 +1,8 @@
 gentoo-bb
 =========
 
-Build framework to produce minimal root file systems based on [Gentoo][]. It's primarily intended for maintaining [LXC][] base image stacks,
-but can probably fairly easy (ab)used for other use cases involving a custom root fs, cross compiling comes to mind.
+Build framework to produce minimal root file systems based on [Gentoo][]. It's primarily intended for maintaining an organization's
+[LXC][] base image stack(s), but can probably fairly easy (ab)used for other use cases involving a custom root fs, cross compiling comes to mind.
 
 Currently supported build engines:
 
@@ -16,11 +16,18 @@ PR are always welcome. ;)
 
 ## Goals
 
+* Central organization-wide management of base images
+* Full control over image content across all layers
 * Containers should only contain the bare minimum to run
   * Separate build and runtime dependencies
   * Only deploy runtime dependencies
 * Maximum flexibility while assembling the rootfs, but with minimal effort
 * Keep things maintainable as the stack grows
+
+## Status
+
+* Stable for a while now and powers a good amount of our internal infrastructure, too scared still for docker in the wild :)
+* Monthly update cycle for all reference images
 
 ## Features
 
@@ -38,13 +45,13 @@ PR are always welcome. ;)
 * Everything happens in docker containers except for some bash glue on the build host
 * Tiny static busybox-uclibc root image (~1.2mb), FROM scratch is fine too
 * Shared layer support for final images, images are not squashed and can depend on other images
-* [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling)
-* Reference images are available on [docker.io][gentoo-bb-docker]
+* [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling), optional of course
+* Reference images are available on [docker hub][gentoo-bb-docker]
 * Push image stack(s) to a public or private docker registry
 
 ## How much do I save?
 
-* Quite a bit, the Nginx Docker image, for example, clocks in at ~20MB, compared to >1GB for a full Gentoo version or ~300MB for a similiar Ubuntu version
+* Quite a bit, the Nginx Docker image, for example, clocks in at ~17MB, compared to >1GB for a full Gentoo version or ~300MB for a similiar Ubuntu version
 
 ## Quick Start
 
@@ -54,7 +61,9 @@ PR are always welcome. ;)
 
 * If you don't have GPG available use `-s` to skip verification of downloaded files
 * Check the directories in `dock/gentoobb/images/` for image specific documentation
-* `bin/` contains a few scripts to start/stop container chains
+
+For testing container stacks see the [docker-compose](https://github.com/edannenberg/gentoo-bb/tree/master/docker-compose) section.
+All reference images are available via docker hub. You may skip the build process if you just want to play around with those before investing your precious cpu cycles. :p
 
 ## Creating a new namespace
 
@@ -133,7 +142,7 @@ If a new release was found simply rebuild the stack by running:
 
     $ ./build.sh -F
 
-* Minor things might break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
+* Minor things might (read will) break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
 
 ## How does it work?
 
