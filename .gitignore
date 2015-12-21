@@ -6,6 +6,7 @@ push.conf
 bob-core/PACKAGES.md
 dock/*/builder/PACKAGES.md
 dock/*
+docker-data/
 !dock/gentoobb
 !dock/dummy
 

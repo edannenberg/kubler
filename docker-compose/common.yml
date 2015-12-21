@@ -1,0 +1,19 @@
+elasticsearch:
+  image: gentoobb/elasticsearch
+  restart: ${DC_RESTART_POLICY}
+
+influxdb:
+  image: gentoobb/influxdb
+  restart: ${DC_RESTART_POLICY}
+
+nginx:
+  image: gentoobb/nginx
+  restart: ${DC_RESTART_POLICY}
+
+nginxphp:
+  image: gentoobb/nginx-php5.5
+  restart: ${DC_RESTART_POLICY}
+
+mariadb:
+  image: gentoobb/mariadb
+  restart: ${DC_RESTART_POLICY}

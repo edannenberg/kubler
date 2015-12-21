@@ -1,0 +1,29 @@
+nginx:
+  extends:
+    file: common.yml
+    service: nginxphp
+  environment:
+    - VIRTUAL_HOST=${VHOST_URL}
+    - NG_TMPL_ADMINER_URL=${ADMINER_URL}
+    - NG_TMPL_PHPINFO_URL=${PHPINFO_URL}
+    - XDEBUG_ENABLED=${XDEBUG}
+    # avoid permission problems for dev setups
+    - NGINX_UID=${NGINX_UID}
+    - NGINX_GID=${NGINX_GID}
+  volumes:
+    - ${HTDOCS_PATH}:/var/www/localhost
+  links:
+    - db
+  ports:
+    - "${XDEBUG_LOCAL_PORT}:9000"
+
+db:
+  extends:
+    file: common.yml
+    service: mariadb
+  environment:
+    - MYSQL_ROOT_PW=${MYSQL_ROOT_PW}
+    - MYSQL_ADMIN_USER=${MYSQL_ADMIN_USER}
+    - MYSQL_ADMIN_PW=${MYSQL_ADMIN_PW}
+  volumes:
+    - ${SQLDATA_PATH}:/var/lib/mysql
