@@ -1,11 +1,11 @@
-### gentoobb/cadvisor:20151112
-Built: Sun Nov 15 19:37:52 CET 2015
+### gentoobb/cadvisor:20151217
+Built: Sun Dec 20 23:17:53 CET 2015
 
-Image Size: 34.81 MB
+Image Size: 35.1 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: cadvisor-0.19.3 | https://github.com/google/cadvisor/
+*manual install*: cadvisor-0.20.1 | https://github.com/google/cadvisor/
 #### Inherited
 Package | USE Flags
 --------|----------

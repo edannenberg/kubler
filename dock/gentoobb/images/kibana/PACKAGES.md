@@ -1,11 +1,11 @@
-### gentoobb/kibana:20151112
-Built: Sun Nov 15 20:34:16 CET 2015
+### gentoobb/kibana:20151217
+Built: Sun Dec 20 23:54:51 CET 2015
 
-Image Size: 54.35 MB
+Image Size: 54.36 MB
 #### Installed
 Package | USE Flags
 --------|----------
-www-apps/kibana-bin-4.1.2 | ``
+www-apps/kibana-bin-4.1.3 | ``
 #### Inherited
 Package | USE Flags
 --------|----------

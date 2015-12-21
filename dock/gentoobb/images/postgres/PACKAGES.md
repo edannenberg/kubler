@@ -1,7 +1,7 @@
-### gentoobb/postgres:20151112
-Built: Sun Nov 15 22:19:40 CET 2015
+### gentoobb/postgres:20151217
+Built: Mon Dec 21 00:30:38 CET 2015
 
-Image Size: 52.3 MB
+Image Size: 52.31 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,7 +9,7 @@ app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
 dev-db/postgresql-9.4.5-r1 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
-dev-libs/libpcre-8.36 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+dev-libs/libpcre-8.38 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-481 | `pcre unicode`
 *manual install*: gosu-1.7 | https://github.com/tianon/gosu/
 #### Inherited
@@ -20,7 +20,7 @@ app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.56 | `nls -static`
 app-shells/bash-4.3_p39 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.43.0 | `ssl threads -adns (-http2) -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
@@ -31,7 +31,8 @@ sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
 sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.2d | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+app-misc/c_rehash-1.7-r1 | ``
+dev-libs/openssl-1.0.2e | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

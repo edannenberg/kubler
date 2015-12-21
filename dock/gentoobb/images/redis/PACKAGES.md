@@ -1,11 +1,11 @@
-### gentoobb/redis:20151112
-Built: Sun Nov 15 22:35:50 CET 2015
+### gentoobb/redis:20151217
+Built: Mon Dec 21 00:44:33 CET 2015
 
-Image Size: 13.33 MB
+Image Size: 13.47 MB
 #### Installed
 Package | USE Flags
 --------|----------
-dev-db/redis-2.8.17-r1 | `jemalloc -tcmalloc {-test}`
+dev-db/redis-3.0.4 | `jemalloc -tcmalloc {-test}`
 dev-lang/lua-5.1.5-r3 | `deprecated -emacs -readline -static`
 dev-libs/jemalloc-3.6.0 | `-debug -static-libs -stats`
 #### Inherited

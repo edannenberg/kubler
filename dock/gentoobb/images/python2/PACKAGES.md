@@ -1,7 +1,7 @@
-### gentoobb/python2:20151112
-Built: Sun Nov 15 22:26:44 CET 2015
+### gentoobb/python2:20151217
+Built: Mon Dec 21 00:36:35 CET 2015
 
-Image Size: 112.9 MB
+Image Size: 111.9 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,14 +9,14 @@ app-admin/python-updater-0.11 | ``
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-python-20111108 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.8.10.2 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
-dev-lang/python-2.7.10 | `hardened readline sqlite ssl threads (wide-unicode) xml (-berkdb) -build -doc -examples -gdbm -ipv6 -ncurses -tk -wininst`
+dev-db/sqlite-3.9.2 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-lang/python-2.7.10-r1 | `hardened readline sqlite ssl threads (wide-unicode) xml (-berkdb) -build -doc -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `pax`
 dev-python/CacheControl-0.11.5 | `{-test}`
-dev-python/certifi-2015.9.6.2 | ` `
-dev-python/cffi-1.2.1 | `-doc`
+dev-python/certifi-2015.11.20 | ` `
+dev-python/cffi-1.2.1 | `-doc {-test}`
 dev-python/chardet-2.2.1 | ` `
 dev-python/colorama-0.3.3 | `-examples`
 dev-python/cryptography-1.0.2 | `(-libressl) {-test}`
@@ -35,7 +35,6 @@ dev-python/py-1.4.30 | `-doc {-test}`
 dev-python/pyasn1-0.1.8 | `-doc`
 dev-python/pycparser-2.14 | `{-test}`
 dev-python/pyopenssl-0.14 | `-doc -examples`
-dev-python/pytest-2.8.2 | `-doc {-test}`
 dev-python/requests-2.8.1 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
 dev-python/setuptools-18.4 | `{-test}`
@@ -48,7 +47,7 @@ app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.56 | `nls -static`
 app-shells/bash-4.3_p39 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.43.0 | `ssl threads -adns (-http2) -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
@@ -59,7 +58,8 @@ sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
 sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
-dev-libs/openssl-1.0.2d | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+app-misc/c_rehash-1.7-r1 | ``
+dev-libs/openssl-1.0.2e | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

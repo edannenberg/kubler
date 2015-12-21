@@ -1,11 +1,11 @@
-### gentoobb/influxdb:20151112
-Built: Sun Nov 15 20:23:39 CET 2015
+### gentoobb/influxdb:20151217
+Built: Sun Dec 20 23:48:34 CET 2015
 
-Image Size: 65.98 MB
+Image Size: 72.55 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: influxdb-0.9.5-rc2 | https://github.com/influxdb/influxdb/
+*manual install*: influxdb-0.9.6.1 | https://github.com/influxdb/influxdb/
 #### Inherited
 Package | USE Flags
 --------|----------
