@@ -8,6 +8,12 @@ configure_bob() {
     emerge app-portage/flaggie
     mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
     touch /etc/portage/package.accept_keywords/flaggie
+    # set locale of build container
+    echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+    locale-gen
+    echo 'LANG="en_US.UTF-8"' > /etc/env.d/02locale
+    env-update
+    source /etc/profile
     # install default packages
     update_use 'dev-vcs/git' '-perl'
     update_use 'app-crypt/pinentry' '+ncurses'
