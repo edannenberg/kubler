@@ -9,8 +9,9 @@ PACKAGES="dev-java/icedtea-bin"
 configure_rootfs_build()
 {
     update_use 'dev-java/icedtea-bin' '-awt'
-    # skip python
+    # skip python and nss
     provide_package dev-lang/python
+    provide_package dev-libs/nss
 }
 
 #
