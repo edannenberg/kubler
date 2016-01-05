@@ -4,5 +4,11 @@ MAINTAINER ${MAINTAINER}
 
 ENV LANG en_US.utf8
 
+# Copy this binary to your root directory and run the following
+# # echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/qemu-arm:' > /proc/sys/fs/binfmt_misc/register
+#
+# See this for reference and mightbe a better solution
+# https://wiki.gentoo.org/wiki/Cross_Container_Support_Project
+ADD qemu-arm /qemu-arm
 ADD rootfs.tar /
 RUN ldconfig
