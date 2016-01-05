@@ -284,8 +284,8 @@ export ROOT="${EMERGE_ROOT}"
 # call pre install hook if declared in Buildconfig.sh
 declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
-# when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
-[[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR
+# when using a crossdev alias unset CHOST, CFLAGS, CXXFLAGS and PKGDIR to not override make.conf
+[[ "${EMERGE_BIN}" != "emerge" ]] && unset CHOST PKGDIR CFLAGS CXXFLAGS
 
 if [ -n "$PACKAGES" ]; then
 
