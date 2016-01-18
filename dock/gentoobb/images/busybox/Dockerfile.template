@@ -1,4 +1,4 @@
-#BUILD_FROM gentoobb/bob-uclibc
+#BUILD_FROM gentoobb/bob-musl
 FROM scratch
 MAINTAINER ${MAINTAINER}
 
