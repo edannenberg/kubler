@@ -17,4 +17,8 @@ DC_FILE="${DC_DIR}/nginx_proxy.yml"
 # services config
 PROXY_CERT_PATH="${PROCY_CERT_PATH:-${DC_DATA_ROOT}/${DC_PROJECT_NAME}/certs/}"
 
+STARTUP_MSG=" Set VIRTUAL_HOST and VIRTUAL_PORT ENV in containers you want reverse proxied. \n \
+VIRTUAL_HOST refers to the proxy url, ensure it resolves to the docker host. \n \
+VHOST_PORT refers to the backend proxy port and defaults to port 80 if omitted."
+
 dc-wrapper "$@"

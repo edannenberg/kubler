@@ -37,14 +37,20 @@ MYSQL_ROOT_PW="${MYSQL_ROOT_PW:-root}"
 MYSQL_ADMIN_USER="${MYSQL_ADMIN_USER:-admin}"
 MYSQL_ADMIN_PW="${MYSQL_ADMIN_PW:-test}"
 
-dc-wrapper "$@"
+STARTUP_MSG=" vhost:\t\t http://$BASE_URL/ \n \
+adminer:\t http://$ADMINER_URL/adminer.php?server=db&username=${MYSQL_ADMIN_USER} \n \
+mariadb:\t login: ${MYSQL_ADMIN_USER}/${MYSQL_ADMIN_PW} \n \
+phpinfo:\t http://$PHPINFO_URL/ \n "
 
-echo -e "\nvhost:\t\t http://$BASE_URL/"
-echo -e "adminer:\t http://$ADMINER_URL/adminer.php?server=db"
-echo -e "mysql:\t\t login: ${MYSQL_ADMIN_USER}/${MYSQL_ADMIN_PW}"
-echo -e "phpinfo:\t http://$PHPINFO_URL/"
 if [[ "$XDEBUG" == 'yes' ]]; then
-    echo -e "xdebug enabled:\t yes, mapped to localhost port: $XDEBUG_LOCAL_PORT"
+    STARTUP_MSG+="xdebug:\t enabled, mapped to localhost port: ${XDEBUG_LOCAL_PORT}"
 else
-    echo -e "xdebug:\t\t no"
+    STARTUP_MSG+="xdebug:\t\t disabled"
 fi
+
+if [ ! -f "${HTDOCS_PATH}/index.php" ]; then
+    mkdir -p "${HTDOCS_PATH}"
+    echo "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><h2><?php print 'here be dragons'; ?></h2>" > "${HTDOCS_PATH}/index.php"
+fi
+
+dc-wrapper "$@"

@@ -21,3 +21,7 @@ nginxphp:
 mariadb:
   image: gentoobb/mariadb
   restart: ${DC_RESTART_POLICY}
+
+opensmtpd:
+  image: gentoobb/opensmtpd
+  restart: ${DC_RESTART_POLICY}

@@ -60,6 +60,8 @@ DC_FILE="${DC_DIR}/my-docker-compose-file.yml"
 # services config
 MY_ENV="${MY_ENV:-some value}"
 
+STARTUP_MSG="SOME INFO"
+
 dc-wrapper "$@"
 ```
 
