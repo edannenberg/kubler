@@ -23,8 +23,6 @@ configure_bob() {
 configure_rootfs_build()
 {
     # as we broke the normal builder chain, recreate the docs for the busybox image
-    # mask 1.24.1 as it seems to be borked -> undefined reference to 'syncfs'
-    echo "=sys-apps/busybox-1.24.1" >> /etc/portage/package.mask/busybox
     init_docs 'gentoobb/busybox'
     update_use 'sys-apps/busybox' '+static +make-symlinks'
     generate_doc_package_installed 'sys-apps/busybox'
