@@ -1,7 +1,7 @@
-### gentoobb/influxdb:20151217
-Built: Sun Dec 20 23:48:34 CET 2015
+### gentoobb/influxdb:20160115
+Built: Mon Jan 18 00:54:14 CET 2016
 
-Image Size: 72.55 MB
+Image Size: 72.57 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -14,7 +14,7 @@ sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.24.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

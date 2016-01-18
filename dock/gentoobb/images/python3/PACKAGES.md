@@ -1,5 +1,5 @@
-### gentoobb/python3:20151217
-Built: Mon Dec 21 00:43:19 CET 2015
+### gentoobb/python3:20160115
+Built: Mon Jan 18 01:30:34 CET 2016
 
 Image Size: 123.9 MB
 #### Installed
@@ -11,7 +11,7 @@ app-arch/xz-utils-5.0.8 | `nls threads -static-libs`
 app-eselect/eselect-python-20111108 | ``
 app-misc/mime-types-9 | ``
 dev-db/sqlite-3.9.2 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
-dev-lang/python-3.4.3 | `hardened readline sqlite ssl threads xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
+dev-lang/python-3.4.3-r1 | `hardened readline sqlite ssl threads xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.1-r1 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/libffi-3.0.13-r1 | `pax`
@@ -44,7 +44,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.56 | `nls -static`
-app-shells/bash-4.3_p39 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
+app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
@@ -65,13 +65,13 @@ sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 dev-lang/execline-2.1.1.0 | `-static -static-libs`
 dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.1.3.0 | `-static`
-*manual install*: entr-3.2 | http://entrproject.org/
+*manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.24.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

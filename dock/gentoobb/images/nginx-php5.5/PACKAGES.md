@@ -1,14 +1,14 @@
-### gentoobb/nginx-php5.5:20151217
-Built: Mon Dec 21 00:23:20 CET 2015
+### gentoobb/nginx-php5.5:20160115
+Built: Mon Jan 18 01:14:55 CET 2016
 
-Image Size: 103 MB
+Image Size: 103.5 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.4 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.7.1-r4 | `fpm -apache2`
-dev-lang/php-5.5.30 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-lang/php-5.5.31 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
 dev-libs/libgcrypt-1.6.3-r4 | `threads -doc -static-libs`
@@ -29,9 +29,9 @@ dev-php/xdebug-2.2.6 | ` `
 dev-php/xdebug-client-2.2.6 | `-libedit`
 mail-mta/nullmailer-1.13-r5 | `ssl`
 media-gfx/imagemagick-6.9.0.3 | `bzip2 cxx zlib -`
-media-libs/libjpeg-turbo-1.3.1 | `-java -static-libs`
+media-libs/libjpeg-turbo-1.4.2 | `-java -static-libs`
 media-libs/libpng-1.6.19 | `-apng (-neon) -static-libs`
-net-dns/libidn-1.30 | `nls -doc -emacs -java -mono -static-libs`
+net-dns/libidn-1.30 | `nls (-doc) -emacs -java -mono -static-libs`
 net-libs/gnutls-3.3.17.1 | `crywrap cxx nls openssl zlib -dane -doc -examples -guile -pkcs11 -static-libs {-test}`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
@@ -68,7 +68,7 @@ Package | USE Flags
 **FROM gentoobb/nginx** |
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 dev-libs/libpcre-8.38 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.8.0 | `http http-cache pcre ssl -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.9.7 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20140927.3.17.2 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
@@ -79,13 +79,13 @@ sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 dev-lang/execline-2.1.1.0 | `-static -static-libs`
 dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.1.3.0 | `-static`
-*manual install*: entr-3.2 | http://entrproject.org/
+*manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2015f | `nls -leaps`
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.23.1-r1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.24.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs
