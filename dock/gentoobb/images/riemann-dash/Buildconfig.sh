@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="sys-libs/zlib"
+PACKAGES="dev-libs/libxslt sys-libs/zlib"
 KEEP_HEADERS=true
 
 configure_bob() {

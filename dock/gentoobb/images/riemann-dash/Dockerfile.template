@@ -3,7 +3,9 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-RUN mkdir -p /riemann-dash/config && gem install --no-ri --no-rdoc riemann-client riemann-tools riemann-dash
+RUN mkdir -p /riemann-dash/config && \
+    gem install nokogiri -- --use-system-libraries --no-ri --no-rdoc && \
+    gem install --no-ri --no-rdoc riemann-client riemann-tools riemann-dash
 
 COPY config.rb /riemann-dash/
 
