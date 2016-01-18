@@ -1,0 +1,67 @@
+{
+  "server": "127.0.0.1:5556",
+  "server_type": "ws",
+  "workspaces": [
+    {
+      "name": "pulse",
+      "view": {
+        "type": "Balloon",
+        "weight": 1,
+        "id": "e028d18fdd36f11ca7be0a2d17162ed68f7a7bc5",
+        "version": 52,
+        "child": {
+          "type": "VStack",
+          "weight": 1,
+          "id": "2357d5742a75769374605e66992fdf044b449830",
+          "version": 52,
+          "children": [
+            {
+              "type": "Log",
+              "weight": 1,
+              "id": "4de4c49af03d8d7d2c23b08689c93b2578373e2c",
+              "version": 24,
+              "title": "event log",
+              "query": "not service =~ \"riemann%\"",
+              "lines": "1000"
+            },
+            {
+              "type": "HStack",
+              "weight": 1,
+              "id": "d2a4475ea1749a7073931c86ca29ca8805877a07",
+              "version": 21,
+              "children": [
+                {
+                  "type": "Flot",
+                  "weight": 1,
+                  "id": "9a5c8cd8378de82e18abd1c78b2b68a1d5e5ee5e",
+                  "version": 7,
+                  "title": "riemann pulse",
+                  "query": "service =~ \"riemann%\"",
+                  "min": null,
+                  "max": null,
+                  "timeRange": 300,
+                  "graphType": "line",
+                  "stackMode": "true"
+                },
+                {
+                  "type": "Flot",
+                  "weight": 1,
+                  "id": "335d99aa41a7054d407b9147eb03cd505b4714fa",
+                  "version": 21,
+                  "title": "riemann stream health",
+                  "query": "service =~ \"riemann streams%\"",
+                  "min": null,
+                  "max": null,
+                  "timeRange": 300,
+                  "graphType": "line",
+                  "stackMode": "false"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "id": "09ab53ba896095786c076ca0bb5b70380546385b"
+    }
+  ]
+}

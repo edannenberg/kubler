@@ -1,0 +1,20 @@
+{
+    "id": 1,
+    "orgId": 1,
+    "name": "influxdb",
+    "type": "influxdb",
+    "access": "proxy",
+    "url": "http://influxdb:8086",
+    "password": "root",
+    "user": "root",
+    "database": "test_metrics",
+    "basicAuth": false,
+    "basicAuthUser": "",
+    "basicAuthPassword": "",
+    "withCredentials": false,
+    "isDefault": true,
+    "jsonData": 
+    {
+
+    }
+}

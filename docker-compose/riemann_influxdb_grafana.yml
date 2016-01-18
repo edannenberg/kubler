@@ -1,0 +1,60 @@
+riemann:
+    image: gentoobb/riemann
+    restart: ${DC_RESTART_POLICY}
+    volumes:
+     - ${RIEMANN_CONFIG_PATH}:/riemann/etc
+    links:
+     - mail
+     - influxdb
+    ports:
+     - "5555:5555"
+     - "5555:5555/udp"
+     - "5556:5556"
+
+riemanndash:
+    image: gentoobb/riemann-dash
+    restart: ${DC_RESTART_POLICY}
+    ports:
+     - "4567:4567"
+    volumes:
+     - ${RIEMANN_DASH_CONFIG_PATH}:/riemann-dash/config
+    links:
+     - riemann:riemann
+    environment:
+     - VIRTUAL_HOST=${RIEMANN_VHOST_URL}
+     - VIRTUAL_PORT=${RIEMANN_PROXY_PORT}
+
+influxdb:
+    image: gentoobb/influxdb
+    restart: ${DC_RESTART_POLICY}
+    volumes:
+     - ${INFLUXDB_DATA_PATH}:/var/lib/influxdb
+    ports:
+     - "8083:8083"
+     - "8086:8086"
+    environment:
+     - VIRTUAL_HOST=${INFLUXDB_VHOST_URL}
+     - VIRTUAL_PORT=${INFLUXDB_PROXY_PORT}
+
+grafana:
+    image: gentoobb/grafana
+    restart: ${DC_RESTART_POLICY}
+    ports:
+     - "3000:3000"
+    volumes:
+     - ${GRAFANA_DATA_PATH}:/opt/grafana/data
+    links:
+     - influxdb
+    environment:
+     - VIRTUAL_HOST=${GRAFANA_VHOST_URL}
+     - VIRTUAL_PORT=${GRAFANA_PROXY_PORT}
+     - INFLUXDB_HOST=${INFLUXDB_HOST}
+     - INFLUXDB_PORT=${INFLUXDB_PORT}
+     - INFLUXDB_NAME=${INFLUXDB_DBNAME}
+     - INFLUXDB_USER=${INFLUXDB_USER}
+     - INFLUXDB_PASS=${INFLUXDB_PASS}
+
+mail:
+    extends:
+        file: common.yml
+        service: opensmtpd
