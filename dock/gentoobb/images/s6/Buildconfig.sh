@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES="sys-apps/s6"
-ENTR_VERSION="3.2"
+ENTR_VERSION="3.4"
 
 #
 # this method runs in the bb builder container just before starting the build of the rootfs
