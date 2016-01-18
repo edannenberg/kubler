@@ -6,9 +6,9 @@ Default SSL certificates are expected at:
 
     /etc/nginx/ssl/localhost/nginx.{crt,key}
 
-If missing a self signed certificate is created on container start. [SPDY][] is enabled per default.
+If missing, a self signed certificate is created on container start. [HTTP/2][] is enabled per default.
 
-In the lights of the recent [POODLE][] exploit SSL3 is disabled per default.
+Due to the [POODLE][] exploit SSL3 is disabled per default.
 
 To enable [forward-secrecy][] set NGINX_FORWARD_SECRECY on container start:
 
@@ -41,4 +41,5 @@ Template variable names must start with NG_TMPL_.
 [Nginx]: http://nginx.org/
 [forward-secrecy]: http://en.wikipedia.org/wiki/Forward_secrecy
 [POODLE]: http://en.wikipedia.org/wiki/POODLE
-[SPDY]: https://en.wikipedia.org/wiki/SPDY
+[HTTP/2]: https://en.wikipedia.org/wiki/HTTP/2
+
