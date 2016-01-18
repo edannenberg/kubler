@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="app-eselect/eselect-ruby dev-lang/ruby"
+PACKAGES="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig"
 KEEP_HEADERS=true
 
 #
