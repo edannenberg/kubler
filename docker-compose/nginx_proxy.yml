@@ -1,7 +1,7 @@
 nginx:
   extends:
     file: common.yml
-    service: nginx
+    service: nginxproxy
   volumes:
    - ${PROXY_CERT_PATH}:/etc/nginx/ssl
   ports:
