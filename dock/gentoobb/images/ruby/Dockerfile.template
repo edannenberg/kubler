@@ -3,4 +3,4 @@ MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
 
-RUN eselect ruby set ruby22 2> /dev/null
+RUN eselect ruby set ruby23 2> /dev/null
