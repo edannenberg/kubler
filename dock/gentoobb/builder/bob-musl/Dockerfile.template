@@ -1,0 +1,5 @@
+#BUILD_FROM gentoobb/bob
+FROM ${NAMESPACE}/bob-musl
+MAINTAINER ${MAINTAINER}
+
+CMD ["/bin/bash"]
