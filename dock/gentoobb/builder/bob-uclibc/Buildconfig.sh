@@ -2,6 +2,7 @@
 # build config
 #
 PACKAGES=""
+EMERGE_BIN="emerge"
 CROSSDEV_UCLIBC="x86_64-pc-linux-uclibc"
 
 configure_bob() {

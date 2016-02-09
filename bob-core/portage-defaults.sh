@@ -1,9 +1,17 @@
 # make.conf doesn't support POSIX parameter expansion, ENV does ;p
 # on the downside this needs to be sourced before building anything
-export CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}"
-export CXXFLAGS="${BOB_CXXFLAGS:-${CFLAGS}}"
 
-export CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}"
+if [[ -z "${USE_BUILDER_FLAGS}" ]]; then
+    export CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}"
+    export CXXFLAGS="${BOB_CXXFLAGS:-${CFLAGS}}"
+
+    export CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}"
+else
+    export CFLAGS="${BOB_BUILDER_CFLAGS:--mtune=generic -O2 -pipe}"
+    export CXXFLAGS="${BOB_BUILDER_CXXFLAGS:-${CFLAGS}}"
+
+    export CHOST="${BOB_BUILDER_CHOST:-x86_64-pc-linux-gnu}"
+fi
 
 export MAKEOPTS="${BOB_MAKEOPTS:--j9}"
 

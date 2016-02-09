@@ -2,6 +2,7 @@
 # build config
 #
 PACKAGES=""
+EMERGE_BIN="emerge"
 
 configure_bob() {
     # install flaggie, required for update_use() helper

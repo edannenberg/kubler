@@ -103,6 +103,7 @@ generate_dockerfile()
     done
 
     sed "${SED_PARAM[@]}" \
+        -e 's|${DEF_BUILD_CONTAINER}|'"${DEF_BUILD_CONTAINER}"'|' \
         -e 's/${NAMESPACE}/'"${NAMESPACE}"'/' \
         -e 's/${TAG}/'"${DATE}"'/' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "${1}/Dockerfile.template" > "${1}/Dockerfile" || \
