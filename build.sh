@@ -154,7 +154,7 @@ check_builder_dependencies() {
             PARENT_BUILDER=$(get_build_container "${1}" "${BUILDER_PATH}")
             [[ $? == 1 ]] && die "error executing get_parent_builder(): ${PARENT_BUILDER}"
             # if defined, add parent builder dependencies
-            [[ "${PARENT_BUILDER}" != "" ]] && [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && \
+            [[ "${PARENT_BUILDER}" != "" ]] && [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && [[ "${PARENT_BUILDER}" != "${DEF_BUILD_CONTAINER}" ]]  && \
                 [[ "${PARENT_BUILDER}" != ${1} ]] && check_builder_dependencies ${PARENT_BUILDER} ${1}
             [[ "${2}" != "" ]] && BUILD_ORDER_BUILDER+=" ${1}"
         fi

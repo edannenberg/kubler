@@ -175,6 +175,8 @@ get_build_container() {
     elif [[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]; then
         [[ "${PARENT_IMAGE}" != "scratch" ]] && image_exists "${BUILD_CONTAINER}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
             BUILD_CONTAINER="${BUILD_CONTAINER}-${PARENT_IMAGE}"
+    elif [[ "${REPO_TYPE}" == "${BUILDER_PATH}" ]] && [[ "$BUILD_FROM" == "false" ]]; then
+        [[ "${PARENT_REPO}" == "${REPO}" ]] && BUILD_CONTAINER=${BUILDER_CORE}
     fi
     [[ "${PARENT_REPO}" == "${BUILD_CONTAINER}" ]] && [[ "${BUILD_FROM}" == "false" ]] && BUILD_CONTAINER=${BUILDER_CORE}
 
