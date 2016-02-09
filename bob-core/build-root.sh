@@ -266,6 +266,13 @@ install_gosu()
     log_as_installed "manual install" "gosu-${GOSU_VERSION}" "https://github.com/tianon/gosu/"
 }
 
+download_from_oracle() {
+    wget --no-cookies --no-check-certificate \
+         --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
+         -P /distfiles \
+         "${1}"
+}
+
 source /etc/profile
 
 mkdir -p $EMERGE_ROOT
