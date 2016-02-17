@@ -275,6 +275,12 @@ download_from_oracle() {
 
 source /etc/profile
 
+if [[ "${CHOST}" = "x86_64-pc-linux-gnu" ]]; then
+    EMERGE_BIN="emerge"
+else
+    EMERGE_BIN="emerge-${CHOST}"
+fi
+
 mkdir -p $EMERGE_ROOT
 
 # read config, mounted via build.sh
