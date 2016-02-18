@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-INFLUXDB_VERSION="0.9.6.1"
+INFLUXDB_VERSION="0.10.0"
 
 configure_bob()
 {
