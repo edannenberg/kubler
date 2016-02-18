@@ -5,7 +5,7 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
-RUN postgresql-config set 9.4 && \
+RUN postgresql-config set 9.5 && \
     chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/postgres/finish && \
     ln -s /etc/service/postgres /service
