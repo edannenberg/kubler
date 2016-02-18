@@ -12,10 +12,6 @@ configure_bob()
     unprovide_package 'dev-libs/openssl'
     emerge dev-libs/openssl
 
-    # go 1.4.x will fail the build since grafana 2.6.0
-    update_keywords 'dev-lang/go' '+~amd64'
-    update_keywords 'dev-lang/go-bootstrap' '+~amd64'
-
     emerge -v dev-lang/go net-libs/nodejs
     export DISTRIBUTION_DIR=/go/src/github.com/grafana/grafana
     mkdir -p ${DISTRIBUTION_DIR}
