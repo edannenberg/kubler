@@ -202,16 +202,11 @@ import_stage3()
 
 # Boostrap gentoobb/bob-core
 build_core() {
-    download_portage_snapshot
+    #download_portage_snapshot
     import_stage3
 
     local CORE_BUILDER_PATH=${BUILDER_CORE/\//\/${BUILDER_PATH}}
-    local PORTAGE_FAKE="portage-fake.tar.xz"
 
-    # copy portage snapshot to bob-core/ so we can access it via dockerfile context, if missing create a "fake"
-    # so the dockerfile copy command won't fail the build (webrsync will fetch latest snapshot)
-    [ -f "${DL_PATH}/${PORTAGE}" ] && cp ${DL_PATH}/${PORTAGE}* ${CORE_BUILDER_PATH}/ ||
-        touch ${CORE_BUILDER_PATH}/${PORTAGE_FAKE}
     # copy build-root.sh and emerge defaults so we can access it via dockerfile context
     cp ${PROJECT_ROOT}/bob-core/{build-root.sh,make.conf,portage-defaults.sh} ${CORE_BUILDER_PATH}/
 
@@ -220,8 +215,6 @@ build_core() {
 
     # clean up
     rm ${CORE_BUILDER_PATH}/{build-root.sh,make.conf,portage-defaults.sh}
-    [ -f ${CORE_BUILDER_PATH}/${PORTAGE} ] && rm -f ${CORE_BUILDER_PATH}/${PORTAGE}*
-    [ -f ${CORE_BUILDER_PATH}/${PORTAGE_FAKE} ] && rm ${CORE_BUILDER_PATH}/${PORTAGE_FAKE}
 }
 
 # Produces a build container image for given BUILDER_REPO
