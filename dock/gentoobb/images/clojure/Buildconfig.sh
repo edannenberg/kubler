@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-CLOJURE_VERSION=1.7.0
+CLOJURE_VERSION=1.8.0
 
 configure_bob() {
     wget https://repo1.maven.org/maven2/org/clojure/clojure/${CLOJURE_VERSION}/clojure-${CLOJURE_VERSION}.jar
