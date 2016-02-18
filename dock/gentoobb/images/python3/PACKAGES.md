@@ -1,13 +1,13 @@
-### gentoobb/python3:20160115
-Built: Mon Jan 18 01:30:34 CET 2016
+### gentoobb/python3:20160211
+Built: Thu Feb 18 05:13:06 CET 2016
 
-Image Size: 123.9 MB
+Image Size: 124.3 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/python-updater-0.11 | ``
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
-app-arch/xz-utils-5.0.8 | `nls threads -static-libs`
+app-arch/xz-utils-5.2.2 | `nls threads -static-libs`
 app-eselect/eselect-python-20111108 | ``
 app-misc/mime-types-9 | ``
 dev-db/sqlite-3.9.2 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
@@ -20,7 +20,7 @@ dev-python/certifi-2015.11.20 | ` `
 dev-python/cffi-1.2.1 | `-doc {-test}`
 dev-python/chardet-2.2.1 | ` `
 dev-python/colorama-0.3.3 | `-examples`
-dev-python/cryptography-1.0.2 | `(-libressl) {-test}`
+dev-python/cryptography-1.1.2 | `(-libressl) {-test}`
 dev-python/distlib-0.2.1 | ` `
 dev-python/html5lib-0.9999999 | `{-test}`
 dev-python/idna-2.0 | ` `
@@ -33,7 +33,7 @@ dev-python/progress-1.2 | ` `
 dev-python/py-1.4.30 | `-doc {-test}`
 dev-python/pyasn1-0.1.8 | `-doc`
 dev-python/pycparser-2.14 | `{-test}`
-dev-python/pyopenssl-0.14 | `-doc -examples`
+dev-python/pyopenssl-0.15.1-r1 | `-doc -examples`
 dev-python/requests-2.8.1 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
 dev-python/setuptools-18.4 | `{-test}`
@@ -56,20 +56,20 @@ sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile)
 sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
 sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
-app-misc/ca-certificates-20140927.3.17.2 | `cacert`
+app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2e | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2f | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
-dev-lang/execline-2.1.1.0 | `-static -static-libs`
-dev-libs/skalibs-2.3.2.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.1.3.0 | `-static`
+dev-lang/execline-2.1.4.5 | `-static -static-libs`
+dev-libs/skalibs-2.3.9.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.2.4.3 | `-static`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r1 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015f | `nls -leaps`
+sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2015g | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
