@@ -14,6 +14,10 @@ Planned support:
 
 PR are always welcome. ;)
 
+## News
+
+* 20160211 images include patches for [cve-2015-7547](https://googleonlinesecurity.blogspot.de/2016/02/cve-2015-7547-glibc-getaddrinfo-stack.html)
+
 ## Goals
 
 * Central organization-wide management of base images
@@ -43,7 +47,7 @@ PR are always welcome. ;)
 
 * Essentially enables [nested](https://github.com/docker/docker/issues/7115) docker builds
 * Everything happens in docker containers except for some bash glue on the build host
-* Tiny static busybox-uclibc root image (~1.2mb), FROM scratch is fine too
+* Tiny static busybox-musl root image (~1.2mb), FROM scratch is fine too
 * Shared layer support for final images, images are not squashed and can depend on other images
 * [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling), optional of course
 * Reference images are available on [docker hub][gentoo-bb-docker]
