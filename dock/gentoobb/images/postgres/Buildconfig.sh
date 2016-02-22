@@ -18,4 +18,5 @@ finish_rootfs_build()
 {
     install_gosu
     uninstall_package app-shells/bash
+    mkdir /backup
 }

@@ -21,5 +21,12 @@ Defaults if omitted:
     POSTGRES_USER=postgres
     POSTGRES_DB=$POSTGRES_USER
 
+To enable backups set `BACKUP_CRON_SCHEDULE` to a standard cron expression, i.e. to backup daily at 5am:
+
+    $ docker run -d --name db-0 \
+        -e BACKUP_CRON_SCHEDULE='0 5 * * *' \
+        -v /host_backups/db-0:/backup \
+        gentoobb/postgres
+
 [PostgreSQL]: http://www.postgresql.org/
 [linking]: http://docs.docker.io/en/latest/use/port_redirection/#linking-a-container
