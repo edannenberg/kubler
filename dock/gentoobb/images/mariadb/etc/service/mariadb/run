@@ -14,5 +14,21 @@ EOF
     killall mysqld && while ps -a | grep -q '[m]ysqld'; do sleep 1; done
 fi
 
+# handle backup cron
+if [ -n "${BACKUP_CRON_SCHEDULE}" ] && [ ! -f /var/spool/cron/crontabs/root ]; then
+    echo "${BACKUP_CRON_SCHEDULE} automysqlbackup" >> /var/spool/cron/crontabs/root
+    chown root:root /backup
+    sed -ri "s|^#CONFIG_backup_dir='/var/backup/db'|CONFIG_backup_dir='/backup'|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_mysql_dump_password=''|CONFIG_mysql_dump_password='${MYSQL_ROOT_PW:-root}'|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_multicore_threads=2|CONFIG_multicore_threads=${BACKUP_THREADS:-auto}|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_mysql_dump_create_database='no'|CONFIG_mysql_dump_create_database='${BACKUP_CREATE_DB:-yes}'|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_mysql_dump_compression='gzip'|CONFIG_mysql_dump_compression='${BACKUP_COMPRESSION_TYPE:-bzip2}'|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_db_exclude=\( 'information_schema' \)|CONFIG_db_exclude=\(${BACKUP_EXCLUDE_DB:-information_schema performance_schema}\)|" \
+        "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_mysql_dump_latest='no'|CONFIG_mysql_dump_latest='${BACKUP_LATEST_LINK:-yes}'|" "/etc/automysqlbackup/automysqlbackup.conf"
+    sed -ri "s|^#CONFIG_mysql_dump_latest_clean_filenames='no'|CONFIG_mysql_dump_latest_clean_filenames='${BACKUP_LATEST_CLEAN:-yes}'|" \
+        "/etc/automysqlbackup/automysqlbackup.conf"
+fi
+
 exec 2>&1
 exec /usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --user=mysql --log-bin=mysqld-bin

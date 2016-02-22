@@ -25,6 +25,21 @@ Defaults if omitted:
     MYSQL_ADMIN_USER=root
     MYSQL_ADMIN_PW=root
 
+To enable backups set `BACKUP_CRON_SCHEDULE` to a standard cron expression, i.e. to backup daily at 5am:
+
+    $ docker run -d --name db-0 \
+        -e BACKUP_CRON_SCHEDULE='0 5 * * *' \
+        -v /host_backups/db-0:/backup \
+        gentoobb/mariadb
+
+Backup related ENV and their defaults:
+
+    BACKUP_THREADS=auto
+    BACKUP_COMPRESSION_TYPE=bzip2
+    BACKUP_CREATE_DB=yes # create db statement in dump
+    BACKUP_EXCLUDE_DB=information_schema performance_schema
+    BACKUP_LATEST_LINK=yes
+    BACKUP_LATEST_CLEAN=yes # remove dates from latest filenames
 
 [volume-mounting][volume-mount] your content under the container's
 `/var/lib/mysql`.  You can also mount volumes from other
@@ -40,7 +55,3 @@ config to serve from an alternative location.
 [MariaDB]: https://mariadb.org/
 [volume-mount]: http://docs.docker.io/en/latest/use/working_with_volumes/
 [linking]: http://docs.docker.io/en/latest/use/port_redirection/#linking-a-container
-[devicemapper-size-limit]: https://www.kernel.org/doc/Documentation/device-mapper/thin-provisioning.txt
-[VOLUME]: http://docs.docker.io/en/latest/use/working_with_volumes/#getting-started
-[fd24041]: https://github.com/SvenDowideit/docker/commit/fd240413ff835ee72741d839dccbee24e5cc410c
-[3389]: https://github.com/dotcloud/docker/pull/3389

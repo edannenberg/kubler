@@ -16,10 +16,11 @@ RUN sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf && \
 
 RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/mysql/finish && \
-    ln -s /etc/service/mysql /service
+    ln -s /etc/service/mysql /service && \
+    ln -s /etc/service/cron /service
 
 EXPOSE 3306
 
-VOLUME [ "/var/run/mysqld" ]
+VOLUME /var/run/mysqld /backup
 
 CMD ["/bin/s6-svscan", "-t0", "/service"]
