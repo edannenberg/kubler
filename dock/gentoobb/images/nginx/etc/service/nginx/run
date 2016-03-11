@@ -42,4 +42,4 @@ if $(printenv | grep -q "^NG_TMPL_"); then
 fi
 
 exec 2>&1
-exec /usr/sbin/nginx
+exec /usr/sbin/nginx -g 'daemon off;'
