@@ -9,7 +9,8 @@ RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.co
     chown -R portage:portage /usr/portage && \
     emerge-webrsync -k && \
     eselect news read new 1>/dev/null && \
-    mkdir -p /etc/portage/profile && [[ ${BOB_DO_SYNC} = "true" ]] && emerge --sync
+    mkdir -p /etc/portage/profile && \
+    if [[ ${BOB_DO_SYNC} == "true" ]]; then emerge --sync; else true; fi
 
 COPY make.conf /etc/portage/make.conf
 
