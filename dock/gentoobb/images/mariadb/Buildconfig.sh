@@ -1,8 +1,7 @@
 #
 # build config
 #
-PACKAGES="net-misc/curl dev-db/mariadb"
-PACKAGES="app-arch/pbzip2 net-misc/curl dev-db/mysql"
+PACKAGES="app-arch/pbzip2 net-misc/curl dev-db/mariadb"
 AUTOSQLBACKUP_VERSION="3.0_rc6"
 
 #
