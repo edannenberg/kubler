@@ -1,7 +1,7 @@
-### gentoobb/python3:20160317
-Built: Sat Mar 26 01:42:37 CET 2016
+### gentoobb/python3:20160414
+Built: Wed Apr 20 18:38:38 CEST 2016
 
-Image Size: 123.3 MB
+Image Size: 123.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -10,7 +10,7 @@ app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-arch/xz-utils-5.2.2 | `nls threads -static-libs`
 app-eselect/eselect-python-20111108 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.11.1 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-db/sqlite-3.12.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-3.4.3-r1 | `hardened readline sqlite ssl threads xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
@@ -43,7 +43,7 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
-app-portage/portage-utils-0.56 | `nls -static`
+app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
@@ -68,8 +68,8 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

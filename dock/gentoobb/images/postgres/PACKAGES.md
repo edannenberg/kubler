@@ -1,14 +1,14 @@
-### gentoobb/postgres:20160317
-Built: Sat Mar 26 01:32:01 CET 2016
+### gentoobb/postgres:20160414
+Built: Wed Apr 20 18:25:24 CEST 2016
 
-Image Size: 52.69 MB
+Image Size: 52.95 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
-dev-db/postgresql-9.5.1 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
+dev-db/postgresql-9.5.2 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
 dev-libs/libpcre-8.38 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-481 | `pcre unicode`
 *manual install*: gosu-1.7 | https://github.com/tianon/gosu/
@@ -17,7 +17,7 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
-app-portage/portage-utils-0.56 | `nls -static`
+app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
@@ -42,8 +42,8 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,7 +1,7 @@
-### gentoobb/ruby:20160317
-Built: Sat Mar 26 01:49:06 CET 2016
+### gentoobb/ruby:20160414
+Built: Wed Apr 20 18:43:14 CEST 2016
 
-Image Size: 51.73 MB
+Image Size: 52 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -25,7 +25,7 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
-app-portage/portage-utils-0.56 | `nls -static`
+app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
@@ -50,8 +50,8 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,16 +1,15 @@
-### gentoobb/jdk-icedtea:20160317
-Built: Sat Mar 26 01:05:05 CET 2016
+### gentoobb/jdk-icedtea:20160414
+Built: Wed Apr 20 17:15:27 CEST 2016
 
-Image Size: 282 MB
+Image Size: 282.5 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.1.0 | ``
-dev-java/icedtea-bin-7.2.6.4 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
-dev-java/java-config-2.2.0 | ` `
-dev-java/java-config-wrapper-0.16 | ``
+dev-java/icedtea-bin-7.2.6.5 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
+dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/glib-2.46.2-r2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
@@ -33,6 +32,7 @@ sys-apps/baselayout-java-0.1.0 | ``
 x11-libs/libX11-1.6.3 | `-doc -ipv6 -static-libs {-test}`
 x11-libs/libXau-1.0.8 | `-static-libs`
 x11-libs/libxcb-1.11.1 | `-doc (-selinux) -static-libs {-test} -xkb`
+x11-libs/libXcomposite-0.4.4-r1 | `-doc -static-libs`
 x11-libs/libXdmcp-1.1.2 | `-doc -static-libs`
 x11-libs/libXext-1.3.3 | `-doc -static-libs`
 x11-libs/libXfixes-5.0.1 | `-static-libs`
@@ -41,6 +41,7 @@ x11-libs/libXrender-0.9.9 | `-static-libs`
 x11-libs/libXtst-1.2.2 | `-doc -static-libs`
 x11-libs/xtrans-1.3.5 | `-doc`
 x11-misc/shared-mime-info-1.4 | `{-test}`
+x11-proto/compositeproto-0.4.2-r1 | ``
 x11-proto/fixesproto-5.0-r1 | ``
 x11-proto/inputproto-2.3.1 | ``
 x11-proto/kbproto-1.0.7 | ``
@@ -64,7 +65,7 @@ sys-devel/make-4.1-r1 | `nls -guile -static`
 sys-kernel/linux-headers-4.3 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
-app-portage/portage-utils-0.56 | `nls -static`
+app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
@@ -89,8 +90,8 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,18 +1,18 @@
-### gentoobb/kibana:20160317
-Built: Sat Mar 26 01:08:07 CET 2016
+### gentoobb/kibana:20160414
+Built: Wed Apr 20 17:20:00 CEST 2016
 
-Image Size: 138.1 MB
+Image Size: 137.8 MB
 #### Installed
 Package | USE Flags
 --------|----------
-www-apps/kibana-bin-4.4.2 | ``
+www-apps/kibana-bin-4.5.0 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

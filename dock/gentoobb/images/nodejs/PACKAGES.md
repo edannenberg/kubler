@@ -1,7 +1,7 @@
-### gentoobb/nodejs:20160317
-Built: Sat Mar 26 01:28:45 CET 2016
+### gentoobb/nodejs:20160414
+Built: Wed Apr 20 18:20:57 CEST 2016
 
-Image Size: 36.93 MB
+Image Size: 37.18 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -23,8 +23,8 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.21-r2 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2015g | `nls -leaps`
+sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/timezone-data-2016a | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
