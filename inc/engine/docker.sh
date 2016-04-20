@@ -85,6 +85,7 @@ run_image() {
     # general docker args
     DOCKER_ARGS=("-it" "--hostname" "${2}")
     [[ "${3}" == "true" ]] && DOCKER_ARGS+=("--rm")
+    [[ "${DOCKER_PRIVILEGED}" == "true" ]] && DOCKER_ARGS+=("--privileged")
     # gogo
     "${DOCKER}" run "${DOCKER_ARGS[@]}" "${DOCKER_MOUNTS[@]}" "${DOCKER_ENV[@]}" "${IMAGE}" "${CONTAINER_CMD[@]}" ||
         die "failed to run image ${IMAGE}"
@@ -110,7 +111,8 @@ generate_dockerfile()
             die "error while generating ${1}/Dockerfile"
 }
 
-# Returns given TAG value from DOCKERFILE or exit signal 3 if TAG was not found
+# Returns given TAG value from DOCKERFILE or exit signal 3 if TAG was not found.
+# Returns "true" if TAG was found but has no value.
 #
 # Arguments:
 # 1: TAG (i.e. FROM)
@@ -118,8 +120,14 @@ generate_dockerfile()
 get_dockerfile_tag() {
     [ ! -f "${2}/Dockerfile" ] && die "failed to read ${2}/Dockerfile"
     dockerf=$(grep ^${1} ${2}/Dockerfile)
-    regex="^${1} (.*)"
-    [[ ${dockerf} =~ $regex ]] && echo "${BASH_REMATCH[1]}" || exit 3
+    regex="^${1} ?(.*)?"
+    if [[ ${dockerf} =~ $regex ]]; then
+        if [ ${BASH_REMATCH[1]} ]; then
+            echo "${BASH_REMATCH[1]}" || exit 3
+        else
+            echo "true" || exit 3
+        fi
+    fi
 }
 
 # Returns builder name given BUILDER_REPO is based on, or exit signal 3 if not defined
@@ -282,6 +290,9 @@ build_image()
         done
 
         local CONTAINER_CMD=("build-root" ${REPO_EXPANDED})
+
+        DOCKER_PRIVILEGED=$(get_dockerfile_tag "#BUILD_PRIVILEGED" "${REPO_EXPANDED}")
+        [[ $? == 1 ]] && die "${DOCKER_PRIVILEGED}"
 
         msg "run ${BUILD_CONTAINER}:${DATE}"
         run_image "${BUILD_CONTAINER}:${DATE}" "${REPO}" "false" || die "failed to build rootfs for $REPO_EXPANDED"

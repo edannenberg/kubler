@@ -1,3 +1,6 @@
+# start the build container in privileged mode, required for glibc. use ## to comment out
+#BUILD_PRIVILEGED
+# use default build container instead of bob-musl-busybox
 #BUILD_FROM ${DEF_BUILD_CONTAINER}
 FROM ${NAMESPACE}/busybox
 MAINTAINER ${MAINTAINER}
