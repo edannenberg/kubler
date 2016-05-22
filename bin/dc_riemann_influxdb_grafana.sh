@@ -45,7 +45,7 @@ grafana:\t http://${GRAFANA_VHOST_URL}/ or http://127.0.0.1:3000 \n \
 influxdb:\t http://${INFLUXDB_VHOST_URL}/ or http://127.0.0.1:8083 \n \
 \t\t login: ${INFLUXDB_USER}/${INFLUXDB_PASS} \n\n \
 create the test database: \n\n \
-curl -G http://localhost:8086/query --data-urlencode 'q=CREATE DATABASE ${INFLUXDB_DBNAME}' \n\n \
+curl -X POST -G http://localhost:8086/query --data-urlencode 'q=CREATE DATABASE ${INFLUXDB_DBNAME}' \n\n \
 configure grafana: \n\n \
 curl -X POST -H 'Content-Type: application/json' -d @${DC_DIR}/grafana/datasource.json \
 admin:admin@localhost:3000/api/datasources \n\n \
