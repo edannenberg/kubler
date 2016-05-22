@@ -9,7 +9,7 @@ PACKAGES="dev-java/oracle-jre-bin"
 configure_rootfs_build()
 {
     # download oracle jre bin
-    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/8u77-b03/jre-8u77-linux-x64.tar.gz
+    JRE_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jre-8u92-linux-x64.tar.gz
     #JRE_TAR=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
     regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
     [[ ${JRE_URL} =~ $regex ]] && JRE_TAR="${BASH_REMATCH[1]}"
@@ -28,5 +28,6 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    :
+    # gentoo's run-java-tool.bash wrapper expects which at /usr/bin
+    ln -rs ${EMERGE_ROOT}/bin/which ${EMERGE_ROOT}/usr/bin/which
 }
