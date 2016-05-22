@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-GRAFANA_VERSION="3.0-beta5"
+GRAFANA_VERSION="3.0.2"
 
 configure_bob()
 {
@@ -20,13 +20,6 @@ configure_bob()
     git clone https://github.com/grafana/grafana.git ${DISTRIBUTION_DIR}
     cd ${DISTRIBUTION_DIR}
     git checkout tags/v${GRAFANA_VERSION}
-    echo "fetching deps.."
-    # occasionally fetch might fail due to exceeded rate limits from github, lets retry up to 5 times before giving up
-    for i in {1..5}; 
-        do go get github.com/grafana/grafana && break || (echo "retry fetch.." && sleep 15); done
-    go run build.go setup
-    for i in {1..5}; 
-        do godep restore && break || (echo "retry fetch.." && sleep 15); done
     echo "building grafana.."
     go run build.go build
 
