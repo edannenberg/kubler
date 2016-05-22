@@ -83,7 +83,7 @@ run_image() {
             DOCKER_MOUNTS+=('-v' "${V}")
     done
     # general docker args
-    DOCKER_ARGS=("-it" "--hostname" "${2}")
+    DOCKER_ARGS=("-it" "--hostname" "${2//\//-}")
     [[ "${3}" == "true" ]] && DOCKER_ARGS+=("--rm")
     [[ "${DOCKER_PRIVILEGED}" == "true" ]] && DOCKER_ARGS+=("--privileged")
     # gogo
