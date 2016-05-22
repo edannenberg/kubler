@@ -1,21 +1,21 @@
-### gentoobb/jdk-icedtea:20160414
-Built: Wed Apr 20 17:15:27 CEST 2016
+### gentoobb/jdk-icedtea:20160519
+Built: Sun May 22 17:31:00 CEST 2016
 
-Image Size: 282.5 MB
+Image Size: 282 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
-app-eselect/eselect-java-0.1.0 | ``
-dev-java/icedtea-bin-7.2.6.5 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
+app-eselect/eselect-java-0.2.0 | ``
+dev-java/icedtea-bin-7.2.6.6-r1 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
-dev-libs/glib-2.46.2-r2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
+dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.46.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.46.0 | ``
-dev-libs/libffi-3.0.13-r1 | `pax`
+dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libxml2-2.9.3 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/nspr-4.12 | `-debug`
@@ -80,7 +80,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2g-r2 | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
@@ -91,7 +91,7 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

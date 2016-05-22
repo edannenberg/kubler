@@ -1,7 +1,7 @@
-### gentoobb/postgres:20160414
-Built: Wed Apr 20 18:25:24 CEST 2016
+### gentoobb/postgres:20160519
+Built: Sun May 22 19:03:58 CEST 2016
 
-Image Size: 52.95 MB
+Image Size: 50.19 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -11,7 +11,7 @@ app-misc/editor-wrapper-4 | ``
 dev-db/postgresql-9.5.2 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
 dev-libs/libpcre-8.38 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-481 | `pcre unicode`
-*manual install*: gosu-1.7 | https://github.com/tianon/gosu/
+*manual install*: gosu-1.9 | https://github.com/tianon/gosu/
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -32,7 +32,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2g-r2 | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
@@ -43,7 +43,7 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

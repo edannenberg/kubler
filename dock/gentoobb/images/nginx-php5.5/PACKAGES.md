@@ -1,14 +1,14 @@
-### gentoobb/nginx-php5.5:20160414
-Built: Wed Apr 20 18:18:30 CEST 2016
+### gentoobb/nginx-php5.5:20160519
+Built: Sun May 22 18:57:04 CEST 2016
 
-Image Size: 103.9 MB
+Image Size: 100.5 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.1 | `fpm -apache2`
-dev-lang/php-5.5.34 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-lang/php-5.5.35 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
 dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
 dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
 dev-libs/libgcrypt-1.6.5 | `threads -doc -static-libs`
@@ -22,7 +22,7 @@ dev-libs/libxslt-1.1.28-r5 | `crypt -debug -examples -python -static-libs`
 dev-libs/nettle-3.2 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.7-r1 | `lock`
-dev-php/pecl-imagick-3.1.2-r1 | `-examples`
+dev-php/pecl-imagick-3.4.1 | `-examples {-test}`
 dev-php/pecl-memcache-3.0.8-r1 | `session`
 dev-php/pecl-redis-2.2.7-r1 | `-igbinary`
 dev-php/xdebug-2.2.6 | ` `
@@ -68,11 +68,11 @@ Package | USE Flags
 **FROM gentoobb/nginx** |
 app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
 dev-libs/libpcre-8.38 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.9.14 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.10.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2g-r2 | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
@@ -83,7 +83,7 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

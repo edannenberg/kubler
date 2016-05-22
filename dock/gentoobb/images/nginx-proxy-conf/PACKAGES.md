@@ -1,7 +1,7 @@
-### gentoobb/nginx-proxy-conf:20160414
-Built: Wed Apr 20 18:19:25 CEST 2016
+### gentoobb/nginx-proxy-conf:20160519
+Built: Sun May 22 18:58:02 CEST 2016
 
-Image Size: 22.06 MB
+Image Size: 23.17 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,14 +9,14 @@ dev-lang/execline-2.1.4.5 | `-static -static-libs`
 dev-libs/skalibs-2.3.9.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.2.4.3 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
-*manual install*: docker-gen-0.7.0 | http://github.com/jwilder/docker-gen/
+*manual install*: docker-gen-0.7.1 | http://github.com/jwilder/docker-gen/
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

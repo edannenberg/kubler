@@ -1,14 +1,14 @@
-### gentoobb/nodejs:20160414
-Built: Wed Apr 20 18:20:57 CEST 2016
+### gentoobb/nodejs:20160519
+Built: Sun May 22 18:59:26 CEST 2016
 
-Image Size: 37.18 MB
+Image Size: 36.83 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/libuv-1.4.2 | `-static-libs`
-dev-libs/openssl-1.0.2g-r2 | `asm tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/libuv-1.8.0 | `-static-libs`
+dev-libs/openssl-1.0.2h | `asm tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 net-libs/http-parser-2.3 | `-static-libs`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
@@ -24,7 +24,7 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,7 +1,7 @@
-### gentoobb/riemann-dash:20160414
-Built: Wed Apr 20 18:41:41 CEST 2016
+### gentoobb/riemann-dash:20160519
+Built: Sun May 22 19:21:07 CEST 2016
 
-Image Size: 209.1 MB
+Image Size: 208.1 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -15,9 +15,9 @@ Package | USE Flags
 --------|----------
 **FROM gentoobb/ruby-gcc** |
 app-eselect/eselect-ruby-20151229 | ``
-dev-lang/ruby-2.3.0 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -ncurses -rubytests -socks5 -xemacs`
-dev-libs/glib-2.46.2-r2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
-dev-libs/libffi-3.0.13-r1 | `pax`
+dev-lang/ruby-2.3.1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -ncurses -rubytests -socks5 -xemacs`
+dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
+dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libxml2-2.9.3 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
 dev-ruby/did_you_mean-1.0.0 | `{-test}`
@@ -59,7 +59,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2g-r2 | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.4 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
@@ -70,7 +70,7 @@ sys-apps/s6-2.2.4.3 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016a | `nls -leaps`
+sys-libs/timezone-data-2016c | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
