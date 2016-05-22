@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-REGISTRY_VERSION="2.4.0"
+REGISTRY_VERSION="2.4.1"
 
 configure_bob()
 {
