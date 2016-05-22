@@ -19,6 +19,7 @@ configure_bob() {
     update_use 'dev-vcs/git' '-perl'
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
+    update_keywords 'dev-python/ssl-fetch' '+~amd64'
     emerge sys-devel/crossdev dev-vcs/git app-portage/layman sys-devel/distcc
     # setup layman
     layman -L
