@@ -5,7 +5,7 @@ PHP_SLOT="5.5"
 PHP_TARGET="php${PHP_SLOT/\./-}"
 PACKAGES="dev-lang/php:${PHP_SLOT} dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu pecl-imagick"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
-ADMINER_VERSION="4.2.4"
+ADMINER_VERSION="4.2.5"
 #ICONV_FROM=gentoobb/glibc
 
 #
