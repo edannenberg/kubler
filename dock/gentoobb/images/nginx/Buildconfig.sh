@@ -11,7 +11,6 @@ configure_rootfs_build()
     echo 'NGINX_MODULES_HTTP="access auth_basic autoindex charset fastcgi \
              gzip gzip_static limit_req map proxy rewrite scgi ssi stub_status"' >> /etc/portage/make.conf
     echo 'NGINX_MODULES_MAIL=""' >> /etc/portage/make.conf
-    update_keywords 'www-servers/nginx' '+~amd64'
     update_use 'www-servers/nginx' '+http2'
     update_use 'dev-libs/libpcre' '-readline'
 }
