@@ -15,7 +15,7 @@ nginxproxy:
   restart: ${DC_RESTART_POLICY}
 
 nginxphp:
-  image: gentoobb/nginx-php5.5
+  image: gentoobb/nginx-php7
   restart: ${DC_RESTART_POLICY}
 
 mariadb:
