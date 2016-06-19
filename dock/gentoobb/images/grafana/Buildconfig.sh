@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-GRAFANA_VERSION="3.0.2"
+GRAFANA_VERSION="3.0.4"
 
 configure_bob()
 {
@@ -27,7 +27,7 @@ configure_bob()
     npm install -g grunt-cli gyp
     #TODO: release fails due to not being able to execute phantomjs tests, figure out how to skip those for release target
     #grunt release
-    grunt
+    grunt --force
 
     mkdir -p ${EMERGE_ROOT}/opt/grafana/{bin,conf,data}
     cp -rp "${DISTRIBUTION_DIR}/public_gen" "${EMERGE_ROOT}/opt/grafana/"
