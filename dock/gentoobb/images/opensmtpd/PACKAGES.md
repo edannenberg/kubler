@@ -1,12 +1,12 @@
-### gentoobb/opensmtpd:20160519
-Built: Sun May 22 19:00:11 CEST 2016
+### gentoobb/opensmtpd:20160616
+Built: Sun Jun 19 15:08:26 CEST 2016
 
-Image Size: 23.35 MB
+Image Size: 23.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
 dev-libs/libevent-2.0.22 | `ssl threads -debug -static-libs {-test}`
-mail-mta/opensmtpd-5.7.3_p2 | `mta -pam`
+mail-mta/opensmtpd-5.9.2_p1 | `mta -pam`
 net-libs/libasr-1.0.1 | ``
 net-mail/mailbase-1.1 | `-pam`
 sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
@@ -17,7 +17,7 @@ Package | USE Flags
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.4 | `-static`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
 dev-lang/execline-2.1.4.5 | `-static -static-libs`

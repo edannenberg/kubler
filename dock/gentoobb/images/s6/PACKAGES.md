@@ -1,5 +1,5 @@
-### gentoobb/s6:20160519
-Built: Sun May 22 16:17:17 CEST 2016
+### gentoobb/s6:20160616
+Built: Sun Jun 19 13:05:39 CEST 2016
 
 Image Size: 12.06 MB
 #### Installed

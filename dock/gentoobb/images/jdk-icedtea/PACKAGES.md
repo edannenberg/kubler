@@ -1,33 +1,33 @@
-### gentoobb/jdk-icedtea:20160519
-Built: Sun May 22 17:31:00 CEST 2016
+### gentoobb/jdk-icedtea:20160616
+Built: Sun Jun 19 17:22:12 CEST 2016
 
-Image Size: 282 MB
+Image Size: 283.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.2.0 | ``
 dev-java/icedtea-bin-7.2.6.6-r1 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
-dev-libs/expat-2.1.0-r5 | `unicode -examples -static-libs`
+dev-libs/expat-2.1.1-r1 | `unicode -examples -static-libs`
 dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.46.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.46.0 | ``
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
-dev-libs/libxml2-2.9.3 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/libxml2-2.9.4 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/nspr-4.12 | `-debug`
 dev-util/pkgconfig-0.28-r2 | `hardened -internal-glib`
 gnome-base/gsettings-desktop-schemas-3.18.1 | `introspection`
 media-fonts/dejavu-2.34 | `-`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
-media-libs/freetype-2.5.5 | `adobe-cff bindist bzip2 -`
+media-libs/freetype-2.6.3-r1 | `adobe-cff bindist bzip2 -`
 media-libs/giflib-4.1.6-r3 | `-`
 media-libs/lcms-2.6-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.4.2 | `-java -static-libs`
-media-libs/libpng-1.6.19 | `-apng (-neon) -static-libs`
+media-libs/libpng-1.6.21 | `-apng (-neon) -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 x11-libs/libX11-1.6.3 | `-doc -ipv6 -static-libs {-test}`
 x11-libs/libXau-1.0.8 | `-static-libs`
@@ -68,11 +68,11 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.49.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
-sys-apps/file-5.22 | `zlib -python -static-libs`
+sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
 sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
@@ -81,7 +81,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.4 | `-static`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
 dev-lang/execline-2.1.4.5 | `-static -static-libs`

@@ -1,11 +1,11 @@
-### gentoobb/grafana:20160519
-Built: Sun May 22 16:52:16 CEST 2016
+### gentoobb/grafana:20160616
+Built: Sun Jun 19 13:48:38 CEST 2016
 
-Image Size: 65.02 MB
+Image Size: 74.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: grafana-3.0.2 | https://github.com/grafana/grafana/
+*manual install*: grafana-3.0.4 | https://github.com/grafana/grafana/
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -13,7 +13,7 @@ Package | USE Flags
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.4 | `-static`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
 dev-lang/execline-2.1.4.5 | `-static -static-libs`

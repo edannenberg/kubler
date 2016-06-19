@@ -1,5 +1,5 @@
-### gentoobb/kibana:20160519
-Built: Sun May 22 17:35:51 CEST 2016
+### gentoobb/kibana:20160616
+Built: Sun Jun 19 14:00:52 CEST 2016
 
 Image Size: 139.5 MB
 #### Installed

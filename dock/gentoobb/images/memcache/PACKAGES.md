@@ -1,12 +1,12 @@
-### gentoobb/memcache:20160519
-Built: Sun May 22 17:44:57 CEST 2016
+### gentoobb/memcache:20160616
+Built: Sun Jun 19 14:32:34 CEST 2016
 
-Image Size: 80.8 MB
+Image Size: 81.93 MB
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/perl-cleaner-2.19 | ``
-app-arch/bzip2-1.0.6-r6 | `-static -static-libs`
+app-admin/perl-cleaner-2.20 | ``
+app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-lang/perl-5.20.2 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libevent-2.0.22 | `ssl threads -debug -static-libs {-test}`
 net-misc/memcached-1.4.25 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
@@ -21,11 +21,11 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.45.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.49.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
-sys-apps/file-5.22 | `zlib -python -static-libs`
+sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
 sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
@@ -34,7 +34,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.4 | `-static`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
 dev-lang/execline-2.1.4.5 | `-static -static-libs`

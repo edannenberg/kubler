@@ -1,5 +1,5 @@
-### gentoobb/glibc:20160519
-Built: Sun May 22 16:16:34 CEST 2016
+### gentoobb/glibc:20160616
+Built: Sun Jun 19 13:04:50 CEST 2016
 
 Image Size: 10.7 MB
 #### Installed

@@ -1,14 +1,14 @@
-### gentoobb/openssl:20160519
-Built: Sun May 22 16:20:24 CEST 2016
+### gentoobb/openssl:20160616
+Built: Sun Jun 19 13:09:14 CEST 2016
 
-Image Size: 15.97 MB
+Image Size: 16.3 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.4 | `-static`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 #### Inherited
 Package | USE Flags

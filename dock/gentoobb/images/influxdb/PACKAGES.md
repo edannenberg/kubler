@@ -1,5 +1,5 @@
-### gentoobb/influxdb:20160519
-Built: Sun May 22 20:42:12 CEST 2016
+### gentoobb/influxdb:20160616
+Built: Sun Jun 19 13:50:52 CEST 2016
 
 Image Size: 75.26 MB
 #### Installed

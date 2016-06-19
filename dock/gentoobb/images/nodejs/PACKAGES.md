@@ -1,7 +1,7 @@
-### gentoobb/nodejs:20160519
-Built: Sun May 22 18:59:26 CEST 2016
+### gentoobb/nodejs:20160616
+Built: Sun Jun 19 15:05:56 CEST 2016
 
-Image Size: 36.83 MB
+Image Size: 40.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,10 +9,10 @@ app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/libuv-1.8.0 | `-static-libs`
 dev-libs/openssl-1.0.2h | `asm tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
-net-libs/http-parser-2.3 | `-static-libs`
-sys-apps/debianutils-4.4 | `-static`
+net-libs/http-parser-2.6.2 | `-static-libs`
+sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
-*manual_install*: net-libs/nodejs-0.12.6 | 
+*manual_install*: net-libs/nodejs-4.4.1 | 
 #### Inherited
 Package | USE Flags
 --------|----------
