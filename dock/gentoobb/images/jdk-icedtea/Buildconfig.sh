@@ -20,4 +20,6 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     copy_gcc_libs
+    # gentoo's run-java-tool.bash wrapper expects which at /usr/bin
+    ln -rs ${EMERGE_ROOT}/bin/which ${EMERGE_ROOT}/usr/bin/which
 }
