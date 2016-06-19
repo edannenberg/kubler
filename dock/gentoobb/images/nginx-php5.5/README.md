@@ -10,7 +10,7 @@ To enable xdebug, mapped to port 9000 on the host:
 
     $ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost -p 80:80 -p 443:443 \
         -p 9000:9000 \
-        -e XDEBUG_ENABLED=yes \
+        -e XDEBUG_ENABLED=true \
         gentoobb/nginx-php5.5
 
 The image also provides optional phpinfo.php and [adminer][] micro sites. To enable them:
@@ -37,17 +37,10 @@ It's much easier to have the nginx-proxy image running and resolve *.void with s
 Notice the missing -p flags, as the nginx-proxy is bound to port 80 and 443 on the host already. The VIRTUAL_HOST env will be
 picked up by the nginx-proxy container and it will route all requests accordingly.
 
-[volume-mounting][volume-mount] your content under the container's
-`/var/www/localhost`.  You can also mount volumes from other
-containers and serve their data, although you may neet to tweak the
-config to serve from an alternative location.  Adjusting this image to
-serve from a configurable `$HTTP_ROOT` wouldn't be too difficult
-either.
-
 [Nginx]: http://nginx.org/
 [PHP]: http://php.org/
 [FPM]: http://php-fpm.org/
 [xdebug]: http://xdebug.org/
 [adminer]: http://www.adminer.org/en/
 [composer]: https://getcomposer.org/
-[volume-mount]: http://docs.docker.io/en/latest/use/working_with_volumes/
+

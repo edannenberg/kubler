@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$XDEBUG_ENABLED" == 'yes' ]; then
+if [ "$XDEBUG_ENABLED" == 'true' ]; then
     if [ ! -f /etc/php/fpm-php5.5/ext-active/xdebug.ini ] && [ -f /etc/php/fpm-php5.5/ext/xdebug.ini ]; then
         ln -s /etc/php/fpm-php5.5/ext/xdebug.ini /etc/php/fpm-php5.5/ext-active
         ln -s /etc/php/cli-php5.5/ext/xdebug.ini /etc/php/cli-php5.5/ext-active
