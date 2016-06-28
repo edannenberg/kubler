@@ -205,7 +205,7 @@ import_stage3()
     bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${NAMESPACE_ROOT}/stage3-import:${DATE}" || die "failed to import"
 
     msg "tag ${NAMESPACE_ROOT}/stage3-import:latest"
-    "${DOCKER}" tag -f "${NAMESPACE_ROOT}/stage3-import:${DATE}" "${NAMESPACE_ROOT}/stage3-import:latest" || die "failed to tag"
+    "${DOCKER}" tag "${NAMESPACE_ROOT}/stage3-import:${DATE}" "${NAMESPACE_ROOT}/stage3-import:latest" || die "failed to tag"
 }
 
 # Boostrap gentoobb/bob-core
@@ -306,7 +306,7 @@ build_image()
         "${DOCKER}" rm "${RUN_ID}" || die "failed to remove container ${RUN_ID}"
 
         msg "tag ${NAMESPACE}/${BUILDER_COMMIT_ID}:latest"
-        "${DOCKER}" tag -f "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" ||
+        "${DOCKER}" tag "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" ||
             die "failed to tag ${BUILDER_COMMIT_ID}"
     fi
 
@@ -317,7 +317,7 @@ build_image()
     "${DOCKER}" build ${BUILD_OPTS} -t "${REPO_ID}:${DATE}" "${REPO_EXPANDED}" || die "failed to build ${REPO_EXPANDED}"
 
     msg "tag ${REPO}:latest"
-    "${DOCKER}" tag -f "${REPO_ID}:${DATE}" "${REPO_ID}:latest" || die "failed to tag ${REPO_EXPANDED}"
+    "${DOCKER}" tag "${REPO_ID}:${DATE}" "${REPO_ID}:latest" || die "failed to tag ${REPO_EXPANDED}"
 
     add_documentation_header "${REPO}" "${REPO_TYPE}" || die "failed to generate PACKAGES.md for ${REPO_EXPANDED}"
 }
@@ -358,8 +358,8 @@ push_image() {
     if [[ ! -z "${REPOSITORY_URL}" ]]; then
         IMAGE_DOCKER_ID=$("${DOCKER}" images "${IMAGE_ID}" | grep "${DATE}" | awk '{print $3}')
         PUSH_ARGS="${REPOSITORY_URL}/${IMAGE_ID}"
-        echo "${DOCKER}" tag -f "${IMAGE_DOCKER_ID}" ${PUSH_ARGS}
-        "${DOCKER}" tag -f "${IMAGE_DOCKER_ID}" "${PUSH_ARGS}" || exit 1
+        echo "${DOCKER}" tag "${IMAGE_DOCKER_ID}" ${PUSH_ARGS}
+        "${DOCKER}" tag "${IMAGE_DOCKER_ID}" "${PUSH_ARGS}" || exit 1
     fi
     echo "pushing ${PUSH_ARGS}"
     "${DOCKER}" push "${PUSH_ARGS}" || exit 1
