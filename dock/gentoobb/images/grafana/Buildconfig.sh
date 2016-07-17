@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-GRAFANA_VERSION="3.0.4"
+GRAFANA_VERSION="3.1.0"
 
 configure_bob()
 {
