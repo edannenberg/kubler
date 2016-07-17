@@ -1,7 +1,7 @@
-### gentoobb/jdk-icedtea:20160616
-Built: Sun Jun 19 17:22:12 CEST 2016
+### gentoobb/jdk-icedtea:20160714
+Built: Sat Jul 16 14:43:48 CEST 2016
 
-Image Size: 283.2 MB
+Image Size: 283.3 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -11,7 +11,7 @@ app-eselect/eselect-java-0.2.0 | ``
 dev-java/icedtea-bin-7.2.6.6-r1 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
-dev-libs/expat-2.1.1-r1 | `unicode -examples -static-libs`
+dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
 dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.46.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.46.0 | ``
@@ -26,7 +26,7 @@ media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
 media-libs/freetype-2.6.3-r1 | `adobe-cff bindist bzip2 -`
 media-libs/giflib-4.1.6-r3 | `-`
 media-libs/lcms-2.6-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
-media-libs/libjpeg-turbo-1.4.2 | `-java -static-libs`
+media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.21 | `-apng (-neon) -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 x11-libs/libX11-1.6.3 | `-doc -ipv6 -static-libs {-test}`
@@ -57,9 +57,9 @@ Package | USE Flags
 dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
 dev-libs/mpc-1.0.2-r1 | `-static-libs`
 dev-libs/mpfr-3.1.3_p4 | `-static-libs`
-sys-devel/binutils-2.25.1-r1 | `cxx nls zlib -multislot -multitarget -static-libs {-test} -vanilla`
+sys-devel/binutils-2.25.1-r1 | `cxx nls zlib -multitarget -static-libs {-test} -vanilla`
 sys-devel/binutils-config-5-r2 | ``
-sys-devel/gcc-4.9.3 | `cxx hardened nls nptl openmp (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -multislot -nopie -nossp -objc -objc`
+sys-devel/gcc-4.9.3 | `cxx hardened nls nptl openmp (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
 sys-devel/gcc-config-1.7.3 | ``
 sys-devel/make-4.1-r1 | `nls -guile -static`
 sys-kernel/linux-headers-4.3 | ``
@@ -80,18 +80,18 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h | `asm bindist tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h-r2 | `asm bindist sslv3 tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
-dev-lang/execline-2.1.4.5 | `-static -static-libs`
-dev-libs/skalibs-2.3.9.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.2.4.3 | `-static -static-libs`
+dev-lang/execline-2.1.5.0 | `-static -static-libs`
+dev-libs/skalibs-2.3.10.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.3.0.0 | `-static -static-libs`
 *manual install*: entr-3.4 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016c | `nls -leaps`
+sys-libs/timezone-data-2016d | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
