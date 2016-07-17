@@ -3,7 +3,7 @@
 #
 PHP_SLOT="7.0"
 PHP_TARGET="php${PHP_SLOT/\./-}"
-PACKAGES="dev-lang/php dev-php/xdebug dev-php/pecl-apcu dev-libs/libmemcached media-gfx/imagemagick"
+PACKAGES="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis"
 #PACKAGES="dev-lang/php dev-php/pecl-memcached dev-php/pecl-redis pecl-imagick"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 ADMINER_VERSION="4.2.5"
@@ -32,6 +32,8 @@ configure_rootfs_build()
     update_keywords 'dev-php/xdebug' '+~amd64'
     update_keywords 'dev-php/xdebug-client' '+~amd64'
     update_keywords 'dev-php/pecl-apcu' '+~amd64'
+    update_keywords 'dev-php/pecl-apcu_bc' '+~amd64'
+    update_keywords 'dev-php/pecl-redis' '+~amd64'
 
     update_use 'dev-php/pecl-apcu' '+mmap'
 
@@ -44,7 +46,7 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    # php memcached support
+    # php memcached support - currently not in portage tree
     git clone https://github.com/php-memcached-dev/php-memcached.git
     cd php-memcached/
     git checkout php7
@@ -56,20 +58,7 @@ finish_rootfs_build()
     cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
     echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > /emerge-root/etc/php/fpm-php7.0/ext-active/memcached.ini
 
-    # php redis support
-    cd ..
-    git clone https://github.com/phpredis/phpredis.git
-    cd phpredis/
-    git checkout php7
-    phpize
-    # our libtool is too new, regen some stuff with current version
-    aclocal; libtoolize --force; autoheader; autoconf
-    ./configure
-    make
-    cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/redis.so' > /emerge-root/etc/php/fpm-php7.0/ext-active/redis.ini
-
-    # php imagick support
+    # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
     cd ..
     wget https://pecl.php.net/get/imagick-3.4.1.tgz
     tar xvzf imagick-3.4.1.tgz
