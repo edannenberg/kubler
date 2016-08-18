@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-CADVISOR_VERSION="0.23.6"
+CADVISOR_VERSION="0.23.9"
 
 configure_bob()
 {
