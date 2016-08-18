@@ -1,14 +1,14 @@
-### gentoobb/mysql:20160714
-Built: Sat Jul 16 15:10:23 CEST 2016
+### gentoobb/mysql:20160811
+Built: Thu Aug 18 19:32:54 CEST 2016
 
-Image Size: 204.1 MB
+Image Size: 198.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/perl-cleaner-2.20 | ``
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
-dev-db/mysql-5.6.30 | `openssl perl server -debug -embedded -extraengine -jemalloc -latin1 (-libressl) -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
+dev-db/mysql-5.6.31 | `openssl perl server -debug -embedded -extraengine -jemalloc -latin1 (-libressl) -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
 dev-db/mysql-init-scripts-2.0-r1 | ``
 dev-lang/perl-5.20.2 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
@@ -35,10 +35,9 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.49.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.50.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
@@ -58,7 +57,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016d | `nls -leaps`
+sys-libs/timezone-data-2016e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

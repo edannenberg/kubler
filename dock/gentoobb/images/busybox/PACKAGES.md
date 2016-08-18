@@ -1,5 +1,5 @@
-### gentoobb/busybox:20160714
-Built: Sat Jul 16 14:12:30 CEST 2016
+### gentoobb/busybox:20160811
+Built: Thu Aug 18 18:22:35 CEST 2016
 
 Image Size: 1.269 MB
 #### Installed

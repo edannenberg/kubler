@@ -1,11 +1,11 @@
-### gentoobb/grafana:20160714
-Built: Sat Jul 16 14:35:19 CEST 2016
+### gentoobb/grafana:20160811
+Built: Thu Aug 18 18:42:04 CEST 2016
 
-Image Size: 75.26 MB
+Image Size: 75.08 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: grafana-3.1.0 | https://github.com/grafana/grafana/
+*manual install*: grafana-3.1.1 | https://github.com/grafana/grafana/
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -23,7 +23,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016d | `nls -leaps`
+sys-libs/timezone-data-2016e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

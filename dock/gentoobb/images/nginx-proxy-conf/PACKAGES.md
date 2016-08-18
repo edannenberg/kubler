@@ -1,7 +1,7 @@
-### gentoobb/nginx-proxy-conf:20160714
-Built: Sat Jul 16 16:00:33 CEST 2016
+### gentoobb/nginx-proxy-conf:20160811
+Built: Thu Aug 18 20:15:03 CEST 2016
 
-Image Size: 23.17 MB
+Image Size: 23.18 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -16,7 +16,7 @@ Package | USE Flags
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016d | `nls -leaps`
+sys-libs/timezone-data-2016e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

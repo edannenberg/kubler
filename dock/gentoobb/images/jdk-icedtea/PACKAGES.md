@@ -1,14 +1,14 @@
-### gentoobb/jdk-icedtea:20160714
-Built: Sat Jul 16 14:43:48 CEST 2016
+### gentoobb/jdk-icedtea:20160811
+Built: Thu Aug 18 18:47:44 CEST 2016
 
-Image Size: 283.3 MB
+Image Size: 277.9 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.2.0 | ``
-dev-java/icedtea-bin-7.2.6.6-r1 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
+dev-java/icedtea-bin-7.2.6.7 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt (-multilib) -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
@@ -21,7 +21,7 @@ dev-libs/libxml2-2.9.4 | `readline -debug -examples -icu -ipv6 -lzma -python -st
 dev-libs/nspr-4.12 | `-debug`
 dev-util/pkgconfig-0.28-r2 | `hardened -internal-glib`
 gnome-base/gsettings-desktop-schemas-3.18.1 | `introspection`
-media-fonts/dejavu-2.34 | `-`
+media-fonts/dejavu-2.35 | `-`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
 media-libs/freetype-2.6.3-r1 | `adobe-cff bindist bzip2 -`
 media-libs/giflib-4.1.6-r3 | `-`
@@ -68,10 +68,9 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.49.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.50.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
@@ -91,7 +90,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016d | `nls -leaps`
+sys-libs/timezone-data-2016e | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
