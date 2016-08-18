@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig"
+PACKAGES="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig sys-apps/coreutils"
 KEEP_HEADERS=true
 
 #
@@ -13,7 +13,7 @@ configure_rootfs_build()
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=app-eselect/eselect-ruby-20151229' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
-    update_keywords '=dev-ruby/rdoc-4.2.1' '+~amd64'
+    update_keywords '=dev-ruby/rdoc-4.2.2' '+~amd64'
     update_keywords '=dev-ruby/rubygems-2.6.6' '+~amd64'
     update_keywords '=dev-ruby/rake-11.2.2-r1' '+~amd64'
     update_keywords '=dev-ruby/power_assert-0.2.6' '+~amd64'
