@@ -56,7 +56,10 @@ finish_rootfs_build()
     ./configure --disable-memcached-sasl
     make
     cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > /emerge-root/etc/php/fpm-php7.0/ext-active/memcached.ini
+    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/memcached.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/memcached.ini ${EMERGE_ROOT}/etc/php/cli-php7.0/ext-active/memcached.ini
+    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/memcached.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/memcached.ini ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext-active/memcached.ini
 
     # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
     cd ..
@@ -69,7 +72,10 @@ finish_rootfs_build()
     ./configure
     make
     cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/imagick.so' > /emerge-root/etc/php/fpm-php7.0/ext-active/imagick.ini
+    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/imagick.so' > ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/imagick.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/imagick.ini ${EMERGE_ROOT}/etc/php/cli-php7.0/ext-active/imagick.ini
+    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/imagick.so' > ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/imagick.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/imagick.ini ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext-active/imagick.ini
 
     # set php iconv default to UTF-8, if you need full iconv functionality set ICONV_FROM=gentoobb/glibc above
     sed -i 's/^;iconv.input_encoding = ISO-8859-1/iconv.input_encoding = UTF-8/g' $EMERGE_ROOT/etc/php/fpm-php${PHP_SLOT}/php.ini
