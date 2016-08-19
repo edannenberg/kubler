@@ -23,4 +23,6 @@ finish_rootfs_build()
     # busybox crond setup
     mkdir -p $EMERGE_ROOT/var/spool/cron/crontabs
     chmod 0600 $EMERGE_ROOT/var/spool/cron/crontabs
+    # eselect now uses a hard coded readlink path :/
+    ln -sr $EMERGE_ROOT/bin/readlink $EMERGE_ROOT/usr/bin/readlink
 }
