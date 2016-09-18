@@ -33,6 +33,10 @@ for bob_var in ${!BOB_*}; do
     CONTAINER_ENV+=("${bob_var}=${!bob_var}")
 done
 
+generate_dockerfile "${REPO_DIR}"
+DOCKER_PRIVILEGED=$(get_dockerfile_tag "#BUILD_PRIVILEGED" "${REPO_DIR}")
+[[ $? == 1 ]] && die "${DOCKER_PRIVILEGED}"
+
 CONTAINER_MOUNTS=(
 "$(realpath -s $SCRIPT_DIR/../tmp/distfiles):/distfiles"
 "$(realpath -s $SCRIPT_DIR/../tmp/packages):/packages"
