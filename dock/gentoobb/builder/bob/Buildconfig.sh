@@ -22,6 +22,7 @@ configure_bob() {
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
     emerge sys-devel/crossdev dev-vcs/git app-portage/layman sys-devel/distcc
     # setup layman
+    sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L
 }
 
