@@ -1,20 +1,20 @@
-### gentoobb/nginx:20160811
-Built: Thu Aug 18 19:34:02 CEST 2016
+### gentoobb/nginx:20160915
+Built: Mon Sep 19 00:17:50 CEST 2016
 
-Image Size: 17.81 MB
+Image Size: 18.35 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.38-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.10.1 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic (-libressl) -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.11.4 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm bindist sslv3 tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

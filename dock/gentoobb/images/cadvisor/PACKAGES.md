@@ -1,5 +1,5 @@
-### gentoobb/cadvisor:20160811
-Built: Thu Aug 18 18:29:37 CEST 2016
+### gentoobb/cadvisor:20160915
+Built: Sun Sep 18 22:34:54 CEST 2016
 
 Image Size: 41.17 MB
 #### Installed

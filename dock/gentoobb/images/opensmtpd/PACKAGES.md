@@ -1,7 +1,7 @@
-### gentoobb/opensmtpd:20160811
-Built: Thu Aug 18 20:17:31 CEST 2016
+### gentoobb/opensmtpd:20160915
+Built: Mon Sep 19 01:50:30 CEST 2016
 
-Image Size: 23.58 MB
+Image Size: 24.12 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -16,7 +16,7 @@ Package | USE Flags
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm bindist sslv3 tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

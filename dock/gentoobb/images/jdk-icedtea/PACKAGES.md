@@ -1,7 +1,7 @@
-### gentoobb/jdk-icedtea:20160811
-Built: Thu Aug 18 18:47:44 CEST 2016
+### gentoobb/jdk-icedtea:20160915
+Built: Sun Sep 18 22:59:58 CEST 2016
 
-Image Size: 277.9 MB
+Image Size: 278.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -15,6 +15,7 @@ dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
 dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.46.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.46.0 | ``
+dev-libs/libbsd-0.8.2 | `-static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libxml2-2.9.4 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
@@ -31,25 +32,25 @@ media-libs/libpng-1.6.21 | `-apng (-neon) -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 x11-libs/libX11-1.6.3 | `-doc -ipv6 -static-libs {-test}`
 x11-libs/libXau-1.0.8 | `-static-libs`
-x11-libs/libxcb-1.11.1 | `-doc (-selinux) -static-libs {-test} -xkb`
+x11-libs/libxcb-1.12 | `-doc (-selinux) -static-libs {-test} -xkb`
 x11-libs/libXcomposite-0.4.4-r1 | `-doc -static-libs`
-x11-libs/libXdmcp-1.1.2 | `-doc -static-libs`
+x11-libs/libXdmcp-1.1.2-r1 | `-doc -static-libs`
 x11-libs/libXext-1.3.3 | `-doc -static-libs`
-x11-libs/libXfixes-5.0.1 | `-static-libs`
-x11-libs/libXi-1.7.5 | `-doc -static-libs`
+x11-libs/libXfixes-5.0.2 | `-static-libs`
+x11-libs/libXi-1.7.6 | `-doc -static-libs`
 x11-libs/libXrender-0.9.9 | `-static-libs`
 x11-libs/libXtst-1.2.2 | `-doc -static-libs`
 x11-libs/xtrans-1.3.5 | `-doc`
 x11-misc/shared-mime-info-1.4 | `{-test}`
 x11-proto/compositeproto-0.4.2-r1 | ``
 x11-proto/fixesproto-5.0-r1 | ``
-x11-proto/inputproto-2.3.1 | ``
+x11-proto/inputproto-2.3.2 | ``
 x11-proto/kbproto-1.0.7 | ``
 x11-proto/recordproto-1.14.2-r1 | `-doc`
 x11-proto/renderproto-0.11.1-r1 | ``
 x11-proto/xextproto-7.3.0 | `-doc`
 x11-proto/xf86bigfontproto-1.2.0-r1 | ``
-x11-proto/xproto-7.0.28 | `-doc`
+x11-proto/xproto-7.0.29 | `-doc`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -68,7 +69,7 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.50.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/file-5.25 | `zlib -python -static-libs`
@@ -79,7 +80,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm bindist sslv3 tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

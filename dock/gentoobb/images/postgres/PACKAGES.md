@@ -1,14 +1,14 @@
-### gentoobb/postgres:20160811
-Built: Thu Aug 18 20:21:23 CEST 2016
+### gentoobb/postgres:20160915
+Built: Mon Sep 19 01:54:24 CEST 2016
 
-Image Size: 47.18 MB
+Image Size: 47.75 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
-dev-db/postgresql-9.5.2 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
+dev-db/postgresql-9.5.4 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
 dev-libs/libpcre-8.38-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-481 | `pcre unicode`
 *manual install*: gosu-1.9 | https://github.com/tianon/gosu/
@@ -20,7 +20,7 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.50.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/file-5.25 | `zlib -python -static-libs`
@@ -31,7 +31,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm bindist sslv3 tls-heartbeat zlib -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
