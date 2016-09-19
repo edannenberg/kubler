@@ -8,10 +8,7 @@ configure_bob()
     # nodejs ebuild pulls in python for node-gyp
     # we only want the runtime deps for node in this image
     NODEJS_VERSION=$(get_package_version 'net-libs/nodejs')
-    # nodejs currently requires openssl with ECDH :/
-    emerge -C net-misc/openssh
-    update_use 'dev-libs/openssl' '-bindist'
-    emerge dev-libs/openssl net-libs/nodejs
+    emerge net-libs/nodejs
 }
 
 #
