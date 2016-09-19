@@ -2,11 +2,10 @@
 # build config
 #
 PACKAGES=""
-REGISTRY_VERSION="2.5.0"
+REGISTRY_VERSION="2.5.1"
 
 configure_bob()
 {
-    emerge -v go
     mkdir -p /go/src/github.com/docker/
     export DISTRIBUTION_DIR=/go/src/github.com/docker/distribution
     export GOPATH=${DISTRIBUTION_DIR}/Godeps/_workspace:/go
