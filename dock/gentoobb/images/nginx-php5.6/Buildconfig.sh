@@ -1,17 +1,14 @@
 #
 # build config
 #
-PHP_SLOT="5.5"
+PHP_SLOT="5.6"
 PHP_TARGET="php${PHP_SLOT/\./-}"
 PACKAGES="dev-lang/php:${PHP_SLOT} dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu pecl-imagick"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 ADMINER_VERSION="4.2.5"
 #ICONV_FROM=gentoobb/glibc
 
-#
-# this method runs in the bb builder container just before starting the build of the rootfs
-#
-configure_rootfs_build()
+configure_bob()
 {
     echo "PHP_TARGETS=\"${PHP_TARGET}\"" >> /etc/portage/make.conf
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
@@ -21,6 +18,14 @@ configure_rootfs_build()
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'dev-php/pecl-apcu' '+mmap'
 
+    emerge php
+}
+
+#
+# this method runs in the bb builder container just before starting the build of the rootfs
+#
+configure_rootfs_build()
+{
     update_use 'media-gfx/imagemagick' '-openmp'
 
     # skip bash, perl, autogen. pulled in as dep since php 5.5.22

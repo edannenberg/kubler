@@ -16,7 +16,7 @@ RUN chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/php-fpm/finish && \
     ln -s /etc/service/nullmailer /service && \
     ln -s /etc/s6_finish_default /etc/service/nullmailer/finish && \
-    if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php5.5 /usr/bin/php; fi && \
+    if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php5.6 /usr/bin/php; fi && \
     curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/bin/composer
 
 EXPOSE 80 443 9000
