@@ -17,8 +17,9 @@ configure_bob()
     update_keywords 'app-eselect/eselect-php' '+~amd64'
     update_keywords 'dev-lang/php' '+~amd64'
 
+    update_use '+gif' '+jpeg' '+jpeg2k' '+png' '+tiff' '+webp'
     update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+gd' '+mhash' \
-               '+mysql' '+mysqli' '+pcntl' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
+               '+mysql' '+mysqli' '+pcntl' '+pdo' '+soap' '+sockets' '+webp' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'media-gfx/imagemagick' '-openmp'
     emerge php git libmemcached imagemagick
