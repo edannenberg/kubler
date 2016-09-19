@@ -2,11 +2,11 @@
 # build config
 #
 PACKAGES=""
-INFLUXDB_VERSION="1.0.0-beta3"
+INFLUXDB_VERSION="1.0.0"
 
 configure_bob()
 {
-    emerge -v go mercurial
+    emerge -v dev-vcs/mercurial
     export DISTRIBUTION_DIR=/go/src/github.com/influxdata/influxdb
     mkdir -p ${DISTRIBUTION_DIR}
     export GOPATH=/go
