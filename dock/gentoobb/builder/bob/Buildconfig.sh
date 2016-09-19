@@ -24,6 +24,13 @@ configure_bob() {
     # setup layman
     sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L
+    # install acbuild
+    emerge dev-lang/go app-crypt/gnupg
+    git clone https://github.com/containers/build
+    cd build/ && ./build
+    cp ./bin/acbuild* /usr/local/bin/
+    cd ..
+    rm -r build/
 }
 
 #
