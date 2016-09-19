@@ -8,10 +8,17 @@ if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhos
     CRT_LOCACTION="${CRT_LOCACTION:-MD}"
     CRT_ORG="${CRT_ORG:-ACME Inc - nginx}"
     CRT_CN="${CRT_CN:-nginx.local}"
-    openssl req -x509 -nodes -days 3650 -newkey rsa:4096 \
+    # rsa cert
+    openssl req -new -x509 -nodes -days 3650 -newkey rsa:4069 \
         -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
         -keyout /etc/nginx/ssl/localhost/nginx.key \
-        -out /etc/nginx/ssl/localhost/nginx.crt 
+        -out /etc/nginx/ssl/localhost/nginx.crt
+    # ecc cert
+    openssl ecparam -name secp521r1 -genkey -param_enc explicit -out /etc/nginx/ssl/localhost/nginx-ecc.key
+    openssl req -new -x509 -nodes -days 3650  \
+        -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
+        -key /etc/nginx/ssl/localhost/nginx-ecc.key \
+        -out /etc/nginx/ssl/localhost/nginx-ecc.crt
 fi
 
 # create dh parameters and enable forward secrecy
