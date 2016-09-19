@@ -1,0 +1,8 @@
+FROM ${NAMESPACE}/bash
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+EXPOSE 9000
+
+ENTRYPOINT ["/usr/bin/webhook"]
