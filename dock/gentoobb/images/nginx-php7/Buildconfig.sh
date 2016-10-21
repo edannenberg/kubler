@@ -14,12 +14,13 @@ configure_bob()
     echo "PHP_TARGETS=\"${PHP_TARGET}\"" >> /etc/portage/make.conf
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
 
-    update_keywords 'app-eselect/eselect-php' '+~amd64'
     update_keywords 'dev-lang/php' '+~amd64'
 
     update_use '+gif' '+jpeg' '+jpeg2k' '+png' '+tiff' '+webp'
-    update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+gd' '+mhash' \
+    update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+mhash' \
                '+mysql' '+mysqli' '+pcntl' '+pdo' '+soap' '+sockets' '+webp' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
+    # flaggie issue with gd use flag, apparently there now is a conflicting license with the same name
+    echo 'dev-lang/php gd' >> /etc/portage/package.use/php
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'media-gfx/imagemagick' '-openmp'
     emerge php git libmemcached imagemagick
