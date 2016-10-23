@@ -6,6 +6,8 @@ EMERGE_BIN="emerge"
 CROSSDEV_MUSL="x86_64-pc-linux-musl"
 
 configure_bob() {
+    # breaks toolchain build
+    echo '=cross-x86_64-pc-linux-musl/musl-1.1.15-r2' > /etc/portage/package.mask/musl
     # setup crossdev
     mkdir -p /usr/local/portage-crossdev/profiles
     echo 'local-crossdev' > /usr/local/portage-crossdev/profiles/repo_name
