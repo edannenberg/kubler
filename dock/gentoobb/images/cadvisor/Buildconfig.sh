@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-CADVISOR_VERSION="0.23.9"
+CADVISOR_VERSION="0.24.1"
 
 configure_bob()
 {
@@ -24,22 +24,25 @@ configure_bob()
 
     repo_path="github.com/google/cadvisor"
 
-    version=$( cat version/VERSION )
+    version=$( git describe --tags --dirty --abbrev=14 | sed -E 's/-([0-9]+)-g/.\1+/' )
     revision=$( git rev-parse --short HEAD 2> /dev/null || echo 'unknown' )
     branch=$( git rev-parse --abbrev-ref HEAD 2> /dev/null || echo 'unknown' )
-    host=$( hostname -f )
+    build_user="${USER}@${HOSTNAME}"
     build_date=$( date +%Y%m%d-%H:%M:%S )
     go_version=$( go version | sed -e 's/^[^0-9.]*\([0-9.]*\).*/\1/' )
 
-    ldflags="
-     -X ${repo_path}/version.Version ${version}
-     -X ${repo_path}/version.Revision ${revision}
-     -X ${repo_path}/version.Branch ${branch}
-     -X ${repo_path}/version.BuildUser ${USER}@${host}
-     -X ${repo_path}/version.BuildDate ${build_date}
-     -X ${repo_path}/version.GoVersion ${go_version}"
+    ldseparator="="
 
-    godep go build -ldflags "${ldflags}" -o cadvisor ${repo_path}
+    ldflags="
+      -extldflags '-static'
+      -X ${repo_path}/version.Version${ldseparator}${version}
+      -X ${repo_path}/version.Revision${ldseparator}${revision}
+      -X ${repo_path}/version.Branch${ldseparator}${branch}
+      -X ${repo_path}/version.BuildUser${ldseparator}${build_user}
+      -X ${repo_path}/version.BuildDate${ldseparator}${build_date}
+      -X ${repo_path}/version.GoVersion${ldseparator}${go_version}"
+
+    godep go build -ldflags "${ldflags}" ${repo_path}
     echo "done."
 
     mkdir -p ${EMERGE_ROOT}/bin
