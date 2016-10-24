@@ -1,12 +1,12 @@
-### gentoobb/riemann-dash:20160915
-Built: Mon Sep 19 02:10:23 CEST 2016
+### gentoobb/riemann-dash:20161020
+Built: Mon Oct 24 00:20:31 CEST 2016
 
-Image Size: 210.2 MB
+Image Size: 213.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
 dev-libs/libgcrypt-1.7.3 | `-doc -static-libs`
-dev-libs/libgpg-error-1.19 | `nls -common-lisp -static-libs`
+dev-libs/libgpg-error-1.24 | `nls -common-lisp -static-libs`
 dev-libs/libxslt-1.1.29 | `crypt -debug -examples -python -static-libs`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 *gem install*: riemann-client riemann-tools riemann-dash | https://github.com/aphyr/riemann
@@ -14,15 +14,17 @@ sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 Package | USE Flags
 --------|----------
 **FROM gentoobb/ruby-gcc** |
+app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-ruby-20151229 | ``
 dev-lang/ruby-2.3.1 | `berkdb rdoc readline ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -ncurses -rubytests -socks5 -tk -xemacs`
-dev-libs/glib-2.46.2-r3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
+dev-libs/glib-2.48.2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `pax`
+dev-libs/libpcre-8.38-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libxml2-2.9.4 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libyaml-0.1.6 | `-doc -examples -static-libs {-test}`
 dev-ruby/did_you_mean-1.0.0 | `{-test}`
 dev-ruby/json-1.8.3 | `-doc {-test}`
-dev-ruby/minitest-5.8.3 | `-doc {-test}`
+dev-ruby/minitest-5.9.1 | `-doc {-test}`
 dev-ruby/net-telnet-0.1.1-r1 | `-doc {-test}`
 dev-ruby/power_assert-0.2.6 | `-doc {-test}`
 dev-ruby/rake-11.2.2-r1 | `-doc {-test}`
@@ -34,19 +36,19 @@ sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -sta
 sys-libs/db-4.8.30-r2 | `cxx -doc -examples -java -tcl {-test}`
 x11-misc/shared-mime-info-1.4 | `{-test}`
 **FROM gentoobb/gcc** |
-dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
+dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/mpc-1.0.2-r1 | `-static-libs`
 dev-libs/mpfr-3.1.3_p4 | `-static-libs`
 sys-devel/binutils-2.25.1-r1 | `cxx nls zlib -multitarget -static-libs {-test} -vanilla`
 sys-devel/binutils-config-5-r2 | ``
-sys-devel/gcc-4.9.3 | `cxx hardened nls nptl openmp (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
+sys-devel/gcc-4.9.3 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
 sys-devel/gcc-config-1.7.3 | ``
 sys-devel/make-4.1-r1 | `nls -guile -static`
 sys-kernel/linux-headers-4.3 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
+app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
@@ -59,7 +61,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

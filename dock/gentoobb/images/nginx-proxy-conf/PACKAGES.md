@@ -1,7 +1,7 @@
-### gentoobb/nginx-proxy-conf:20160915
-Built: Mon Sep 19 01:40:07 CEST 2016
+### gentoobb/nginx-proxy-conf:20161020
+Built: Sun Oct 23 23:58:04 CEST 2016
 
-Image Size: 23.18 MB
+Image Size: 23.23 MB
 #### Installed
 Package | USE Flags
 --------|----------

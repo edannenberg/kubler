@@ -1,7 +1,7 @@
-### gentoobb/s6:20160915
-Built: Sun Sep 18 22:18:05 CEST 2016
+### gentoobb/s6:20161020
+Built: Sun Oct 23 21:55:57 CEST 2016
 
-Image Size: 12.08 MB
+Image Size: 12.13 MB
 #### Installed
 Package | USE Flags
 --------|----------

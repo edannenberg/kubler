@@ -1,7 +1,7 @@
-### gentoobb/python3:20160915
-Built: Mon Sep 19 02:07:18 CEST 2016
+### gentoobb/python3:20161020
+Built: Mon Oct 24 00:17:32 CEST 2016
 
-Image Size: 119.4 MB
+Image Size: 120.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -9,8 +9,8 @@ app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-arch/xz-utils-5.2.2 | `nls threads -static-libs`
 app-eselect/eselect-python-20140125-r1 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.12.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
-dev-lang/python-3.4.3-r1 | `hardened readline sqlite ssl threads xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
+dev-db/sqlite-3.13.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-lang/python-3.4.3-r1 | `hardened readline sqlite ssl (threads) xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
 dev-libs/libffi-3.2.1 | `pax`
@@ -19,7 +19,7 @@ dev-python/certifi-2015.11.20 | ` `
 dev-python/cffi-1.5.2 | `-doc {-test}`
 dev-python/chardet-2.2.1 | ` `
 dev-python/colorama-0.3.3 | `-examples`
-dev-python/cryptography-1.3.1 | `(-libressl) {-test}`
+dev-python/cryptography-1.3.4 | `(-libressl) {-test}`
 dev-python/distlib-0.2.1 | ` `
 dev-python/html5lib-0.9999999 | `{-test}`
 dev-python/idna-2.0 | ` `
@@ -35,7 +35,7 @@ dev-python/pycparser-2.14 | `{-test}`
 dev-python/pyopenssl-0.15.1-r1 | `-doc -examples`
 dev-python/requests-2.8.1 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
-dev-python/setuptools-18.4 | `{-test}`
+dev-python/setuptools-20.6.7 | `{-test}`
 dev-python/six-1.10.0 | `-doc {-test}`
 #### Inherited
 Package | USE Flags
@@ -43,7 +43,7 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p42-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
+app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
 net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
@@ -56,7 +56,7 @@ sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2h-r2 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
