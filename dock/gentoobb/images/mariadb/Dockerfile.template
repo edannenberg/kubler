@@ -9,9 +9,7 @@ ADD etc /etc
 RUN sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf && \
     sed -i 's/\/var\/log\/mysql\/mysql.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf && \
     sed -i 's/\/var\/log\/mysql\/mysqld.err/\/proc\/self\/fd\/2/g' /etc/mysql/my.cnf && \
-    # increase innodb_buffer_pool_size
     sed -i 's/^innodb_buffer_pool_size = 16M/innodb_buffer_pool_size = 256M/g' /etc/mysql/my.cnf && \
-    # increase max innodb data file size
     sed -i 's/^innodb_data_file_path = ibdata1:10M:autoextend:max:128M/innodb_data_file_path = ibdata1:10M:autoextend:max:512M/g' /etc/mysql/my.cnf
 
 RUN chmod +x $(find /etc/service -name run) && \
