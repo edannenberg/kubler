@@ -5,7 +5,7 @@ Run this [InfluxDB][] image with:
        -v /var/lib/influxdb:/var/opt/influxdb \
        -p 8083:8083 -p 8086:8086 -p 8090:8090 -p 8099:8099 gentoobb/influxdb
 
-Web Interface:
+Web Interface (obsolete since 1.1.0):
 
     http://localhost:8083
 
