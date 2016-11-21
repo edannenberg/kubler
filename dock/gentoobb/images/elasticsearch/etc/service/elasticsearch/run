@@ -1,5 +1,6 @@
 #!/bin/sh
 
+ES_HOME=${ES_HOME:="/usr/share/elasticsearch"}
 ES_USER=${ES_USER:="elasticsearch"}
 ES_INSTANCE=local
 
@@ -16,8 +17,6 @@ for dir in ${check_dirs}; do
     chown ${ES_USER} "${dir}"
 done;
 
-ES_WORK_PATH="${ES_BASE_PATH}/work"
-
 export ES_INCLUDE="${ES_CONF_PATH}/elasticsearch.in.sh"
 export JAVA_OPTS
 export ES_JAVA_OPTS
@@ -27,7 +26,7 @@ export ES_DIRECT_SIZE
 export ES_USE_IPV4
 
 server_command="/usr/share/elasticsearch/bin/elasticsearch"
-server_args=" -p ${PIDFILE} -Des.default.path.conf=${ES_CONF_PATH} -Des.default.path.data=${ES_DATA_PATH} -Des.default.path.work=${ES_WORK_PATH} -Des.default.path.logs=${ES_LOG_PATH}"
+server_args=" -p ${PIDFILE} -E default.path.home=${ES_HOME} -E default.path.conf=${ES_CONF_PATH} -E default.path.data=${ES_DATA_PATH} -E default.path.logs=${ES_LOG_PATH}"
 if [ -n "${ES_MAX_FD}" ]; then
     ulimit -n ${ES_MAX_FD}
 fi

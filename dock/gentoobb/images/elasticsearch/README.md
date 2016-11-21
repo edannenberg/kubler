@@ -2,6 +2,12 @@ Run this [Elasticsearch][] image with:
 
     $ docker run -d --name elasticsearch-0 gentoobb/elasticsearch
 
+Note: Since Elastic 5.0 you will most likely need to modify sysctl's
+`vm.max_map_count` on the **host**.
+See https://www.elastic.co/guide/en/elasticsearch/reference/5.0/vm-max-map-count.html
+
+Last Elastic 2.x version: `gentoobb/elasticsearch:20161020`
+
 Then [link][linking] to it from your client container:
 
     $ docker run --link elasticsearch-0:elastic your-client
