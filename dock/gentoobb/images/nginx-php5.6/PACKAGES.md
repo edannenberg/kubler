@@ -1,15 +1,15 @@
-### gentoobb/nginx-php5.6:20161020
-Built: Sun Oct 23 23:46:50 CEST 2016
+### gentoobb/nginx-php5.6:20161117
+Built: Mon Nov 21 02:06:21 CET 2016
 
-Image Size: 101.2 MB
+Image Size: 107 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-5.6.26 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
-dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
+dev-lang/php-5.6.28 | `bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -debug -embed -enchant -exif (-firebird) -flatfile (-frontbase) -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.2 | `-static-libs`
 dev-libs/libgcrypt-1.7.3 | `-doc -static-libs`
@@ -34,9 +34,10 @@ media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.21 | `-apng (-neon) -static-libs`
 net-dns/libidn-1.33 | `nls -doc -emacs -java -mono -static-libs`
 net-libs/gnutls-3.3.24-r1 | `crywrap cxx nls openssl zlib -dane -doc -examples -guile -pkcs11 -static-libs {-test}`
-net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.51.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
+sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-apps/shadow-4.1.5.1-r1 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
@@ -68,7 +69,7 @@ Package | USE Flags
 **FROM gentoobb/nginx** |
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.38-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.11.5 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
+www-servers/nginx-1.11.6 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
@@ -83,7 +84,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,7 +1,7 @@
-### gentoobb/jdk-icedtea:20161020
-Built: Sun Oct 23 22:39:28 CEST 2016
+### gentoobb/jdk-icedtea:20161117
+Built: Mon Nov 21 00:05:48 CET 2016
 
-Image Size: 282 MB
+Image Size: 287 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -11,7 +11,7 @@ app-eselect/eselect-java-0.2.0 | ``
 dev-java/icedtea-bin-7.2.6.7 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt (-multilib) -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-lang/python-exec-2.0.2 | ` `
-dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
+dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/glib-2.48.2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.48.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.48.0 | ``
@@ -26,7 +26,7 @@ gnome-base/gsettings-desktop-schemas-3.20.0 | `introspection`
 media-fonts/dejavu-2.35 | `-`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
 media-libs/freetype-2.6.3-r1 | `adobe-cff bindist bzip2 -`
-media-libs/giflib-4.1.6-r3 | `-`
+media-libs/giflib-5.1.4 | `-doc -static-libs`
 media-libs/lcms-2.6-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.21 | `-apng (-neon) -static-libs`
@@ -38,7 +38,7 @@ x11-libs/libXcomposite-0.4.4-r1 | `-doc -static-libs`
 x11-libs/libXdmcp-1.1.2-r1 | `-doc -static-libs`
 x11-libs/libXext-1.3.3 | `-doc -static-libs`
 x11-libs/libXfixes-5.0.3 | `-static-libs`
-x11-libs/libXi-1.7.7 | `-doc -static-libs`
+x11-libs/libXi-1.7.8 | `-doc -static-libs`
 x11-libs/libXrender-0.9.10 | `-static-libs`
 x11-libs/libXtst-1.2.3 | `-doc -static-libs`
 x11-libs/xtrans-1.3.5 | `-doc`
@@ -68,11 +68,12 @@ sys-kernel/linux-headers-4.3 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
+app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.51.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
+sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
@@ -92,7 +93,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

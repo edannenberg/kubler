@@ -1,13 +1,13 @@
-### gentoobb/nginx:20161020
-Built: Sun Oct 23 23:20:38 CEST 2016
+### gentoobb/nginx:20161117
+Built: Mon Nov 21 01:48:52 CET 2016
 
-Image Size: 18.42 MB
+Image Size: 18.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.38-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.11.5 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
+www-servers/nginx-1.11.6 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -25,7 +25,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

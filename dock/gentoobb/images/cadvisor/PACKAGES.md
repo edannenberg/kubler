@@ -1,7 +1,7 @@
-### gentoobb/cadvisor:20161020
-Built: Sun Oct 23 22:08:24 CEST 2016
+### gentoobb/cadvisor:20161117
+Built: Sun Nov 20 23:35:43 CET 2016
 
-Image Size: 36.38 MB
+Image Size: 36.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,7 +12,7 @@ Package | USE Flags
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

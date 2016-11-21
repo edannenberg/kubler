@@ -1,7 +1,7 @@
-### gentoobb/opensmtpd:20161020
-Built: Mon Oct 24 00:01:27 CEST 2016
+### gentoobb/opensmtpd:20161117
+Built: Mon Nov 21 02:28:10 CET 2016
 
-Image Size: 24.18 MB
+Image Size: 24.2 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -27,7 +27,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

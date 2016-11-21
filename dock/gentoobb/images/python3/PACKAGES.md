@@ -1,7 +1,7 @@
-### gentoobb/python3:20161020
-Built: Mon Oct 24 00:17:32 CEST 2016
+### gentoobb/python3:20161117
+Built: Mon Nov 21 02:52:57 CET 2016
 
-Image Size: 120.2 MB
+Image Size: 126 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,42 +12,46 @@ app-misc/mime-types-9 | ``
 dev-db/sqlite-3.13.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-3.4.3-r1 | `hardened readline sqlite ssl (threads) xml -build -examples -gdbm -ipv6 -ncurses -tk -wininst`
 dev-lang/python-exec-2.0.2 | ` `
-dev-libs/expat-2.1.1-r2 | `unicode -examples -static-libs`
+dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-python/CacheControl-0.11.5 | `{-test}`
 dev-python/certifi-2015.11.20 | ` `
 dev-python/cffi-1.5.2 | `-doc {-test}`
 dev-python/chardet-2.2.1 | ` `
 dev-python/colorama-0.3.3 | `-examples`
-dev-python/cryptography-1.3.4 | `(-libressl) {-test}`
+dev-python/cryptography-1.5.2 | `(-libressl) {-test}`
 dev-python/distlib-0.2.1 | ` `
 dev-python/html5lib-0.9999999 | `{-test}`
 dev-python/idna-2.0 | ` `
 dev-python/lockfile-0.11.0-r1 | `-doc {-test}`
 dev-python/ndg-httpsclient-0.4.0 | ` `
-dev-python/packaging-15.3-r2 | `{-test}`
+dev-python/packaging-16.6 | `{-test}`
 dev-python/pip-7.1.2 | ` `
 dev-python/ply-3.6-r1 | `-examples`
 dev-python/progress-1.2 | ` `
 dev-python/py-1.4.30 | `-doc {-test}`
 dev-python/pyasn1-0.1.8 | `-doc`
 dev-python/pycparser-2.14 | `{-test}`
-dev-python/pyopenssl-0.15.1-r1 | `-doc -examples`
-dev-python/requests-2.8.1 | `{-test}`
+dev-python/pyopenssl-16.1.0 | `-doc -examples`
+dev-python/pyparsing-2.1.8 | `-doc -examples`
+dev-python/PySocks-1.5.6 | ` `
+dev-python/requests-2.11.1 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
 dev-python/setuptools-20.6.7 | `{-test}`
 dev-python/six-1.10.0 | `-doc {-test}`
+dev-python/urllib3-1.16 | `-doc {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins -vanilla`
+app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.50.3 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.51.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
+sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
 sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
 sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
@@ -67,7 +71,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

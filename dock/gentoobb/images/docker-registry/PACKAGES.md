@@ -1,7 +1,7 @@
-### gentoobb/docker-registry:20161020
-Built: Sun Oct 23 22:10:45 CEST 2016
+### gentoobb/docker-registry:20161117
+Built: Sun Nov 20 23:39:05 CET 2016
 
-Image Size: 63.21 MB
+Image Size: 63.4 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -23,7 +23,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

@@ -1,13 +1,13 @@
-### gentoobb/nodejs:20161020
-Built: Sun Oct 23 23:59:06 CEST 2016
+### gentoobb/nodejs:20161117
+Built: Mon Nov 21 02:27:20 CET 2016
 
-Image Size: 40.67 MB
+Image Size: 40.6 MB
 #### Installed
 Package | USE Flags
 --------|----------
 dev-libs/libuv-1.8.0 | `-static-libs`
 net-libs/http-parser-2.6.2 | `-static-libs`
-*manual_install*: net-libs/nodejs-4.4.6 | 
+*manual_install*: net-libs/nodejs-4.6.1 | 
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -25,7 +25,7 @@ sys-apps/s6-2.3.0.0 | `-static -static-libs`
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016e | `nls -leaps`
+sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
