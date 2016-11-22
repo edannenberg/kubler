@@ -30,15 +30,9 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-REALPATH="${REALPATH:-$(command -v realpath)}"
-if [ -z "${REALPATH}" ]; then
-    READLINK="${READLINK:-$(command -v readlink)}"
-    if [ -n "${READLINK}" ]; then
-        REALPATH="${READLINK} -f"
-    else
-        die "need realpath or readlink to canonicalize paths"
-    fi
-fi
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
 
 PROJECT_ROOT=$(dirname $(realpath -s $0))
 DL_PATH="${DL_PATH:-${PROJECT_ROOT}/tmp/downloads}"
@@ -55,7 +49,7 @@ BUILD_OPTS="${BUILD_OPTS:-}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
 
-REQUIRED_BINARIES="awk bzip2 grep sha512sum wget"
+REQUIRED_BINARIES="awk bzip2 grep shasum wget"
 [ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
 
 [ ! -f "${PROJECT_ROOT}/inc/core.sh" ] && echo "error: Could not find ${PROJECT_ROOT}/inc/core.sh" && exit 1
