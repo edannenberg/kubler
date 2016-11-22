@@ -97,7 +97,7 @@ download_stage3() {
         gpg --verify "$DL_PATH/${STAGE3_DIGESTS}" || die "insecure digests"
     fi
     SHA512_HASHES=$(grep -A1 SHA512 "$DL_PATH/${STAGE3_DIGESTS}" | grep -v '^--')
-    SHA512_CHECK=$(cd $DL_PATH/ && (echo "${SHA512_HASHES}" | sha512sum -c))
+    SHA512_CHECK=$(cd $DL_PATH/ && (echo "${SHA512_HASHES}" | shasum -a512 -c))
     SHA512_FAILED=$(echo "${SHA512_CHECK}" | grep FAILED)
     if [ -n "${SHA512_FAILED}" ]; then
         die "${SHA512_FAILED}"
@@ -160,5 +160,5 @@ add_documentation_header() {
         echo -e "" > ${DOC_FILE}
     fi
     # add header
-    sed -i "1i${HEADER}\nBuilt: $(date)\n\nImage Size: $IMAGE_SIZE" $DOC_FILE
+    echo -e "${HEADER}\n\nBuilt: $(date)\nImage Size: $IMAGE_SIZE\n$(cat $DOC_FILE)" > $DOC_FILE
 }
