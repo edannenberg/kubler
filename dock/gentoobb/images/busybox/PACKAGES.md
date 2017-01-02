@@ -1,11 +1,11 @@
-### gentoobb/busybox:20161117
-Built: Mon Nov 21 03:17:40 CET 2016
+### gentoobb/busybox:20161229
+Built: Mon Jan  2 04:49:15 CET 2017
 
-Image Size: 1.24 MB
+Image Size: 1.25 MB
 #### Installed
 Package | USE Flags
 --------|----------
-sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog (-systemd)`
+sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog (-systemd)`
 #### Inherited
 Package | USE Flags
 --------|----------

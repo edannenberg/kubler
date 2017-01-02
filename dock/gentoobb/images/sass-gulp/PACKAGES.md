@@ -1,13 +1,13 @@
-### gentoobb/log-collector:20161229
-Built: Mon Jan  2 06:27:58 CET 2017
+### gentoobb/sass-gulp:20161229
+Built: Mon Jan  2 08:52:55 CET 2017
 
-Image Size: 223 MB
+Image Size: 226 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*gem install*: fluentd | --no-ri --no-rdoc
-*gem install*: fluent-plugin-elasticsearch | --no-ri --no-rdoc
-*manual install*: docker-gen-0.7.3 | http://github.com/jwilder/docker-gen/
+dev-libs/libuv-1.8.0 | `-static-libs`
+net-libs/http-parser-2.6.2 | `-static-libs`
+*manual_install*: net-libs/nodejs-4.6.1 | 
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -74,8 +74,9 @@ sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
-- [ ] Headers
+- [x] Headers
 - [x] Static Libs
 
 #### Included
-- [x] Headers from gentoobb/bash
+- [x] Headers from gentoobb/glibc
+- [x] Static Libs from gentoobb/glibc

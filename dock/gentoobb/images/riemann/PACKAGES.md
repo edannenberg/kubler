@@ -1,11 +1,11 @@
-### gentoobb/riemann:20161117
-Built: Mon Nov 21 02:55:22 CET 2016
+### gentoobb/riemann:20161229
+Built: Mon Jan  2 08:48:25 CET 2017
 
-Image Size: 217 MB
+Image Size: 220 MB
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: riemann-0.2.11 | https://github.com/aphyr/riemann
+*manual install*: riemann-0.2.12 | https://github.com/riemann/riemann
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -20,17 +20,16 @@ sys-apps/baselayout-java-0.1.0 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
+app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.51.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
+sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
-sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
-sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
-sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
-sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
+sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
+sys-libs/ncurses-6.0-r1 | `cxx threads unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
@@ -47,7 +46,7 @@ sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

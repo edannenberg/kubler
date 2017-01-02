@@ -1,16 +1,16 @@
-### gentoobb/postgres:20161117
-Built: Mon Nov 21 02:32:05 CET 2016
+### gentoobb/postgres:20161229
+Built: Mon Jan  2 08:27:35 CET 2017
 
-Image Size: 52.9 MB
+Image Size: 54.8 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
-dev-db/postgresql-9.5.4 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
-dev-libs/libpcre-8.38-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
-sys-apps/less-481 | `pcre unicode`
+dev-db/postgresql-9.5.5 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
+dev-libs/libpcre-8.39 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+sys-apps/less-487 | `pcre unicode`
 *manual install*: gosu-1.10 | https://github.com/tianon/gosu/
 #### Inherited
 Package | USE Flags
@@ -18,17 +18,16 @@ Package | USE Flags
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
-app-shells/bash-4.3_p48 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
+app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.51.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.23 | `acl nls (xattr) -caps -gmp -multicall (-selinux) -static -vanilla`
+sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.25 | `zlib -python -static-libs`
-sys-apps/sed-4.2.1-r1 | `acl nls (-selinux) -static`
-sys-libs/ncurses-5.9-r5 | `cxx unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs -tinfo -trace`
-sys-libs/ncurses-5.9-r99 | `cxx unicode -ada -gpm -static-libs -tinfo`
-sys-libs/readline-6.3_p8-r2 | `-static-libs -utils`
+sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
+sys-libs/ncurses-6.0-r1 | `cxx threads unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20151214.3.21 | `cacert`
 app-misc/c_rehash-1.7-r1 | ``
@@ -45,7 +44,7 @@ sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

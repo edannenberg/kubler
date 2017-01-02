@@ -1,5 +1,5 @@
-### gentoobb/glibc:20161117
-Built: Mon Nov 21 03:17:41 CET 2016
+### gentoobb/glibc:20161229
+Built: Mon Jan  2 04:50:15 CET 2017
 
 Image Size: 10.7 MB
 #### Installed
@@ -12,7 +12,7 @@ sys-libs/timezone-data-2016h | `nls -leaps`
 Package | USE Flags
 --------|----------
 **FROM gentoobb/busybox** |
-sys-apps/busybox-1.24.2 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 
 #### Purged
 - [x] Headers
