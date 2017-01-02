@@ -40,7 +40,7 @@ PKGDIR="/packages/${CHOST}"' /usr/${CROSSDEV_MUSL}/etc/portage/make.conf
     sed -i -e 's/^ACCEPT_KEYWORDS=" ~"/ACCEPT_KEYWORDS="amd64"/g' /usr/${CROSSDEV_MUSL}/etc/portage/make.conf
 
     # quick'n'dirty workaround as libsanitize currently breaks the tool chain build
-    echo "cross-${CROSSDEV_MUSL}/gcc -sanitize" > /etc/portage/package.use/gcc
+    echo "cross-${CROSSDEV_MUSL}/gcc -sanitize -vtv" > /etc/portage/package.use/gcc
 
     # init portage env defaults..
     source /etc/profile
