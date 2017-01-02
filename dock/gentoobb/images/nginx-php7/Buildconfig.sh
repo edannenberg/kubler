@@ -1,9 +1,10 @@
 #
 # build config
 #
-PHP_SLOT="7.0"
+PHP_SLOT="7.1"
 PHP_TARGET="php${PHP_SLOT/\./-}"
-PACKAGES="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis"
+ZEND_API="20160303"
+PACKAGES="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick"
 #PACKAGES="dev-lang/php dev-php/pecl-memcached dev-php/pecl-redis pecl-imagick"
 PHP_TIMEZONE="${BOB_TIMEZONE:-UTC}"
 ADMINER_VERSION="4.2.5"
@@ -57,27 +58,40 @@ finish_rootfs_build()
     aclocal; libtoolize --force; autoheader; autoconf
     ./configure --disable-memcached-sasl
     make
-    cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/memcached.ini
-    ln -sr ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/memcached.ini ${EMERGE_ROOT}/etc/php/cli-php7.0/ext-active/memcached.ini
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/memcached.so' > ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/memcached.ini
-    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/memcached.ini ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext-active/memcached.ini
+    cp modules/* /emerge-root/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/
+    echo "extension=/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/memcached.so" > ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext/memcached.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext/memcached.ini ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext-active/memcached.ini
+    echo "extension=/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/memcached.so" > ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext/memcached.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext/memcached.ini ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext-active/memcached.ini
 
-    # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
+    # php redis support
     cd ..
-    wget https://pecl.php.net/get/imagick-3.4.1.tgz
-    tar xvzf imagick-3.4.1.tgz
-    cd imagick-3.4.1/
+    git clone https://github.com/phpredis/phpredis.git
+    cd phpredis/
+    git checkout php7
     phpize
     # our libtool is too new, regen some stuff with current version
     aclocal; libtoolize --force; autoheader; autoconf
     ./configure
     make
-    cp modules/* /emerge-root/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/imagick.so' > ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/imagick.ini
-    ln -sr ${EMERGE_ROOT}/etc/php/cli-php7.0/ext/imagick.ini ${EMERGE_ROOT}/etc/php/cli-php7.0/ext-active/imagick.ini
-    echo 'extension=/usr/lib64/php7.0/lib/extensions/no-debug-zts-20151012/imagick.so' > ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/imagick.ini
-    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext/imagick.ini ${EMERGE_ROOT}/etc/php/fpm-php7.0/ext-active/imagick.ini
+    cp modules/* /emerge-root/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/
+    echo "extension=/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/redis.so" > /emerge-root/etc/php/fpm-php${PHP_SLOT}/ext-active/redis.ini
+
+    # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
+    cd ..
+    wget https://pecl.php.net/get/imagick-3.4.3RC1.tgz
+    tar xvzf imagick-3.4.3RC1.tgz
+    cd imagick-3.4.3RC1/
+    phpize
+    # our libtool is too new, regen some stuff with current version
+    aclocal; libtoolize --force; autoheader; autoconf
+    ./configure
+    make
+    cp modules/* /emerge-root/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/
+    echo "extension=/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/imagick.so" > ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext/imagick.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext/imagick.ini ${EMERGE_ROOT}/etc/php/cli-php${PHP_SLOT}/ext-active/imagick.ini
+    echo "extension=/usr/lib64/php${PHP_SLOT}/lib/extensions/no-debug-zts-${ZEND_API}/imagick.so" > ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext/imagick.ini
+    ln -sr ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext/imagick.ini ${EMERGE_ROOT}/etc/php/fpm-php${PHP_SLOT}/ext-active/imagick.ini
 
     # set php iconv default to UTF-8, if you need full iconv functionality set ICONV_FROM=gentoobb/glibc above
     sed -i 's/^;iconv.input_encoding = ISO-8859-1/iconv.input_encoding = UTF-8/g' $EMERGE_ROOT/etc/php/fpm-php${PHP_SLOT}/php.ini
