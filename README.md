@@ -10,7 +10,7 @@ Currently supported build engines:
 
 Planned support:
 
-* [Rocket][]
+* [rkt][]
 
 PR are always welcome. ;)
 
@@ -184,16 +184,16 @@ For example `gentoobb/bob-openssl` refers to the container used to build the `ge
 
 [@jbergstroem][] for all his contributions and feedback to this project <3
 
-[LXC]: http://en.wikipedia.org/wiki/LXC
+[LXC]: https://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
 [bob-core]: https://github.com/edannenberg/gentoo-bb/tree/master/bob-core
-[s6]: http://skarnet.org/software/s6/
-[OpenRC]: http://wiki.gentoo.org/wiki/OpenRC
-[Docker]: http://www.docker.io/
-[Rocket]: https://github.com/coreos/rocket
+[s6]: https://skarnet.org/software/s6/
+[OpenRC]: https://wiki.gentoo.org/wiki/OpenRC
+[Docker]: https://www.docker.com/
+[rkt]: https://github.com/coreos/rkt
 [gentoo-bb-docker]: https://hub.docker.com/search/?q=gentoobb&page=1&isAutomated=0&isOfficial=0&starCount=0&pullCount=0
 [nginx-packages]: https://github.com/edannenberg/gentoo-bb/blob/master/dock/gentoobb/images/nginx/PACKAGES.md
-[Gentoo]: http://www.gentoo.org/
+[Gentoo]: https://www.gentoo.org/
 [binary package]: https://wiki.gentoo.org/wiki/Binary_package_guide
 [CoreOS]: https://coreos.com/
 [@wking]: https://github.com/wking
