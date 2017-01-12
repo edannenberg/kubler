@@ -19,6 +19,10 @@ msg()
     echo -e "--> $@"
 }
 
+sha_sum() {
+    [[ $(command -v sha512sum) ]] && echo 'sha512sum' || echo 'shasum -a512'
+}
+
 # Make sure required binaries are in PATH
 has_required_binaries() {
     for BINARY in ${REQUIRED_BINARIES}; do
@@ -97,7 +101,7 @@ download_stage3() {
         gpg --verify "$DL_PATH/${STAGE3_DIGESTS}" || die "insecure digests"
     fi
     SHA512_HASHES=$(grep -A1 SHA512 "$DL_PATH/${STAGE3_DIGESTS}" | grep -v '^--')
-    SHA512_CHECK=$(cd $DL_PATH/ && (echo "${SHA512_HASHES}" | shasum -a512 -c))
+    SHA512_CHECK=$(cd $DL_PATH/ && (echo "${SHA512_HASHES}" | $(sha_sum) -c))
     SHA512_FAILED=$(echo "${SHA512_CHECK}" | grep FAILED)
     if [ -n "${SHA512_FAILED}" ]; then
         die "${SHA512_FAILED}"
