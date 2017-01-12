@@ -34,6 +34,10 @@ realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 
+sha_sum() {
+    [[ $(command -v shasum512) ]] && echo 'shasum512' || echo 'shasum'
+}
+
 PROJECT_ROOT=$(dirname $(realpath -s $0))
 DL_PATH="${DL_PATH:-${PROJECT_ROOT}/tmp/downloads}"
 
@@ -49,7 +53,7 @@ BUILD_OPTS="${BUILD_OPTS:-}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
 
-REQUIRED_BINARIES="awk bzip2 grep shasum wget"
+REQUIRED_BINARIES="awk bzip2 grep $(sha_sum) wget"
 [ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
 
 [ ! -f "${PROJECT_ROOT}/inc/core.sh" ] && echo "error: Could not find ${PROJECT_ROOT}/inc/core.sh" && exit 1
