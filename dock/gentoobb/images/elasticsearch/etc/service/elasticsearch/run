@@ -32,4 +32,4 @@ if [ -n "${ES_MAX_FD}" ]; then
 fi
 
 exec 2>&1
-gosu elasticsearch:elasticsearch ${server_command} ${server_args}
+su-exec elasticsearch:elasticsearch ${server_command} ${server_args}

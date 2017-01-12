@@ -8,7 +8,7 @@ chmod g+s /run/postgresql
 chown -R postgres:postgres /run/postgresql
 
 if [ -z "$(ls -A "$PGDATA")" ]; then
-    gosu postgres initdb
+    su-exec postgres initdb
 
     sed -ri "s/^#(listen_addresses\s*=\s*)\S+/\1'*'/" "$PGDATA"/postgresql.conf
 
@@ -27,7 +27,7 @@ if [ -z "$(ls -A "$PGDATA")" ]; then
     : ${POSTGRES_DB:=$POSTGRES_USER}
 
     if [ "$POSTGRES_DB" != 'postgres' ]; then
-        gosu postgres postgres --single -jE << EOSQL
+        su-exec postgres postgres --single -jE << EOSQL
 CREATE DATABASE "$POSTGRES_DB" ;
 EOSQL
         echo
@@ -39,7 +39,7 @@ EOSQL
         op='CREATE'
     fi
 
-    gosu postgres postgres --single -jE << EOSQL
+    su-exec postgres postgres --single -jE << EOSQL
 $op USER "$POSTGRES_USER" WITH SUPERUSER $pass ;
 EOSQL
     echo
@@ -52,4 +52,5 @@ fi
     echo "${BACKUP_CRON_SCHEDULE} /etc/pg_backup_rotated.sh" >> /var/spool/cron/crontabs/postgres &&
     chown postgres:postgres /backup
 
-exec gosu postgres postgres
+exec 2>&1
+su-exec postgres postgres

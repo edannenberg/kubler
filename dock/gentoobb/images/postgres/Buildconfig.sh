@@ -16,7 +16,7 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    install_gosu
+    install_suexec
     uninstall_package app-shells/bash
     mkdir /backup
 }

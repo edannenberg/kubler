@@ -257,6 +257,7 @@ install_docker_gen() {
     log_as_installed "manual install" "docker-gen-${DOCKERGEN_VERSION}" "http://github.com/jwilder/docker-gen/"
 }
 
+# deprecated, use install_suexec instead
 install_gosu()
 {
     local GOSU_VERSION="1.10"
@@ -264,6 +265,18 @@ install_gosu()
     curl -o ${EMERGE_ROOT}/usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64"
     chmod +x ${EMERGE_ROOT}/usr/local/bin/gosu
     log_as_installed "manual install" "gosu-${GOSU_VERSION}" "https://github.com/tianon/gosu/"
+}
+
+install_suexec()
+{
+    local SUEXEC_VERSION="0.2"
+    git clone https://github.com/ncopa/su-exec.git
+    cd su-exec/
+    git checkout tags/v${SUEXEC_VERSION}
+    make
+    mkdir -p ${EMERGE_ROOT}/usr/local/bin
+    cp su-exec ${EMERGE_ROOT}/usr/local/bin/
+    log_as_installed "manual install" "su-exec-${SUEXEC_VERSION}" "https://github.com/ncopa/su-exec/"
 }
 
 download_from_oracle() {
