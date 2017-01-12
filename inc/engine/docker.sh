@@ -280,8 +280,8 @@ build_image()
 
         # mounts for build container
         local CONTAINER_MOUNTS=("$(dirname $(realpath -s $0))/$REPO_EXPANDED:/config"
-"$(realpath -s ../tmp/distfiles):/distfiles"
-"$(realpath -s ../tmp/packages):/packages"
+"$(realpath ../tmp/distfiles):/distfiles"
+"$(realpath ../tmp/packages):/packages"
 )
 
         # pass variables starting with BOB_ to build container as ENV
