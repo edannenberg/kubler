@@ -270,7 +270,8 @@ case "${ACTION}" in
     build) build "$REPOS";;
     update) update_stage3_date;;
     missing) missing "$REPOS";;
-    help) msg "usage: ${0} [-n, -f, -F, -c, -C, -h] {build|update|missing} [repo ...]
+    stage3) download_stage3;;
+    help) msg "usage: ${0} [-n, -f, -F, -c, -C, -h] {build|update|missing|stage3} [repo ...]
     -f force repo rebuild
     -F also rebuild repo rootfs tar ball
     -c rebuild building containers
