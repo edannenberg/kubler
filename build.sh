@@ -51,7 +51,7 @@ EXCLUDE="${EXCLUDE:-}"
 
 REQUIRED_BINARIES="awk bzip2 grep wget"
 [ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
-[[ $(command -v shasum512) ]] && REQUIRED_BINARIES+=" sha512sum" || REQUIRED_BINARIES+=" shasum"
+[[ $(command -v sha512sum) ]] && REQUIRED_BINARIES+=" sha512sum" || REQUIRED_BINARIES+=" shasum"
 
 [ ! -f "${PROJECT_ROOT}/inc/core.sh" ] && echo "error: Could not find ${PROJECT_ROOT}/inc/core.sh" && exit 1
 source "${PROJECT_ROOT}/inc/core.sh"
