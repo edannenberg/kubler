@@ -15,7 +15,7 @@ priority=9999
 masters = gentoo
 auto-sync = no" > /etc/portage/repos.conf/crossdev.conf
 
-    crossdev -S --init-target --target ${CROSSDEV_UCLIBC}
+    crossdev --show-fail-log -S --init-target --target ${CROSSDEV_UCLIBC}
     mkdir -p /usr/${CROSSDEV_UCLIBC}/etc/portage/package.{mask,unmask,use,keywords} /usr/${CROSSDEV_UCLIBC}/tmp/
     rm /usr/${CROSSDEV_UCLIBC}/etc/portage/make.profile
     ln -s /usr/portage/profiles/uclibc/amd64/ /usr/${CROSSDEV_UCLIBC}/etc/portage/make.profile
@@ -46,7 +46,7 @@ PKGDIR="/packages/${CHOST}"' /usr/${CROSSDEV_UCLIBC}/etc/portage/make.conf
     # fix regression in latest toolchain.eclass - see https://bugs.gentoo.org/show_bug.cgi?id=548782
     sed -i 's/\.\/\${dir}\/\*\.la || die/\.\/\${dir}\/\*\.la/g' /usr/portage/eclass/toolchain.eclass
 
-    crossdev -S --target ${CROSSDEV_UCLIBC}
+    crossdev --show-fail-log -S --target ${CROSSDEV_UCLIBC}
 
     rm /etc/portage/package.use/gcc
 }
