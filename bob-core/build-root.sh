@@ -273,7 +273,7 @@ install_suexec()
     git clone https://github.com/ncopa/su-exec.git
     cd su-exec/
     git checkout tags/v${SUEXEC_VERSION}
-    make
+    make && strip su-exec
     mkdir -p ${EMERGE_ROOT}/usr/local/bin
     cp su-exec ${EMERGE_ROOT}/usr/local/bin/
     log_as_installed "manual install" "su-exec-${SUEXEC_VERSION}" "https://github.com/ncopa/su-exec/"
