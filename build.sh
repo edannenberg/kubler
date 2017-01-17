@@ -151,7 +151,7 @@ check_builder_dependencies() {
             # if defined, add parent builder dependencies
             [[ "${PARENT_BUILDER}" != "" ]] && [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && [[ "${PARENT_BUILDER}" != "${DEF_BUILD_CONTAINER}" ]]  && \
                 [[ "${PARENT_BUILDER}" != ${1} ]] && check_builder_dependencies ${PARENT_BUILDER} ${1}
-            ! string_has_word "${BUILD_ORDER_BUILDER}" ${PARENT_BUILDER} && BUILD_ORDER_BUILDER+=" ${PARENT_BUILDER}"
+            [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && ! string_has_word "${BUILD_ORDER_BUILDER}" ${PARENT_BUILDER} && BUILD_ORDER_BUILDER+=" ${PARENT_BUILDER}"
             [[ "${2}" != "" ]] && BUILD_ORDER_BUILDER+=" ${1}"
         fi
     fi
