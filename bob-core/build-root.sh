@@ -367,7 +367,7 @@ unset ROOT
 mkdir -p $EMERGE_ROOT/var/run && ln -s /run $EMERGE_ROOT/var/run
 
 # clean up
-rm -rf $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
+rm -rf $EMERGE_ROOT/var/lib/portage $EMERGE_ROOT/var/cache/edb $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
 if [ -z "$KEEP_HEADERS" ]; then
     rm -rf $EMERGE_ROOT/usr/include/*
 fi
