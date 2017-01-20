@@ -164,7 +164,8 @@ build()
     if $BUILD_WITHOUT_DEPS; then
         cd $REPO_PATH
         for REPO in $1; do
-            source_image_conf ${REPO}
+            local REPO_EXPANDED=${REPO/\//\/${IMAGE_PATH}}
+            source_image_conf ${REPO_EXPANDED}
             validate_repo ${REPO} ${IMAGE_PATH}
             build_image_no_deps ${REPO}
         done
