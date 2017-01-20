@@ -45,7 +45,6 @@ image_exists()
 {
     local REPO="${1}"
     local REPO_TYPE="${2:-${IMAGE_PATH}}"
-    [[ "${REPO}" == "${BUILDER_CORE}" ]] && REPO=${BUILDER_CORE}
     IMAGES=$("${DOCKER}" images "${REPO}") || die "error while checking for image ${REPO}:${DATE}"
     local MATCHES=$(echo "${IMAGES}" | grep "${DATE}")
     if [ -z "${MATCHES}" ]; then
@@ -54,10 +53,10 @@ image_exists()
     if [ -n $FORCE_FULL_REBUILD ] && [[ "${FORCE_FULL_REBUILD}" == "true" ]]; then
         remove_image "$REPO"
         return 3
-    elif $FORCE_BUILDER_REBUILD && [ "${REPO_TYPE}" == "${BUILDER_PATH}" ]; then
+    elif $FORCE_BUILDER_REBUILD && [ "${REPO_TYPE}" == "${BUILDER_PATH}" ] && [[ "${REPO}" != ${NAMESPACE}/*-stage3 ]] && [[ "${REPO}" != ${NAMESPACE}/*-core ]]; then
         remove_image "$REPO"
         return 3
-    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${REPO_TYPE}" != "${BUILDER_PATH}" ] && [ "$REPO" != "${NAMESPACE}/stage3-import" ] && [ "$REPO" != "${BUILDER_CORE}" ]; then
+    elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${REPO_TYPE}" != "${BUILDER_PATH}" ]; then
         remove_image "$REPO"
         return 3
     fi
@@ -85,7 +84,7 @@ run_image() {
     # general docker args
     DOCKER_ARGS=("-it" "--hostname" "${2//\//-}")
     [[ "${3}" == "true" ]] && DOCKER_ARGS+=("--rm")
-    [[ "${DOCKER_PRIVILEGED}" == "true" ]] && DOCKER_ARGS+=("--privileged")
+    [[ "${BUILD_PRIVILEGED}" == "true" ]] && DOCKER_ARGS+=("--privileged")
     # gogo
     "${DOCKER}" run "${DOCKER_ARGS[@]}" "${DOCKER_MOUNTS[@]}" "${DOCKER_ENV[@]}" "${IMAGE}" "${CONTAINER_CMD[@]}" ||
         die "failed to run image ${IMAGE}"
@@ -132,32 +131,18 @@ get_dockerfile_tag() {
 
 # Returns builder name given BUILDER_REPO is based on, or exit signal 3 if not defined
 get_parent_builder() {
-    local REPO="${1}"
-    local REPO_EXPANDED=${REPO/\//\/${BUILDER_PATH}}
-    generate_dockerfile "${REPO_EXPANDED}"
-    FROM=$(get_dockerfile_tag "FROM" "${REPO_EXPANDED}")
-    [[ $? == 1 ]] && die "${FROM}"
-    [[ "${FROM}" != "" ]] && echo ${FROM} || exit 3
+    [[ "${BUILDER}" != "" ]] && echo ${BUILDER} || exit 3
 }
 
 # Returns image given IMAGE_REPO is based on by parsing FROM, or exit signal 3 if not defined
 get_parent_image() {
-    local REPO="${1}"
-    local REPO_TYPE="${2:-${IMAGE_PATH}}"
-    FROM=$(get_dockerfile_tag "FROM" ${REPO/\//\/$REPO_TYPE})
-    [[ $? == 1 ]] && die "${FROM}"
-    [[ "${FROM}" != "" ]] && echo ${FROM} || exit 3
+    [[ "${IMAGE_PARENT}" != "" ]] && echo ${IMAGE_PARENT} || exit 3
 }
 
 # Returns builder given IMAGE_REPO needs for building the rootfs, or exit signal 3 if not defined
 get_image_builder() {
-    local REPO="${1}"
-    local REPO_TYPE="${2:-${IMAGE_PATH}}"
-    local REPO_EXPANDED=${REPO/\//\/${REPO_TYPE}}
-    generate_dockerfile "${REPO_EXPANDED}"
-    BUILD_FROM=$(get_dockerfile_tag "#BUILD_FROM" "${REPO_EXPANDED}")
-    [[ $? == 1 ]] && die "${BUILD_FROM}"
-    [[ "${BUILD_FROM}" != "" ]] && echo ${BUILD_FROM} || exit 3
+    [[ ! -z "${STAGE3_BASE}" ]] && echo "${1}" && exit 0
+    [[ "${BUILDER}" != "" ]] && echo ${BUILDER} || exit 3
 }
 
 # Returns build container name for given REPO, implements "virtual" build container juggling for images
@@ -170,7 +155,7 @@ get_build_container() {
     local REPO_TYPE="${2:-${IMAGE_PATH}}"
     local REPO_EXPANDED=${REPO/\//\/${REPO_TYPE}}
     # determine build container
-    local BUILD_CONTAINER=${DEF_BUILD_CONTAINER}
+    local BUILD_CONTAINER=${DEFAULT_BUILDER}
     BUILD_FROM=$(get_image_builder ${REPO} ${REPO_TYPE})
     [[ $? == 1 ]] && die "${BUILD_FROM}"
     [[ "${BUILD_FROM}" == "" ]] && BUILD_FROM="false"
@@ -184,55 +169,71 @@ get_build_container() {
     elif [[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]; then
         [[ "${PARENT_IMAGE}" != "scratch" ]] && image_exists "${BUILD_CONTAINER}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
             BUILD_CONTAINER="${BUILD_CONTAINER}-${PARENT_IMAGE}"
-    elif [[ "${REPO_TYPE}" == "${BUILDER_PATH}" ]] && [[ "$BUILD_FROM" == "false" ]]; then
-        [[ "${PARENT_REPO}" == "${REPO}" ]] && BUILD_CONTAINER=${BUILDER_CORE}
     fi
-    [[ "${PARENT_REPO}" == "${BUILD_CONTAINER}" ]] && [[ "${BUILD_FROM}" == "false" ]] && BUILD_CONTAINER=${BUILDER_CORE}
 
     echo "${BUILD_CONTAINER}"
 }
 
-# If they don't already exist:
+# Docker import a stage3 tar ball for given STAGE3_REPO_ID
+#
+# Arguments:
+# 1: STAGE3_REPO_ID (i.e. gentoobb/bob-stage3)
 import_stage3()
 {
-    msg "build ${NAMESPACE_ROOT}/stage3-import"
-    image_exists "${NAMESPACE_ROOT}/stage3-import" && return 0
+    local IMAGE_NAME="${1}"
+    msg "build ${IMAGE_NAME}"
+    image_exists "${IMAGE_NAME}" "${BUILDER_PATH}" && [[ ! "${FORCE_FULL_REBUILD}" == true ]] && return 0
 
     download_stage3 || die "failed to download stage3 files"
 
     # import stage3 image from Gentoo mirrors
-    msg "import ${NAMESPACE_ROOT}/stage3-import:${DATE}"
-    bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${NAMESPACE_ROOT}/stage3-import:${DATE}" || die "failed to import"
+    msg "import ${IMAGE_NAME}:${DATE} using ${STAGE3}"
+    bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${IMAGE_NAME}:${DATE}" || die "failed to import stage3"
 
-    msg "tag ${NAMESPACE_ROOT}/stage3-import:latest"
-    "${DOCKER}" tag "${NAMESPACE_ROOT}/stage3-import:${DATE}" "${NAMESPACE_ROOT}/stage3-import:latest" || die "failed to tag"
+    msg "tag ${IMAGE_NAME}:latest"
+    "${DOCKER}" tag "${IMAGE_NAME}:${DATE}" "${IMAGE_NAME}:latest" || die "failed to tag"
 }
 
-# Boostrap gentoobb/bob-core
+# Bootstrap a fresh stage3 docker image for given BUILDER_REPO_ID
+#
+# Arguments:
+# 1: BUILDER_REPO_ID
 build_core() {
-    #download_portage_snapshot
-    import_stage3
+    local BUILDER_CORE="${1}-core"
+    export BOB_CURRENT_STAGE3_ID="${1}-stage3"
+    import_stage3 "${BOB_CURRENT_STAGE3_ID}"
 
     local CORE_BUILDER_PATH=${BUILDER_CORE/\//\/${BUILDER_PATH}}
+    mkdir -p "${CORE_BUILDER_PATH}"
 
     # copy build-root.sh and emerge defaults so we can access it via dockerfile context
-    cp ${PROJECT_ROOT}/bob-core/{build-root.sh,make.conf,portage-defaults.sh} ${CORE_BUILDER_PATH}/
+    cp ${PROJECT_ROOT}/bob-core/{build-root.sh,make.conf,portage-defaults.sh,Dockerfile.template} ${CORE_BUILDER_PATH}/
 
     generate_dockerfile ${CORE_BUILDER_PATH}
-    build_image "${BUILDER_CORE}" "${BUILDER_PATH}"
+    build_image "${1}-core" "${BUILDER_PATH}"
 
     # clean up
-    rm ${CORE_BUILDER_PATH}/{build-root.sh,make.conf,portage-defaults.sh}
+    rm -r ${CORE_BUILDER_PATH}
 }
 
-# Produces a build container image for given BUILDER_REPO
+# Produces a build container image for given BUILDER_REPO_ID
+#
+# Arguments:
+# 1: BUILDER_REPO_ID
 build_builder() {
+    # bootstrap a stage3 image if defined in build.conf
+    if [[ ! -z "${STAGE3_BASE}" ]]; then
+       STAGE3="${STAGE3_BASE}-${STAGE3_DATE}.tar.bz2"
+       STAGE3_CONTENTS="${STAGE3}.CONTENTS"
+       STAGE3_DIGESTS="${STAGE3}.DIGESTS.asc"
+       build_core "${1}"
+    fi
     build_image "${1}" "${BUILDER_PATH}"
 }
 
 # Called when using the -n flag of build.sh, thin wrapper to build_image()
 build_image_no_deps() {
-    generate_dockerfile ${1/\//\/${IMAGE_PATH}}
+    #generate_dockerfile ${1/\//\/${IMAGE_PATH}}
     build_image ${1}
 }
 
@@ -253,8 +254,10 @@ build_image()
     msg "build repo ${REPO}"
     image_exists "${REPO}" "${REPO_TYPE}" && return 0
 
+    generate_dockerfile "${REPO_EXPANDED}"
+
     if ([ ! -f $REPO_EXPANDED/rootfs.tar ] || $FORCE_ROOTFS_REBUILD) && \
-        [ "${REPO}" != ${BUILDER_CORE} ]; then
+       ([[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]  || [[ "${REPO}" != ${NAMESPACE}/*-core ]]); then
 
         msg "building rootfs"
 
@@ -262,24 +265,27 @@ build_image()
 
         # determine build container commit id
         local BUILDER_COMMIT_ID=""
-        BUILD_FROM=$(get_image_builder ${REPO} ${REPO_TYPE})
+        local BUILD_FROM=$(get_image_builder ${REPO} ${REPO_TYPE})
         [[ $? == 1 ]] && die "${BUILD_FROM}"
         [[ "${BUILD_FROM}" == "" ]] && BUILD_FROM="false"
-        PARENT_REPO=$(get_parent_image ${REPO} ${REPO_TYPE}) 
+        PARENT_REPO=$(get_parent_image ${REPO} ${REPO_TYPE})
         [[ $? == 1 ]] && die "Error parsing parent image for ${REPO}"
         local CURRENT_IMAGE=${REPO##*/}
 
         if [[ "$BUILD_FROM" != "false" ]]; then
             BUILDER_COMMIT_ID="${BUILD_FROM##*/}-${CURRENT_IMAGE}"
         elif [[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]; then
-            BUILDER_COMMIT_ID="${DEF_BUILD_CONTAINER##*/}-${CURRENT_IMAGE}"
+            BUILDER_COMMIT_ID="${DEFAULT_BUILDER##*/}-${CURRENT_IMAGE}"
         fi
 
-        [[ "${PARENT_REPO}" == "${BUILD_CONTAINER}" ]] && [[ "${BUILD_FROM}" == "false" ]] && BUILDER_COMMIT_ID="${REPO##*/}"
-        [[ "${PARENT_REPO}" == "${REPO}" ]] && BUILDER_COMMIT_ID="${CURRENT_IMAGE}"
+        if [[ "${REPO_TYPE}" == "${BUILDER_PATH}" ]]; then
+            [[ "${BUILD_CONTAINER}" == "${REPO}" ]] && [[ "${REPO}" != ${NAMESPACE}/*-core ]] && \
+                BUILD_CONTAINER="${REPO}-core"
+            BUILDER_COMMIT_ID="${REPO##*/}"
+        fi
 
         # mounts for build container
-        local CONTAINER_MOUNTS=("$(dirname $(realpath -s $0))/$REPO_EXPANDED:/config"
+        local CONTAINER_MOUNTS=("$(dirname $(realpath $0))/$REPO_EXPANDED:/config"
 "$(realpath ../tmp/distfiles):/distfiles"
 "$(realpath ../tmp/packages):/packages"
 )
@@ -290,9 +296,6 @@ build_image()
         done
 
         local CONTAINER_CMD=("build-root" ${REPO_EXPANDED})
-
-        DOCKER_PRIVILEGED=$(get_dockerfile_tag "#BUILD_PRIVILEGED" "${REPO_EXPANDED}")
-        [[ $? == 1 ]] && die "${DOCKER_PRIVILEGED}"
 
         msg "run ${BUILD_CONTAINER}:${DATE}"
         run_image "${BUILD_CONTAINER}:${DATE}" "${REPO}" "false" || die "failed to build rootfs for $REPO_EXPANDED"
@@ -311,7 +314,7 @@ build_image()
     fi
 
     REPO_ID=$REPO
-    [[ "$REPO" == ${BUILDER_CORE} ]] && REPO_ID=${BUILDER_CORE}
+    #[[ "$REPO" == ${BUILDER_CORE} ]] && REPO_ID=${BUILDER_CORE}
 
     msg "build ${REPO}:${DATE}"
     "${DOCKER}" build ${BUILD_OPTS} -t "${REPO_ID}:${DATE}" "${REPO_EXPANDED}" || die "failed to build ${REPO_EXPANDED}"

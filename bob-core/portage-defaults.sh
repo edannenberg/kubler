@@ -5,7 +5,7 @@ if [[ -z "${USE_BUILDER_FLAGS}" ]]; then
     export CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}"
     export CXXFLAGS="${BOB_CXXFLAGS:-${CFLAGS}}"
 
-    export CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}"
+    export CHOST="${DEF_CHOST:-x86_64-pc-linux-gnu}"
 else
     export CFLAGS="${BOB_BUILDER_CFLAGS:--mtune=generic -O2 -pipe}"
     export CXXFLAGS="${BOB_BUILDER_CXXFLAGS:-${CFLAGS}}"
@@ -21,4 +21,5 @@ export EMERGE_DEFAULT_OPTS="${BOB_EMERGE_DEFAULT_OPTS:--b -k}"
 export GENTOO_MIRRORS="${BOB_GENTOO_MIRRORS:-ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/gentoo/}"
 
 export DISTDIR="/distfiles"
-export PKGDIR="/packages/${CHOST}"
+# set once per *-core build container as ENV via Dockerfile.template
+#export PKGDIR="/packages/${CHOST}"

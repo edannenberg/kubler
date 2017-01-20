@@ -7,6 +7,8 @@ FORCE_FULL_REBUILD=false
 BUILD_WITHOUT_DEPS=false
 IMAGE_PATH="images/"
 BUILDER_PATH="builder/"
+BOB_HOST_UID=$(id -u)
+BOB_HOST_GID=$(id -g)
 
 die()
 {
@@ -59,6 +61,20 @@ source_namespace_conf() {
             die "failed to source engine file ${PROJECT_ROOT}/inc/engine/${CONTAINER_ENGINE}.sh"
         LAST_SOURCED_ENGINE="${CONTAINER_ENGINE}"
     fi
+}
+
+# Read image build.conf for given EXPANDED_REPO_ID
+#
+# Arguments:
+# 1: EXPANDED_REPO_ID (i.e. gentoobb/images/busybox)
+source_image_conf() {
+    # exit if we just sourced the given build.conf
+    [[ "${LAST_SOURCED_IMAGE}" == ${1} ]] && return 0
+    source_namespace_conf ${1}
+    unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER
+    local BUILD_CONF="${1}/build.conf"
+    [[ -f ${BUILD_CONF} ]] && source ${BUILD_CONF} || die "Could not read required ${BUILD_CONF}"
+    LAST_SOURCED_IMAGE=${1}
 }
 
 # Read namespace push.conf for given REPO_ID

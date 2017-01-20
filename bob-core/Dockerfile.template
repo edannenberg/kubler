@@ -1,5 +1,8 @@
-FROM ${NAMESPACE}/stage3-import
+FROM ${BOB_CURRENT_STAGE3_ID}
 MAINTAINER ${MAINTAINER}
+
+ENV DEF_CHOST ${BOB_CHOST}
+ENV PKGDIR "/packages/${BOB_CHOST}"
 
 RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
     mkdir -p /etc/portage/repos.conf /usr/portage && \

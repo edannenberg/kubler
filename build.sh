@@ -38,7 +38,7 @@ PROJECT_ROOT=$(dirname $(realpath -s $0))
 DL_PATH="${DL_PATH:-${PROJECT_ROOT}/tmp/downloads}"
 
 # read global build.conf
-[[ ! -f "${PROJECT_ROOT}/build.conf" ]] && echo "error: could not find ${PROJECT_ROOT}//build.conf" && exit 1
+[[ ! -f "${PROJECT_ROOT}/build.conf" ]] && echo "error: could not find ${PROJECT_ROOT}/build.conf" && exit 1
 source ./build.conf
 
 DATE_ROOT="${DATE?Error \$DATE is not defined.}"
@@ -49,7 +49,7 @@ BUILD_OPTS="${BUILD_OPTS:-}"
 SKIP_GPG="${SKIP_GPG:-false}"
 EXCLUDE="${EXCLUDE:-}"
 
-REQUIRED_BINARIES="awk bzip2 grep wget"
+REQUIRED_BINARIES="awk bzip2 grep id wget"
 [ "${SKIP_GPG}" != "false" ] && REQUIRED_BINARIES+=" gpg"
 [[ $(command -v sha512sum) ]] && REQUIRED_BINARIES+=" sha512sum" || REQUIRED_BINARIES+=" shasum"
 
@@ -76,12 +76,12 @@ generate_build_order()
     done
     # generate builder build order
     BUILD_ORDER_BUILDER=""
-    for BUILDER in $REQUIRED_BUILDER; do
-        check_builder_dependencies ${BUILDER}
+    for BUILDER_ID in $REQUIRED_BUILDER; do
+        check_builder_dependencies ${BUILDER_ID}
         if [ -z "$BUILD_ORDER_BUILDER" ]; then
-            BUILD_ORDER_BUILDER="${BUILDER}"
+            BUILD_ORDER_BUILDER="${BUILDER_ID}"
         else
-            ! string_has_word "${BUILD_ORDER_BUILDER}" ${BUILDER} && BUILD_ORDER_BUILDER+=" ${BUILDER}"
+            ! string_has_word "${BUILD_ORDER_BUILDER}" ${BUILDER_ID} && BUILD_ORDER_BUILDER+=" ${BUILDER_ID}"
         fi
     done
     # remove excluded repos
@@ -104,7 +104,7 @@ check_image_dependencies()
     # add image path if missing
     [[ $REPO_EXPANDED != *"/${IMAGE_PATH}"* ]] && REPO_EXPANDED=${REPO_EXPANDED/\//\/${IMAGE_PATH}}
     if [ "${1}" != "scratch" ]; then
-        source_namespace_conf $REPO_EXPANDED
+        source_image_conf $REPO_EXPANDED
 
         # collect required engines
         ! string_has_word "${REQUIRED_ENGINES}" ${CONTAINER_ENGINE} && REQUIRED_ENGINES+=" ${CONTAINER_ENGINE}"
@@ -116,7 +116,7 @@ check_image_dependencies()
              REQUIRED_BUILDER+=" ${IMAGE_BUILDER}"
         else
             # add default build container of current namespace
-            ! string_has_word "${REQUIRED_BUILDER}" ${DEF_BUILD_CONTAINER} && REQUIRED_BUILDER+=" ${DEF_BUILD_CONTAINER}"
+            ! string_has_word "${REQUIRED_BUILDER}" ${DEFAULT_BUILDER} && REQUIRED_BUILDER+=" ${DEFAULT_BUILDER}"
         fi
 
         PARENT_IMAGE=$(get_parent_image "${1}" "${IMAGE_PATH}")
@@ -142,18 +142,16 @@ check_builder_dependencies() {
     local REPO_EXPANDED="${1}"
     # add builder path if missing
     [[ $REPO_EXPANDED != *"/${BUILDER_PATH}"* ]] && REPO_EXPANDED=${REPO_EXPANDED/\//\/${BUILDER_PATH}}
-    if [ "${1}" != "${BUILDER_CORE}" ]; then
-        source_namespace_conf "$REPO_EXPANDED"
-        # skip further checking if already processed
-        if ! string_has_word "${BUILD_ORDER_BUILDER}" ${1}; then
+    source_image_conf "${REPO_EXPANDED}"
+    [[ ! -z "${STAGE3_BASE}" ]] && ! string_has_word "${REQUIRED_CORES}" "${STAGE3_BASE}" && REQUIRED_CORES+=" ${STAGE3_BASE}"
+    # skip further checking if already processed
+    if ! string_has_word "${BUILD_ORDER_BUILDER}" ${1}; then
+        if [[ -z "${STAGE3_BASE}" ]]; then
             PARENT_BUILDER=$(get_build_container "${1}" "${BUILDER_PATH}")
             [[ $? == 1 ]] && die "error executing get_parent_builder(): ${PARENT_BUILDER}"
-            # if defined, add parent builder dependencies
-            [[ "${PARENT_BUILDER}" != "" ]] && [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && [[ "${PARENT_BUILDER}" != "${DEF_BUILD_CONTAINER}" ]]  && \
-                [[ "${PARENT_BUILDER}" != ${1} ]] && check_builder_dependencies ${PARENT_BUILDER} ${1}
-            [[ "${PARENT_BUILDER}" != "${BUILDER_CORE}" ]] && ! string_has_word "${BUILD_ORDER_BUILDER}" ${PARENT_BUILDER} && BUILD_ORDER_BUILDER+=" ${PARENT_BUILDER}"
-            [[ "${2}" != "" ]] && BUILD_ORDER_BUILDER+=" ${1}"
+            check_builder_dependencies ${PARENT_BUILDER} ${1}
         fi
+        [[ "${2}" != "" ]] && BUILD_ORDER_BUILDER+=" ${1}"
     fi
 }
 
@@ -166,7 +164,7 @@ build()
     if $BUILD_WITHOUT_DEPS; then
         cd $REPO_PATH
         for REPO in $1; do
-            source_namespace_conf ${REPO}
+            source_image_conf ${REPO}
             validate_repo ${REPO} ${IMAGE_PATH}
             build_image_no_deps ${REPO}
         done
@@ -177,28 +175,30 @@ build()
     cd $REPO_PATH
     REPOS=$(expand_requested_repos "${REPOS}") || die "failed to expand requested images, typo in namespace or image name?"
     generate_build_order "${REPOS}"
-    msg "required engines: ${REQUIRED_ENGINES}"
+    msg "required engines:  ${REQUIRED_ENGINES}"
+    msg "required stage3:   ${REQUIRED_CORES}"
     msg "required builders: ${BUILD_ORDER_BUILDER}"
-    msg "build sequence:    ${BUILD_ORDER}"
+    msg "build sequence:     ${BUILD_ORDER}"
     [[ -n ${EXCLUDE} ]] && msg "excluded: ${EXCLUDE}"
 
     e=($REQUIRED_ENGINES)
     for ENGINE in "${e[@]}"; do
        source "${PROJECT_ROOT}/inc/engine/${ENGINE}.sh"
        validate_engine
-       build_core
     done
 
     b=($BUILD_ORDER_BUILDER)
     for REPO in "${b[@]}"; do
-        source_namespace_conf ${REPO}
+        local REPO_EXPANDED=${REPO/\//\/${BUILDER_PATH}}
+        source_image_conf ${REPO_EXPANDED}
         validate_repo ${REPO} ${BUILDER_PATH}
         build_builder "${REPO}"
     done
 
     b=($BUILD_ORDER)
     for REPO in "${b[@]}"; do
-        source_namespace_conf ${REPO}
+        local REPO_EXPANDED=${REPO/\//\/${IMAGE_PATH}}
+        source_image_conf ${REPO_EXPANDED}
         validate_repo ${REPO} ${IMAGE_PATH}
         build_image "${REPO}"
     done

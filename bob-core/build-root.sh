@@ -99,6 +99,7 @@ generate_documentation() {
     if [[ -f ${DOC_FOOTER_INCLUDES} ]]; then
         cat ${DOC_FOOTER_INCLUDES} >> $DOC_FILE
     fi
+    chown ${BOB_HOST_UID}:${BOB_HOST_GID} ${DOC_FILE}
 }
 
 # Appends a github markdown line with a checkbox and label to given file.
@@ -197,7 +198,7 @@ update_use() {
     flaggie --strict --destructive-cleanup ${@}
 }
 
-# Just for better readabilty of Buildconfig.sh
+# Just for better readabilty of build.sh
 update_keywords() {
     update_use ${@}
 }
@@ -288,7 +289,7 @@ download_from_oracle() {
 
 source /etc/profile
 
-if [[ "${CHOST}" = "x86_64-pc-linux-gnu" ]]; then
+if [[ "${CHOST}" == x86_64-pc-linux-* ]]; then
     EMERGE_BIN="emerge"
 else
     EMERGE_BIN="emerge-${CHOST}"
@@ -297,13 +298,13 @@ fi
 mkdir -p $EMERGE_ROOT
 
 # read config, mounted via build.sh
-[[ -f ${CONFIG}/Buildconfig.sh ]] && source ${CONFIG}/Buildconfig.sh || :
+[[ -f ${CONFIG}/build.sh ]] && source ${CONFIG}/build.sh || :
 
 # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS}
 export USE_BUILDER_FLAGS="true"
 source /etc/profile
 
-# call configure bob hook if declared in Buildconfig.sh
+# call configure bob hook if declared in build.sh
 declare -F configure_bob &>/dev/null && configure_bob
 
 # switch back to BOB_{CHOST,CFLAGS,CXXFLAGS}
@@ -315,7 +316,7 @@ mkdir -p ${ROOTFS_BACKUP}
 # set ROOT env for emerge calls
 export ROOT="${EMERGE_ROOT}"
 
-# call pre install hook if declared in Buildconfig.sh
+# call pre install hook if declared in build.sh
 declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
 
 # when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
@@ -328,7 +329,7 @@ if [ -n "$PACKAGES" ]; then
     generate_doc_package_installed "${PACKAGES}"
 
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v sys-apps/baselayout
-    # install packages (defined via Buildconfig.sh)
+    # install packages (defined via build.sh)
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v $PACKAGES
 
     [[ -f ${PACKAGE_INSTALLED} ]] && cat ${PACKAGE_INSTALLED} | sed -e /^virtual/d >> /etc/portage/profile/package.provided
@@ -356,7 +357,7 @@ if [ -n "$PACKAGES" ]; then
 
 fi
 
-# call post install hook if declared in Buildconfig.sh
+# call post install hook if declared in build.sh
 declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
 
 generate_documentation_footer
@@ -385,7 +386,7 @@ fi
 if [ "$(ls -A $EMERGE_ROOT)" ]; then
     # make rootfs tar ball
     tar -cpf ${CONFIG}/rootfs.tar -C ${EMERGE_ROOT} .
-    chmod 777 ${CONFIG}/rootfs.tar
+    chown ${BOB_HOST_UID}:${BOB_HOST_GID} ${CONFIG}/rootfs.tar
     rm -rf "${EMERGE_ROOT}"
 fi
 
