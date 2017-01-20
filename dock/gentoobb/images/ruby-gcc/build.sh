@@ -9,7 +9,8 @@ KEEP_HEADERS=true
 #
 configure_rootfs_build()
 {
-    echo 'RUBY_TARGETS="ruby24"' >> /etc/portage/make.conf
+    echo 'RUBY_TARGETS="ruby23"' >> /etc/portage/make.conf
+    echo '>=dev-lang/ruby-2.4.0' >> /etc/portage/package.mask/ruby
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=app-eselect/eselect-ruby-20161226' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
@@ -22,7 +23,7 @@ configure_rootfs_build()
     update_keywords '=virtual/rubygems-12' '+~amd64'
     update_keywords '=dev-ruby/json-2.0.2' '+~amd64'
     update_keywords '=dev-ruby/net-telnet-0.1.1-r1' '+~amd64'
-    update_keywords '=dev-ruby/did_you_mean-1.1.0' '+~amd64'
+    update_keywords '=dev-ruby/did_you_mean-1.0.2' '+~amd64'
     update_keywords '=dev-ruby/xmlrpc-0.2.1' '+~amd64'
     update_keywords '=dev-ruby/kpeg-1.1.0' '+~amd64'
 }
