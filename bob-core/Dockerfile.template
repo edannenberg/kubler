@@ -1,7 +1,17 @@
 FROM ${BOB_CURRENT_STAGE3_ID}
 MAINTAINER ${MAINTAINER}
 
-ENV DEF_CHOST ${BOB_CHOST}
+# active in configure_rootfs_build() hook and during the rest of the build
+ENV DEF_CHOST ${BOB_CHOST:-x86_64-pc-linux-gnu}
+ENV DEF_CFLAGS ${BOB_CFLAGS:--mtune=generic -O2 -pipe}
+ENV DEV_CXXFLAGS ${BOB_CXXFLAGS:-${DEF_CFLAGS}}
+
+# active in configure_bob() hook, generally only differs when using crossdev
+ENV DEF_BUILDER_CHOST ${BOB_BUILDER_CHOST:-${DEF_CHOST}}
+ENV DEF_BUILDER_CFLAGS ${BOB_BUILDER_CFLAGS:-${DEF_CFLAGS}}
+ENV DEF_BUILDER_CXXFLAGS ${BOB_BUILDER_CXXFLAGS:-${DEF_CXXFLAGS}}
+
+# binary package location
 ENV PKGDIR "/packages/${BOB_CHOST}"
 
 RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \

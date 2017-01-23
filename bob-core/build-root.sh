@@ -230,9 +230,11 @@ provide_package() {
 # 1: package atom (i.e. app-shells/bash)
 # n: more package atoms
 unprovide_package() {
-    for P in ${@}; do
-        sed -i /^${P//\//\\\/}/d /etc/portage/profile/package.provided
-    done
+    if [ -f /etc/portage/profile/package.provided ]; then
+        for P in ${@}; do
+            sed -i /^${P//\//\\\/}/d /etc/portage/profile/package.provided
+        done
+    fi
 }
 
 # Remove packages that were only needed at build time, also cleans ${DOC_PACKAGE_INSTALLED}
@@ -289,7 +291,7 @@ download_from_oracle() {
 
 source /etc/profile
 
-if [[ "${CHOST}" == x86_64-pc-linux-* ]]; then
+if [[ "${CHOST}" == x86_64-pc-linux-* ]] || [[ "${CHOST}" == x86_64-gentoo-linux-* ]]; then
     EMERGE_BIN="emerge"
 else
     EMERGE_BIN="emerge-${CHOST}"
