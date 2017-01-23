@@ -5,10 +5,14 @@ if [ -z $1 ]; then
     exit 1
 fi
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_ROOT=$(realpath -s $SCRIPT_DIR/../)
+PROJECT_ROOT=$(realpath $SCRIPT_DIR/../)
 REPO=${1}
-REPO_DIR=$(realpath -s $SCRIPT_DIR/../dock/${REPO/\//\/images\/})
+REPO_DIR=$(realpath $SCRIPT_DIR/../dock/${REPO/\//\/images\/})
 [ ! -d $REPO_DIR ] && echo "error: can't find ${REPO_DIR}" && exit 1
 
 [ ! -f "${PROJECT_ROOT}/inc/core.sh" ] && echo "error: failed to read ${PROJECT_ROOT}/inc/core.sh" && exit 1
@@ -20,7 +24,7 @@ source "${PROJECT_ROOT}/build.conf"
 DATE_ROOT="${DATE?Error \$DATE is not defined.}"
 
 cd ${PROJECT_ROOT}/${REPO_PATH}
-source_namespace_conf ${REPO}
+source_image_conf ${REPO/\//\/images\/}
 validate_engine
 
 BUILDER=$(get_build_container ${REPO} ${IMAGE_PATH})
@@ -34,12 +38,10 @@ for bob_var in ${!BOB_*}; do
 done
 
 generate_dockerfile "${REPO_DIR}"
-DOCKER_PRIVILEGED=$(get_dockerfile_tag "#BUILD_PRIVILEGED" "${REPO_DIR}")
-[[ $? == 1 ]] && die "${DOCKER_PRIVILEGED}"
 
 CONTAINER_MOUNTS=(
-"$(realpath -s $SCRIPT_DIR/../tmp/distfiles):/distfiles"
-"$(realpath -s $SCRIPT_DIR/../tmp/packages):/packages"
+"$(realpath $SCRIPT_DIR/../tmp/distfiles):/distfiles"
+"$(realpath $SCRIPT_DIR/../tmp/packages):/packages"
 "${REPO_DIR}:/config"
 )
 
