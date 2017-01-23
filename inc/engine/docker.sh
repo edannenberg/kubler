@@ -167,8 +167,9 @@ get_build_container() {
     if [[ "$BUILD_FROM" != "false" ]]; then
         BUILD_CONTAINER="${BUILD_FROM}"
     elif [[ "${REPO_TYPE}" == "${IMAGE_PATH}" ]]; then
-        [[ "${PARENT_IMAGE}" != "scratch" ]] && image_exists "${BUILD_CONTAINER}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
-            BUILD_CONTAINER="${BUILD_CONTAINER}-${PARENT_IMAGE}"
+        local BUILDER_IMAGE=${BUILD_CONTAINER##*/}
+        [[ "${PARENT_IMAGE}" != "scratch" ]] && image_exists "${NAMESPACE}/${BUILDER_IMAGE}-${PARENT_IMAGE}" "${BUILDER_PATH}" && \
+            BUILD_CONTAINER="${NAMESPACE}/${BUILDER_IMAGE}-${PARENT_IMAGE}"
     fi
 
     echo "${BUILD_CONTAINER}"
