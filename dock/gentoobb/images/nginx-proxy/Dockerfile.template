@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/nginx
+FROM ${IMAGE_PARENT}
 MAINTAINER ${MAINTAINER}
 
 VOLUME ["/etc/nginx/sites-enabled"]

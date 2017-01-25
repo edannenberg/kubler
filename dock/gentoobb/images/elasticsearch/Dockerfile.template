@@ -1,4 +1,4 @@
-FROM ${NAMESPACE}/jre-oracle
+FROM ${IMAGE_PARENT}
 MAINTAINER ${MAINTAINER}
 
 ADD rootfs.tar /
