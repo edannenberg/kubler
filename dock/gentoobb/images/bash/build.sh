@@ -8,7 +8,7 @@ PACKAGES="sys-libs/readline net-misc/curl app-admin/eselect app-portage/portage-
 #
 configure_rootfs_build()
 {
-    :
+    update_use 'sys-libs/ncurses' '+minimal'
 }
 
 #
