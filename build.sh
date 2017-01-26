@@ -247,6 +247,14 @@ add_from_template()
     echo "NotImplementedException ;/"
 }
 
+clean_project_artifacts()
+{
+    msg "removing all rootfs.tar files"
+    find "${PROJECT_ROOT}/${REPO_PATH}" -name rootfs.tar -exec rm {} \;
+    msg "removing all PACKAGES.md files"
+    find "${PROJECT_ROOT}/${REPO_PATH}" -name PACKAGES.md -exec rm {} \;
+}
+
 # List images that are not build yet
 missing()
 {
@@ -295,6 +303,7 @@ REMAINING_ARGS="${@:-"*"}"
 
 case "${ACTION}" in
     add) add_from_template "$REMAINING_ARGS";;
+    clean) clean_project_artifacts;;
     build) build "$REMAINING_ARGS";;
     update) update_stage3_date;;
     missing) missing "$REMAINING_ARGS";;
