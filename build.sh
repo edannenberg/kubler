@@ -113,8 +113,8 @@ check_image_dependencies()
         # collect required build containers
         IMAGE_BUILDER=$(get_image_builder "${1}" "${IMAGE_PATH}")
         [[ $? == 1 ]] && die "error executing get_image_builder(): ${IMAGE_BUILDER}"
-        if [[ "${IMAGE_BUILDER}" != "" ]] && ! string_has_word "${REQUIRED_BUILDER}" ${IMAGE_BUILDER}; then
-             REQUIRED_BUILDER+=" ${IMAGE_BUILDER}"
+        if [[ "${IMAGE_BUILDER}" != "" ]];then
+             ! string_has_word "${REQUIRED_BUILDER}" ${IMAGE_BUILDER} && REQUIRED_BUILDER+=" ${IMAGE_BUILDER}"
         else
             # add default build container of current namespace
             ! string_has_word "${REQUIRED_BUILDER}" ${DEFAULT_BUILDER} && REQUIRED_BUILDER+=" ${DEFAULT_BUILDER}"
