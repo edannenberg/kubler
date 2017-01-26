@@ -34,7 +34,7 @@ realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 
-PROJECT_ROOT=$(dirname $(realpath -s $0))
+PROJECT_ROOT=$(dirname $(realpath $0))
 DL_PATH="${DL_PATH:-${PROJECT_ROOT}/tmp/downloads}"
 
 # read global build.conf
@@ -76,6 +76,7 @@ generate_build_order()
     done
     # generate builder build order
     BUILD_ORDER_BUILDER=""
+    REQUIRED_CORES=""
     for BUILDER_ID in $REQUIRED_BUILDER; do
         check_builder_dependencies ${BUILDER_ID}
         if [ -z "$BUILD_ORDER_BUILDER" ]; then
@@ -174,13 +175,13 @@ build()
 
     msg "generate build order"
     cd $REPO_PATH
-    REPOS=$(expand_requested_repos "${REPOS}") || die "failed to expand requested images, typo in namespace or image name?"
+    REPOS=$(expand_requested_repos "${1}") || die "failed to expand requested images, typo in namespace or image name?"
     generate_build_order "${REPOS}"
-    msg "required engines:  ${REQUIRED_ENGINES}"
-    msg "required stage3:   ${REQUIRED_CORES}"
-    msg "required builders: ${BUILD_ORDER_BUILDER}"
-    msg "build sequence:     ${BUILD_ORDER}"
-    [[ -n ${EXCLUDE} ]] && msg "excluded: ${EXCLUDE}"
+    msgf "required engines:" "${REQUIRED_ENGINES:1}"
+    msgf "required stage3:" "${REQUIRED_CORES:1}"
+    msgf "required builders:" "${BUILD_ORDER_BUILDER}"
+    msgf "build sequence:" "${BUILD_ORDER}"
+    [[ -n ${EXCLUDE} ]] && msgf "excluded:" "${EXCLUDE}"
 
     e=($REQUIRED_ENGINES)
     for ENGINE in "${e[@]}"; do
@@ -205,21 +206,45 @@ build()
     done
 }
 
-# Update DATE to latest stage3 build date
+# Update STAGE3_DATE in build.conf for all builders in all namespaces
 update_stage3_date() {
-    S3DATE_REMOTE="$(curl -s ${MIRROR}/releases/${ARCH}/autobuilds/latest-stage3.txt | grep ${STAGE3_BASE} | awk -F '/' '{print $1}')"
-    regex='^DATE=("?([0-9]+)"?)|("\$\{DATE:-([0-9]+)\}")'
-    if [[ "$(grep ^DATE= build.conf)" =~ $regex ]]; then
-        S3DATE_LOCAL="${BASH_REMATCH[4]}"
-    else
-        die "Could not parse DATE in build.conf"
-    fi
-    if [ "$S3DATE_LOCAL" -lt "$S3DATE_REMOTE" ]; then
-        msg "Updating DATE from $S3DATE_LOCAL to $S3DATE_REMOTE in ./build.conf"
-        sed -i s/^DATE=\"\${DATE:-[0-9]*}\"/DATE=\"\${DATE:-${S3DATE_REMOTE}}\"/g build.conf
-    else
-        msg "Already up to date. ($S3DATE_LOCAL)"
-    fi
+    cd "${REPO_PATH}"
+    for CURRENT_NS in */; do
+        msg $CURRENT_NS
+        local BPATH=${PROJECT_ROOT}/$REPO_PATH/${CURRENT_NS}${BUILDER_PATH}
+        if [ -d "${BPATH}" ]; then
+            cd $BPATH
+            for CURRENT_B in  */; do
+                local UPDATE_STATUS=""
+                cd $PROJECT_ROOT/$REPO_PATH
+                source_image_conf $CURRENT_NS/$BUILDER_PATH/$CURRENT_B
+                if [[ ! -z ${STAGE3_BASE} ]]; then
+                    local RFILES="$(wget -qO- ${ARCH_URL})"
+                    local REGEX="${STAGE3_BASE//+/\\+}-([0-9]{8})\.tar\.bz2"
+                    if [[ $RFILES =~ $REGEX ]]; then
+                        local S3DATE_REMOTE="${BASH_REMATCH[1]}"
+                        if [ "$STAGE3_DATE" -lt "$S3DATE_REMOTE" ]; then
+                            sed -r -i s/^STAGE3_DATE=\"?\{0,1\}[0-9]*\"?/STAGE3_DATE=\"${S3DATE_REMOTE}\"/g \
+                                "${BPATH}${CURRENT_B}build.conf"
+                            UPDATE_STATUS="updated ${STAGE3_DATE} -> ${S3DATE_REMOTE}"
+                        else
+                            UPDATE_STATUS="up-to-date ${STAGE3_DATE}"
+                        fi
+                    else
+                        UPDATE_STATUS="could not parse remote STAGE3 DATE from ${ARCH_URL}"
+                    fi
+                fi
+                printf "      %-20s %s\n" "${CURRENT_B}" "${UPDATE_STATUS}"
+            done
+        else
+            echo "      no build containers"
+        fi
+    done
+}
+
+add_from_template()
+{
+    echo "NotImplementedException ;/"
 }
 
 # List images that are not build yet
@@ -266,17 +291,18 @@ if [ -z "$ACTION" ]; then
     ACTION="${1:-build}"
 fi
 shift
-REPOS="${@:-"*"}"
+REMAINING_ARGS="${@:-"*"}"
 
 case "${ACTION}" in
-    build) build "$REPOS";;
+    add) add_from_template "$REMAINING_ARGS";;
+    build) build "$REMAINING_ARGS";;
     update) update_stage3_date;;
-    missing) missing "$REPOS";;
-    help) msg "usage: ${0} [-n, -f, -F, -c, -C, -h] {build|update|missing} [repo ...]
+    missing) missing "$REMAINING_ARGS";;
+    help) msg "usage: ${0} [-n, -f, -F, -c, -C, -h] {add|build|update|missing} [repo ...]
     -f force repo rebuild
     -F also rebuild repo rootfs tar ball
-    -c rebuild building containers
-    -C also rebuild stage3 import containers
+    -c rebuild building/core containers
+    -C also rebuild stage3 import containers, a.k.a everything
     -n do not build repo dependencies for given repo(s)
     -s skip gpg validation on downloaded files
     -h help" ;;
