@@ -41,7 +41,7 @@ DL_PATH="${DL_PATH:-${PROJECT_ROOT}/tmp/downloads}"
 [[ ! -f "${PROJECT_ROOT}/build.conf" ]] && echo "error: could not find ${PROJECT_ROOT}/build.conf" && exit 1
 source ./build.conf
 
-DATE_ROOT="${DATE?Error \$DATE is not defined.}"
+IMAGE_TAG_ROOT="${IMAGE_TAG?Error \$IMAGE_TAG is not defined.}"
 NAMESPACE_ROOT="${NAMESPACE:-gentoobb}"
 
 BUILD_OPTS="${BUILD_OPTS:-}"

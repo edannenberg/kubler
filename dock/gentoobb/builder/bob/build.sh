@@ -1,9 +1,12 @@
 #
-# build config
+# build config, sourced by build-root.sh inside build container
 #
 PACKAGES=""
 EMERGE_BIN="emerge"
 
+#
+# this hook can be used to configure the build container itself, install packages, etc
+#
 configure_bob() {
     # install flaggie, required for update_use() helper
     emerge app-portage/flaggie
@@ -34,8 +37,8 @@ configure_bob() {
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
-# 
+# this hook is called in the build container just before tar'ing the rootfs
+#
 finish_rootfs_build()
 {
     :

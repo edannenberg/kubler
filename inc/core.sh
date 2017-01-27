@@ -7,6 +7,7 @@ FORCE_FULL_REBUILD=false
 BUILD_WITHOUT_DEPS=false
 IMAGE_PATH="images/"
 BUILDER_PATH="builder/"
+REPO_PATH="dock"
 BOB_HOST_UID=$(id -u)
 BOB_HOST_GID=$(id -g)
 
@@ -19,6 +20,13 @@ die()
 msg()
 {
     echo -e "--> $@"
+}
+
+msgf()
+{
+    local PREFIX="${1}"
+    shift
+    printf "%s %-20s %s\n" "-->" "${PREFIX}" "${@}"
 }
 
 sha_sum() {
@@ -43,19 +51,16 @@ LAST_SOURCED_ENGINE=""
 # Arguments:
 # 1: REPO_ID (i.e. gentoobb/busybox)
 source_namespace_conf() {
-    # exit if we just sourced the given NS
-    [[ "${LAST_SOURCED_NS}" == ${1%%/*} ]] && return 0
     # reset to global defaults first..
-    [[ -f ${PROJECT_ROOT}/build.conf ]] && source ${PROJECT_ROOT}/build.conf
+    [[ -f ${PROJECT_ROOT}/build.conf ]] && source ${PROJECT_ROOT}/build.conf || die "could not read ${PROJECT_ROOT}/build.conf"
     # ..then read namespace build.conf if passed args have a namespace
     [[ ${1} != *"/"* ]] && return 0
     local CURRENT_NS=${1%%/*}
     NAMESPACE=${CURRENT_NS}
     [[ -f $CURRENT_NS/build.conf ]] && source $CURRENT_NS/build.conf
-    # prevent setting namespace and date via namespace build.conf
+    # prevent setting namespace and image tag via namespace build.conf
     NAMESPACE=${CURRENT_NS}
-    LAST_SOURCED_NS=${NAMESPACE}
-    DATE=${DATE_ROOT}
+    IMAGE_TAG=${IMAGE_TAG_ROOT}
     if [[ "${LAST_SOURCED_ENGINE}" != "${CONTAINER_ENGINE}" ]]; then
         source "${PROJECT_ROOT}/inc/engine/${CONTAINER_ENGINE}.sh" ||
             die "failed to source engine file ${PROJECT_ROOT}/inc/engine/${CONTAINER_ENGINE}.sh"
@@ -70,10 +75,13 @@ source_namespace_conf() {
 source_image_conf() {
     # exit if we just sourced the given build.conf
     [[ "${LAST_SOURCED_IMAGE}" == ${1} ]] && return 0
+    unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
     source_namespace_conf ${1}
     unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER
     local BUILD_CONF="${1}/build.conf"
     [[ -f ${BUILD_CONF} ]] && source ${BUILD_CONF} || die "Could not read required ${BUILD_CONF}"
+    # stage3 overrides BUILDER, unset if defined
+    [[ ! -z ${STAGE3_BASE} ]] && unset BUILDER
     LAST_SOURCED_IMAGE=${1}
 }
 
@@ -107,14 +115,25 @@ string_has_word() {
 download_stage3() {
     [ -d $DL_PATH ] || mkdir -p $DL_PATH
 
+    local IS_AUTOBUILD=false
+    STAGE3="${STAGE3_BASE}-${STAGE3_DATE}.tar.bz2"
+    local STAGE3_CONTENTS="${STAGE3}.CONTENTS"
+    local STAGE3_DIGESTS="${STAGE3}.DIGESTS"
+    if [[ $ARCH_URL == *autobuilds*  ]]; then
+        STAGE3_DIGESTS="${STAGE3}.DIGESTS.asc"
+        IS_AUTOBUILD=true
+    fi
+
     for FILE in "${STAGE3}" "${STAGE3_CONTENTS}" "${STAGE3_DIGESTS}"; do
         [ -f "$DL_PATH/${FILE}" ] && continue
         wget -O "$DL_PATH/${FILE}" "${ARCH_URL}${FILE}" ||
             (rm "$DL_PATH/${FILE}" && die "failed to download ${ARCH_URL}${FILE}")
     done
 
-    if [ "$SKIP_GPG" = false ]; then
+    if [ "$SKIP_GPG" = false ] && [ "${IS_AUTOBUILD}" = true ]; then
         gpg --verify "$DL_PATH/${STAGE3_DIGESTS}" || die "insecure digests"
+    elif [ "${IS_AUTOBUILD}" = false ]; then
+        msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     fi
     SHA512_HASHES=$(grep -A1 SHA512 "$DL_PATH/${STAGE3_DIGESTS}" | grep -v '^--')
     SHA512_CHECK=$(cd $DL_PATH/ && (echo "${SHA512_HASHES}" | $(sha_sum) -c))
@@ -171,8 +190,8 @@ add_documentation_header() {
     REPO="${1}"
     REPO_EXPANDED=${REPO/\//\/${2}}
     DOC_FILE="${REPO_EXPANDED}/PACKAGES.md"
-    HEADER="### ${REPO}:${DATE}"
-    IMAGE_SIZE="$(get_image_size ${REPO} ${DATE})" || die "failed to get image size: ${IMAGE_SIZE}"
+    HEADER="### ${REPO}:${IMAGE_TAG}"
+    IMAGE_SIZE="$(get_image_size ${REPO} ${IMAGE_TAG})" || die "failed to get image size: ${IMAGE_SIZE}"
     # remove existing header
     if [[ -f ${DOC_FILE} ]]; then
         $(grep -q "^${HEADER}" ${DOC_FILE}) && sed -i '1,4d' ${DOC_FILE}

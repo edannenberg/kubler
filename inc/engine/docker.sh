@@ -28,32 +28,32 @@ validate_repo() {
 remove_image()
 {
     local REPO="${1}"
-    "${DOCKER}" rmi -f "$REPO:${DATE}" || die "failed to remove image $REPO:${DATE}"
+    "${DOCKER}" rmi -f "$REPO:${IMAGE_TAG}" || die "failed to remove image $REPO:${IMAGE_TAG}"
 }
 
 # Get docker image size for given ${NAMESPACE}/${IMAGE}:${TAG}
 #
 # Arguments:
 # 1: IMAGE (i.e. gentoobb/busybox)
-# 2: TAG (=DATE)
+# 2: TAG (=IMAGE_TAG)
 get_image_size() {
     echo "$(${DOCKER} images ${1} | grep ${2} | awk '{print $(NF-1)" "$NF}')"
 }
 
-# Does "${NAMESPACE}/${REPO}:${DATE}" exist?
+# Does "${NAMESPACE}/${REPO}:${IMAGE_TAG}" exist?
 image_exists()
 {
     local REPO="${1}"
     local REPO_TYPE="${2:-${IMAGE_PATH}}"
-    IMAGES=$("${DOCKER}" images "${REPO}") || die "error while checking for image ${REPO}:${DATE}"
-    local MATCHES=$(echo "${IMAGES}" | grep "${DATE}")
+    IMAGES=$("${DOCKER}" images "${REPO}") || die "error while checking for image ${REPO}:${IMAGE_TAG}"
+    local MATCHES=$(echo "${IMAGES}" | grep "${IMAGE_TAG}")
     if [ -z "${MATCHES}" ]; then
         return 3
     fi
     if [ -n $FORCE_FULL_REBUILD ] && [[ "${FORCE_FULL_REBUILD}" == "true" ]]; then
         remove_image "$REPO"
         return 3
-    elif $FORCE_BUILDER_REBUILD && [ "${REPO_TYPE}" == "${BUILDER_PATH}" ] && [[ "${REPO}" != ${NAMESPACE}/*-stage3 ]] && [[ "${REPO}" != ${NAMESPACE}/*-core ]]; then
+    elif $FORCE_BUILDER_REBUILD && [ "${REPO_TYPE}" == "${BUILDER_PATH}" ] && [[ "${REPO}" != ${NAMESPACE}/*-stage3 ]]; then
         remove_image "$REPO"
         return 3
     elif ($FORCE_REBUILD || $FORCE_ROOTFS_REBUILD) && [ "${REPO_TYPE}" != "${BUILDER_PATH}" ]; then
@@ -106,7 +106,7 @@ generate_dockerfile()
         -e 's|${IMAGE_PARENT}|'"${IMAGE_PARENT}"'|' \
         -e 's|${DEFAULT_BUILDER}|'"${DEFAULT_BUILDER}"'|' \
         -e 's/${NAMESPACE}/'"${NAMESPACE}"'/' \
-        -e 's/${TAG}/'"${DATE}"'/' \
+        -e 's/${TAG}/'"${IMAGE_TAG}"'/' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/' "${1}/Dockerfile.template" > "${1}/Dockerfile" || \
             die "error while generating ${1}/Dockerfile"
 }
@@ -189,11 +189,11 @@ import_stage3()
     download_stage3 || die "failed to download stage3 files"
 
     # import stage3 image from Gentoo mirrors
-    msg "import ${IMAGE_NAME}:${DATE} using ${STAGE3}"
-    bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${IMAGE_NAME}:${DATE}" || die "failed to import stage3"
+    msg "import ${IMAGE_NAME}:${IMAGE_TAG} using ${STAGE3}"
+    bzcat < "$DL_PATH/${STAGE3}" | bzip2 | "${DOCKER}" import - "${IMAGE_NAME}:${IMAGE_TAG}" || die "failed to import stage3"
 
     msg "tag ${IMAGE_NAME}:latest"
-    "${DOCKER}" tag "${IMAGE_NAME}:${DATE}" "${IMAGE_NAME}:latest" || die "failed to tag"
+    "${DOCKER}" tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:latest" || die "failed to tag"
 }
 
 # Bootstrap a fresh stage3 docker image for given BUILDER_REPO_ID
@@ -224,12 +224,7 @@ build_core() {
 # 1: BUILDER_REPO_ID
 build_builder() {
     # bootstrap a stage3 image if defined in build.conf
-    if [[ ! -z "${STAGE3_BASE}" ]]; then
-       STAGE3="${STAGE3_BASE}-${STAGE3_DATE}.tar.bz2"
-       STAGE3_CONTENTS="${STAGE3}.CONTENTS"
-       STAGE3_DIGESTS="${STAGE3}.DIGESTS.asc"
-       build_core "${1}"
-    fi
+    [[ ! -z "${STAGE3_BASE}" ]] && build_core "${1}"
     build_image "${1}" "${BUILDER_PATH}"
 }
 
@@ -242,7 +237,7 @@ build_image_no_deps() {
 # If it doesn't already exist:
 #
 #
-# Forcibly tag "${NAMESPACE}/${REPO}:${DATE}" with "latest"
+# Forcibly tag "${NAMESPACE}/${REPO}:${IMAGE_TAG}" with "latest"
 #
 # Arguments:
 #
@@ -299,30 +294,30 @@ build_image()
 
         local CONTAINER_CMD=("build-root" ${REPO_EXPANDED})
 
-        msg "run ${BUILD_CONTAINER}:${DATE}"
-        run_image "${BUILD_CONTAINER}:${DATE}" "${REPO}" "false" || die "failed to build rootfs for $REPO_EXPANDED"
+        msg "run ${BUILD_CONTAINER}:${IMAGE_TAG}"
+        run_image "${BUILD_CONTAINER}:${IMAGE_TAG}" "${REPO}" "false" || die "failed to build rootfs for $REPO_EXPANDED"
 
-        RUN_ID="$(${DOCKER} ps -a | grep -m1 ${BUILD_CONTAINER}:${DATE} | awk '{print $1}')"
+        RUN_ID="$(${DOCKER} ps -a | grep -m1 ${BUILD_CONTAINER}:${IMAGE_TAG} | awk '{print $1}')"
 
-        msg "commit ${RUN_ID} ${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}"
-        "${DOCKER}" commit "${RUN_ID}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" ||
-            die "failed to commit ${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}"
+        msg "commit ${RUN_ID} ${NAMESPACE}/${BUILDER_COMMIT_ID}:${IMAGE_TAG}"
+        "${DOCKER}" commit "${RUN_ID}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:${IMAGE_TAG}" ||
+            die "failed to commit ${NAMESPACE}/${BUILDER_COMMIT_ID}:${IMAGE_TAG}"
 
         "${DOCKER}" rm "${RUN_ID}" || die "failed to remove container ${RUN_ID}"
 
         msg "tag ${NAMESPACE}/${BUILDER_COMMIT_ID}:latest"
-        "${DOCKER}" tag "${NAMESPACE}/${BUILDER_COMMIT_ID}:${DATE}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" ||
+        "${DOCKER}" tag "${NAMESPACE}/${BUILDER_COMMIT_ID}:${IMAGE_TAG}" "${NAMESPACE}/${BUILDER_COMMIT_ID}:latest" ||
             die "failed to tag ${BUILDER_COMMIT_ID}"
     fi
 
     REPO_ID=$REPO
     #[[ "$REPO" == ${BUILDER_CORE} ]] && REPO_ID=${BUILDER_CORE}
 
-    msg "build ${REPO}:${DATE}"
-    "${DOCKER}" build ${BUILD_OPTS} -t "${REPO_ID}:${DATE}" "${REPO_EXPANDED}" || die "failed to build ${REPO_EXPANDED}"
+    msg "build ${REPO}:${IMAGE_TAG}"
+    "${DOCKER}" build ${BUILD_OPTS} -t "${REPO_ID}:${IMAGE_TAG}" "${REPO_EXPANDED}" || die "failed to build ${REPO_EXPANDED}"
 
     msg "tag ${REPO}:latest"
-    "${DOCKER}" tag "${REPO_ID}:${DATE}" "${REPO_ID}:latest" || die "failed to tag ${REPO_EXPANDED}"
+    "${DOCKER}" tag "${REPO_ID}:${IMAGE_TAG}" "${REPO_ID}:latest" || die "failed to tag ${REPO_EXPANDED}"
 
     add_documentation_header "${REPO}" "${REPO_TYPE}" || die "failed to generate PACKAGES.md for ${REPO_EXPANDED}"
 }
@@ -361,7 +356,7 @@ push_image() {
     local REPOSITORY_URL="${2}"
     PUSH_ARGS="${IMAGE_ID}"
     if [[ ! -z "${REPOSITORY_URL}" ]]; then
-        IMAGE_DOCKER_ID=$("${DOCKER}" images "${IMAGE_ID}" | grep "${DATE}" | awk '{print $3}')
+        IMAGE_DOCKER_ID=$("${DOCKER}" images "${IMAGE_ID}" | grep "${IMAGE_TAG}" | awk '{print $3}')
         PUSH_ARGS="${REPOSITORY_URL}/${IMAGE_ID}"
         echo "${DOCKER}" tag "${IMAGE_DOCKER_ID}" ${PUSH_ARGS}
         "${DOCKER}" tag "${IMAGE_DOCKER_ID}" "${PUSH_ARGS}" || exit 1

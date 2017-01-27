@@ -24,7 +24,7 @@ source "${PROJECT_ROOT}/inc/core.sh"
 [[ ! -f "${PROJECT_ROOT}/build.conf" ]] && die "error: failed to read build.conf"
 source "${PROJECT_ROOT}/build.conf"
 
-DATE_ROOT="${DATE?Error \$DATE is not defined.}"
+IMAGE_TAG_ROOT="${IMAGE_TAG?Error \$IMAGE_TAG is not defined.}"
 
 REPOSITORY_URL=""
 while getopts "h:" opt; do
@@ -48,11 +48,11 @@ REPOS=$(expand_requested_repos "${REPO_ARGS}") || die "error expanding repos: ${
 for REPO in $REPOS; do
     NAMESPACE=${REPO%%/*}
     REPO_EXPANDED=${REPO/\//\/${IMAGE_PATH}}
-    source_namespace_conf "$REPO_EXPANDED"
+    source_image_conf "$REPO_EXPANDED"
     source_push_conf "${REPO}"
 
     if ! image_exists $REPO; then
-        echo "skipping ${REPO}:${DATE}, image is not build yet"
+        echo "skipping ${REPO}:${IMAGE_TAG}, image is not build yet"
         continue
     fi
 
