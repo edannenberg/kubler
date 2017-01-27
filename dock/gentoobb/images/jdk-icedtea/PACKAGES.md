@@ -1,7 +1,7 @@
-### gentoobb/jdk-icedtea:20161229
-Built: Mon Jan  2 05:38:11 CET 2017
+### gentoobb/jdk-icedtea:20170127
 
-Image Size: 290 MB
+Built: Fri Jan 27 01:25:30 CET 2017
+Image Size: 289 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -10,7 +10,6 @@ app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.2.0 | ``
 dev-java/icedtea-bin-7.2.6.8 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt (-multilib) -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-lang/python-exec-2.0.2 | ` `
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/glib-2.48.2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.48.0 | `-cairo -doctool {-test}`
@@ -19,8 +18,8 @@ dev-libs/libbsd-0.8.2 | `-static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpcre-8.39 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
-dev-libs/libxml2-2.9.4 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
-dev-libs/nspr-4.12 | `-debug`
+dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/nspr-4.13.1 | `-debug`
 dev-util/pkgconfig-0.28-r2 | `hardened -internal-glib`
 gnome-base/gsettings-desktop-schemas-3.20.0 | `introspection`
 media-fonts/dejavu-2.35 | `-`
@@ -63,7 +62,7 @@ sys-devel/binutils-2.25.1-r1 | `cxx nls zlib -multitarget -static-libs {-test} -
 sys-devel/binutils-config-5-r2 | ``
 sys-devel/gcc-4.9.4 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
 sys-devel/gcc-config-1.7.3 | ``
-sys-devel/make-4.1-r1 | `nls -guile -static`
+sys-devel/make-4.2.1 | `nls -guile -static`
 sys-kernel/linux-headers-4.4 | ``
 **FROM gentoobb/bash** |
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
@@ -74,24 +73,24 @@ net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
-sys-apps/file-5.25 | `zlib -python -static-libs`
+sys-apps/file-5.29 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-libs/ncurses-6.0-r1 | `cxx threads unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/ncurses-6.0-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
-app-misc/ca-certificates-20151214.3.21 | `cacert`
+app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
-sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
-dev-lang/execline-2.1.5.0 | `-static -static-libs`
-dev-libs/skalibs-2.3.10.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.3.0.0 | `-static -static-libs`
-*manual install*: entr-3.4 | http://entrproject.org/
+dev-lang/execline-2.2.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.4.0.0 | `-static -static-libs`
+*manual install*: entr-3.6 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

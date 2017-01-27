@@ -1,7 +1,7 @@
-### gentoobb/gcc:20161229
-Built: Mon Jan  2 05:26:36 CET 2017
+### gentoobb/gcc:20170127
 
-Image Size: 158 MB
+Built: Fri Jan 27 01:08:51 CET 2017
+Image Size: 157 MB
 #### Installed
 Package | USE Flags
 --------|----------
@@ -12,7 +12,7 @@ sys-devel/binutils-2.25.1-r1 | `cxx nls zlib -multitarget -static-libs {-test} -
 sys-devel/binutils-config-5-r2 | ``
 sys-devel/gcc-4.9.4 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
 sys-devel/gcc-config-1.7.3 | ``
-sys-devel/make-4.1-r1 | `nls -guile -static`
+sys-devel/make-4.2.1 | `nls -guile -static`
 sys-kernel/linux-headers-4.4 | ``
 #### Inherited
 Package | USE Flags
@@ -26,24 +26,24 @@ net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
-sys-apps/file-5.25 | `zlib -python -static-libs`
+sys-apps/file-5.29 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-libs/ncurses-6.0-r1 | `cxx threads unicode -ada -debug -doc -gpm -minimal (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/ncurses-6.0-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
-app-misc/ca-certificates-20151214.3.21 | `cacert`
+app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
-sys-libs/zlib-1.2.8-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
-dev-lang/execline-2.1.5.0 | `-static -static-libs`
-dev-libs/skalibs-2.3.10.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.3.0.0 | `-static -static-libs`
-*manual install*: entr-3.4 | http://entrproject.org/
+dev-lang/execline-2.2.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.4.0.0 | `-static -static-libs`
+*manual install*: entr-3.6 | http://entrproject.org/
 **FROM gentoobb/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.22-r4 | `hardened -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2016h | `nls -leaps`
 **FROM gentoobb/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
