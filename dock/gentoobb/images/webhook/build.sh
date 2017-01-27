@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES="dev-vcs/git"
-WEBHOOK_VERSION="2.4.0"
+WEBHOOK_VERSION="2.6.0"
 
 configure_bob()
 {
