@@ -13,7 +13,7 @@ RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.co
     if [[ ${BOB_DO_SYNC} == "true" ]]; then emerge --sync; else true; fi
 
 # DEF_BUILDER_* is only active in configure_bob() hook, generally only differs when using crossdev
-ENV DEF_CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}" \
+ENV DEF_CHOST="${BOB_CHOST}" \
     DEF_CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}" \
     DEF_CXXFLAGS="${BOB_CXXFLAGS:-${BOB_CFLAGS}}" \
     DEF_BUILDER_CHOST="${BOB_BUILDER_CHOST:-${BOB_CHOST}}" \
