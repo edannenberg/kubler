@@ -21,7 +21,7 @@ source "${PROJECT_ROOT}/inc/core.sh"
 [[ ! -f "${PROJECT_ROOT}/build.conf" ]] && die "error: failed to read build.conf"
 source "${PROJECT_ROOT}/build.conf"
 
-DATE_ROOT="${DATE?Error \$DATE is not defined.}"
+IMAGE_TAG_ROOT="${IMAGE_TAG?Error \$IMAGE_TAG is not defined.}"
 
 cd ${PROJECT_ROOT}/${REPO_PATH}
 source_image_conf ${REPO/\//\/images\/}
