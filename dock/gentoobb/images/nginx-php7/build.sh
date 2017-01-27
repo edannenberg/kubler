@@ -16,6 +16,7 @@ configure_bob()
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
 
     update_keywords 'dev-lang/php' '+~amd64'
+    update_use 'sys-libs/ncurses' '+minimal'
 
     update_use '+gif' '+jpeg' '+jpeg2k' '+png' '+tiff' '+webp'
     update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+mhash' \

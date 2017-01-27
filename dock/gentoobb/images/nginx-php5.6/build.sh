@@ -13,6 +13,7 @@ configure_bob()
     echo "PHP_TARGETS=\"${PHP_TARGET}\"" >> /etc/portage/make.conf
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
 
+    update_use 'sys-libs/ncurses' '+minimal'
     update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+mhash' \
                '+mysql' '+mysqli' '+pcntl' '+pdo' '+soap' '+sockets' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
     # flaggie issue with gd use flag, apparently there now is a conflicting license with the same name
