@@ -12,14 +12,14 @@ RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.co
     mkdir -p /etc/portage/profile && \
     if [[ ${BOB_DO_SYNC} == "true" ]]; then emerge --sync; else true; fi
 
-# DEF_BUILDER_* is active in configure_bob() hook, generally only differs when using crossdev
-ENV DEF_CHOST ${BOB_CHOST:-x86_64-pc-linux-gnu} \
-  DEF_CFLAGS ${BOB_CFLAGS:--mtune=generic -O2 -pipe} \
-  DEV_CXXFLAGS ${BOB_CXXFLAGS:-${DEF_CFLAGS}} \
-  DEF_BUILDER_CHOST ${BOB_BUILDER_CHOST:-${DEF_CHOST}} \
-  DEF_BUILDER_CFLAGS ${BOB_BUILDER_CFLAGS:-${DEF_CFLAGS}} \
-  DEF_BUILDER_CXXFLAGS ${BOB_BUILDER_CXXFLAGS:-${DEF_CXXFLAGS}} \
-  PKGDIR "/packages/${BOB_CHOST}"
+# DEF_BUILDER_* is only active in configure_bob() hook, generally only differs when using crossdev
+ENV DEF_CHOST="${BOB_CHOST:-x86_64-pc-linux-gnu}" \
+    DEF_CFLAGS="${BOB_CFLAGS:--mtune=generic -O2 -pipe}" \
+    DEF_CXXFLAGS="${BOB_CXXFLAGS:-${BOB_CFLAGS}}" \
+    DEF_BUILDER_CHOST="${BOB_BUILDER_CHOST:-${BOB_CHOST}}" \
+    DEF_BUILDER_CFLAGS="${BOB_BUILDER_CFLAGS:-${BOB_CFLAGS}}" \
+    DEF_BUILDER_CXXFLAGS="${BOB_BUILDER_CXXFLAGS:-${BOB_CXXFLAGS}}" \
+    PKGDIR="/packages/${BOB_CHOST}"
 
 COPY make.conf /etc/portage/make.conf
 
