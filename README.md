@@ -76,7 +76,7 @@ All reference images are available via docker hub. You may skip the build proces
     $ mkdir -p dock/mynamespace/images/
     $ cat <<END > dock/mynamespace/build.conf
 AUTHOR="My Name <my@mail.org>"
-DEF_BUILD_CONTAINER="gentoobb/bob"
+DEFAULT_BUILDER="gentoobb/bob"
 CONTAINER_ENGINE="docker"
 END
 ```
@@ -92,11 +92,14 @@ Let's setup a test image in our new namespace:
 ```bash
  $ cd gentoo-bb/
  $ mkdir -p dock/mynamespace/images/figlet
- $ cat <<END > dock/mynamespace/images/figlet/Buildconfig.sh
+ $ cat <<END > dock/mynamespace/images/figlet/build.conf
+IMAGE_PARENT="gentoobb/glibc"
+END
+ $ cat <<END > dock/mynamespace/images/figlet/build.sh
 PACKAGES="app-misc/figlet"
 END
  $ cat <<END > dock/mynamespace/images/figlet/Dockerfile.template
-FROM gentoobb/glibc
+FROM ${IMAGE_PARENT}
 ADD rootfs.tar /
 CMD ["figlet", "gentoo-bb"]
 END
@@ -115,8 +118,6 @@ will be much faster. Let's spin up the new image:
     $ docker run -it --rm mynamespace/figlet
 
  * All images must be located in `dock/<namespace>/images/`, directory name = image name
- * `Dockerfile.template` and `Buildconfig.sh` are the only required files
- * `build.sh` will pick up the image on the next run
 
 Some useful options for `build.sh` while working on an image:
 
