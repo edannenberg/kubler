@@ -98,7 +98,7 @@ END
  $ cat <<END > dock/mynamespace/images/figlet/build.sh
 PACKAGES="app-misc/figlet"
 END
- $ cat <<END > dock/mynamespace/images/figlet/Dockerfile.template
+ $ cat <<'END' > dock/mynamespace/images/figlet/Dockerfile.template
 FROM ${IMAGE_PARENT}
 ADD rootfs.tar /
 CMD ["figlet", "gentoo-bb"]
