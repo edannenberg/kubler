@@ -166,15 +166,15 @@ Each implementation is allowed to only implement parts of the build process, if 
 * `build_core()` builds a clean stage 3 image with portage snapshot and helper files from `./bob-core/`
 * `build_image()` mounts each `dock/<namespace>/images/<repo>` directory into a fresh build container as `/config`
 * executes `build-root.sh` inside build container
-* `build-root.sh` reads `Buildconfig.sh` from the mounted `/config` directory
-* if `configure_bob()` hook is defined in `Buildconfig.sh`, execute it
+* `build-root.sh` reads `build.sh` from the mounted `/config` directory
+* if `configure_bob()` hook is defined in `build.sh` (in `/config`), execute it
 * `package.installed` file is generated which is used by depending images as `package.provided`
-* if `configure_rootfs_build()` hook is defined in `Buildconfig.sh`, execute it
-* `PACKAGES` defined in `Buildconfig.sh` are installed at a custom empty root directory
-* if `finish_rootfs_build()` hook is defined in `Buildconfig.sh`, execute it
+* if `configure_rootfs_build()` hook is defined in `build.sh` (in `/config`), execute it
+* `PACKAGES` defined in `build.sh` (in `/config`) are installed at a custom empty root directory
+* if `finish_rootfs_build()` hook is defined in `build.sh` (in `/config`), execute it
 * resulting `rootfs.tar` is placed in `/config`, end of first build phase
 * used build container gets committed as a new builder image which will be used by other builds depending on this image, this preserves exact build state
-* `build.sh` then starts a normal docker build that uses `rootfs.tar` to create the final image
+* `build.sh` (in gentoobb root) then starts a normal docker build that uses `rootfs.tar` to create the final image
 
 Build container names generally start with `gentoobb/bob`, when a new build container state is committed the current image name gets appended.
 For example `gentoobb/bob-openssl` refers to the container used to build the `gentoobb/openssl` image.
