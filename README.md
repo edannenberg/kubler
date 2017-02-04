@@ -174,7 +174,7 @@ Each implementation is allowed to only implement parts of the build process, if 
 * if `finish_rootfs_build()` hook is defined in `build.sh` (in `/config`), execute it
 * resulting `rootfs.tar` is placed in `/config`, end of first build phase
 * used build container gets committed as a new builder image which will be used by other builds depending on this image, this preserves exact build state
-* `build.sh` (in gentoobb root) then starts a normal docker build that uses `rootfs.tar` to create the final image
+* `build.sh` (in gentoo-bb root) then starts a normal docker build that uses `rootfs.tar` to create the final image
 
 Build container names generally start with `gentoobb/bob`, when a new build container state is committed the current image name gets appended.
 For example `gentoobb/bob-openssl` refers to the container used to build the `gentoobb/openssl` image.
