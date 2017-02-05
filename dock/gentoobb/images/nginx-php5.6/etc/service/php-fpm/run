@@ -6,4 +6,4 @@ until ps -a | grep -q '[n]ginx: master'; do
 done
 
 exec 2>&1
-exec /usr/bin/php-fpm5.5 -y /etc/php/fpm-php5.5/php-fpm.conf -F
+exec /usr/bin/php-fpm5.6 -y /etc/php/fpm-php5.6/php-fpm.conf -F
