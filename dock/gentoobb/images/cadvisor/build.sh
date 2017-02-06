@@ -6,8 +6,6 @@ CADVISOR_VERSION="0.24.1"
 
 configure_bob()
 {
-    # cadvisor 0.23.x is not compatible with go 1.7, planned for 0.24
-    echo '>=dev-lang/go-1.7.0' > /etc/portage/package.mask/go
     emerge -v go mercurial
     export DISTRIBUTION_DIR=/go/src/github.com/google/cadvisor
     mkdir -p ${DISTRIBUTION_DIR}
