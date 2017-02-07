@@ -330,7 +330,9 @@ if [ -n "$PACKAGES" ]; then
     init_docs ${REPO/\images\//}
     generate_doc_package_installed "${PACKAGES}"
 
-    "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v sys-apps/baselayout
+    if [ -z "BOB_SKIP_BASELAYOUT" ]; then
+        "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v sys-apps/baselayout
+    fi
     # install packages (defined via build.sh)
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v $PACKAGES
 
@@ -367,7 +369,9 @@ generate_documentation_footer
 unset ROOT
 
 # /run symlink
-mkdir -p $EMERGE_ROOT/run $EMERGE_ROOT/var && ln -s /run $EMERGE_ROOT/var/run
+if [ -z "BOB_SKIP_BASELAYOUT" ]; then
+    mkdir -p $EMERGE_ROOT/{run,var} && ln -s /run $EMERGE_ROOT/var/run
+fi
 
 # clean up
 rm -rf $EMERGE_ROOT/var/lib/portage $EMERGE_ROOT/var/cache/edb $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
