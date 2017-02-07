@@ -367,7 +367,9 @@ generate_documentation_footer
 unset ROOT
 
 # /run symlink
-mkdir -p $EMERGE_ROOT/run $EMERGE_ROOT/var && ln -s /run $EMERGE_ROOT/var/run
+if [ -z "SKIP_VAR_RUN_SYMLINK" ]; then
+    mkdir -p $EMERGE_ROOT/run $EMERGE_ROOT/var && ln -s /run $EMERGE_ROOT/var/run
+fi
 
 # clean up
 rm -rf $EMERGE_ROOT/var/lib/portage $EMERGE_ROOT/var/cache/edb $EMERGE_ROOT/usr/share/gtk-doc/* $EMERGE_ROOT/var/db/pkg/* $EMERGE_ROOT/etc/ld.so.cache
