@@ -10,9 +10,12 @@ EMERGE_BIN="emerge"
 configure_bob() {
     # install flaggie, required for update_use() helper
     emerge app-portage/flaggie
-    mv /etc/portage/package.accept_keywords /etc/portage/foo
-    mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
-    mv /etc/portage/foo /etc/portage/package.accept_keywords/flaggie
+    # migrate from files to directories at /etc/portage/package.*
+    for i in /etc/portage/package.{accept_keywords,unmask,mask,use}; do
+        [[ -f ${i} ]] && { cat "${i}"; mv "${i}" "${i}".old; }
+        mkdir -p "${i}"
+        [[ -f ${i}.old ]] &&  mv "${i}".old ${i}/default
+    done
     touch /etc/portage/package.accept_keywords/flaggie
     # set locale of build container
     #echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
