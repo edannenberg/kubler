@@ -1,7 +1,8 @@
 FROM ${BOB_CURRENT_STAGE3_ID}
 MAINTAINER ${MAINTAINER}
 
-RUN echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
+RUN set -x && \
+    echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
     mkdir -p /etc/portage/repos.conf /usr/portage && \
     sed -e 's|^sync-uri =.*|sync-uri = ${BOB_SYNC_URI}|' \
         -e 's|^sync-type =.*|sync-type = ${BOB_SYNC_TYPE}|' \
