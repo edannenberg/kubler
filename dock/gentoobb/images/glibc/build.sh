@@ -41,6 +41,16 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
+    # fix lib/ symlink, gentoo-functions install creates the dir before glibc tries to create the symlink
+    mv ${EMERGE_ROOT}/lib ${EMERGE_ROOT}/lib.old
+    local lib_backup="${EMERGE_ROOT}/lib.backup.0000"
+    if [[ -e ${lib_backup} ]]; then
+        mv ${lib_backup} ${EMERGE_ROOT}/lib
+    else
+        ln -s -r ${EMERGE_ROOT}/lib64 ${EMERGE_ROOT}/lib
+    fi
+    mv ${EMERGE_ROOT}/lib.old/* ${EMERGE_ROOT}/lib/
+    rm -r ${EMERGE_ROOT}/lib.old/
     # purge glibc locales/charmaps
     for LOCALE in "${GLIBC_LOCALES[@]}"; do
         locale=($LOCALE)
