@@ -26,7 +26,9 @@ configure_bob() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
-    emerge dev-vcs/git app-portage/layman sys-devel/distcc
+    emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq app-portage/eix
+    # init eix portage db
+    eix-update
     # setup layman
     sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L

@@ -140,10 +140,14 @@ write_checkbox_line() {
 # 1: PACKAGES (i.e. "sys-apps/busybox dev-vcs/git")
 generate_package_installed() {
     local PACKAGES="${1}"
+    # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
+    local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
+    export EMERGE_DEFAULT_OPTS=""
     # generate installed package list
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
-    grep -Eow "\[.*\] (.*) to" | \
-    awk '{print $(NF-1)}' > ${PACKAGE_INSTALLED}
+        eix '-|*' --format '<markedversions:NAMEVERSION>' > ${PACKAGE_INSTALLED}
+    # enable binary package features again
+    export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
 
 # Append DOC_PACKAGE_INSTALLED from last build to DOC_PACKAGE_PROVIDED, overwrite DOC_PACKAGE_INSTALLED with header for current build
@@ -167,10 +171,15 @@ init_docs() {
 # 1: PACKAGES (i.e. "shell/bash dev-vcs/git")
 generate_doc_package_installed() {
     local PACKAGES="${1}"
+    # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
+    local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
+    export EMERGE_DEFAULT_OPTS=""
     # generate installed package list with use flags
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
         perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
+    # enable binary package features again
+    export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
 
 # Adds a package entry in $DOC_PACKAGE_INSTALLED to document non-Portage package installs.
@@ -218,9 +227,16 @@ unmask_package() {
 # 1: package atom (i.e. app-shells/bash)
 # n: more package atoms
 provide_package() {
+    # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
+    local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
+    export EMERGE_DEFAULT_OPTS=""
     for P in ${@}; do
-        emerge -p "${P}" | grep "${P}" | grep -Eow "\[.*\] (.*) to" | awk '{print $(NF-1)}' >> /etc/portage/profile/package.provided
+        "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p "${P}" | \
+            eix '-|*' --format '<markedversions:NAMEVERSION>' | \
+            grep "${P}" >> /etc/portage/profile/package.provided
     done
+    # enable binary package features again
+    export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
 
 # Mark package atom for reinstall.
