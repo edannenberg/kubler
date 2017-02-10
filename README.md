@@ -67,61 +67,94 @@ PR are always welcome. ;)
 * Check the directories in `dock/gentoobb/images/` for image specific documentation
 
 For testing container stacks see the [docker-compose](https://github.com/edannenberg/gentoo-bb/tree/master/docker-compose) section.
-All reference images are available via docker hub. You may skip the build process if you just want to play around with those before investing your precious cpu cycles. :p
+All reference images are available via docker hub. You may skip the build process if you just want to play around with
+those before investing your precious cpu cycles. :p
+
+The first run will take quite a bit of time, don't worry, once the build containers and binary package cache are seeded
+future runs will be much faster.
 
 ## Creating a new namespace
 
-```bash
-    $ cd gentoo-bb/
-    $ mkdir -p dock/mynamespace/images/
-    $ cat <<END > dock/mynamespace/build.conf
-AUTHOR="My Name <my@mail.org>"
-DEFAULT_BUILDER="gentoobb/bob"
-CONTAINER_ENGINE="docker"
-END
+Images are kept in a directory in `./dock/`, called `namespace`. You may have any number of namespaces. A helper is
+provided to take care of the boiler plate for you: 
+
+```
+ $ cd gentoo-bb/
+ $ ./build.sh add namespace somename
+ --> Who maintains the new namespace?
+ Name (John Doe): My Name
+ EMail (john@doe.net): my@mail.org
+ --> What type of images would you like to build?
+ Engine (docker):
+
+ --> Successfully added somename namespace at ./dock/somename
+
+ $ tree dock/somename/
+ dock/somename/
+ |-- .gitignore
+ |-- build.conf
+ .-- README.md
 ```
 
-You are now ready to work on your shiny new image stack. The `build.conf` above defines the `gentoobb/bob` image
-as `default build container`. You may set any build container from other namespaces or roll your own of course.
-For most tasks the `gentoobb/bob` image should do just fine though.
+You are now ready to work on your shiny new image stack.
 
 ## Adding Docker images
 
-Let's setup a test image in our new namespace:
+Let's create a test image in our new namespace. If you chose a more sensible namespace name above replace `somename`
+accordingly:
 
-```bash
- $ cd gentoo-bb/
- $ mkdir -p dock/mynamespace/images/figlet
- $ cat <<END > dock/mynamespace/images/figlet/build.conf
-IMAGE_PARENT="gentoobb/glibc"
-END
- $ cat <<END > dock/mynamespace/images/figlet/build.sh
-PACKAGES="app-misc/figlet"
-END
- $ cat <<'END' > dock/mynamespace/images/figlet/Dockerfile.template
-FROM ${IMAGE_PARENT}
-ADD rootfs.tar /
-CMD ["figlet", "gentoo-bb"]
-END
- $ ./build.sh build mynamespace
+```
+ $ ./build.sh add image somename/figlet
+ --> Do you want to extend an existing image? Full image id (i.e. gentoobb/busybox) or scratch
+ Parent Image (scratch): gentoobb/glibc
+
+ --> Successfully added somename/figlet image at ./dock/somename/images/figlet
 ```
 
-Pretty straight forward, pass a Gentoo `package atom` to be installed in the first build phase and setup a `Dockerfile` that
-assembles the final image. Again we use an image from another namespace as base for the final image. (gentoobb/glibc)
+We used `gentoobb/glibc` as parent image, or what you probably know as `FROM` in your `Dockerfiles`. The namespace now looks
+like this:
+ 
+```
+ $ tree dock/somename/
+ dock/somename/
+ |-- build.conf
+ |-- images
+ |   .-- figlet
+ |       |-- build.conf
+ |       |-- build.sh
+ |       |-- Dockerfile.template
+ |       .-- README.md
+ .-- README.md
+```
 
-See the 'how does it work' section below for more details on the build process.
+Edit `./dock/somename/images/figlet/build.sh`,for now lets just install [figlet](http://www.figlet.org/) by adding it
+to the `PACKAGES` variable:
 
-The first run will take quite a bit of time, don't worry, once the build containers and binary package cache are seeded future runs
-will be much faster. Let's spin up the new image:
+```
+PACKAGES="app-misc/figlet"
+```
 
-    $ docker images | grep /figlet
-    $ docker run -it --rm mynamespace/figlet
+When it's time to build this will instruct the build container in the *first build phase* to install the given package(s)
+from Gentoo's package tree at an empty directory. It's content is then exported to the host as `rootfs.tar` file.
+In the *second build phase* a normal Docker build is started and the `rootfs.tar` file is added to the final image.
 
- * All images must be located in `dock/<namespace>/images/`, directory name = image name
+See the 'how does it work' section below for more details on the build process. Also make sure to read the comments
+in `build.sh`. But let's build the darn thing already:
+
+```
+ $ ./build.sh build somename
+```
+
+Once that finishes we are ready to take the image for a test drive:
+
+```
+ $ docker images | grep /figlet
+ $ docker run -it --rm somename/figlet figlet gentoo-bb
+```
 
 Some useful options for `build.sh` while working on an image:
 
-Start an interactive build container, same as used to create the rootfs.tar:
+Start an interactive build container, same as used in the first phase to create the `rootfs.tar`:
 
     $ ./bin/bob-interactive.sh mynamespace/myimage
 
@@ -129,7 +162,7 @@ Force rebuild of myimage and all images it depends on:
 
     $ ./build.sh -f build mynamespace/myimage
 
-Same as above, but also rebuild all rootfs.tar files:
+Same as above, but also rebuild all `rootfs.tar` files:
 
     $ ./build.sh -F build mynamespace/myimage
 
@@ -137,17 +170,18 @@ Only rebuild myimage1 and myimage2, ignore images they depend on:
 
     $ ./build.sh -nF build mynamespace/{myimage1,myimage2}
 
-## Updating to a newer gentoo stage3 release
+## Updating build containers to a newer Gentoo stage3 release
 
-First check for a new release by running:
+First check for new releases by running:
 
     $ ./build.sh update
 
 If a new release was found simply rebuild the stack by running:
 
-    $ ./build.sh -F
+    $ ./build.sh clean
+    $ ./build.sh -C
 
-* Minor things might (read will) break, Oracle downloads, for example, may not work. You can always download them manually to `tmp/distfiles`.
+* Minor things might (read will) break, Oracle downloads, for example, may not work.
 
 ## How does it work?
 

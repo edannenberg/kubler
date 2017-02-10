@@ -242,9 +242,117 @@ update_stage3_date() {
     done
 }
 
+print_add_help()
+{
+    msg "Create a namespace or image from templates. Syntax: \n
+         ./build.sh add namespace <name>
+         ./build.sh add builder <namespace>/<builder_name>
+         ./build.sh add image <namespace>/<image_name>"
+}
+
 add_from_template()
 {
-    echo "NotImplementedException ;/"
+    local type="${1}"
+    local name="${2}"
+    if [ -z "$type" ] || [ -z "$name" ]; then
+        print_add_help && die
+    fi
+
+    tmpl_namespace=${name%%/*}
+    tmpl_image_name=${name##*/}
+
+    case $type in
+        namespace)
+                local ns_path="./dock/${name}"
+                [ -d "${ns_path}" ] && die "${ns_path} already exists, aborting!"
+
+                echo -e ''
+                msg '<enter> to accept default value\n'
+
+                msg 'Who maintains the new namespace?'
+                read -p 'Name (John Doe): ' tmpl_author
+                [ -z "${tmpl_author}" ] && tmpl_author='John Doe'
+
+                read -p 'EMail (john@doe.net): ' tmpl_author_email
+                [ -z "${tmpl_author_email}" ] && tmpl_author_email='john@doe.net'
+
+                msg 'What type of images would you like to build?'
+                read -p 'Engine (docker): ' tmpl_engine
+                [ -z "${tmpl_engine}" ] && tmpl_engine='docker'
+
+                tmpl_namespace="${name}"
+
+                [ ! -f ./inc/engine/${tmpl_engine}.sh ] && die "\nError, unknown engine: ${tmpl_engine}"
+
+                cp -r "./inc/template/${tmpl_engine}/namespace" "${ns_path}" || die
+
+                # replace placeholder vars in template files with actual values
+                local sed_args=()
+                for tmpl_var in ${!tmpl_*}; do
+                    sed_args+=('-e' "s|\${${tmpl_var}}|${!tmpl_var}|g")
+                done
+                for nsfile in ./dock/${name}/*; do
+                    replace_in_file "${nsfile}" sed_args[@]
+                done
+
+                echo -e ''
+                msg "Successfully added ${name} namespace at ./dock/${name}
+
+If you want to manage the new namespace with git you may want to run:
+
+git init ./dock/${name}
+
+To add new images run:
+
+./build.sh add image ${name}/foo
+"
+                ;;
+        image)
+                if [ -z "${tmpl_namespace}" ] || [ -z "${tmpl_image_name}" ]; then
+                    die "Error: ${name} should have format <namespace>/<image>"
+                fi
+
+                [ -f "./dock/${tmpl_namespace}/build.conf" ] && source "./dock/${tmpl_namespace}/build.conf" \
+                    || die "Error: could not read ./dock/${tmpl_namespace}/build.conf
+
+You can create a new namespace by running: ./build.sh add namespace ${tmpl_namespace}
+"
+
+                local image_base_path="./dock/${tmpl_namespace}/images"
+                local image_path="${image_base_path}/${tmpl_image_name}"
+
+                [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
+                [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
+
+                echo -e ''
+                msg '<enter> to accept default value\n'
+
+                msg 'Do you want to extend an existing image? Full image id (i.e. gentoobb/busybox) or scratch'
+                read -p 'Parent Image (scratch): ' tmpl_image_parent
+                [ -z "${tmpl_image_parent}" ] && tmpl_image_parent='scratch'
+
+                cp -r "./inc/template/${CONTAINER_ENGINE}/image" "${image_path}" || die
+
+                # replace placeholder vars in template files with actual values
+                local sed_args=()
+                for tmpl_var in ${!tmpl_*}; do
+                    sed_args+=('-e' "s|\${${tmpl_var}}|${!tmpl_var}|g")
+                done
+                for imgfile in ${image_path}/*; do
+                    replace_in_file "${imgfile}" sed_args[@]
+                done
+
+                echo -e ''
+                msg "Successfully added ${name} image at ${image_path}\n"
+                ;;
+        builder)
+                echo "not yet implemented, you may want to copy a builder in ./dock/gentoobb/builder/ in the meantime."
+                ;;
+        *)
+                msg "unknown type: ${type}, should be namespace,builder or image.."
+                print_add_help && die
+                ;;
+    esac
 }
 
 clean_project_artifacts()
@@ -302,7 +410,7 @@ shift
 REMAINING_ARGS="${@:-"*"}"
 
 case "${ACTION}" in
-    add) add_from_template "$REMAINING_ARGS";;
+    add) add_from_template $REMAINING_ARGS;;
     clean) clean_project_artifacts;;
     build) build "$REMAINING_ARGS";;
     update) update_stage3_date;;

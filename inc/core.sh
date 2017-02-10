@@ -111,6 +111,18 @@ string_has_word() {
     fi
 }
 
+# Run sed over given $file with given $sed_args array
+#
+# Arguments:
+# 1: full file path as string
+# 2: sed_args as array
+replace_in_file()
+{
+    local file_path="${1}"
+    declare -a sed_arg=("${!2}")
+    sed "${sed_arg[@]}" "${file_path}" > "${file_path}.tmp" && mv "${file_path}.tmp" "${file_path}" || die
+}
+
 # Download and verify stage3 tar ball
 download_stage3() {
     [ -d $DL_PATH ] || mkdir -p $DL_PATH
