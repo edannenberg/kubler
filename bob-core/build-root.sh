@@ -390,23 +390,26 @@ if [ -z "$BOB_SKIP_BASELAYOUT" ]; then
 fi
 
 # clean up
-find "${EMERGE_ROOT}"/lib64 "${EMERGE_ROOT}"/usr/lib64 \
-    -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+for lib_dir in "${EMERGE_ROOT}"/{lib64,usr/lib64}; do
+    [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+done
+
 rm -rf \
     "${EMERGE_ROOT}"/etc/ld.so.cache \
     "${EMERGE_ROOT}"/usr/bin/*-config \
     "${EMERGE_ROOT}"/usr/lib64/cmake/ \
     "${EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
-    "${EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/
+    "${EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
     "${EMERGE_ROOT}"/usr/share/aclocal/ \
     "${EMERGE_ROOT}"/usr/share/gettext/ \
-    "${EMERGE_ROOT}"/usr/share/gir-[0-9]*/
+    "${EMERGE_ROOT}"/usr/share/gir-[0-9]*/ \
     "${EMERGE_ROOT}"/usr/share/gtk-doc/* \
     "${EMERGE_ROOT}"/usr/share/qt*/mkspecs/ \
     "${EMERGE_ROOT}"/usr/share/vala/vapi/ \
     "${EMERGE_ROOT}"/var/cache/edb \
     "${EMERGE_ROOT}"/var/db/pkg/* \
     "${EMERGE_ROOT}"/var/lib/portage
+
 if [ -z "$KEEP_HEADERS" ]; then
     rm -rf $EMERGE_ROOT/usr/include/*
 fi
