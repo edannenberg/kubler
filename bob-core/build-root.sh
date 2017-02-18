@@ -390,17 +390,19 @@ if [ -z "$BOB_SKIP_BASELAYOUT" ]; then
 fi
 
 # clean up
+set +e
 find "${EMERGE_ROOT}"/lib64 "${EMERGE_ROOT}"/usr/lib64 \
     -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+set -e
 rm -rf \
     "${EMERGE_ROOT}"/etc/ld.so.cache \
     "${EMERGE_ROOT}"/usr/bin/*-config \
     "${EMERGE_ROOT}"/usr/lib64/cmake/ \
     "${EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
-    "${EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/
+    "${EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
     "${EMERGE_ROOT}"/usr/share/aclocal/ \
     "${EMERGE_ROOT}"/usr/share/gettext/ \
-    "${EMERGE_ROOT}"/usr/share/gir-[0-9]*/
+    "${EMERGE_ROOT}"/usr/share/gir-[0-9]*/ \
     "${EMERGE_ROOT}"/usr/share/gtk-doc/* \
     "${EMERGE_ROOT}"/usr/share/qt*/mkspecs/ \
     "${EMERGE_ROOT}"/usr/share/vala/vapi/ \
