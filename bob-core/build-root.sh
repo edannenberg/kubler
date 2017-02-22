@@ -34,6 +34,22 @@ copy_gcc_libs() {
     done
 }
 
+# Sync overlay with emaint
+# `sync_overlay repo_name url sync-type`
+# Example usage: sync_overlay musl https://anongit.gentoo.org/git/proj/musl.git git
+sync_overlay() {
+    repop="/var/lib/repos"
+    [ ! -d "$repop" ] && mkdir -p "$repop"
+    tee /etc/portage/repos.conf/"$1".conf >/dev/null <<END
+[$1]
+priority = 50
+location = $repop/$1
+sync-type = ${3:-git}
+sync-uri = $2
+END
+    emaint sync -r "$1" 
+}
+
 extract_build_dependencies() {
     RESOURCE_SUFFIX="${1}"
     RESOURCE_VAR="${RESOURCE_SUFFIX}_FROM"
