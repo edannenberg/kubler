@@ -396,9 +396,11 @@ if [ -z "$BOB_SKIP_BASELAYOUT" ]; then
 fi
 
 # clean up
-for lib_dir in "${EMERGE_ROOT}"/{lib64,usr/lib64}; do
-    [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
-done
+if [ -z "$BOB_SKIP_LIB_CLEANUP" ]; then
+    for lib_dir in "${EMERGE_ROOT}"/{lib64,usr/lib64}; do
+        [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+    done
+fi
 
 rm -rf \
     "${EMERGE_ROOT}"/etc/ld.so.cache \
