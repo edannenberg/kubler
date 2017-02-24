@@ -2,7 +2,7 @@
 # build config
 #
 PACKAGES=""
-INFLUXDB_VERSION="1.2.0"
+INFLUXDB_VERSION="1.2.1-rc4"
 
 configure_bob()
 {
@@ -12,11 +12,11 @@ configure_bob()
     export GOPATH=/go
     git clone https://github.com/influxdb/influxdb.git ${DISTRIBUTION_DIR}
     cd ${DISTRIBUTION_DIR}
-    git checkout tags/v${INFLUXDB_VERSION}
+    #git checkout tags/v${INFLUXDB_VERSION}
     echo "building influxdb.."
     # occasionally github clone rate limits fail the build, lets retry up to 5 times before giving up
     for i in {1..5}; 
-        do ./build.py && break || (echo "retrying build in 5s.." && sleep 5); done
+        do ./build.py && break || { echo "retrying build in 5s.."; sleep 5; } ;done
     echo "done."
 
     mkdir -p ${EMERGE_ROOT}/{bin,etc,var/opt/influxdb}
