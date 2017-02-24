@@ -144,8 +144,11 @@ generate_package_installed() {
     local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list
+    set +e
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
         eix '-|*' --format '<markedversions:NAMEVERSION>' > ${PACKAGE_INSTALLED}
+    [[ $? -gt 1 ]] && echo "Error generating package.installed" && exit $?
+    set -e
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
@@ -175,9 +178,12 @@ generate_doc_package_installed() {
     local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list with use flags
+    set +e
     "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -p ${PACKAGES[@]} | \
         perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
         sed /^virtual/d | sort -u >> "${DOC_PACKAGE_INSTALLED}"
+    [[ $? -gt 1 ]] && echo "Error generating doc.package.installed" && exit $?
+    set -e
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
