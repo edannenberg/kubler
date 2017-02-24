@@ -1,6 +1,0 @@
-# start the build container in privileged mode, required for glibc. use ## to comment out
-#BUILD_PRIVILEGED
-FROM ${NAMESPACE}/bob
-MAINTAINER ${MAINTAINER}
-
-CMD ["/bin/bash"]

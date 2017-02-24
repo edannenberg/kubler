@@ -1,0 +1,22 @@
+AUTHOR="${_tmpl_author} <${_tmpl_author_email}>"
+# Global tag (a.k.a version) for all images
+IMAGE_TAG="${IMAGE_TAG:-${_tmpl_image_tag}}"
+
+# Download location for stage3 and Portage files, use whitespace to set multiple servers
+# You may visit https://www.gentoo.org/downloads/mirrors/ and pick a http or ftp url near your physical location
+#MIRROR="${MIRROR:-http://distfiles.gentoo.org/}"
+
+# Portage snapshot date that is used to bootstrap the portage container
+#PORTAGE_DATE="${PORTAGE_DATE:-latest}"
+
+# You can also define these per namespace conf
+#BUILD_ENGINE="${BUILD_ENGINE:-${_tmpl_engine}}"
+#DEFAULT_BUILDER="${DEFAULT_BUILDER:-kubler/bob}"
+
+# Variables starting with BOB_ are exported as ENV to all build containers
+
+# Timezone for build containers
+#BOB_TIMEZONE="${BOB_TIMEZONE:-UTC}"
+# Options passed on to the make jobs launched from Portage
+# -jX = number of cpu cores used for compiling, rule of thumb: amount_of_cores+1, i.e. -j9
+#BOB_MAKEOPTS="${BOB_MAKEOPTS:--j9}"

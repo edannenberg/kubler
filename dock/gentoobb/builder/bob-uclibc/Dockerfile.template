@@ -1,5 +1,0 @@
-#BUILD_FROM gentoobb/bob
-FROM ${NAMESPACE}/bob-uclibc
-MAINTAINER ${MAINTAINER}
-
-CMD ["/bin/bash"]
