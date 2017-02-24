@@ -2,7 +2,6 @@
 # build config
 #
 PACKAGES=""
-EMERGE_BIN="emerge"
 
 configure_bob() {
     # install flaggie, required for update_use() helper
@@ -20,17 +19,18 @@ configure_bob() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
-    emerge sys-devel/crossdev dev-vcs/git app-portage/layman sys-devel/distcc
+    emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq app-portage/eix
+    install_git_postsync_hooks
+    # init eix portage db
+    eix-update
+    # auto-run after emerge sync
+    ln -s /usr/bin/eix /etc/portage/repo.postsync.d/eix-update
     # setup layman
     sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L
-    # install acbuild
-    emerge dev-lang/go app-crypt/gnupg
-    git clone https://github.com/containers/build
-    cd build/ && ./build
-    cp ./bin/acbuild* /usr/local/bin/
-    cd ..
-    rm -r build/
+    # install aci/oci requirements
+    #emerge dev-lang/go app-crypt/gnupg
+    #install_oci_deps
 }
 
 #

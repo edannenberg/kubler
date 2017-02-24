@@ -9,7 +9,7 @@ DC_PROJECT_NAME="${DC_PROJECT_NAME:-proxy}"
 
 # source generic wrapper script and defaults from run.conf
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "${SCRIPT_DIR}/../inc/dc-wrapper.sh" || exit 1
+source "${SCRIPT_DIR}/../lib/dc-wrapper.sh" || exit 1
 
 # docker-compose file location
 DC_FILE="${DC_DIR}/nginx_proxy.yml"

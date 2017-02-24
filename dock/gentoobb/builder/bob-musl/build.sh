@@ -2,19 +2,19 @@
 # build config, sourced by build-root.sh inside build container
 #
 PACKAGES=""
-EMERGE_BIN="emerge"
 
 #
 # this hook can be used to configure the build container itself, install packages, etc
 #
 configure_bob() {
+    fix_portage_profile_symlink
     # install flaggie, required for update_use() helper
     emerge app-portage/flaggie
     # migrate from files to directories at /etc/portage/package.*
     for i in /etc/portage/package.{accept_keywords,unmask,mask,use}; do
         [[ -f ${i} ]] && { cat "${i}"; mv "${i}" "${i}".old; }
         mkdir -p "${i}"
-        [[ -f ${i}.old ]] &&  mv "${i}".old ${i}/default
+        [[ -f ${i}.old ]] &&  mv "${i}".old "${i}"/default
     done
     touch /etc/portage/package.accept_keywords/flaggie
     # set locale of build container
@@ -30,19 +30,18 @@ configure_bob() {
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
     emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq app-portage/eix
+    install_git_postsync_hooks
     # init eix portage db
     eix-update
+    # auto-run after emerge sync
+    ln -s /usr/bin/eix /etc/portage/repo.postsync.d/eix-update
     # setup layman
     sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L
     layman -a musl
-    # install acbuild
+    # install aci/oci requirements
     #emerge dev-lang/go app-crypt/gnupg
-    #git clone https://github.com/containers/build
-    #cd build/ && ./build
-    #cp ./bin/acbuild* /usr/local/bin/
-    #cd ..
-    #rm -r build/
+    #install_oci_deps
 }
 
 #

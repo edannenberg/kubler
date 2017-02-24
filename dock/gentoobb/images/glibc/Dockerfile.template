@@ -1,7 +1,8 @@
 FROM ${IMAGE_PARENT}
-MAINTAINER ${MAINTAINER}
+LABEL maintainer ${MAINTAINER}
 
 ENV LANG en_US.utf8
 
 ADD rootfs.tar /
+
 RUN ldconfig

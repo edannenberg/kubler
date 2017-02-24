@@ -1,0 +1,10 @@
+api:
+  serverName:               # if not provided, use dns of http requests
+  port: 80
+  https: false
+  #username:                # disable basic auth security if not provided
+  #password:
+STORAGE:
+  rootPath: /oci-registry   # where to store acis
+  unsigned: true            # support unsigned acis
+  allowOverride: true       # allow overriding aci that already exists in store

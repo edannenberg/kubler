@@ -1,4 +1,0 @@
-FROM ${NAMESPACE}/${tmpl_image_name}
-MAINTAINER ${MAINTAINER}
-
-CMD ["/bin/bash"]
