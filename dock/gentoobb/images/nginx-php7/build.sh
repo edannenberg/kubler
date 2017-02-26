@@ -14,6 +14,7 @@ configure_bob()
 {
     echo "PHP_TARGETS=\"${PHP_TARGET}\"" >> /etc/portage/make.conf
     echo 'PHP_INI_VERSION="production"' >> /etc/portage/make.conf
+    echo "-php_targets_${PHP_TARGET}" >> /etc/portage/profile/use.mask
 
     update_keywords 'dev-lang/php' '+~amd64'
     update_use 'sys-libs/ncurses' '+minimal'
@@ -35,9 +36,7 @@ configure_rootfs_build()
 {
     update_keywords 'dev-php/xdebug' '+~amd64'
     update_keywords 'dev-php/xdebug-client' '+~amd64'
-    update_keywords 'dev-php/pecl-apcu' '+~amd64'
-    update_keywords 'dev-php/pecl-apcu_bc' '+~amd64'
-    update_keywords 'dev-php/pecl-redis' '+~amd64'
+    #update_keywords 'dev-php/pecl-redis' '+~amd64'
 
     update_use 'dev-php/pecl-apcu' '+mmap'
 
