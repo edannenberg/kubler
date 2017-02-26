@@ -258,7 +258,7 @@ function run_image() {
         docker_mounts+=('-v' "${dmnt}")
     done
     # general docker args
-    docker_args=("-it" "--hostname" "${container_host_name}")
+    docker_args=("-it" "--hostname" "${container_host_name//\//-}")
     [[ "${auto_rm}" == "true" ]] && docker_args+=("--rm")
     [[ ! -z "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
     [[ "${BUILD_PRIVILEGED}" == "true" ]] && docker_args+=("--privileged")
