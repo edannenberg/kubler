@@ -1,7 +1,7 @@
 #
 # build config
 #
-PACKAGES="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig sys-apps/coreutils"
+PACKAGES="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig sys-apps/coreutils dev-ruby/pkg-config"
 KEEP_HEADERS=true
 
 #
@@ -10,6 +10,9 @@ KEEP_HEADERS=true
 configure_rootfs_build()
 {
     echo 'RUBY_TARGETS="ruby24"' >> /etc/portage/make.conf
+    # pkg-config needs unmasked ruby24 target
+    mkdir ${EMERGE_ROOT}/etc
+    echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     #echo '>=dev-lang/ruby-2.4.0' >> /etc/portage/package.mask/ruby
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=app-eselect/eselect-ruby-20161226' '+~amd64'
