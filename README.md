@@ -61,9 +61,11 @@ PR are always welcome. ;)
 
     $ git clone https://github.com/edannenberg/gentoo-bb.git
     $ cd gentoo-bb
-    $ ./build.sh
+    $ ./build.sh build gentoobb/glibc
 
-* If you don't have GPG available use `-s` to skip verification of downloaded files
+This will build a busybox and glibc image. To build all images you may run `./build.sh`. 
+
+* If you don't have GPG available use `-s` to skip verification of downloaded files (SHA512 is still checked)
 * Check the directories in `dock/gentoobb/images/` for image specific documentation
 
 For testing container stacks see the [docker-compose](https://github.com/edannenberg/gentoo-bb/tree/master/docker-compose) section.
@@ -127,7 +129,7 @@ like this:
  .-- README.md
 ```
 
-Edit `./dock/somename/images/figlet/build.sh`,for now lets just install [figlet](http://www.figlet.org/) by adding it
+Edit the new image's build script located at `./dock/somename/images/figlet/build.sh`. For now lets just install [figlet](http://www.figlet.org/) by adding it
 to the `PACKAGES` variable:
 
 ```
