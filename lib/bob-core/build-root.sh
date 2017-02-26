@@ -489,7 +489,9 @@ rm -rf \
     "${_EMERGE_ROOT}"/usr/share/vala/vapi/ \
     "${_EMERGE_ROOT}"/var/cache/edb \
     "${_EMERGE_ROOT}"/var/db/pkg/* \
-    "${_EMERGE_ROOT}"/var/lib/portage
+    "${_EMERGE_ROOT}"/var/lib/portage \
+    "${_EMERGE_ROOT}"/etc/portage \
+    "${_EMERGE_ROOT}"/var/lib/gentoo
 
 if [[ -z "${_keep_headers}" ]]; then
     rm -rf "${_EMERGE_ROOT}"/usr/include/*
