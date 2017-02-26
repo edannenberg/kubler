@@ -58,7 +58,17 @@ function install_git_postsync_hooks() {
     chmod +x /etc/portage/repo.postsync.d/sync_*
     rm -r ./gitsync
     # not required when using gentoo-mirror/gentoo.git
-    rm /etc/portage/repo.postsync.d/sync_gentoo_cache
+    chmod -x /etc/portage/repo.postsync.d/sync_gentoo_cache
+}
+
+# Setup eix  and init db
+function configure_eix() {
+    # init eix portage db
+    eix-update
+    # configure post-sync
+    cp /etc/portage/repo.postsync.d/example /etc/portage/repo.postsync.d/egencache
+    chmod +x /etc/portage/repo.postsync.d/egencache
+    chown -R portage:portage /var/cache/eix
 }
 
 # Extract saved resources, like headers, from a parent image.
@@ -181,8 +191,11 @@ function generate_package_installed() {
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list
+    set +e
     "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p "${packages[@]}" | \
         eix '-|*' --format '<markedversions:NAMEVERSION>' > "${_PACKAGE_INSTALLED}"
+    [[ $? -gt 1 ]] && echo "Error generating package.installed" && exit $?
+    set -e
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
@@ -456,9 +469,11 @@ if [[ -z "${BOB_SKIP_BASELAYOUT}" ]]; then
 fi
 
 # clean up
-for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
-    [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
-done
+if [ -z "${BOB_SKIP_LIB_CLEANUP}" ]; then
+    for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
+        [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+    done
+fi
 
 rm -rf \
     "${_EMERGE_ROOT}"/etc/ld.so.cache \

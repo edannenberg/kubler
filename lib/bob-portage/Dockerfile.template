@@ -10,4 +10,4 @@ RUN set -x && \
     mkdir -p /var/sync/portage/metadata && \
     rm /${BOB_CURRENT_PORTAGE_FILE}
 
-VOLUME /var/sync
+VOLUME /var/sync /var/lib/layman /var/cache/eix

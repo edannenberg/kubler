@@ -21,7 +21,7 @@ function main() {
     curl -X POST -H "Content-Type: application/json" -d '{"success":true}' "${registry_host}/complete/${upload_id}"
 }
 
-main "@"
+main "$@"
 #acbuild begin
 #acbuild set-name localhost/gentoobb/busybox
 #acbuild dep add quay.io/coreos/alpine-sh

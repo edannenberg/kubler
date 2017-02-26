@@ -8,8 +8,9 @@ PACKAGES=""
 #
 configure_bob() {
     fix_portage_profile_symlink
-    # install flaggie, required for update_use() helper
-    emerge app-portage/flaggie
+    # install flaggie and eix, required by helper functions
+    emerge app-portage/flaggie app-portage/eix
+    configure_eix
     # migrate from files to directories at /etc/portage/package.*
     for i in /etc/portage/package.{accept_keywords,unmask,mask,use}; do
         [[ -f ${i} ]] && { cat "${i}"; mv "${i}" "${i}".old; }
@@ -29,16 +30,12 @@ configure_bob() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
-    emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq app-portage/eix
+    emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq
     install_git_postsync_hooks
-    # init eix portage db
-    eix-update
-    # auto-run after emerge sync
-    ln -s /usr/bin/eix /etc/portage/repo.postsync.d/eix-update
     # setup layman
     sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg # no pesky prompts please
     layman -L
-    layman -a musl
+    layman -l | grep -q musl || layman -a musl
     # install aci/oci requirements
     #emerge dev-lang/go app-crypt/gnupg
     #install_oci_deps

@@ -52,7 +52,7 @@ function update_portage() {
     cd "${_script_dir}/${_NAMESPACE_PATH}"
     expand_image_id "${builder_id}" "${_BUILDER_PATH}"
     source_image_conf "${__expand_image_id}"
-    image_exists "${builder_id}" || die "Error, couldn't find builder image: ${builder_id}"
+    image_exists "${builder_id}" || { msg "Error, couldn't find builder: ${builder_id}, skipping"; return 0; }
     # pass variables starting with BOB_ to build container as ENV
     for bob_var in ${!BOB_*}; do
         _container_env+=("${bob_var}=${!bob_var}")
