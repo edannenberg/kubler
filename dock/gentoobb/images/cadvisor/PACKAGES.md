@@ -1,7 +1,7 @@
-### gentoobb/cadvisor:20170127
+### gentoobb/cadvisor:20170226
 
-Built: Fri Jan 27 01:03:11 CET 2017
-Image Size: 36.3 MB
+Built: Sun Feb 26 21:28:57 CET 2017
+Image Size: 31.7 MB
 #### Installed
 Package | USE Flags
 --------|----------

@@ -1,20 +1,20 @@
-### gentoobb/jdk-icedtea:20170127
+### gentoobb/jdk-icedtea:20170226
 
-Built: Fri Jan 27 01:25:30 CET 2017
-Image Size: 289 MB
+Built: Sun Feb 26 21:43:07 CET 2017
+Image Size: 281 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
-app-eselect/eselect-java-0.2.0 | ``
+app-eselect/eselect-java-0.3.0 | ``
 dev-java/icedtea-bin-7.2.6.8 | `-alsa -cjk -cups -doc -examples -gtk -headless-awt (-multilib) -nsplugin -nss -pulseaudio (-selinux) -source -webstart`
 dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/glib-2.48.2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/gobject-introspection-1.48.0 | `-cairo -doctool {-test}`
 dev-libs/gobject-introspection-common-1.48.0 | ``
-dev-libs/libbsd-0.8.2 | `-static-libs`
+dev-libs/libbsd-0.8.3 | `-static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpcre-8.39 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
@@ -26,7 +26,7 @@ media-fonts/dejavu-2.35 | `-`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
 media-libs/freetype-2.6.3-r1 | `adobe-cff bindist bzip2 -`
 media-libs/giflib-5.1.4 | `-doc -static-libs`
-media-libs/lcms-2.6-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
+media-libs/lcms-2.8-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
@@ -69,7 +69,7 @@ app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.53.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
@@ -80,7 +80,7 @@ sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

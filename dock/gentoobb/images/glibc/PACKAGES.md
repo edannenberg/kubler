@@ -1,7 +1,7 @@
-### gentoobb/glibc:20170127
+### gentoobb/glibc:20170226
 
-Built: Fri Jan 27 00:58:38 CET 2017
-Image Size: 10.7 MB
+Built: Sun Feb 26 21:24:55 CET 2017
+Image Size: 10.3 MB
 #### Installed
 Package | USE Flags
 --------|----------

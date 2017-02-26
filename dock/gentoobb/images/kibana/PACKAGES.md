@@ -1,6 +1,6 @@
-### gentoobb/kibana:20170127
+### gentoobb/kibana:20170226
 
-Built: Fri Jan 27 01:29:07 CET 2017
+Built: Sun Feb 26 21:45:11 CET 2017
 Image Size: 160 MB
 #### Installed
 Package | USE Flags

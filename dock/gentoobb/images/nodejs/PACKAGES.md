@@ -1,20 +1,20 @@
-### gentoobb/nodejs:20170127
+### gentoobb/nodejs:20170226
 
-Built: Fri Jan 27 02:52:42 CET 2017
-Image Size: 40.5 MB
+Built: Sun Feb 26 22:11:21 CET 2017
+Image Size: 47.7 MB
 #### Installed
 Package | USE Flags
 --------|----------
-dev-libs/libuv-1.8.0 | `-static-libs`
+dev-libs/libuv-1.10.2 | `-static-libs`
 net-libs/http-parser-2.6.2 | `-static-libs`
-*manual_install*: net-libs/nodejs-4.6.1 | 
+net-libs/nodejs-6.9.4 | `npm snapshot ssl -debug -doc -icu {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM gentoobb/s6** |

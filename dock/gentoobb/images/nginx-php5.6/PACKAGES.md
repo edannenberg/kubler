@@ -1,17 +1,17 @@
-### gentoobb/nginx-php5.6:20170127
+### gentoobb/nginx-php5.6:20170226
 
-Built: Fri Jan 27 02:31:53 CET 2017
-Image Size: 112 MB
+Built: Sun Feb 26 22:01:49 CET 2017
+Image Size: 110 MB
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-5.6.29 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-lang/php-5.6.30 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
-dev-libs/gmp-6.0.0a | `cxx -doc -pgo -static-libs`
-dev-libs/libbsd-0.8.2 | `-static-libs`
+dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
+dev-libs/libbsd-0.8.3 | `-static-libs`
 dev-libs/libgcrypt-1.7.3 | `-doc -static-libs`
 dev-libs/libgpg-error-1.24 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
@@ -19,28 +19,29 @@ dev-libs/libmcrypt-2.5.8-r3 | ``
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libtasn1-4.9-r1 | `-doc -static-libs`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
-dev-libs/libxslt-1.1.29 | `crypt -debug -examples -python -static-libs`
+dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
 dev-libs/nettle-3.2-r1 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
-dev-php/pecl-apcu-4.0.7-r1 | `lock`
+dev-php/pecl-apcu-4.0.11 | `lock`
+dev-php/pecl-apcu-5.1.8 | `lock`
 dev-php/pecl-imagick-3.4.1 | `-examples {-test}`
 dev-php/pecl-memcache-3.0.8-r1 | `session`
 dev-php/pecl-redis-2.2.7-r1 | `-igbinary`
 dev-php/xdebug-2.4.1 | ` `
 dev-php/xdebug-client-2.4.1 | `-libedit`
 mail-mta/nullmailer-1.13-r5 | `ssl`
-media-gfx/imagemagick-6.9.6.2 | `bzip2 cxx zlib -`
+media-gfx/imagemagick-6.9.7.4 | `bzip2 cxx zlib -`
 media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
 net-dns/libidn-1.33 | `nls -doc -emacs -java -mono -static-libs`
 net-libs/gnutls-3.3.26 | `crywrap cxx nls openssl zlib -dane -doc -examples -guile -pkcs11 -static-libs {-test}`
-net-misc/curl-7.52.1-r1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.53.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.29 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-apps/shadow-4.2.1-r2 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
+sys-apps/shadow-4.4-r2 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-devel/gettext-0.19.7 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs {-test}`
@@ -68,11 +69,11 @@ Package | USE Flags
 **FROM gentoobb/nginx** |
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.39 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.11.8 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
+www-servers/nginx-1.11.10 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
 **FROM gentoobb/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2j | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM gentoobb/s6** |
