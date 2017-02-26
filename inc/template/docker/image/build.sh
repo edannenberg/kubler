@@ -6,9 +6,6 @@
 # if you are not sure about package names you may want to run:
 # ./bin/bob_interactive ${tmpl_namespace}/$tmpl_image_name} and then emerge -s <search-string>
 PACKAGES=""
-# if PACKAGES is not empty a minimal base layout is created at ${EMERGE_ROOT}, empty directories for the most part.
-# skipping the base layout my cause errors with some packages, enable at your own risk
-#BOB_SKIP_BASELAYOUT=true
 
 # define custom variables to your liking
 #${tmpl_image_name}_version=1.0

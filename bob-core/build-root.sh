@@ -352,7 +352,7 @@ if [ -n "$PACKAGES" ]; then
     init_docs ${REPO/\images\//}
     generate_doc_package_installed "${PACKAGES}"
 
-    if [ -z "$BOB_SKIP_BASELAYOUT" ]; then
+    if [ ! -z "$BOB_INSTALL_BASELAYOUT" ]; then
         "${EMERGE_BIN}" ${EMERGE_OPT} --binpkg-respect-use=y -v sys-apps/baselayout
     fi
     # install packages (defined via build.sh)
@@ -376,6 +376,7 @@ if [ -n "$PACKAGES" ]; then
     done
 
     # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
+    mkdir -p $EMERGE_ROOT/etc
     cp -f /etc/{passwd,group} $EMERGE_ROOT/etc
     # merge with ld.so.conf from builder
     cat /etc/ld.so.conf >> $EMERGE_ROOT/etc/ld.so.conf
@@ -391,7 +392,7 @@ generate_documentation_footer
 unset ROOT
 
 # /run symlink
-if [ -z "$BOB_SKIP_BASELAYOUT" ]; then
+if [ ! -z "$BOB_INSTALL_BASELAYOUT" ]; then
     mkdir -p $EMERGE_ROOT/{run,var} && ln -s /run $EMERGE_ROOT/var/run
 fi
 
