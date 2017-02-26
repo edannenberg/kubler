@@ -1,14 +1,12 @@
 #
 # build config
 #
-PACKAGES="net-libs/http-parser dev-libs/libuv dev-libs/openssl"
+PACKAGES="net-libs/http-parser dev-libs/libuv net-libs/nodejs"
+EMERGE_OPT="--nodeps"
 
 configure_bob()
 {
-    # nodejs ebuild pulls in python for node-gyp
-    # we only want the runtime deps for node in this image
-    NODEJS_VERSION=$(get_package_version 'net-libs/nodejs')
-    emerge net-libs/nodejs
+    :
 }
 
 #
@@ -25,6 +23,4 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     copy_gcc_libs
-    tar xjvf "/packages/x86_64-pc-linux-gnu/net-libs/nodejs-${NODEJS_VERSION}.tbz2" -C "${EMERGE_ROOT}"
-    log_as_installed "manual_install" "net-libs/nodejs-${NODEJS_VERSION}"
 }
