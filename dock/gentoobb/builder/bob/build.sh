@@ -8,8 +8,8 @@ _packages=""
 #
 configure_bob() {
     fix_portage_profile_symlink
-    # install flaggie and eix, required by helper functions
-    emerge app-portage/flaggie app-portage/eix
+    # install basics used by helper functions
+    emerge app-portage/flaggie app-portage/eix app-portage/gentoolkit
     configure_eix
     mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
     touch /etc/portage/package.accept_keywords/flaggie
