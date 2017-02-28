@@ -1,12 +1,13 @@
 #
 # build config
 #
-PACKAGES="net-libs/http-parser dev-libs/libuv net-libs/nodejs"
+PACKAGES="net-libs/http-parser dev-libs/libuv dev-libs/icu net-libs/nodejs"
 EMERGE_OPT="--nodeps"
 
 configure_bob()
 {
-    :
+    # nodejs expects those on the host for compilation
+    emerge net-libs/http-parser dev-libs/libuv dev-libs/icu
 }
 
 #
@@ -14,7 +15,7 @@ configure_bob()
 #
 configure_rootfs_build()
 {
-    :
+    update_use net-libs/nodejs +icu
 }
 
 #
