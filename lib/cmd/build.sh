@@ -57,7 +57,7 @@ function check_image_dependencies()
         source_image_conf "${__expand_image_id}"
 
         # collect required engines
-        ! string_has_word "${_required_engines}" "${CONTAINER_ENGINE}" && _required_engines+=" ${CONTAINER_ENGINE}"
+        ! string_has_word "${_required_engines}" "${BUILD_ENGINE}" && _required_engines+=" ${BUILD_ENGINE}"
 
         # collect required build containers
         if [[ ! -z "${BUILDER}" ]];then
@@ -138,7 +138,7 @@ function main()
         _container_mount_portage="true"
         _container_cmd=("/bin/bash")
 
-        msg "using: ${CONTAINER_ENGINE} / builder: ${builder_id}"
+        msg "using: ${BUILD_ENGINE} / builder: ${builder_id}"
         echo -e "\nrunning interactive build container with ${__expand_image_id} mounted as /config\nartifacts from previous builds: /backup-rootfs\n"
         echo -e "to start the build: $ build-root ${_arg_target_id}"
         echo -e "*** if you plan to run emerge manually, source /etc/profile first ***\n"

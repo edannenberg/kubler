@@ -109,15 +109,11 @@ function source_namespace_conf() {
     [[ ${image_id} != *"/"* ]] && return 0
     # ..then read namespace build.conf if passed image has a namespace
     current_ns=${image_id%%/*}
-    NAMESPACE=${current_ns}
     file_exists_or_die "${current_ns}/build.conf" && source "${current_ns}/build.conf"
-    # prevent setting namespace and image tag via namespace build.conf
-    NAMESPACE=${current_ns}
-    IMAGE_TAG=${_image_tag_root}
-    if [[ "${_last_sourced_engine}" != "${CONTAINER_ENGINE}" ]]; then
-        source "${_script_dir}/lib/engine/${CONTAINER_ENGINE}.sh" ||
-            die "failed to source engine file ${_script_dir}/lib/engine/${CONTAINER_ENGINE}.sh"
-        _last_sourced_engine="${CONTAINER_ENGINE}"
+    if [[ "${_last_sourced_engine}" != "${BUILD_ENGINE}" ]]; then
+        source "${_script_dir}/lib/engine/${BUILD_ENGINE}.sh" ||
+            die "failed to source engine file ${_script_dir}/lib/engine/${BUILD_ENGINE}.sh"
+        _last_sourced_engine="${BUILD_ENGINE}"
     fi
 }
 

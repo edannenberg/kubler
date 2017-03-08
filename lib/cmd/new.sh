@@ -77,7 +77,7 @@ function add_image() {
     [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
     [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
 
-    cp -r "./lib/template/${CONTAINER_ENGINE}/image" "${image_path}" || die
+    cp -r "./lib/template/${BUILD_ENGINE}/image" "${image_path}" || die
 
     _template_target="${image_path}"
     _post_msg="Successfully created ${_arg_name} image at ${image_path}\n"
@@ -107,7 +107,7 @@ function add_builder() {
     [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
     [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
 
-    cp -r "./lib/template/${CONTAINER_ENGINE}/builder" "${image_path}" || die
+    cp -r "./lib/template/${BUILD_ENGINE}/builder" "${image_path}" || die
 
     _template_target="${image_path}"
     _post_msg="Successfully created ${_arg_name} builder at ${image_path}\n"
