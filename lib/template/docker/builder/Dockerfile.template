@@ -1,4 +1,4 @@
 FROM ${NAMESPACE}/${_tmpl_image_name}
-MAINTAINER ${MAINTAINER}
+LABEL maintainer ${MAINTAINER}
 
 CMD ["/bin/bash"]

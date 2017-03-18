@@ -1,10 +1,10 @@
 #!/bin/bash
 
-_help_command_description="Check for stage3 updates and sync portage container"
+_help_command_description="Check for stage3 updates and sync the portage container"
 
-# ARGBASH_WRAP([opt-global])
 # ARG_OPTIONAL_BOOLEAN([no-sync],[n],[Do not sync portage container, just check for stage3 updates])
 # ARG_HELP([])
+# ARGBASH_WRAP([opt-global])
 # ARGBASH_SET_INDENT([    ])
 # ARGBASH_GO()
 # needed because of Argbash --> m4_ignore([
@@ -12,24 +12,17 @@ _help_command_description="Check for stage3 updates and sync portage container"
 # Argbash is a bash code generator used to get arguments parsing right.
 # Argbash is FREE SOFTWARE, see https://argbash.io for more info
 
-die()
-{
-    local _ret=$2
-    test -n "$_ret" || _ret=1
-    test "$_PRINT_HELP" = yes && print_help >&2
-    echo "$1" >&2
-    exit ${_ret}
-}
-
 # THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_verbose=off
 _arg_no_sync=off
+_arg_working_dir=
+_arg_debug=off
 
 print_help ()
 {
-    printf 'Usage: %s [--(no-)verbose] [--(no-)no-sync] [-h|--help]\n' "$0"
-    printf "\t%s\n" "-n,--no-sync,--no-no-sync: Do not sync portage container, just check for stage3 updates (off by default)"
+    printf 'Usage: %s update [--no-sync] [-w|--working-dir <arg>] [--debug]\n' "${_KUBLER_BIN}"
+    printf "\t%s\n" "-n,--no-sync: Do not sync portage container, just check for stage3 updates"
     printf "\t%s\n" "-h,--help: Prints help"
+    printf "\t%s\n" "-w,--working-dir: Where to look for namespaces or images, default: current directory"
 }
 
 # THE PARSING ITSELF
@@ -37,11 +30,6 @@ while test $# -gt 0
 do
     _key="$1"
     case "$_key" in
-        --no-verbose|--verbose)
-            _arg_verbose="on"
-            _args_opt_global_opt+=("${_key%%=*}")
-            test "${1:0:5}" = "--no-" && _arg_verbose="off"
-            ;;
         -n*|--no-no-sync|--no-sync)
             _arg_no_sync="on"
             _next="${_key##-n}"
@@ -51,6 +39,26 @@ do
         -h*|--help)
             print_help
             exit 0
+            ;;
+        -w*|--working-dir|--working-dir=*)
+            _val="${_key##--working-dir=}"
+            _val2="${_key##-w}"
+            if test "$_val" = "$_key"
+            then
+                test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+                _val="$2"
+                shift
+            elif test "$_val2" != "$_key" -a -n "$_val2"
+            then
+                _val="$_val2"
+            fi
+            _arg_working_dir="$_val"
+            _args_opt_global_opt+=("${_key%%=*}" "$_arg_working_dir")
+            ;;
+        --no-debug|--debug)
+            _arg_debug="on"
+            _args_opt_global_opt+=("${_key%%=*}")
+            test "${1:0:5}" = "--no-" && _arg_debug="off"
             ;;
         *)
             _PRINT_HELP=yes die "FATAL ERROR: Got an unexpected argument '$1'" 1

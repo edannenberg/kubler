@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# All rights reserved.
 
 ###
 ### REQUIRED FUNCTIONS
@@ -14,7 +16,7 @@ function validate_engine() {
 # Has given image_id all requirements to start the build? Called once per image in current image dependency graph.
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 # 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
 function validate_image() {
     local image_id image_type
@@ -28,7 +30,7 @@ function validate_image() {
 # Build the image for given image_id
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 function build_image() {
     local image_id image_type
     image_id="${1}"
@@ -41,7 +43,7 @@ function build_image() {
 # Exits with signal 0 if given image_id has a built and ready to run image or signal 3 if not.
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 # 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
 # 3: image_tag - optional, default: ${IMAGE_TAG}
 function image_exists() {
@@ -55,7 +57,7 @@ function image_exists() {
 # Sets __get_image_size for given image_id, required for generating PACKAGES.md header
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 # 2: image_tag (a.k.a. version)
 function get_image_size() {
     # assume failure
@@ -70,7 +72,7 @@ function get_image_size() {
 # Start a container from given image_id.
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 # 2: container_host_name
 # 3: remove container after it exists, optional, default: true
 # 4: container_name, optional, keep in mind that this needs to be unique for all existing containers on the host
@@ -96,7 +98,7 @@ function run_image() {
 # bootstrap a stage3 with portage plus helper files from /bob-core.
 #
 # Arguments:
-# 1: builder_id (i.e. gentoobb/bob)
+# 1: builder_id (i.e. kubler/bob)
 function build_core() {
     local builder_id
     builder_id="$1"
@@ -109,7 +111,7 @@ function build_core() {
 # Implement this if you want support for multiple build containers.
 #
 # Arguments:
-# 1: builder_id (i.e. gentoobb/bob)
+# 1: builder_id (i.e. kubler/bob)
 function build_builder() {
     local builder_id
     builder_id="$1"
@@ -119,7 +121,7 @@ function build_builder() {
 # Called when using --no-deps, in most cases a thin wrapper to build_image()
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 function build_image_no_deps() {
     local image_id
     image_id="$1"
@@ -138,14 +140,14 @@ function get_build_container() {
     local image_id image_type
     image_id="${1}"
     image_type="${2:-${_IMAGE_PATH}}"
-    #__get_build_container="gentoobb/bob"
+    #__get_build_container="kubler/bob"
     exit 3
 }
 
 # Handle image repository auth, called once per namespace if pushing
 #
 # Arguments:
-# 1: namespace (i.e. gentoobb)
+# 1: namespace (i.e. kubler)
 # 2: repository_url
 function push_auth() {
     local namespace repository_url login_args
@@ -157,7 +159,7 @@ function push_auth() {
 # Push image to a repository
 #
 # Arguments:
-# 1: image_id (i.e. gentoobb/busybox)
+# 1: image_id (i.e. kubler/busybox)
 # 2: repository_url
 function push_image() {
     local image_id repository_url

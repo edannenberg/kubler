@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
+# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# All rights reserved.
 
 function main() {
     msg "--> remove build artifacts"
     msg "rootfs.tar files"
-    find "${_script_dir}/${_NAMESPACE_PATH}" -name rootfs.tar -delete
+    find -L "${_NAMESPACE_DIR}" -name rootfs.tar -delete
     msg "generated Dockerfiles"
-    find "${_script_dir}/${_NAMESPACE_PATH}" -name Dockerfile -delete
+    find -L "${_NAMESPACE_DIR}" -name Dockerfile -delete
     msg "PACKAGES.md files"
-    find "${_script_dir}/${_NAMESPACE_PATH}" -name PACKAGES.md -delete
+    find -L "${_NAMESPACE_DIR}" -name PACKAGES.md -delete
 }
 
 main "$@"

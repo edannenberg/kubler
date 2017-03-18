@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# All rights reserved.
 
 _required_binaries=" bzip2 grep id wget"
 [[ "${_arg_skip_gpg_check}" != "on" ]] && _required_binaries+=" gpg"
@@ -9,8 +11,7 @@ _required_binaries=" bzip2 grep id wget"
 # Arguments:
 #
 # 1: images
-function generate_build_order()
-{
+function generate_build_order() {
     local images image_id builder_id excluded_image
     images="$1"
     # generate image build order
@@ -47,8 +48,7 @@ function generate_build_order()
 #
 # 1: image_id
 # 2: previous_image_id
-function check_image_dependencies()
-{
+function check_image_dependencies() {
     local image_id previous_image
     image_id="$1"
     previous_image="$2"
@@ -85,8 +85,7 @@ function check_image_dependencies()
 #
 # 1: builder_id
 # 2: previous_builder_id
-function check_builder_dependencies()
-{
+function check_builder_dependencies() {
     local builder_id previous_builder_id
     builder_id="$1"
     previous_builder_id="$2"
@@ -104,23 +103,31 @@ function check_builder_dependencies()
     fi
 }
 
-function main()
-{
-    local engine_id engines builder_id builders image_id images bob_var
-    cd "${_script_dir}/${_NAMESPACE_PATH}"
+function main() {
+    local target_id engine_id engines builder_id builders image_id images bob_var
+
+    cd "${_NAMESPACE_DIR}"
 
     # --interactive build
-    if [[ "${_arg_interactive}" == "on" ]]; then
-        [[ "${_arg_target_id}" == "*" ]] && die "Error, --interactive does not support wildcards, only co."
-        [[ "${_arg_target_id}" != *"/"*  ]] && die "Error, --interactive expects an image, but only got a namespace."
-        expand_image_id "${_arg_target_id}" "${_IMAGE_PATH}"
+    if [[ "${_arg_interactive}" == 'on' ]]; then
+        BOB_IS_INTERACTIVE='true'
+        target_id="${_arg_target_id}"
+        [[ "${target_id}" == "*" ]] && die "--interactive does not support wildcards, only fully qualified ids."
+        if [[ "${target_id}" != *"/"*  ]]; then
+            if [[ -n "${_NAMESPACE_DEFAULT}" ]]; then
+                target_id="${_NAMESPACE_DEFAULT}/${target_id}"
+            else
+                die "--interactive expects an image, but only got a namespace."
+            fi
+        fi
+        expand_image_id "${target_id}" "${_IMAGE_PATH}"
         source_image_conf "${__expand_image_id}"
 
-        get_build_container "${_arg_target_id}" "${_IMAGE_PATH}"
+        get_build_container "${target_id}" "${_IMAGE_PATH}"
         [[ $? -eq 1 ]] && die "Error while executing get_build_container(): ${builder_id}"
         builder_id="${__get_build_container}"
 
-        image_exists "${builder_id}" "${_IMAGE_PATH}" || die "Error couldn't find image ${builder_id}"
+        image_exists "${builder_id}" "${_IMAGE_PATH}" || die "Couldn't find image ${builder_id}"
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do
@@ -129,28 +136,38 @@ function main()
 
         generate_dockerfile "${__expand_image_id}"
 
+        get_absolute_path "${__expand_image_id}"
         _container_mounts=(
-            "${_script_dir}/tmp/distfiles:/distfiles"
-            "${_script_dir}/tmp/packages:/packages"
-            "${_script_dir}/tmp/oci-registry:/oci-registry"
-            "$(realpath ${__expand_image_id}):/config"
+            "${_KUBLER_DIR}/tmp/distfiles:/distfiles"
+            "${_KUBLER_DIR}/tmp/packages:/packages"
+            "${_KUBLER_DIR}/tmp/oci-registry:/oci-registry"
+            "${__get_absolute_path}:/config"
         )
-        _container_mount_portage="true"
-        _container_cmd=("/bin/bash")
+        _container_mount_portage='true'
+        _container_cmd=('/bin/bash')
 
         msg "using: ${BUILD_ENGINE} / builder: ${builder_id}"
-        echo -e "\nrunning interactive build container with ${__expand_image_id} mounted as /config\nartifacts from previous builds: /backup-rootfs\n"
-        echo -e "to start the build: $ build-root ${_arg_target_id}"
-        echo -e "*** if you plan to run emerge manually, source /etc/profile first ***\n"
+        echo -e "\nRunning interactive build container with ${_NAMESPACE_DIR}/${__expand_image_id} mounted as /config"
+        echo -e "Artifacts from previous builds: /backup-rootfs\n"
+        echo -e "You may run any helper function available in your image's build.sh, like update_use, etc."
+        echo -e "Once you are finished tinkering, history | cut -c 8- may prove useful ;)\n"
+        echo -e "To start the build: $ kubler_build_rootfs ${target_id}\n"
 
-        run_image "${builder_id}" "${builder_id}" "true"
+        run_image "${builder_id}" "${builder_id}" 'true'
         exit $?
     fi
 
     # --no-deps build
-    if [[ "${_arg_no_deps}" == "on" ]]; then
+    if [[ "${_arg_no_deps}" == 'on' ]]; then
         for image_id in "${_arg_target_id[@]}"; do
-            [[ "${image_id}" == "*" ]] && die "Error, --no-deps does not support wildcards, specify one or more image names."
+            [[ "${image_id}" == "*" ]] && die "--no-deps does not support wildcards, only fully qualified ids."
+            if [[ "${image_id}" != *"/"*  ]]; then
+                if [[ -n "${_NAMESPACE_DEFAULT}" ]]; then
+                    image_id="${_NAMESPACE_DEFAULT}/${image_id}"
+                else
+                    die "--no-deps expects a fully qualified image_id, but only got namespace \"${image_id}\""
+                fi
+            fi
             expand_image_id "${image_id}" "${_IMAGE_PATH}"
             source_image_conf "${__expand_image_id}"
             validate_image "${image_id}" "${_IMAGE_PATH}"
@@ -171,7 +188,7 @@ function main()
 
     engines=($_required_engines)
     for engine_id in "${engines[@]}"; do
-       source "${_script_dir}/lib/engine/${engine_id}.sh"
+       source "${_LIB_DIR}/engine/${engine_id}.sh"
        validate_engine
     done
 

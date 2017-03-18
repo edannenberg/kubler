@@ -1,8 +1,25 @@
 #!/usr/bin/env bash
-
-# Copyright (C) 2014-2017 Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
-
-set -e
+#
+# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+# following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+#    disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+# following disclaimer in the documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+# INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 readonly _EMERGE_ROOT="/emerge-root"
 readonly _CONFIG="/config"
@@ -17,19 +34,10 @@ readonly _DOC_FOOTER_INCLUDES="${_ROOTFS_BACKUP}/doc.footer.includes"
 _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
-[ "$1" ] || {
-    echo "--> Error, missing required image id"
-    exit 1
-}
-
-_image="${1}"
-_image_ns="${_image%%/*}"
-_image_id="${_image##*/}"
-
 # Copy libgcc/libstdc++ libs
 function copy_gcc_libs() {
     local lib_gcc lib_stdc lib
-    mkdir -p "${_EMERGE_ROOT}/lib64"
+    mkdir -p "${_EMERGE_ROOT}"/lib64
     lib_gcc="$(find /usr/lib/ -name libgcc_s.so.1)"
     lib_stdc="$(find /usr/lib/ -name libstdc++.so.6)"
 
@@ -183,18 +191,19 @@ function write_checkbox_line() {
 # should only get called from configure_rootfs_build() hook
 #
 # Arguments:
-# 1: packages (i.e. "sys-apps/busybox dev-vcs/git")
+# n: packages (i.e. "sys-apps/busybox dev-vcs/git")
 function generate_package_installed() {
-    local packages current_emerge_opts
-    packages="$1"
+    local packages current_emerge_opts emerge_ret
+    packages="$@"
     # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list
     set +e
-    "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p "${packages[@]}" | \
-        eix '-|*' --format '<markedversions:NAMEVERSION>' > "${_PACKAGE_INSTALLED}"
-    [[ $? -gt 1 ]] && echo "Error generating package.installed" && exit $?
+    "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p ${packages[@]} \
+        | eix '-|*' --format '<markedversions:NAMEVERSION>' > "${_PACKAGE_INSTALLED}"
+    emerge_ret=$?
+    [[ ${emerge_ret} -gt 1 ]] && echo "Error generating package.installed" && exit ${emerge_ret}
     set -e
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
@@ -219,17 +228,17 @@ function init_docs() {
 # should only get called from configure_rootfs_build() hook
 #
 # Arguments:
-# 1: packages (i.e. "shell/bash dev-vcs/git")
+# n: packages (i.e. "shell/bash dev-vcs/git")
 function generate_doc_package_installed() {
     local packages current_emerge_opts
-    packages="$1"
+    packages="$@"
     # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list with use flags
-    "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p "${packages[@]}" | \
-        perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' | \
-        sed /^virtual/d | sort -u >> "${_DOC_PACKAGE_INSTALLED}"
+    "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p ${packages[@]} \
+        | perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' \
+        | sed /^virtual/d | sort -u >> "${_DOC_PACKAGE_INSTALLED}"
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 }
@@ -323,10 +332,19 @@ function uninstall_package() {
     done
 }
 
+function configure_layman() {
+    # no pesky prompts please
+    sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
+    layman -L
+    # layman might have added config for existing overlays from the shared portage container, reset to be sure
+    rm /etc/portage/repos.conf/layman.conf
+    touch /etc/portage/repos.conf/layman.conf
+}
+
 function install_oci_deps() {
     local acserver_path
-    export GOPATH=/go
-    export PATH=$PATH:$GOPATH/bin
+    export GOPATH='/go'
+    export PATH="${PATH}:${GOPATH}/bin"
     # install acbuild
     git clone https://github.com/containers/build
     cd build/ && ./build
@@ -382,136 +400,170 @@ function download_from_oracle() {
          "$1"
 }
 
-source /etc/profile
+function _build_rootfs() {
+    local target_id image_ns image_id
+    target_id="$1"
+    [[ -z "${target_id}" || "${target_id}" != *'/'* ]] && echo "fatal: Expected a fully qualified image id." && return 1
+    image_ns="${target_id%%/*}"
+    image_id="${target_id##*/}"
 
-if [[ -z "${_emerge_bin}" ]]; then
-    if [[ "${CHOST}" == x86_64-pc-linux-* ]] || [[ "${CHOST}" == x86_64-gentoo-linux-* ]]; then
-        _emerge_bin="emerge"
-    else
-        _emerge_bin="emerge-${CHOST}"
-    fi
-fi
+    source /etc/profile
 
-mkdir -p "${_EMERGE_ROOT}"
-
-# read config, mounted via build.sh
-[[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh" || :
-
-# use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
-export USE_BUILDER_FLAGS="true"
-source /etc/profile
-
-# call configure bob hook if declared in build.sh
-declare -F configure_bob &>/dev/null && configure_bob
-
-# switch back to BOB_{CHOST,CFLAGS,CXXFLAGS}
-unset USE_BUILDER_FLAGS
-source /etc/profile
-
-mkdir -p "${_ROOTFS_BACKUP}"
-
-# set ROOT env for emerge calls
-export ROOT="${_EMERGE_ROOT}"
-
-# call pre install hook if declared in build.sh
-declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
-
-# when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
-[[ "${_emerge_bin}" != "emerge" ]] && unset CHOST PKGDIR
-
-if [ -n "${_packages}" ]; then
-
-    generate_package_installed ${_packages}
-    init_docs "${_image/\images\//}"
-    generate_doc_package_installed ${_packages}
-
-    if [ -z "${BOB_SKIP_BASELAYOUT}" ]; then
-        "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v sys-apps/baselayout
-    fi
-    # install packages defined in image's build.sh
-    "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
-
-    [[ -f "${_PACKAGE_INSTALLED}" ]] && cat "${_PACKAGE_INSTALLED}" | sed -e /^virtual/d >> /etc/portage/profile/package.provided
-
-    # backup headers and static files, depending images can pull them in again
-    if [[ -d "${_EMERGE_ROOT}/usr/include" ]]; then
-        find "${_EMERGE_ROOT}/usr/include" -type f -name '*.h' | \
-            tar -cpf "${_ROOTFS_BACKUP}/${_image_ns}_${_image_id}-headers.tar" --files-from -
-    fi
-    if [[ -d "${_EMERGE_ROOT}/usr/lib64" ]]; then
-        find "${_EMERGE_ROOT}/usr/lib64" -type f -name '*.a' | \
-            tar -cpf "${_ROOTFS_BACKUP}/${_image_ns}_${_image_id}-static_libs.tar" --files-from -
+    if [[ -z "${_emerge_bin}" ]]; then
+        if [[ "${CHOST}" == x86_64-pc-linux-* ]] || [[ "${CHOST}" == x86_64-gentoo-linux-* ]]; then
+            _emerge_bin="emerge"
+        else
+            _emerge_bin="emerge-${CHOST}"
+        fi
     fi
 
-    # extract any possible required headers and static libs from previous builds
-    for resource in "headers" "static_libs" "iconv"; do
-        extract_build_dependencies "${resource}"
-    done
+    mkdir -p "${_EMERGE_ROOT}"
 
-    # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
-    cp -f /etc/{passwd,group} "${_EMERGE_ROOT}/etc"
-    # merge with ld.so.conf from builder
-    cat /etc/ld.so.conf >> "${_EMERGE_ROOT}/etc/ld.so.conf"
-    sort -u "${_EMERGE_ROOT}/etc/ld.so.conf" -o "${_EMERGE_ROOT}/etc/ld.so.conf"
+    # read config, mounted via build.sh
+    [[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh" || :
 
-fi
+    # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
+    export USE_BUILDER_FLAGS="true"
+    source /etc/profile
 
-# call post install hook if declared in build.sh
-declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
+    # call configure bob hook if declared in build.sh
+    declare -F configure_bob &>/dev/null && configure_bob
 
-generate_documentation_footer
+    # switch back to BOB_{CHOST,CFLAGS,CXXFLAGS}
+    unset USE_BUILDER_FLAGS
+    source /etc/profile
 
-unset ROOT
+    mkdir -p "${_ROOTFS_BACKUP}"
 
-# /run symlink
-if [[ -z "${BOB_SKIP_BASELAYOUT}" ]]; then
-    mkdir -p "${_EMERGE_ROOT}"/{run,var} && ln -s /run "${_EMERGE_ROOT}/var/run"
-fi
+    # set ROOT env for emerge calls
+    export ROOT="${_EMERGE_ROOT}"
 
-# clean up
-if [ -z "${BOB_SKIP_LIB_CLEANUP}" ]; then
+    # call pre install hook if declared in build.sh
+    declare -F configure_rootfs_build &>/dev/null && configure_rootfs_build
+
+    # when using a crossdev alias unset CHOST and PKGDIR to not override make.conf
+    [[ "${_emerge_bin}" != "emerge" ]] && unset CHOST PKGDIR
+
+    if [ -n "${_packages}" ]; then
+
+        generate_package_installed ${_packages}
+        init_docs "${target_id/\images\//}"
+        generate_doc_package_installed ${_packages}
+
+        if [ -n "${BOB_INSTALL_BASELAYOUT}" ]; then
+            "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v sys-apps/baselayout
+        fi
+        # install packages defined in image's build.sh
+        "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
+
+        [[ -f "${_PACKAGE_INSTALLED}" ]] && cat "${_PACKAGE_INSTALLED}" | sed -e '/^virtual/d' >> /etc/portage/profile/package.provided
+
+        # backup headers and static files, depending images can pull them in again
+        if [[ -d "${_EMERGE_ROOT}/usr/include" ]]; then
+            find "${_EMERGE_ROOT}/usr/include" -type f -name '*.h' | \
+                tar -cpf "${_ROOTFS_BACKUP}/${image_ns}_${image_id}-headers.tar" --files-from -
+        fi
+        if [[ -d "${_EMERGE_ROOT}/usr/lib64" ]]; then
+            find "${_EMERGE_ROOT}/usr/lib64" -type f -name '*.a' | \
+                tar -cpf "${_ROOTFS_BACKUP}/${image_ns}_${image_id}-static_libs.tar" --files-from -
+        fi
+
+        # extract any possible required headers and static libs from previous builds
+        for resource in "headers" "static_libs" "iconv"; do
+            extract_build_dependencies "${resource}"
+        done
+
+        # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
+        mkdir -p "${_EMERGE_ROOT}"/etc
+        cp -f /etc/{passwd,group} "${_EMERGE_ROOT}/etc"
+        # merge with ld.so.conf from builder
+        cat /etc/ld.so.conf >> "${_EMERGE_ROOT}/etc/ld.so.conf"
+        sort -u "${_EMERGE_ROOT}/etc/ld.so.conf" -o "${_EMERGE_ROOT}/etc/ld.so.conf"
+
+    fi
+
+    # call post install hook if declared in build.sh
+    declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
+
+    [[ -z "${BOB_IS_INTERACTIVE}" ]] && generate_documentation_footer
+
+    unset ROOT
+
+    # /run symlink
+    if [[ -n "${BOB_INSTALL_BASELAYOUT}" ]]; then
+        mkdir -p "${_EMERGE_ROOT}"/{run,var} && ln -s /run "${_EMERGE_ROOT}/var/run"
+    fi
+
+    # clean up
+    if [ -z "${BOB_SKIP_LIB_CLEANUP}" ]; then
+        for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
+            [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+        done
+    fi
+
+    rm -rf \
+        "${_EMERGE_ROOT}"/etc/ld.so.cache \
+        "${_EMERGE_ROOT}"/usr/bin/*-config \
+        "${_EMERGE_ROOT}"/usr/lib64/cmake/ \
+        "${_EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
+        "${_EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
+        "${_EMERGE_ROOT}"/usr/share/aclocal/ \
+        "${_EMERGE_ROOT}"/usr/share/gettext/ \
+        "${_EMERGE_ROOT}"/usr/share/gir-[0-9]*/ \
+        "${_EMERGE_ROOT}"/usr/share/gtk-doc/* \
+        "${_EMERGE_ROOT}"/usr/share/qt*/mkspecs/ \
+        "${_EMERGE_ROOT}"/usr/share/vala/vapi/ \
+        "${_EMERGE_ROOT}"/var/cache/edb \
+        "${_EMERGE_ROOT}"/var/db/pkg/* \
+        "${_EMERGE_ROOT}"/var/lib/portage \
+        "${_EMERGE_ROOT}"/etc/portage \
+        "${_EMERGE_ROOT}"/var/lib/gentoo
+
+    if [[ -z "${_keep_headers}" ]]; then
+        rm -rf "${_EMERGE_ROOT}"/usr/include/*
+    fi
+
+    local lib_dir
     for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
-        [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
+        if [[ -z "${_keep_static_libs}" ]] && [[ -d "${lib_dir}" ]] && [[ "$(ls -A "${lib_dir}")" ]]; then
+            find "${lib_dir}"/* -type f -name "*.a" -delete
+        fi
     done
-fi
 
-rm -rf \
-    "${_EMERGE_ROOT}"/etc/ld.so.cache \
-    "${_EMERGE_ROOT}"/usr/bin/*-config \
-    "${_EMERGE_ROOT}"/usr/lib64/cmake/ \
-    "${_EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
-    "${_EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
-    "${_EMERGE_ROOT}"/usr/share/aclocal/ \
-    "${_EMERGE_ROOT}"/usr/share/gettext/ \
-    "${_EMERGE_ROOT}"/usr/share/gir-[0-9]*/ \
-    "${_EMERGE_ROOT}"/usr/share/gtk-doc/* \
-    "${_EMERGE_ROOT}"/usr/share/qt*/mkspecs/ \
-    "${_EMERGE_ROOT}"/usr/share/vala/vapi/ \
-    "${_EMERGE_ROOT}"/var/cache/edb \
-    "${_EMERGE_ROOT}"/var/db/pkg/* \
-    "${_EMERGE_ROOT}"/var/lib/portage \
-    "${_EMERGE_ROOT}"/etc/portage \
-    "${_EMERGE_ROOT}"/var/lib/gentoo
-
-if [[ -z "${_keep_headers}" ]]; then
-    rm -rf "${_EMERGE_ROOT}"/usr/include/*
-fi
-
-for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
-    if [[ -z "${_keep_static_libs}" ]] && [[ -d "${lib_dir}" ]] && [[ "$(ls -A "${lib_dir}")" ]]; then
-        find "${lib_dir}"/* -type f -name "*.a" -delete
+    if [[ -n "${_install_docker_gen}" ]]; then
+        install_docker_gen
     fi
-done
 
-if [[ -n "${_install_docker_gen}" ]]; then
-    install_docker_gen
+    # if this is not an interactive build create the tar ball and clean up
+    if [[ -z "${BOB_IS_INTERACTIVE}" && "$(ls -A "${_EMERGE_ROOT}")" ]]; then
+        # make rootfs tar ball and copy to host
+        tar -cpf "${_CONFIG}/rootfs.tar" -C "${_EMERGE_ROOT}" .
+        chown ${BOB_HOST_UID}:${BOB_HOST_GID} "${_CONFIG}/rootfs.tar"
+        rm -rf "${_EMERGE_ROOT}"
+    fi
+
+    [[ -z "${BOB_IS_INTERACTIVE}" ]] && generate_documentation
+
+    return 0
+}
+
+function kubler_build_rootfs() {
+    _build_rootfs "$@"
+    echo "Build finished, skipped rootfs.tar and PACKAGES.md"
+    echo "To inspect the build result check the contents of ${_EMERGE_ROOT}"
+    return 0
+}
+
+function main() {
+    _build_rootfs "$@"
+}
+
+[[ "${BOB_IS_DEBUG}" == 'true' ]] && set -x
+
+if [[ "${BOB_IS_INTERACTIVE}" != 'true' ]]; then
+    set -e
+    main "$@"
+else
+    set +e
+    unset main
 fi
-
-if [[ "$(ls -A "${_EMERGE_ROOT}")" ]]; then
-    # make rootfs tar ball and copy to host
-    tar -cpf "${_CONFIG}/rootfs.tar" -C "${_EMERGE_ROOT}" .
-    chown ${BOB_HOST_UID}:${BOB_HOST_GID} "${_CONFIG}/rootfs.tar"
-    rm -rf "${_EMERGE_ROOT}"
-fi
-
-generate_documentation

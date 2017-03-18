@@ -21,7 +21,9 @@ ENV DEF_CHOST="${BOB_CHOST}" \
 
 COPY etc/ /etc/
 
-COPY build-root.sh /bin/build-root
+COPY build-root.sh /root/
+
+COPY bashrc.sh /root/.bashrc
 
 COPY acserver-push.sh /usr/bin/acserver-push
 

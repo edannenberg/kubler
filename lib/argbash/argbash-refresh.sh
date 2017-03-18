@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" \
     || die "Error, couldn't determine the script's running directory, aborting" 2
 

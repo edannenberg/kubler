@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# All rights reserved.
 
 function main() {
     local image_id current_ns
-    cd "${_NAMESPACE_PATH}"
+    cd "${_NAMESPACE_DIR}"
 
     expand_requested_target_ids "${_arg_target_id[@]}"
 
