@@ -1,0 +1,19 @@
+FROM ${IMAGE_PARENT}
+LABEL maintainer ${MAINTAINER}
+
+ADD rootfs.tar /
+
+RUN set -x && \
+    /usr/share/tomcat-8/gentoo/tomcat-instance-manager.bash --create --suffix local --user tomcat --group tomcat
+
+ENV CATALINA_NAME=tomcat-8-local
+
+ENV CATALINA_HOME=/usr/share/tomcat-8 \
+    CATALINA_BASE=/var/lib/${CATALINA_NAME} \
+    CATALINA_TMPDIR=/var/tmp/${CATALINA_NAME} \
+    CATALINA_USER=tomcat \
+    CATALINA_GROUP=tomcat
+
+EXPOSE 8080 8009
+
+CMD ["/usr/share/tomcat-8/bin/catalina.sh", "run"]
