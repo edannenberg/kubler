@@ -44,13 +44,11 @@ function build_image() {
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
-# 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
-# 3: image_tag - optional, default: ${IMAGE_TAG}
+# 2: image_tag - optional, default: ${IMAGE_TAG}
 function image_exists() {
     local image_id image_type image_tag
     image_id="$1"
-    image_type="$2"
-    image_tag="${3:-${IMAGE_TAG}}"
+    image_tag="${2:-${IMAGE_TAG}}"
     return 3
 }
 

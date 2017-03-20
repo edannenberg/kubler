@@ -120,7 +120,7 @@ function build_image() {
     image_expanded="${__expand_image_id}"
 
     msg "--> build image ${image_id}"
-    image_exists "${image_id}" "${image_type}"
+    image_exists_or_rm "${image_id}" "${image_type}"
     local exists_return=$?
     [[ ${exists_return} -eq 0 ]] && return 0
     # if the builder image does not exist we need to ensure there is no pre-existing rootfs.tar
@@ -209,23 +209,19 @@ function container_exists() {
     return 0
 }
 
-# Check if image exits for given image_id, exits with signal 3 if not.
+# Check if image exists, remove existing image depending on passed rebuild args. (-f, -F, -c, -C)
+# Returns signal 0 if image exists, or signal 3 if not/image was removed due to rebuild args.
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
-# 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
-# 3: image_tag - optional, default: ${IMAGE_TAG}
-# 4: ignore_build_opts - only check with docker, ignore build options like -c, optional, default: false
-function image_exists() {
-    local image_id image_type image_tag images
+# 2: image_type - $_IMAGE_PATH or $_BUILDER_PATH, optional, default: $_IMAGE_PATH
+# 3: image_tag - optional, default: $IMAGE_TAG
+function image_exists_or_rm {
+    local image_id image_type
     image_id="${1}"
-    image_type="${2:-${IMAGE_PATH}}"
+    image_type="${2:-${_IMAGE_PATH}}"
     image_tag="${3:-${IMAGE_TAG}}"
-    ignore_build_opts="$4"
-    # image exists?
-    "${DOCKER}" inspect "${image_id}:${image_tag}" > /dev/null 2>&1 || return 3
-    [[ -n "${ignore_build_opts}" ]] && return 0
-    # ok, lets check the rebuild flags
+    image_exists "${image_id}" "${image_tag}" || return $?
     if [[ "${_arg_clear_everything}" == 'on' && "${image_id}" != "${_STAGE3_NAMESPACE}/portage" ]]; then
         # -C => nuke everything except portage
         remove_image "${image_id}" "${image_tag}"
@@ -240,7 +236,20 @@ function image_exists() {
         # -f, -F => rebuild image if not a builder
         [[ "${image_type}" != "${_BUILDER_PATH}" ]] && remove_image "${image_id}" "${image_tag}" && return 3
     fi
-    # fine, guess the image really does exist :P
+    return 0
+}
+
+# Check if image exits for given image_id, returns signal 3 if not.
+#
+# Arguments:
+# 1: image_id (i.e. kubler/busybox)
+# 2: image_tag - optional, default: $IMAGE_TAG
+function image_exists() {
+    local image_id image_type image_tag images ignore_build_opts
+    image_id="${1}"
+    image_tag="${2:-${IMAGE_TAG}}"
+    # image exists?
+    "${DOCKER}" inspect "${image_id}:${image_tag}" > /dev/null 2>&1 || return 3
     return 0
 }
 
@@ -302,7 +311,7 @@ function import_portage_tree() {
     local image_id image_tag portage_tmp_file
     image_id="$1"
     image_tag="$2"
-    image_exists "${image_id}" "${_BUILDER_PATH}" "${image_tag}" && return 0
+    image_exists "${image_id}" "${image_tag}" && return 0
 
     download_portage_snapshot || die "Failed to download portage snapshot"
 
@@ -325,7 +334,7 @@ function import_portage_tree() {
 function import_stage3() {
     local image_id
     image_id="${1//+/-}"
-    image_exists "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
+    image_exists_or_rm "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
 
     download_stage3 || die "failed to download stage3 files"
 
@@ -356,7 +365,7 @@ function build_core() {
     import_stage3 "${BOB_CURRENT_STAGE3_ID}"
 
     core_id="${builder_id}-core"
-    image_exists "${core_id}" "${_BUILDER_PATH}" && return 0
+    image_exists_or_rm "${core_id}" "${_BUILDER_PATH}" && return 0
     expand_image_id "${core_id}" "${_BUILDER_PATH}"
     mkdir -p "${__expand_image_id}"
 
@@ -412,8 +421,7 @@ function get_build_container() {
         build_container="${BUILDER}"
     elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
         builder_image="${build_container##*/}"
-        [[ "${parent_image}" != "scratch" ]] \
-        && image_exists "${_current_namespace}/${builder_image}-${parent_image}" "${_BUILDER_PATH}" "${IMAGE_TAG}" true \
+        [[ "${parent_image}" != "scratch" ]] && image_exists "${_current_namespace}/${builder_image}-${parent_image}" \
             && build_container="${_current_namespace}/${builder_image}-${parent_image}"
     elif [[ "${image_type}" == "${_BUILDER_PATH}" ]]; then
         build_container="${image_id}-core"

@@ -127,7 +127,7 @@ function main() {
         [[ $? -eq 1 ]] && die "Error while executing get_build_container(): ${builder_id}"
         builder_id="${__get_build_container}"
 
-        image_exists "${builder_id}" "${_IMAGE_PATH}" || die "Couldn't find image ${builder_id}"
+        image_exists "${builder_id}" || die "Couldn't find image ${builder_id}"
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do
