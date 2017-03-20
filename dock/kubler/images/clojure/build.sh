@@ -6,8 +6,6 @@ CLOJURE_VERSION=1.9.0-alpha15
 
 configure_bob() {
     wget https://repo1.maven.org/maven2/org/clojure/clojure/${CLOJURE_VERSION}/clojure-${CLOJURE_VERSION}.jar
-    #wget https://repo1.maven.org/maven2/org/clojure/clojure/${CLOJURE_VERSION}/clojure-${CLOJURE_VERSION}.jar.md5
-    #md5sum -c clojure-${CLOJURE_VERSION}.jar.md5 || die "error validating clojure-${CLOJURE_VERSION}.jar"
 }
 
 #

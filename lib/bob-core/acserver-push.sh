@@ -22,11 +22,3 @@ function main() {
 }
 
 main "$@"
-#acbuild begin
-#acbuild set-name localhost/gentoobb/busybox
-#acbuild dep add quay.io/coreos/alpine-sh
-#acbuild label add version latest
-#acbuild cat-manifest > busybox.manifest
-#acbuild write busybox-latest-linux-amd64.aci
-#acbuild cat-manifest > busybox-latest-linux-amd64.manifest
-#acbuild end
