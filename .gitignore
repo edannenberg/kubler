@@ -5,6 +5,5 @@ rootfs.tar
 push.conf
 dock/*/builder/PACKAGES.md
 dock/*
-!dock/gentoobb
 !dock/kubler
 !dock/dummy
