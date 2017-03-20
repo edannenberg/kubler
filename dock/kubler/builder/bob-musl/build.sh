@@ -18,10 +18,6 @@ configure_bob() {
         [[ -f ${i}.old ]] &&  mv "${i}".old "${i}"/default
     done
     touch /etc/portage/package.accept_keywords/flaggie
-    # set locale of build container
-    #echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
-    # not supported with musl
-    #locale-gen
     echo 'LANG="en_US.UTF-8"' > /etc/env.d/02locale
     env-update
     source /etc/profile
@@ -36,9 +32,6 @@ configure_bob() {
     # add musl overlay, it may exist already in the shared portage container
     layman -l | grep -q musl && layman -d musl
     layman -a musl
-    # install aci/oci requirements
-    #emerge dev-lang/go app-crypt/gnupg
-    #install_oci_deps
 }
 
 #
