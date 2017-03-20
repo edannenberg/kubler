@@ -100,7 +100,7 @@ function main() {
     [[ -z "${__get_absolute_path}" ]] && die "Couldn't determine the script's real directory, aborting" 2
     readonly _KUBLER_DIR="$(dirname -- "${__get_absolute_path}")"
 
-    local kubler_bin lib_dir core parser namespace_dir cmd_script
+    local kubler_bin lib_dir core parser working_dir cmd_script
     kubler_bin="$(basename "$0")"
     command -v "${kubler_bin}" > /dev/null
     # use full path name if not in PATH
@@ -124,10 +124,10 @@ function main() {
     # handle --help for main script
     [[ -z "${_arg_command}" && "${_arg_help}" == 'on' ]] && { show_help; exit 0; }
 
-    # KUBLER_NAMESPACE_DIR overrides --namespace-dir, else use current working directory
-    namespace_dir="${KUBLER_NAMESPACE_DIR:-${_arg_namespace_dir}}"
-    [[ -z "${namespace_dir}" ]] && namespace_dir="${PWD}"
-    detect_namespace "${namespace_dir}"
+    # KUBLER_WORKING_DIR overrides --working-dir, else use current working directory
+    working_dir="${KUBLER_WORKING_DIR:-${_arg_working_dir}}"
+    [[ -z "${working_dir}" ]] && working_dir="${PWD}"
+    detect_namespace "${working_dir}"
 
     # valid command?
     cmd_script="${_LIB_DIR}/cmd/${_arg_command}.sh"
