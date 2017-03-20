@@ -369,16 +369,6 @@ function install_docker_gen() {
     log_as_installed "manual install" "docker-gen-${dockergen_version}" "http://github.com/jwilder/docker-gen/"
 }
 
-# deprecated, use install_suexec instead
-function install_gosu() {
-    local gosu_version
-    gosu_version="1.10"
-    mkdir -p "${_EMERGE_ROOT}/usr/local/bin"
-    curl -o "${_EMERGE_ROOT}/usr/local/bin/gosu" -SL "https://github.com/tianon/gosu/releases/download/${gosu_version}/gosu-amd64"
-    chmod +x "${_EMERGE_ROOT}/usr/local/bin/gosu"
-    log_as_installed "manual install" "gosu-${gosu_version}" "https://github.com/tianon/gosu/"
-}
-
 function install_suexec() {
     local suexec_version
     suexec_version="0.2"
