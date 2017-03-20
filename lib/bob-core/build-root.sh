@@ -21,6 +21,9 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+# declare some vars to satisfy shellcheck
+declare _keep_headers _keep_static_libs _headers_from _static_libs_from _iconv_from _install_docker_gen
+
 readonly _EMERGE_ROOT="/emerge-root"
 readonly _CONFIG="/config"
 readonly _CONFIG_TMP="${_CONFIG}/tmp"
@@ -53,10 +56,10 @@ function copy_gcc_libs() {
 function fix_portage_profile_symlink() {
     local new_portage_path old_profile
     new_portage_path="${1:-/var/sync}"
-    _old_profile="$(readlink -m /etc/portage/make.profile)"
+    old_profile="$(readlink -m /etc/portage/make.profile)"
     rm /etc/portage/make.profile
-    echo "switching portage profile to: ${new_portage_path}/${_old_profile#/usr/}"
-    ln -sr "${new_portage_path}"/${_old_profile#/usr/} /etc/portage/make.profile
+    echo "switching portage profile to: ${new_portage_path}/${old_profile#/usr/}"
+    ln -sr "${new_portage_path}/${old_profile#/usr/}" /etc/portage/make.profile
 }
 
 # Clone a fork of hasufell/portage-gentoo-git-config and copy postsync hooks, part of stage3 builder setup
@@ -99,14 +102,14 @@ function extract_build_dependencies() {
 #
 # Arguments:
 # 1: package_atom
-function get_package_version()
-{
+function get_package_version() {
+    __get_package_version=
     local package
     package="$1"
-    exec 2>/dev/null
-    echo $("${_emerge_bin}" -p "${package}" | grep "${package}" | sed -e "s|${package}-|${package}§|" -e 's/[\s]*USE=/§USE=/g' \
-        | awk -F§ '{print $2}')
-    exec 2>&1
+    nameversion="$(equery --quiet list "${package}")" \
+        || die "Couldn't parse package version for ${package}"
+    # shellcheck disable=SC2034
+    __get_package_version="${nameversion}"
 }
 
 function generate_documentation_footer() {
@@ -134,7 +137,7 @@ function generate_documentation() {
     echo "#### Installed" > "${doc_file}"
     if [[ -f "${_DOC_PACKAGE_INSTALLED}" ]]; then
         echo -e "${table_header}" >> "${doc_file}"
-        cat "${_DOC_PACKAGE_INSTALLED}" | sed -e "1d" >> "${doc_file}"
+        sed -e "1d" < "${_DOC_PACKAGE_INSTALLED}" >> "${doc_file}"
     else
         echo "None." >> "${doc_file}"
     fi
@@ -151,7 +154,7 @@ function generate_documentation() {
     if [[ -f "${_DOC_FOOTER_INCLUDES}" ]]; then
         cat "${_DOC_FOOTER_INCLUDES}" >> "${doc_file}"
     fi
-    chown ${BOB_HOST_UID}:${BOB_HOST_GID} "${doc_file}"
+    chown "${BOB_HOST_UID}":"${BOB_HOST_GID}" "${doc_file}"
 }
 
 # Appends a github markdown line with a checkbox and label to given file.
@@ -162,24 +165,24 @@ function generate_documentation() {
 # 3: out_file
 # 4: negate checked state, when set the true/false eval of $2 is negated, optional
 function write_checkbox_line() {
-    local label checked out_file negate_check_state state checkbox
+    local label checked out_file negate_checked_state state checkbox
     label="$1"
     checked="$2"
     out_file="$3"
     negate_checked_state="$4"
-    if [[ -z "$checked" ]] || [[ "$checked" = "false" ]]; then
+    if [[ -z "${checked}" || "${checked}" == "false" ]]; then
         state=0
     else 
         state=1
     fi
-    if [[ -n $negate_checked_state ]]; then
-        if [[ "$state" == 1 ]]; then
+    if [[ -n ${negate_checked_state} ]]; then
+        if [[ "${state}" == 1 ]]; then
             state=0
         else 
             state=1
         fi
     fi
-    if [[ "$state" == 1 ]]; then
+    if [[ "${state}" == 1 ]]; then
         checkbox="- [x]"
     else 
         checkbox="- [ ]"
@@ -194,12 +197,13 @@ function write_checkbox_line() {
 # n: packages (i.e. "sys-apps/busybox dev-vcs/git")
 function generate_package_installed() {
     local packages current_emerge_opts emerge_ret
-    packages="$@"
+    packages=( "$@" )
     # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list
     set +e
+    # shellcheck disable=SC2086,SC2068
     "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p ${packages[@]} \
         | eix '-|*' --format '<markedversions:NAMEVERSION>' > "${_PACKAGE_INSTALLED}"
     emerge_ret=$?
@@ -231,11 +235,12 @@ function init_docs() {
 # n: packages (i.e. "shell/bash dev-vcs/git")
 function generate_doc_package_installed() {
     local packages current_emerge_opts
-    packages="$@"
+    packages=( "$@" )
     # disable binary package features temporarily to work around binpkg_multi_instance altering the version string
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
     # generate installed package list with use flags
+    # shellcheck disable=SC2086,SC2068
     "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p ${packages[@]} \
         | perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-z0-9\- (){}]*)?/' \
         | sed /^virtual/d | sort -u >> "${_DOC_PACKAGE_INSTALLED}"
@@ -265,11 +270,13 @@ function log_as_installed() {
 # reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
 # reset all use flags: update_use app-shells/bash %
 function update_use() {
+    # shellcheck disable=SC2068
     flaggie --strict --destructive-cleanup ${@}
 }
 
 # Just for better readabilty of build.sh
 function update_keywords() {
+    # shellcheck disable=SC2068
     update_use ${@}
 }
 
@@ -292,6 +299,7 @@ function provide_package() {
     local current_emerge_opts package
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
+    # shellcheck disable=SC2068
     for package in ${@}; do
         "${_emerge_bin}" --binpkg-respect-use=y -p "${package}" | \
             eix '-|*' --format '<markedversions:NAMEVERSION>' | \
@@ -311,8 +319,9 @@ function unprovide_package() {
     local pkg_provided package
     pkg_provided="/etc/portage/profile/package.provided"
     if [[ -f "${pkg_provided}"  ]]; then
+        # shellcheck disable=SC2068
         for package in ${@}; do
-            sed -i /^${package//\//\\\/}/d "${pkg_provided}"
+            sed -i /^"${package//\//\\\/}"/d "${pkg_provided}"
         done
     fi
 }
@@ -325,10 +334,12 @@ function unprovide_package() {
 # n: more package atoms
 function uninstall_package() {
     local package
+    # shellcheck disable=SC2068
     emerge -C ${@}
+    # shellcheck disable=SC2068
     for package in ${@}; do
         # reflect uninstall in docs
-        sed -i /^${package//\//\\\/}/d "${_DOC_PACKAGE_INSTALLED}"
+        sed -i /^"${package//\//\\\/}"/d "${_DOC_PACKAGE_INSTALLED}"
     done
 }
 
@@ -390,12 +401,12 @@ function download_from_oracle() {
          "$1"
 }
 
-function _build_rootfs() {
-    local target_id image_ns image_id
-    target_id="$1"
-    [[ -z "${target_id}" || "${target_id}" != *'/'* ]] && echo "fatal: Expected a fully qualified image id." && return 1
-    image_ns="${target_id%%/*}"
-    image_id="${target_id##*/}"
+function build_rootfs() {
+    local target_id
+
+    [[ -z "${BOB_CURRENT_TARGET}" || "${BOB_CURRENT_TARGET}" != *'/'* ]] \
+        && echo "fatal: Expected a fully qualified image id in BOB_CURRENT_TARGET." && return 1
+    target_id="${BOB_CURRENT_TARGET}"
 
     source /etc/profile
 
@@ -410,6 +421,7 @@ function _build_rootfs() {
     mkdir -p "${_EMERGE_ROOT}"
 
     # read config, mounted via build.sh
+    # shellcheck source=dock/kubler/images/busybox/build.sh disable=SC2015
     [[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh" || :
 
     # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
@@ -437,25 +449,28 @@ function _build_rootfs() {
     if [ -n "${_packages}" ]; then
 
         generate_package_installed ${_packages}
-        init_docs "${target_id/\images\//}"
+        init_docs "${target_id}"
         generate_doc_package_installed ${_packages}
 
         if [ -n "${BOB_INSTALL_BASELAYOUT}" ]; then
+            # shellcheck disable=SC2086
             "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v sys-apps/baselayout
         fi
         # install packages defined in image's build.sh
+        # shellcheck disable=SC2086
         "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
 
-        [[ -f "${_PACKAGE_INSTALLED}" ]] && cat "${_PACKAGE_INSTALLED}" | sed -e '/^virtual/d' >> /etc/portage/profile/package.provided
+        [[ -f "${_PACKAGE_INSTALLED}" ]] \
+            && sed -e '/^virtual/d' < "${_PACKAGE_INSTALLED}" >> /etc/portage/profile/package.provided
 
         # backup headers and static files, depending images can pull them in again
         if [[ -d "${_EMERGE_ROOT}/usr/include" ]]; then
             find "${_EMERGE_ROOT}/usr/include" -type f -name '*.h' | \
-                tar -cpf "${_ROOTFS_BACKUP}/${image_ns}_${image_id}-headers.tar" --files-from -
+                tar -cpf "${_ROOTFS_BACKUP}/${target_id//\//_}-headers.tar" --files-from -
         fi
         if [[ -d "${_EMERGE_ROOT}/usr/lib64" ]]; then
             find "${_EMERGE_ROOT}/usr/lib64" -type f -name '*.a' | \
-                tar -cpf "${_ROOTFS_BACKUP}/${image_ns}_${image_id}-static_libs.tar" --files-from -
+                tar -cpf "${_ROOTFS_BACKUP}/${target_id//\//_}-static_libs.tar" --files-from -
         fi
 
         # extract any possible required headers and static libs from previous builds
@@ -493,9 +508,6 @@ function _build_rootfs() {
 
     rm -rf \
         "${_EMERGE_ROOT}"/etc/ld.so.cache \
-        "${_EMERGE_ROOT}"/usr/bin/*-config \
-        "${_EMERGE_ROOT}"/usr/lib64/cmake/ \
-        "${_EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
         "${_EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
         "${_EMERGE_ROOT}"/usr/share/aclocal/ \
         "${_EMERGE_ROOT}"/usr/share/gettext/ \
@@ -510,7 +522,10 @@ function _build_rootfs() {
         "${_EMERGE_ROOT}"/var/lib/gentoo
 
     if [[ -z "${_keep_headers}" ]]; then
-        rm -rf "${_EMERGE_ROOT}"/usr/include/*
+        rm -rf "${_EMERGE_ROOT}"/usr/include/* \
+               "${_EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
+               "${_EMERGE_ROOT}"/usr/bin/*-config \
+               "${_EMERGE_ROOT}"/usr/lib64/cmake/
     fi
 
     local lib_dir
@@ -528,32 +543,31 @@ function _build_rootfs() {
     if [[ -z "${BOB_IS_INTERACTIVE}" && "$(ls -A "${_EMERGE_ROOT}")" ]]; then
         # make rootfs tar ball and copy to host
         tar -cpf "${_CONFIG}/rootfs.tar" -C "${_EMERGE_ROOT}" .
-        chown ${BOB_HOST_UID}:${BOB_HOST_GID} "${_CONFIG}/rootfs.tar"
+        chown "${BOB_HOST_UID}":"${BOB_HOST_GID}" "${_CONFIG}/rootfs.tar"
         rm -rf "${_EMERGE_ROOT}"
     fi
 
-    [[ -z "${BOB_IS_INTERACTIVE}" ]] && generate_documentation
+    if [[ -z "${BOB_IS_INTERACTIVE}" ]]; then
+        generate_documentation
+    else
+        echo "*** Build finished, skipped rootfs.tar and PACKAGES.md"
+        echo "To inspect the build result check the contents of ${_EMERGE_ROOT}"
+    fi
 
-    return 0
-}
-
-function kubler_build_rootfs() {
-    _build_rootfs "$@"
-    echo "Build finished, skipped rootfs.tar and PACKAGES.md"
-    echo "To inspect the build result check the contents of ${_EMERGE_ROOT}"
     return 0
 }
 
 function main() {
-    _build_rootfs "$@"
+    build_rootfs
 }
 
 [[ "${BOB_IS_DEBUG}" == 'true' ]] && set -x
 
-if [[ "${BOB_IS_INTERACTIVE}" != 'true' ]]; then
-    set -e
-    main "$@"
+if [[ "$1" != '--source-mode' ]]; then
+    [[ "${BOB_IS_INTERACTIVE}" != 'true' ]] && set -e
+    main
 else
     set +e
-    unset main
+    # build should always be started from script and not a sourced function, prevents container exit on error
+    unset main build_rootfs
 fi

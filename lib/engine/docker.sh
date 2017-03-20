@@ -45,6 +45,7 @@ function validate_image() {
     image_id="$1"
     image_type="$2"
     expand_image_id "${image_id}" "${image_type}"
+    # shellcheck disable=SC2154
     file_exists_or_die "${__expand_image_id}/Dockerfile.template"
 }
 
@@ -60,6 +61,7 @@ function generate_dockerfile() {
     for bob_var in ${!BOB_*}; do
         sed_param+=(-e "s|\${${bob_var}}|${!bob_var}|")
     done
+    # shellcheck disable=SC2016,SC2153,SC2154
     sed "${sed_param[@]}" \
         -e 's|${IMAGE_PARENT}|'"${IMAGE_PARENT}"'|g' \
         -e 's|${DEFAULT_BUILDER}|'"${DEFAULT_BUILDER}"'|g' \
@@ -83,10 +85,11 @@ function get_dockerfile_tag() {
     image_path="$2"
     dockerfile="${image_path}/Dockerfile"
     file_exists_or_die "${dockerfile}"
-    grep_out=$(grep ^${tag} "${dockerfile}")
+    grep_out="$(grep ^"${tag}" "${dockerfile}")"
     regex="^${tag} ?(.*)?"
     if [[ "${grep_out}" =~ $regex ]]; then
-        if [ ${BASH_REMATCH[1]} ]; then
+        if [[ "${BASH_REMATCH[1]}" ]]; then
+            # shellcheck disable=SC2034
             __get_dockerfile_tag="${BASH_REMATCH[1]}"
         else
             exit 3
@@ -131,6 +134,7 @@ function build_image() {
     generate_dockerfile "${image_expanded}"
 
     # build rootfs?
+    # shellcheck disable=SC2154
     if [[ ! -f "${image_expanded}/rootfs.tar" || "${_arg_force_full_image_build}" == 'on' ]] && \
        [[ "${image_type}" == "${_IMAGE_PATH}" || "${image_id}" != "${_current_namespace}"/*-core ]]; then
 
@@ -157,24 +161,28 @@ function build_image() {
         local config_dir
         # mounts for build container
         get_absolute_path "${image_expanded}"
+        # shellcheck disable=SC2154
         config_dir="${__get_absolute_path}"
         _container_mounts=("${config_dir}:/config"
                            "${_KUBLER_DIR}/tmp/distfiles:/distfiles"
                            "${_KUBLER_DIR}/tmp/packages:/packages"
                           )
+        # shellcheck disable=SC2034
+        BOB_CURRENT_TARGET="${image_id}"
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do
             _container_env+=("${bob_var}=${!bob_var}")
         done
 
-        _container_cmd=("/root/build-root.sh" "${image_expanded}")
+        _container_cmd=("kubler-build-root")
         _container_mount_portage="true"
 
         msg "using ${builder_id}:${IMAGE_TAG}"
 
-        run_id="${image_id//\//-}-${RANDOM}"
-        run_image "${builder_id}:${IMAGE_TAG}" "${image_id}" "false" "${run_id}" || die "failed to build rootfs for ${image_expanded}"
+        run_id="${image_id//\//-}-${$}-${RANDOM}"
+        run_image "${builder_id}:${IMAGE_TAG}" "${image_id}" "false" "${run_id}" \
+            || die "failed to build rootfs for ${image_expanded}"
 
         _container_mount_portage="false"
 
@@ -185,11 +193,12 @@ function build_image() {
         "${DOCKER}" rm "${run_id}" || die "failed to remove container ${run_id}"
 
         msg "tag ${_current_namespace}/${builder_commit_id}:latest"
-        "${DOCKER}" tag "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" "${_current_namespace}/${builder_commit_id}:latest" ||
-            die "failed to tag ${builder_commit_id}"
+        "${DOCKER}" tag "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" "${_current_namespace}/${builder_commit_id}:latest" \
+            || die "failed to tag ${builder_commit_id}"
     fi
 
     msg "--> phase 2: build ${image_id}:${IMAGE_TAG}"
+    # shellcheck disable=SC2086
     "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_expanded}" || die "failed to build ${image_expanded}"
 
     msg "tag ${image_id}:latest"
@@ -222,6 +231,7 @@ function image_exists_or_rm {
     image_type="${2:-${_IMAGE_PATH}}"
     image_tag="${3:-${IMAGE_TAG}}"
     image_exists "${image_id}" "${image_tag}" || return $?
+    # shellcheck disable=SC2154
     if [[ "${_arg_clear_everything}" == 'on' && "${image_id}" != "${_STAGE3_NAMESPACE}/portage" ]]; then
         # -C => nuke everything except portage
         remove_image "${image_id}" "${image_tag}"
@@ -245,7 +255,7 @@ function image_exists_or_rm {
 # 1: image_id (i.e. kubler/busybox)
 # 2: image_tag - optional, default: $IMAGE_TAG
 function image_exists() {
-    local image_id image_type image_tag images ignore_build_opts
+    local image_id image_type image_tag
     image_id="${1}"
     image_tag="${2:-${IMAGE_TAG}}"
     # image exists?
@@ -264,7 +274,9 @@ function get_image_size() {
     image_id="$1"
     image_tag="$2"
     image_size="$(${DOCKER} images "${image_id}:${image_tag}" --format '{{.Size}}')"
+    # shellcheck disable=2181
     [[ $? -ne 0 ]] && die "Couldn't determine image size for ${image_id}:${image_tag}: ${image_size}"
+    # shellcheck disable=SC2034
     __get_image_size="${image_size}"
 }
 
@@ -280,7 +292,7 @@ function run_image() {
     image_id="$1"
     container_host_name="$2"
     auto_rm="${3:-true}"
-    container_name="$4"
+    container_name="${4:-${image_id//\//-}-${$}-${RANDOM}}"
     # docker env options
     docker_env=()
     for denv in "${_container_env[@]}"; do
@@ -297,9 +309,21 @@ function run_image() {
     [[ ! -z "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
     [[ "${BUILD_PRIVILEGED}" == "true" ]] && docker_args+=("--privileged")
     [[ "${_container_mount_portage}" == "true" ]] && docker_args+=("--volumes-from" "${_PORTAGE_IMAGE//\//-}")
-    # gogo
-    "${DOCKER}" run "${docker_args[@]}" "${docker_mounts[@]}" "${docker_env[@]}" "${image_id}" "${_container_cmd[@]}" ||
-        die "Failed to run image ${image_id}"
+    # shellcheck disable=SC2064
+    trap "handle_container_run ${container_name}" EXIT
+    "${DOCKER}" run "${docker_args[@]}" "${docker_mounts[@]}" "${docker_env[@]}" "${image_id}" "${_container_cmd[@]}" \
+        || die "Failed to run image ${image_id}"
+    trap - EXIT
+}
+
+# 1: container_id
+function handle_container_run() {
+    local container_id
+    container_id="$1"
+    if [[ -z "${NO_CLEANUP}" ]] && container_exists "${container_id}"; then
+        msg "--> remove ${container_id}, NO_CLEANUP env prevents this"
+        "${DOCKER}" rm "${container_id}" 1> /dev/null
+    fi
 }
 
 # Docker import a portage snapshot as given portage_image_id
@@ -316,13 +340,14 @@ function import_portage_tree() {
     download_portage_snapshot || die "Failed to download portage snapshot"
 
     msg "--> bootstrap ${image_id}"
+    # shellcheck disable=SC2154
     portage_tmp_file="${_KUBLER_DIR}/lib/bob-portage/${_portage_file}"
     cp "${DOWNLOAD_PATH}/${_portage_file}" "${_KUBLER_DIR}/lib/bob-portage/"
     export BOB_CURRENT_PORTAGE_FILE=${_portage_file}
 
     generate_dockerfile "${_KUBLER_DIR}/lib/bob-portage/"
     "${DOCKER}" build -t "${image_id}:${PORTAGE_DATE}" "${_KUBLER_DIR}/lib/bob-portage/" || die "failed to tag"
-    rm ${_KUBLER_DIR}/lib/bob-portage/Dockerfile "${portage_tmp_file}"
+    rm "${_KUBLER_DIR}"/lib/bob-portage/Dockerfile "${portage_tmp_file}"
     "${DOCKER}" tag "${image_id}:${PORTAGE_DATE}" "${image_id}:latest" || die "failed to tag"
 }
 
@@ -337,7 +362,7 @@ function import_stage3() {
     image_exists_or_rm "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
 
     download_stage3 || die "failed to download stage3 files"
-
+    # shellcheck disable=SC2154
     msg "--> import ${image_id}:${STAGE3_DATE} using ${_stage3_file}"
     bzcat < "${DOWNLOAD_PATH}/${_stage3_file}" | bzip2 | "${DOCKER}" import - "${image_id}:${STAGE3_DATE}" || die "failed to import ${_stage3_file}"
 
@@ -376,7 +401,7 @@ function build_core() {
     build_image "${builder_id}-core" "${_BUILDER_PATH}"
 
     # clean up
-    rm -r ${__expand_image_id}
+    rm -r "${__expand_image_id}"
 }
 
 # Produces a build container image for given builder_id
@@ -409,20 +434,21 @@ function build_image_no_deps() {
 # 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH), default: $_IMAGE_PATH
 function get_build_container() {
     __get_build_container=
-    local image_id image_type build_container build_from parent_image current_image builder_image
+    local image_id image_type build_container parent_image parent_ns current_image builder_image
     image_id="${1}"
     image_type="${2:-${_IMAGE_PATH}}"
     # set default
     build_container="${DEFAULT_BUILDER}"
     # get parent image basename
     parent_image="${IMAGE_PARENT##*/}"
+    parent_ns="${IMAGE_PARENT%%/*}"
     if [[ ! -z "${BUILDER}" ]]; then
         # BUILDER was set for this image, override default and start with given base builder from this image on
         build_container="${BUILDER}"
     elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
         builder_image="${build_container##*/}"
-        [[ "${parent_image}" != "scratch" ]] && image_exists "${_current_namespace}/${builder_image}-${parent_image}" \
-            && build_container="${_current_namespace}/${builder_image}-${parent_image}"
+        [[ "${parent_image}" != "scratch" ]] && image_exists "${parent_ns}/${builder_image}-${parent_image}" \
+            && build_container="${parent_ns}/${builder_image}-${parent_image}"
     elif [[ "${image_type}" == "${_BUILDER_PATH}" ]]; then
         build_container="${image_id}-core"
     fi
@@ -442,13 +468,14 @@ function push_auth() {
     if [[ -z "${repository_url}" ]]; then
         DOCKER_LOGIN="${DOCKER_LOGIN:-${namespace}}"
         msg "--> using docker.io/u/${DOCKER_LOGIN}"
-        login_args="-u ${DOCKER_LOGIN}"
-        if [ ! -z ${DOCKER_PW} ]; then
-            login_args+=" -p ${DOCKER_PW}"
+        login_args=('-u' "${DOCKER_LOGIN}")
+        # shellcheck disable=SC2153
+        if [[ -n "${DOCKER_PW}" ]]; then
+            login_args+=('-p' "${DOCKER_PW}")
         fi
-        "${DOCKER}" login ${login_args} || exit 1
+        "${DOCKER}" login "${login_args[@]}" || exit 1
     else
-        echo "--> using ${repository_url}"
+        msg "--> using ${repository_url}"
     fi
 }
 
@@ -464,11 +491,12 @@ function push_image() {
     push_id="${image_id}"
     if [[ ! -z "${repository_url}" ]]; then
         docker_image_id="$("${DOCKER}" images "${image_id}:${image_tag}" --format '{{.ID}}')"
+        # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${image_tag}: ${docker_image_id}"
         push_id="${repository_url}/${image_id}"
         msg "${DOCKER}" tag "${docker_image_id}" "${push_id}"
         "${DOCKER}" tag "${docker_image_id}" "${push_id}" || exit 1
     fi
-    echo "--> pushing ${push_id}"
+    msg "--> pushing ${push_id}"
     "${DOCKER}" push "${push_id}" || exit 1
 }

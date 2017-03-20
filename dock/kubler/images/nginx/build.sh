@@ -1,16 +1,19 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="www-servers/nginx::mva"
+_packages="www-servers/nginx"
+# ..or when using mva overlay
+#_packages="www-servers/nginx::mva"
 
 configure_bob()
 {
     # add mva overlay which has nginx with pagespeed and other goodies
-    layman -a mva
+    #layman -a mva
+    :
 }
 
 #
-# this method runs in the bb builder container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -23,14 +26,14 @@ configure_rootfs_build()
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {
-    mkdir -p $_EMERGE_ROOT/etc/nginx/conf.d
+    mkdir -p "${_EMERGE_ROOT}"/etc/nginx/conf.d
     # required if pagespeed module is included
     #copy_gcc_libs
     # remove overlay
-    unset ROOT
-    layman -d mva
+    #unset ROOT
+    #layman -d mva
 }

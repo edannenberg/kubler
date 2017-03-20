@@ -21,12 +21,12 @@ ENV DEF_CHOST="${BOB_CHOST}" \
 
 COPY etc/ /etc/
 
-COPY build-root.sh /root/
+COPY build-root.sh /usr/local/bin/kubler-build-root
 
 COPY bashrc.sh /root/.bashrc
 
-COPY acserver-push.sh /usr/bin/acserver-push
+COPY acserver-push.sh /usr/local/bin/acserver-push
 
-COPY portage-git-sync.sh /usr/bin/portage-git-sync
+COPY portage-git-sync.sh /usr/local/bin/portage-git-sync
 
 CMD ["/bin/bash"]

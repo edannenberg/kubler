@@ -1,3 +1,5 @@
+## kubler/postgres
+
 Run this [PostgreSQL][] image with:
 
     $ docker run -d --name db-0 -v /data/db/db-0:/var/lib/postgresql/data kubler/postgres
@@ -28,5 +30,8 @@ To enable backups set `BACKUP_CRON_SCHEDULE` to a standard cron expression, i.e.
         -v /host_backups/db-0:/backup \
         kubler/postgres
 
+[Last Build][packages]
+
 [PostgreSQL]: http://www.postgresql.org/
 [linking]: http://docs.docker.io/en/latest/use/port_redirection/#linking-a-container
+[packages]: PACKAGES.md

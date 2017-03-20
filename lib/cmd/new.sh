@@ -28,26 +28,26 @@ function add_namespace() {
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
         msg "--> What type of namespace? To allow multiple namespaces choose 'multi', else 'single'.
     The only upshot of 'single' mode is saving one directory level, the downside is loss of cross-namespace access."
-        read -p "Type (${def_type}): " _tmpl_ns_type
+        read -r -p "Type (${def_type}): " _tmpl_ns_type
 
         [[ -z "${_tmpl_ns_type}" ]] && _tmpl_ns_type="${def_type}"
         [[ "${_tmpl_ns_type}" != 'single' && "${_tmpl_ns_type}" != 'multi' ]] && die "Unknown type, \"${_tmpl_ns_type}\""
         msg "--> Initial image tag, a.k.a. version?"
-        read -p "Image Tag (${def_image_tag}): " _tmpl_image_tag
+        read -r -p "Image Tag (${def_image_tag}): " _tmpl_image_tag
         [[ -z "${_tmpl_image_tag}" ]] && _tmpl_image_tag="${def_image_tag}"
     else
         msg "Namespace Type:          ${_NAMESPACE_TYPE}"
     fi
 
     msg '\n--> Who maintains the new namespace?'
-    read -p "Name (${def_name}): " _tmpl_author
+    read -r -p "Name (${def_name}): " _tmpl_author
     [[ -z "${_tmpl_author}" ]] && _tmpl_author="${def_name}"
 
-    read -p "EMail (${def_mail}): " _tmpl_author_email
+    read -r -p "EMail (${def_mail}): " _tmpl_author_email
     [[ -z "${_tmpl_author_email}" ]] && _tmpl_author_email="${def_mail}"
 
     msg '--> What type of images would you like to build?'
-    read -p "Engine (${def_engine}): " _tmpl_engine
+    read -r -p "Engine (${def_engine}): " _tmpl_engine
     [[ -z "${_tmpl_engine}" ]] && _tmpl_engine="${def_engine}"
 
     _tmpl_namespace="${ns_name}"
@@ -107,9 +107,10 @@ To manage the new namespace with GIT you may want to run:
 
 function get_ns_conf() {
     __get_ns_conf=
-    local ns_conf_file image_type
+    local ns_conf_file
 
     if [[ -z "${_tmpl_namespace}" || -z "${_tmpl_image_name}" ]] && [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
+        # shellcheck disable=SC2154
         die "${_arg_name} should have format <namespace>/<image_name>"
     fi
 
@@ -121,19 +122,17 @@ You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${_tmpl_
     __get_ns_conf="${ns_conf_file}"
 }
 
-# Arguments:
-# 1: image_name
 function add_image() {
-    local image_name image_base_path image_path
-    image_name="$1"
+    local image_base_path image_path
 
     get_ns_conf "${_IMAGE_PATH}"
+    # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
     msg '\n<enter> to accept default value\n'
 
     msg 'Extend an existing image? Fully qualified image id (i.e. kubler/busybox) if yes or scratch'
-    read -p 'Parent Image (scratch): ' _tmpl_image_parent
+    read -r -p 'Parent Image (scratch): ' _tmpl_image_parent
     [ -z "${_tmpl_image_parent}" ] && _tmpl_image_parent='scratch'
 
     image_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/images"
@@ -148,22 +147,21 @@ function add_image() {
     _post_msg="Successfully created ${_arg_name} image at ${image_path}\n"
 }
 
-# Arguments:
-# 1: builder_name
 function add_builder() {
-    local builder_name builder_base_path builder_path
-    builder_name="$1"
+    local builder_base_path builder_path
 
     get_ns_conf "${_BUILDER_PATH}"
+    # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
     msg '\n<enter> to accept default value\n'
 
     msg 'Extend an existing builder? Fully qualified image id (i.e. kubler/bob) if yes or else stage3'
-    read -p 'Parent Image (stage3): ' _tmpl_builder_type
+    read -r -p 'Parent Image (stage3): ' _tmpl_builder_type
     [ -z "${_tmpl_builder_type}" ] && _tmpl_builder_type='stage3'
 
     _tmpl_builder="${_tmpl_builder_type}"
+    # shellcheck disable=SC2016,SC2034
     [[ "${_tmpl_builder_type}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
 
     builder_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/builder"
@@ -182,11 +180,10 @@ function main() {
     local sed_args tmpl_var tmpl_file
     target_id="${_arg_name}"
     _sub_tmpl_target=
-    if [[ "${target_id}" != *"/"* ]]; then
-        [[ "${_arg_template_type}" != 'namespace' && -n "${_NAMESPACE_DEFAULT}" ]] \
-            && target_id="${_NAMESPACE_DEFAULT}/${_arg_name}"
-        _tmpl_namespace="${target_id%%/*}"
-    fi
+    # shellcheck disable=SC2154
+    [[ "${target_id}" != *"/"* && "${_arg_template_type}" != 'namespace' && -n "${_NAMESPACE_DEFAULT}" ]] \
+        && target_id="${_NAMESPACE_DEFAULT}/${_arg_name}"
+    _tmpl_namespace="${target_id%%/*}"
     _tmpl_image_name="${target_id##*/}"
 
     case "${_arg_template_type}" in
@@ -194,10 +191,10 @@ function main() {
             add_namespace "${target_id}"
             ;;
         image)
-            add_image "${target_id}"
+            add_image
             ;;
         builder)
-            add_builder "${target_id}"
+            add_builder
             ;;
         *)
             show_help

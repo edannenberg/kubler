@@ -4,5 +4,8 @@
 
 # setup portage
 source /etc/profile
-# provide all helper functions from build-root.sh
-source /root/build-root.sh
+
+# shellcheck disable=SC1091
+source /config/build.sh
+# shellcheck disable=SC1091
+source /usr/local/bin/kubler-build-root --source-mode

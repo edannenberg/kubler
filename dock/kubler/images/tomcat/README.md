@@ -2,9 +2,9 @@
 
 Run this [tomcat][] image with:
 
-    $ docker run -d --name tomcat kubler/tomcat
+    $ docker run -d --name tomcat -p "8080:8080" kubler/tomcat
 
-[packages][Image Content]
+[Last Build][packages]
 
-[tomcat]: https://tomcat.net
+[tomcat]: https://tomcat.apache.org/
 [packages]: PACKAGES.md

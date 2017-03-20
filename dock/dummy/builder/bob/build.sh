@@ -1,5 +1,5 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
 

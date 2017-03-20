@@ -1,10 +1,9 @@
 #
-# build config, sourced by build-root.sh inside build container
+# Build config, sourced by build-root.sh inside build container
 #
-_packages=""
 
 #
-# this hook can be used to configure the build container itself, install packages, etc
+# This hook can be used to configure the build container itself, install packages, run any command, etc
 #
 configure_bob() {
     fix_portage_profile_symlink
@@ -28,7 +27,7 @@ configure_bob() {
     emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq
     install_git_postsync_hooks
     configure_layman
-    # install aci/oci requirements
+    # install aci/oci requirements, note: currently broken for musl based stage3 builders
     emerge dev-lang/go app-crypt/gnupg
     install_oci_deps
 }

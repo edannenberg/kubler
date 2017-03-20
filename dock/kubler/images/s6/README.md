@@ -1,3 +1,5 @@
+## kubler/s6
+
 Run this [s6][] image with:
 
     $ docker run -d --name s6 kubler/s6
@@ -18,6 +20,9 @@ Also includes a service to run [busybox-crond][]. Disabled per default. To enabl
 
     RUN echo '* * * * * echo hi' >> /var/spool/cron/crontabs/root && ln -s /etc/service/cron /service
 
+[Last Build][packages]
+
 [s6]: http://skarnet.org/software/s6/
 [entr]: http://entrproject.org/
 [busybox-crond]: http://www.busybox.net/downloads/BusyBox.html
+[packages]: PACKAGES.md

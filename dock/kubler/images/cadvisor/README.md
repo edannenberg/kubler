@@ -1,3 +1,5 @@
+## kubler/cadvisor
+
 Run this [cadvisor][] image with:
 
     $ docker run \
@@ -5,7 +7,7 @@ Run this [cadvisor][] image with:
     --volume=/var/run:/var/run:rw \
     --volume=/sys:/sys:ro \
     --volume=/var/lib/docker/:/var/lib/docker:ro \
-    --publish=8080:8080 \
+    --publish="8080:8080" \
     --detach=true \
     --name=cadvisor \
     kubler/cadvisor:latest
@@ -14,4 +16,7 @@ Web interface:
 
     http://localhost:8080
 
+[Last Build][packages]
+
 [cadvisor]: https://github.com/google/cadvisor
+[packages]: PACKAGES.md

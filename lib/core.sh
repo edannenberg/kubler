@@ -30,7 +30,9 @@ readonly _PORTAGE_IMAGE="${_STAGE3_NAMESPACE}/portage"
 readonly _PORTAGE_CONTAINER="${_STAGE3_NAMESPACE}-portage"
 readonly _TODAY="$(date +%Y%m%d)"
 
+# shellcheck disable=SC2034
 BOB_HOST_UID=$(id -u)
+# shellcheck disable=SC2034
 BOB_HOST_GID=$(id -g)
 
 # stage3 defaults, override via build container .conf
@@ -38,7 +40,6 @@ STAGE3_BASE="stage3-amd64-hardened+nomultilib"
 
 # used as primitive caching mechanism
 _last_sourced_engine=
-_last_sourced_ns=
 _last_sourced_image=
 _last_sourced_push_conf=
 
@@ -78,7 +79,7 @@ function sha_sum() {
 function has_required_binaries() {
     local binary
     for binary in ${_required_binaries}; do
-        if ! [ -x "$(command -v ${binary})" ]; then
+        if ! [ -x "$(command -v "${binary}")" ]; then
             die "${binary} is required for this script to run. Please install and try again"
         fi
     done
@@ -108,7 +109,8 @@ function replace_in_file() {
     local file_path sed_arg
     file_path="${1}"
     declare -a sed_arg=("${!2}")
-    sed "${sed_arg[@]}" "${file_path}" > "${file_path}.tmp" && mv "${file_path}.tmp" "${file_path}" || die
+    sed "${sed_arg[@]}" "${file_path}" > "${file_path}.tmp" || die
+    mv "${file_path}.tmp" "${file_path}" || die
 }
 
 # Source build engine script depending on BUILD_ENGINE value
@@ -117,6 +119,7 @@ function source_build_engine() {
     engine="${_LIB_DIR}/engine/${BUILD_ENGINE}.sh"
     if [[ "${_last_sourced_engine}" != "${BUILD_ENGINE}" ]]; then
         file_exists_or_die "${engine}"
+        # shellcheck source=lib/engine/docker.sh
         source "${engine}"
         _last_sourced_engine="${BUILD_ENGINE}"
     fi
@@ -133,9 +136,11 @@ function source_namespace_conf() {
     [[ "${_NAMESPACE_TYPE}" == 'single' ]] && return 0
 
     # reset to possible user conf first..
+    # shellcheck disable=SC1090
     [[ -f "${_ns_conf}" ]] && source "${_ns_conf}"
 
     # ..then read project conf to initialize any missing defaults if necessary
+    # shellcheck source=kubler.conf
     [[ "${_ns_conf}" != "${_global_conf}" ]] && source "${_global_conf}"
 
     [[ "${image_id}" != *"/"* ]] && return 0
@@ -144,6 +149,7 @@ function source_namespace_conf() {
     conf_file="${_NAMESPACE_DIR}/${current_ns}/${_KUBLER_CONF}"
 
     # ..then read current namespace conf
+    # shellcheck source=dock/kubler/kubler.conf
     file_exists_or_die "${conf_file}" && source "${conf_file}"
     _current_namespace="${current_ns}"
     # just for BC and to make build.conf/templates a bit more consistent to use. not used otherwise
@@ -167,6 +173,7 @@ function source_image_conf() {
     fi
     unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILD_PRIVILEGED
     build_conf="${image_path}/build.conf"
+    # shellcheck source=dock/kubler/images/busybox/build.conf
     file_exists_or_die "${build_conf}" && source "${build_conf}"
 
     # assume scratch if IMAGE_PARENT is not set
@@ -187,6 +194,7 @@ function source_push_conf() {
     namespace=${1%%/*}
     # exit if we just sourced for this NS
     [[ "${_last_sourced_push_conf}" == "${namespace}" ]] && return 0
+    # shellcheck disable=SC1090
     [[ -f "${namespace}/push.conf" ]] && source "${namespace}/push.conf"
     _last_sourced_push_conf="${namespace}"
 }
@@ -209,24 +217,22 @@ function download_stage3() {
 
     for file in "${_stage3_file}" "${stage3_contents}" "${stage3_digests}"; do
         [ -f "${DOWNLOAD_PATH}/${file}" ] && continue
+        trap 'handle_download_error ${DOWNLOAD_PATH}/${file}' EXIT
         wget -O "${DOWNLOAD_PATH}/${file}" "${ARCH_URL}${file}"
         wget_exit=$?
-        if [[ "${wget_exit}" -ne 0 ]]; then
-            rm -f "${DOWNLOAD_PATH}/${file}"
-            # give hint if 404
-            [[ "${wget_exit}" -eq 8 ]] && die "Got a 404 for ${file}, try running the update command to resolve this."
-            die "Couldn't download ${ARCH_URL}${file}"
-        fi
+        [[ "${wget_exit}" -eq 8 ]] && msg "*** Got a 404 for ${file}, try running the update command to resolve this."
+        [[ "${wget_exit}" -ne 0 ]] && exit $?
+        trap - EXIT
     done
-
+    # shellcheck disable=SC2154
     if [ "${_arg_skip_gpg_check}" = false ] && [ "${is_autobuild}" = true ]; then
         gpg --verify "${DOWNLOAD_PATH}/${stage3_digests}" || die "insecure digests"
     elif [ "${is_autobuild}" = false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     fi
-    sha512_hashes=$(grep -A1 SHA512 "${DOWNLOAD_PATH}/${stage3_digests}" | grep -v '^--')
-    sha512_check=$(cd "${DOWNLOAD_PATH}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))
-    sha512_failed=$(echo "${sha512_check}" | grep FAILED)
+    sha512_hashes="$(grep -A1 SHA512 "${DOWNLOAD_PATH}/${stage3_digests}" | grep -v '^--')"
+    sha512_check="$(cd "${DOWNLOAD_PATH}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))"
+    sha512_failed="$(echo "${sha512_check}" | grep FAILED)"
     if [ -n "${sha512_failed}" ]; then
         die "${sha512_failed}"
     fi
@@ -237,7 +243,7 @@ function download_portage_snapshot() {
     PORTAGE_DATE="${PORTAGE_DATE:-latest}"
     PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
     [[ -d "${DOWNLOAD_PATH}" ]] || mkdir -p "${DOWNLOAD_PATH}"
-    local portage_sig portage_md5 file portage_backup dl_name
+    local portage_sig portage_md5 file dl_name
     _portage_file="portage-${PORTAGE_DATE}.tar.xz"
     portage_sig="${_portage_file}.gpgsig"
     portage_md5="${_portage_file}.md5sum"
@@ -248,8 +254,9 @@ function download_portage_snapshot() {
             dl_name="${_portage_file//latest/${_TODAY}}"
         fi
         if [ ! -f "${DOWNLOAD_PATH}/${dl_name}" ]; then
-            wget -O "${DOWNLOAD_PATH}/${dl_name}" "${MIRROR}snapshots/${file}"
-            [[ $? -ne 0 ]] && rm "${DOWNLOAD_PATH}/${file}" && die "Couldn't download ${MIRROR}snapshots/${file}"
+            trap 'handle_download_error ${DOWNLOAD_PATH}/${dl_name}' EXIT
+            wget -O "${DOWNLOAD_PATH}/${dl_name}" "${MIRROR}snapshots/${file}" || exit $?
+            trap - EXIT
         fi
     done
 
@@ -264,6 +271,17 @@ function download_portage_snapshot() {
     if [[ "${_arg_skip_gpg_check}" != 'on' ]] && [[ -f "${DOWNLOAD_PATH}/${portage_sig}" ]]; then
         gpg --verify "${DOWNLOAD_PATH}/${portage_sig}" "${DOWNLOAD_PATH}/${_portage_file}" || die "Insecure digests."
     fi
+}
+
+# Arguments:
+# 1: file - full path of downloaded file
+# 2: error_message - optional
+function handle_download_error() {
+    local file msg
+    file="$1"
+    msg="${2:-Aborted download of ${file}}"
+    [[ -f "${file}" ]] && rm "${file}"
+    die "${msg}"
 }
 
 # Sets __expand_image_id to image sub-path for given image_id
@@ -298,11 +316,11 @@ function expand_image_id() {
 function expand_requested_target_ids() {
     __expand_requested_target_ids=
     local target_ids expanded target image current_ns
-    target_ids="$@"
+    target_ids=( "$@" )
     expanded=""
     if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
         current_ns="$(basename -- "${_NAMESPACE_DIR}")"
-        for target in $target_ids; do
+        for target in "${target_ids[@]}"; do
             # strip namespace if this is a fully qualified image id, redundant in single namespace mode
             if [[ "${target}" == *"/"* ]]; then
                 [[ "${target%%/*}" != "${current_ns}" ]] && die "Invalid namespace for ${target}, expected: ${current_ns}"
@@ -314,7 +332,7 @@ function expand_requested_target_ids() {
         done
     else
         local is_processed
-        for target in $target_ids; do
+        for target in "${target_ids[@]}"; do
             is_processed=
             # is target a fully qualified image id?
             if [[ "${target}" == *"/"* ]]; then
@@ -343,6 +361,7 @@ function expand_requested_target_ids() {
             fi
         done
     fi
+    # shellcheck disable=SC2034
     __expand_requested_target_ids=${expanded}
 }
 
@@ -394,6 +413,7 @@ function detect_namespace() {
     else
         # allow missing namespace dir for new command, the user might want to create a new namespace
         if [[ -z "${real_ns_dir}" ]]; then
+            # shellcheck disable=SC2154
             if [[ "${_arg_command}" == 'new' ]]; then
                 real_ns_dir="${working_dir}"
                 readonly _NAMESPACE_TYPE='none'
@@ -425,9 +445,11 @@ function detect_namespace() {
     [[ -z "${_NAMESPACE_TYPE}" ]] && readonly _NAMESPACE_TYPE='multi'
 
     # read namespace config first..
+    # shellcheck disable=SC1090
     [[ -f "${_ns_conf}" ]] && source "${_ns_conf}"
 
     # ..then project conf to initialize any missing defaults
+    # shellcheck source=kubler.conf
     [[ "${_ns_conf}" != "${_global_conf}" ]] && source "${_global_conf}"
 
     [[ "${_NAMESPACE_TYPE}" == 'single' ]] && source_build_engine
@@ -450,7 +472,7 @@ function add_documentation_header() {
     get_image_size "${image}" "${IMAGE_TAG}"
     # remove existing header
     if [[ -f "${doc_file}" ]]; then
-        $(grep -q "^${header}" "${doc_file}") && sed -i '1,4d' "${doc_file}"
+        grep -q "^${header}" "${doc_file}" && sed -i '1,4d' "${doc_file}"
     else
         echo -e "" > "${doc_file}"
     fi

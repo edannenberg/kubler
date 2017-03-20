@@ -1,13 +1,8 @@
 FROM ${IMAGE_PARENT}
-LABEL maintainer ${MAINTAINER}
+LABEL maintainer  ${MAINTAINER}
 
 ADD rootfs.tar /
 
 RUN dot -c && \
-    rm -rf /var/lib/tomcat-8-local/webapps/ROOT && \
-    mv /var/lib/tomcat-8-local/webapps/plantuml.war /var/lib/tomcat-8-local/ && \
-    echo '<?xml version="1.0" encoding="UTF-8"?><Context docBase="/var/lib/tomcat-8-local/plantuml.war"></Context>' > /var/lib/tomcat-8-local/conf/ROOT.xml
-    #sed -i '126i <Context path="" docBase="plantuml.war"></Context>' /var/lib/tomcat-8-local/conf/server.xml && \
-    #sed -i 's|autoDeploy="true"|autoDeploy="false" deployOnStartup="false"|g' /var/lib/tomcat-8-local/conf/server.xml
-
-#CMD ["/bin/some-cmd", "--some-option", "some-value"]
+    rm -rf /var/lib/tomcat-8-local/webapps/ROOT/* && \
+    echo '<% response.sendRedirect("/plantuml"); %>' > /var/lib/tomcat-8-local/webapps/ROOT/index.jsp

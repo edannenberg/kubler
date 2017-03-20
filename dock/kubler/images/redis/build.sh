@@ -1,10 +1,10 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="dev-db/redis"
 
 #
-# this method runs in the bb builder container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -12,10 +12,10 @@ configure_rootfs_build()
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {
     # disable protected mode
-    sed -i 's/^protected-mode yes/protected-mode no/g' "${_EMERGE_ROOT}/etc/redis.conf"
+    sed -i 's/^protected-mode yes/protected-mode no/g' "${_EMERGE_ROOT}"/etc/redis.conf
 }

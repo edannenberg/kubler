@@ -1,22 +1,12 @@
 #
-# build config, sourced by build-root.sh inside build container
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-
-# list of gentoo package atoms to be installed at custom rootfs (${_EMERGE_ROOT}), optional
-# if you are not sure about package names you may want to run:
-# kubler build -i kubler/plant-uml and then emerge -s <search-string>
 _packages="media-gfx/graphviz"
 
-# define custom variables to your liking
-#plant-uml_version=1.0
-
-#
-# this hook can be used to configure the build container itself, install packages, run any command, etc
-#
 configure_bob()
 {
     unprovide_package dev-java/javatoolkit
-    update_use 'media-libs/gd' '+jpeg' '+png +fontconfig +truetype'
+    update_use 'media-libs/gd' '+jpeg' '+png' '+fontconfig' '+truetype'
     update_use media-gfx/graphviz '-cairo'
     emerge -v java-virtuals/servlet-api:3.0 dev-java/maven-bin media-gfx/graphviz
     # build plantuml
@@ -28,9 +18,8 @@ configure_bob()
     chown tomcat:tomcat "${_EMERGE_ROOT}"/var/lib/tomcat-8-local/webapps/plantuml.war
 }
 
-
 #
-# this hook is called in the build container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -38,7 +27,7 @@ configure_rootfs_build()
 }
 
 #
-# this hook is called in the build container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {

@@ -1,18 +1,8 @@
 #
-# build config, sourced by build-root.sh inside build container
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-
-# list of gentoo package atoms to be installed at custom rootfs (${_EMERGE_ROOT}), optional
-# if you are not sure about package names you may want to run:
-# ./bin/bob_interactive kubler/$tmpl_image_name} and then emerge -s <search-string>
 _packages="dev-libs/apr dev-java/tomcat-native www-servers/tomcat"
 
-# define custom variables to your liking
-#tomcat_version=1.0
-
-#
-# this hook can be used to configure the build container itself, install packages, run any command, etc
-#
 configure_bob()
 {
     # build tomcat-native package on the host
@@ -23,7 +13,7 @@ configure_bob()
 
 
 #
-# this hook is called in the build container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -31,7 +21,7 @@ configure_rootfs_build()
 }
 
 #
-# this hook is called in the build container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {

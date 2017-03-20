@@ -1,3 +1,5 @@
+## kubler/elasticsearch
+
 Run this [Elasticsearch][] image with:
 
     $ docker run -d --name elasticsearch-0 kubler/elasticsearch
@@ -29,5 +31,8 @@ For example, we can use the busybox image and wget to query the elasticsearch co
       "tagline" : "You Know, for Search"
     }
 
+[Last Build][packages]
+
 [Elasticsearch]: http://www.elasticsearch.org/
 [linking]: http://docs.docker.io/en/latest/use/port_redirection/#linking-a-container
+[packages]: PACKAGES.md

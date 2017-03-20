@@ -1,5 +1,10 @@
-Run this [BusyBox][] image with:
+## kubler/glibc
 
-    $ docker run -i -t --name busybox kubler/busybox
+Run this [Glibc][] image with:
 
-[BusyBox]: http://busybox.net/
+    $ docker run -it --rm kubler/glibc
+
+[Last Build][packages]
+
+[Glibc]: https://www.gnu.org/software/libc/
+[packages]: PACKAGES.md

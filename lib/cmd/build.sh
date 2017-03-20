@@ -3,6 +3,7 @@
 # All rights reserved.
 
 _required_binaries=" bzip2 grep id wget"
+# shellcheck disable=SC2154
 [[ "${_arg_skip_gpg_check}" != "on" ]] && _required_binaries+=" gpg"
 [[ $(command -v sha512sum) ]] && _required_binaries+=" sha512sum" || _required_binaries+=" shasum"
 
@@ -10,7 +11,7 @@ _required_binaries=" bzip2 grep id wget"
 #
 # Arguments:
 #
-# 1: images
+# 1: images - fully qualified ids, space separated
 function generate_build_order() {
     local images image_id builder_id excluded_image
     images="$1"
@@ -22,7 +23,7 @@ function generate_build_order() {
         if [ -z "$_build_order" ]; then
             _build_order="${image_id}"
         else
-            ! string_has_word "${_build_order}" ${image_id} && _build_order+=" ${image_id}"
+            ! string_has_word "${_build_order}" "${image_id}" && _build_order+=" ${image_id}"
         fi
     done
     # generate builder build order
@@ -36,10 +37,11 @@ function generate_build_order() {
             ! string_has_word "${_build_order_builder}" "${builder_id}" && _build_order_builder+=" ${builder_id}"
         fi
     done
+    # shellcheck disable=SC2154
     for excluded_image in "${_arg_exclude[@]}";do
         _build_order="${_build_order/${excluded_image}/}"
     done
-    read _build_order <<< ${_build_order}
+    read -r _build_order <<< "${_build_order}"
 }
 
 # Check image dependencies and populate _build_order, _required_builder and _required_engines. Recursive.
@@ -54,6 +56,7 @@ function check_image_dependencies() {
     previous_image="$2"
     expand_image_id "${image_id}" "${_IMAGE_PATH}"
     if [ "${image_id}" != "scratch" ]; then
+        # shellcheck disable=SC2154
         source_image_conf "${__expand_image_id}"
 
         # collect required engines
@@ -69,7 +72,7 @@ function check_image_dependencies() {
 
         if [[ ! -z "${IMAGE_PARENT}" ]]; then
             # skip further checking if already processed
-            if ! string_has_word "${_build_order}" ${image_id}; then
+            if ! string_has_word "${_build_order}" "${image_id}"; then
                 # check parent image dependencies
                 check_image_dependencies "${IMAGE_PARENT}" "${image_id}"
                 # finally add the image
@@ -106,11 +109,14 @@ function check_builder_dependencies() {
 function main() {
     local target_id engine_id engines builder_id builders image_id images bob_var
 
-    cd "${_NAMESPACE_DIR}"
+    cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
 
     # --interactive build
+    # shellcheck disable=SC2154
     if [[ "${_arg_interactive}" == 'on' ]]; then
+        # shellcheck disable=SC2034
         BOB_IS_INTERACTIVE='true'
+        # shellcheck disable=SC2154
         target_id="${_arg_target_id}"
         [[ "${target_id}" == "*" ]] && die "--interactive does not support wildcards, only fully qualified ids."
         if [[ "${target_id}" != *"/"*  ]]; then
@@ -128,6 +134,8 @@ function main() {
         builder_id="${__get_build_container}"
 
         image_exists "${builder_id}" || die "Couldn't find image ${builder_id}"
+
+        BOB_CURRENT_TARGET="${target_id}"
 
         # pass variables starting with BOB_ to build container as ENV
         for bob_var in ${!BOB_*}; do
@@ -147,17 +155,20 @@ function main() {
         _container_cmd=('/bin/bash')
 
         msg "using: ${BUILD_ENGINE} / builder: ${builder_id}"
-        echo -e "\nRunning interactive build container with ${_NAMESPACE_DIR}/${__expand_image_id} mounted as /config"
-        echo -e "Artifacts from previous builds: /backup-rootfs\n"
-        echo -e "You may run any helper function available in your image's build.sh, like update_use, etc."
-        echo -e "Once you are finished tinkering, history | cut -c 8- may prove useful ;)\n"
-        echo -e "To start the build: $ kubler_build_rootfs ${target_id}\n"
+        msg "\nRunning interactive build container with ${_NAMESPACE_DIR}/${__expand_image_id} mounted as /config"
+        msg "Artifacts from previous builds: /backup-rootfs\n"
+        msg "You may run any helper function available in your image's build.sh, like update_use, etc."
+        msg "Once you are finished tinkering, history | cut -c 8- may prove useful ;)\n"
+        msg "To start the build:\n"
+        msg "    $ kubler-build-root \n\nNote: Starting a build twice in the same container is not recommended\n"
+        msg "Search packages: eix <search-string> / Check use flags: emerge -pv <package-atom>\n"
 
         run_image "${builder_id}" "${builder_id}" 'true'
         exit $?
     fi
 
     # --no-deps build
+    # shellcheck disable=SC2154
     if [[ "${_arg_no_deps}" == 'on' ]]; then
         for image_id in "${_arg_target_id[@]}"; do
             [[ "${image_id}" == "*" ]] && die "--no-deps does not support wildcards, only fully qualified ids."
@@ -179,6 +190,7 @@ function main() {
     msg "*** generate build order"
 
     expand_requested_target_ids "${_arg_target_id[@]}"
+    # shellcheck disable=SC2154
     generate_build_order "${__expand_requested_target_ids}"
     msgf "required engines:" "${_required_engines:1}"
     msgf "required stage3:" "${_required_cores:1}"
@@ -188,6 +200,7 @@ function main() {
 
     engines=($_required_engines)
     for engine_id in "${engines[@]}"; do
+       # shellcheck source=lib/engine/docker.sh
        source "${_LIB_DIR}/engine/${engine_id}.sh"
        validate_engine
     done

@@ -29,6 +29,7 @@
 # global          : _some_var
 # function return : __function_name
 
+# shellcheck disable=SC1004
 _help_header=' __        ___.   .__
 |  | ____ _\_ |__ |  |   ___________
 |  |/ /  |  \ __ \|  | _/ __ \_  __ \
@@ -47,7 +48,7 @@ push    - Push image(s) or namespace(s) to a registry
 update  - Check for stage3 updates and sync portage container
 
 ${_KUBLER_BIN} <command> --help for more information\n"
-
+    # shellcheck disable=SC2154
     [[ "${_is_valid_cmd}" == 'true' ]] && header_current_cmd=" ${_arg_command}"
     echo -e "${_help_header}${header_current_cmd}\n"
     [[ ! -z "${_help_command_description}" ]] && echo -e "${_help_command_description}\n"
@@ -89,13 +90,15 @@ function get_absolute_path() {
 # 2: exit_code as int, optional, default: 1
 function die() {
     local exit_code
-    exit_code=${2:-1}
+    exit_code="${2:-1}"
     [[ "$_PRINT_HELP" = 'yes' ]] && show_help >&2
-    echo -e '--#@!> fatal:' "$1" >&2
-    exit ${exit_code}
+    echo -e 'fatal:' "$1" >&2
+    exit "${exit_code}"
 }
 
 function main() {
+    (( ${BASH_VERSION%%.*} >= 4 )) || die "Kubler needs Bash version 4 or greater, only found version ${BASH_VERSION}."
+
     get_absolute_path "$0"
     [[ -z "${__get_absolute_path}" ]] && die "Couldn't determine the script's real directory, aborting" 2
     readonly _KUBLER_DIR="$(dirname -- "${__get_absolute_path}")"
@@ -113,13 +116,20 @@ function main() {
 
     core="${_LIB_DIR}"/core.sh
     [[ -f "${core}" ]] || die "Couldn't read ${core}" 2
+    # shellcheck source=lib/core.sh
     source "${core}"
 
     # parse main args
     parser="${_LIB_DIR}"/argbash/opt-main.sh
+    # shellcheck source=lib/argbash/opt-main.sh
     file_exists_or_die "${parser}" && source "${parser}"
 
-    [[ "${_arg_debug}" == 'on' ]] && { readonly BOB_IS_DEBUG='true'; set -x; } || readonly BOB_IS_DEBUG='false'
+    if [[ "${_arg_debug}" == 'on' ]]; then
+        readonly BOB_IS_DEBUG='true'
+        set -x
+    else
+        readonly BOB_IS_DEBUG='false'
+    fi
 
     # handle --help for main script
     [[ -z "${_arg_command}" && "${_arg_help}" == 'on' ]] && { show_help; exit 0; }
@@ -131,17 +141,19 @@ function main() {
 
     # valid command?
     cmd_script="${_LIB_DIR}/cmd/${_arg_command}.sh"
-    [[ ! -f "${cmd_script}" ]] && { show_help; die "Unknown command, ${_arg_command}" 5; }
+    [[ -f "${cmd_script}" ]] || { show_help; die "Unknown command, ${_arg_command}" 5; }
     _is_valid_cmd='true'
 
     # parse command args if a matching parser exists
     parser="${_LIB_DIR}/argbash/${_arg_command}.sh"
+    # shellcheck source=lib/argbash/build.sh
     [[ -f "${parser}" ]] && source "${parser}" "${_arg_leftovers[@]}"
 
     # handle --help for command script
     [[ "${_arg_help}" == 'on' ]] && { show_help; exit 0; }
 
     # run command
+    # shellcheck source=lib/cmd/build.sh
     source "${cmd_script}" "${_arg_leftovers[@]}"
 }
 

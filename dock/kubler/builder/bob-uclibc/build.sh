@@ -1,8 +1,10 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages=""
 
+#
+# This hook can be used to configure the build container itself, install packages, run any command, etc
+#
 configure_bob() {
     fix_portage_profile_symlink
     # install basics used by helper functions

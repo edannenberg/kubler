@@ -1,10 +1,9 @@
 #
-# build config, sourced by build-root.sh inside build container
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages=""
 
 #
-# this hook can be used to configure the build container itself, install packages, etc
+# This hook can be used to configure the build container itself, install packages, run any command, etc
 #
 configure_bob() {
     fix_portage_profile_symlink
@@ -28,14 +27,6 @@ configure_bob() {
     install_git_postsync_hooks
     configure_layman
     # install aci/oci requirements
-    emerge dev-lang/go app-crypt/gnupg
+    emerge dev-lang/go
     install_oci_deps
-}
-
-#
-# this hook is called in the build container just before tar'ing the rootfs
-#
-finish_rootfs_build()
-{
-    :
 }

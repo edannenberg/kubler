@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 # adapted from: https://github.com/docker-library/postgres/blob/e616341507a7beec3a161b0a366ba0d3400328fd/9.4/docker-entrypoint.sh
 
 chown -R postgres "$PGDATA"

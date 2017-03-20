@@ -1,3 +1,5 @@
+## kubler/influxdb
+
 Run this [InfluxDB][] image with:
 
     $ mkdir /var/lib/influxdb
@@ -21,4 +23,7 @@ Write stuff via curl:
 
     $ curl -X POST -d '[{"name":"foo","columns":["val"],"points":[[23]]}]' 'http://localhost:8086/db/somedb/series?u=root&p=root'
 
+[Last Build][packages]
+
 [InfluxDB]: http://github.com/influxdb/influxdb/
+[packages]: PACKAGES.md

@@ -1,3 +1,5 @@
+## kubler/grafana
+
 Run this [Grafana][] 2.x image with:
 
     $ mkdir /var/lib/grafana
@@ -13,4 +15,7 @@ Default admin credentials:
 
     admin/admin
 
+[Last Build][packages]
+
 [Grafana]: http://grafana.org/
+[packages]: PACKAGES.md

@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
 function main() {
-    local image_id image_path image_name manifest_name manifest_path registry_host completed_url upload_id
+    local image_id image_path image_name manifest_name registry_host completed_url upload_id
     image_id="$1"
     image_path="$2"
-    image_name=$(basename "${image_path}")
+    image_name=$(basename -- "${image_path}")
     manifest_name="${image_name/.aci/.manifest}"
-    manifest_path="$(dirname "${image_path}")${manifest_name}"
-    registry_host="localhost"
+    registry_host='localhost'
 
     completed_url=$(curl -s -X POST -H "Content-Type: application/json" \
-        -d "\{\"image\":"${image_id}"\}" "${registry_host}/${image_id}/startupload" | jq -r '.completed_url')
+        -d "\{\"image\":${image_id}\}" "${registry_host}/${image_id}/startupload" | jq -r '.completed_url')
     upload_id="${completed_url#*/complete/}"
 
     echo "uploading ${image_name}"

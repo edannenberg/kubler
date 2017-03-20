@@ -6,9 +6,8 @@ Kubler
 > [Wikipedia](https://en.wikipedia.org/wiki/Cooper_%28profession%29#.22Cooper.22_as_a_name) said:
 In much the same way as the trade or vocation of smithing produced the common English surname Smith
 and the German name Schmidt, the cooper trade is also the origin of German names like Kübler.
-
-> [Wikipedia](https://en.wikipedia.org/wiki/Cooper_%28profession%29#21st_century) said:
-There is still demand for high-quality ~~wooden barrels~~ containers, and it is thought that the
+>
+> There is still demand for high-quality ~~wooden barrels~~ containers, and it is thought that the
 highest-quality ~~barrels~~ containers are those hand-made by professional ~~coopers~~ kublers.
 
 At the core Kubler is just a simple ~~craftsman~~ bash script that, well, builds things.. and things that
@@ -23,34 +22,14 @@ however the final images hold just the runtime dependencies for selected softwar
 in very slim images. To achieve this a 2 phase build process is employed, essentially the often requested, but
 still missing, Docker feature for [nested](https://github.com/docker/docker/issues/7115) image builds.
 
-
-
-Ready to go back to the chroots?
-
----
-
-or alternatively to stay somewhat silly (draft, that would need some further work to match the key details from above):
-
----
-
-What kind of things? Well, dock(er) containers were in high demand lately. A universal container format any
-craftsmen could easily fit to his needs, marvelous stuff, all things considered.
-
-But there was one tiny flaw. Most of those fancy new containers seemed to ship with the, now useless,
-build(time) tools scattered around. Imagine opening your freshly ordered [Grafana][] container only to
-find a ~~hammer~~ Go installation sitting there taking valuable space. There has to be a better way, Kubler
-thought to himself, maybe it's time to go back to the chroots!
-
 ## Goals
 
 * Central, organization-wide management of base images
-* Full control over image content across all layers
 * Containers should only contain the bare minimum to run
   * Separate build and runtime dependencies
   * Only deploy runtime dependencies
 * Maximum flexibility while assembling the root file system, but with minimal effort
 * Keep things maintainable as the stack grows
-* Automate **all** the things!
 
 ## Status
 
@@ -76,12 +55,12 @@ thought to himself, maybe it's time to go back to the chroots!
 * Shared layer support for final images, images are not squashed and can depend on other images
 * [s6][] instead of [OpenRC][] as default supervisor (small footprint (<1mb) and proper docker SIGTERM handling),
 optional of course
-* Reference images are available on [docker hub][gentoo-bb-docker]
+* Reference images are available on [docker hub][kubler-docker]
 * Push built image stack(s) to a public or private docker registry
 
 ### Requirements
 
-* Bash 4.x (not tested on 3.x, may or may not work)
+* Bash 4.x
 * Working Docker setup
 
 Optional:
@@ -101,7 +80,7 @@ or ~300MB for a similiar Ubuntu version
 
 Kubler needs a `working-dir` to operate from, much like `git` needs to be called from inside a git repo for most of its
 functionality. You may also call Kubler from any sub directory and it will detect the proper path. The Kubler git repo 
-comes with an example image stack, let's get build something!
+comes with an example image stack, let's build a provided `glibc` image:
 
     $ cd kubler/
     $ ./kubler.sh build kubler/glibc
@@ -224,7 +203,7 @@ First check for new releases by running:
 If a new stage3 release was found simply rebuild the stack by running:
 
     $ ./kubler.sh clean
-    $ ./kubler.sh -C
+    $ ./kubler.sh -C build mynamespace
 
 * Minor things might (read will) break, Oracle downloads, for example, may not work.
 
@@ -286,7 +265,7 @@ name gets appended. For example `kubler/bob-openssl` refers to the container use
 [OpenRC]: https://wiki.gentoo.org/wiki/OpenRC
 [Docker]: https://www.docker.com/
 [acbuild]: https://github.com/containers/build
-[gentoo-bb-docker]: https://hub.docker.com/search/?q=kubler&page=1&isAutomated=0&isOfficial=0&starCount=0&pullCount=0
+[kubler-docker]: https://hub.docker.com/u/kubler/
 [nginx-packages]: https://github.com/edannenberg/kubler/blob/master/dock/kubler/images/nginx/PACKAGES.md
 [Gentoo]: https://www.gentoo.org/
 [binary package]: https://wiki.gentoo.org/wiki/Binary_package_guide

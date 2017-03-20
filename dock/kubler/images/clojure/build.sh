@@ -1,15 +1,11 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-CLOJURE_VERSION=1.9.0-alpha15
-
-configure_bob() {
-    wget https://repo1.maven.org/maven2/org/clojure/clojure/${CLOJURE_VERSION}/clojure-${CLOJURE_VERSION}.jar
-}
+_clojure_version=1.9.0-alpha15
 
 #
-# this method runs in the bb builder container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -17,11 +13,12 @@ configure_rootfs_build()
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {
-    mkdir -p "${_EMERGE_ROOT}/opt/"
-    mv "/clojure-${CLOJURE_VERSION}.jar" "${_EMERGE_ROOT}/opt/clojure.jar"
-    log_as_installed "manual install" "clojure-${CLOJURE_VERSION}" "http://clojure.org/"
+    wget "https://repo1.maven.org/maven2/org/clojure/clojure/${_clojure_version}/clojure-${_clojure_version}.jar"
+    mkdir -p "${_EMERGE_ROOT}"/opt/
+    mv "/clojure-${_clojure_version}.jar" "${_EMERGE_ROOT}"/opt/clojure.jar
+    log_as_installed "manual install" "clojure-${_clojure_version}" "http://clojure.org/"
 }

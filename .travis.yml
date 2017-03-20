@@ -1,0 +1,16 @@
+sudo: required
+
+language: bash
+
+services:
+  - docker
+
+before_install:
+  - docker pull koalaman/shellcheck
+
+script:
+ - docker run -w /scripts -v $(pwd):/scripts koalaman/shellcheck -x
+   kubler.sh lib/*.sh lib/engine/docker.sh lib/cmd/*.sh lib/bob-core/*.sh lib/argbash/argbash-refresh.sh
+
+matrix:
+fast_finish: true

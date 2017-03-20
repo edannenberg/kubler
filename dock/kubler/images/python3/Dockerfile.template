@@ -1,4 +1,4 @@
 FROM ${IMAGE_PARENT}
-MAINTAINER ${MAINTAINER}
+LABEL maintainer ${MAINTAINER}
 
 ADD rootfs.tar /

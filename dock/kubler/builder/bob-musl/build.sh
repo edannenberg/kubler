@@ -1,10 +1,9 @@
 #
-# build config, sourced by build-root.sh inside build container
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
-PACKAGES=""
 
 #
-# this hook can be used to configure the build container itself, install packages, etc
+# This hook can be used to configure the build container itself, install packages, run any command, etc
 #
 configure_bob() {
     fix_portage_profile_symlink
@@ -13,9 +12,9 @@ configure_bob() {
     configure_eix
     # migrate from files to directories at /etc/portage/package.*
     for i in /etc/portage/package.{accept_keywords,unmask,mask,use}; do
-        [[ -f ${i} ]] && { cat "${i}"; mv "${i}" "${i}".old; }
+        [[ -f "${i}" ]] && { cat "${i}"; mv "${i}" "${i}".old; }
         mkdir -p "${i}"
-        [[ -f ${i}.old ]] &&  mv "${i}".old "${i}"/default
+        [[ -f "${i}".old ]] &&  mv "${i}".old "${i}"/default
     done
     touch /etc/portage/package.accept_keywords/flaggie
     echo 'LANG="en_US.UTF-8"' > /etc/env.d/02locale
@@ -32,12 +31,4 @@ configure_bob() {
     # add musl overlay, it may exist already in the shared portage container
     layman -l | grep -q musl && layman -d musl
     layman -a musl
-}
-
-#
-# this hook is called in the build container just before tar'ing the rootfs
-#
-finish_rootfs_build()
-{
-    :
 }

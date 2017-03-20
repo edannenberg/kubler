@@ -1,3 +1,5 @@
+## kubler/docker-registry
+
 Run this [docker-registry][] 2.x image with:
 
     $ mkdir /var/lib/docker-registry
@@ -27,6 +29,9 @@ Searching the registry is currently not implemented, should be in soon though.
 
 Also see the [docker-registry-docs][].
 
+[Last Build][packages]
+
 [docker-registry]: https://github.com/docker/distribution/
 [docker-registry-docs]: https://github.com/docker/distribution/blob/master/docs/index.md
 [nginx-proxy]: https://github.com/edannenberg/gentoo-bb/tree/master/bb-dock/nginx-proxy
+[packages]: PACKAGES.md

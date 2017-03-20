@@ -1,18 +1,10 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-RIEMANN_VERSION="0.2.12"
-
-configure_bob() {
-    wget https://github.com/riemann/riemann/releases/download/${RIEMANN_VERSION}/riemann-${RIEMANN_VERSION}.tar.bz2
-    wget https://github.com/riemann/riemann/releases/download/${RIEMANN_VERSION}/riemann-${RIEMANN_VERSION}.tar.bz2.md5
-    md5sum -c riemann-${RIEMANN_VERSION}.tar.bz2.md5 || die 'error validating riemann-${RIEMANN_VERSION}.tar.bz2'
-    tar xvfj riemann-${RIEMANN_VERSION}.tar.bz2
-}
 
 #
-# this method runs in the bb builder container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
@@ -20,11 +12,19 @@ configure_rootfs_build()
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {
-    mv /riemann-${RIEMANN_VERSION} ${_EMERGE_ROOT}/riemann
-    sed -i 's/host "127.0.0.1"/host "0.0.0.0"/g' ${_EMERGE_ROOT}/riemann/etc/riemann.config
-    log_as_installed "manual install" "riemann-${RIEMANN_VERSION}" "https://github.com/riemann/riemann"
+    local riemann_version riemann_url riemann_file
+    riemann_version="0.2.12"
+    riemann_url=https://github.com/riemann/riemann/releases/download/"${riemann_version}"
+    riemann_file="riemann-${riemann_version}.tar.bz2"
+    wget "${riemann_url}/${riemann_file}"
+    wget "${riemann_url}/${riemann_file}".md5
+    md5sum -c "${riemann_file}".md5 || die "error validating ${riemann_file}"
+    tar xvjf "${riemann_file}"
+    mv /riemann-"${riemann_version}" "${_EMERGE_ROOT}"/riemann
+    sed -i 's/host "127.0.0.1"/host "0.0.0.0"/g' "${_EMERGE_ROOT}"/riemann/etc/riemann.config
+    log_as_installed "manual install" "riemann-${riemann_version}" "https://github.com/riemann/riemann"
 }

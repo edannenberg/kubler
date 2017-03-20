@@ -1,3 +1,5 @@
+## kubler/nginx-php7
+
 Run this [Nginx][] image with:
 
     $ docker run -d --name nginx-0 \
@@ -37,9 +39,12 @@ It's much easier to have the nginx-proxy image running and resolve *.void with s
 Notice the missing -p flags, as the nginx-proxy is bound to port 80 and 443 on the host already. The VIRTUAL_HOST env will be
 picked up by the nginx-proxy container and it will route all requests accordingly.
 
+[Last Build][packages]
+
 [Nginx]: http://nginx.org/
 [PHP]: http://php.org/
 [FPM]: http://php-fpm.org/
 [xdebug]: http://xdebug.org/
 [adminer]: http://www.adminer.org/en/
 [composer]: https://getcomposer.org/
+[packages]: PACKAGES.md

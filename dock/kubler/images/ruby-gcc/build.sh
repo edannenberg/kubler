@@ -1,17 +1,17 @@
 #
-# build config
+# Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig sys-apps/coreutils dev-ruby/pkg-config"
 _keep_headers='true'
 
 #
-# this method runs in the bb builder container just before starting the build of the rootfs
+# This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
     echo 'RUBY_TARGETS="ruby24"' >> /etc/portage/make.conf
     # pkg-config needs unmasked ruby24 target
-    mkdir ${_EMERGE_ROOT}/etc
+    mkdir "${_EMERGE_ROOT}"/etc
     echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     #echo '>=dev-lang/ruby-2.4.0' >> /etc/portage/package.mask/ruby
     update_keywords 'dev-lang/ruby' '+~amd64'
@@ -32,7 +32,7 @@ configure_rootfs_build()
 }
 
 #
-# this method runs in the bb builder container just before tar'ing the rootfs
+# This hook is called just before packaging the root fs tar ball, ideal for any post-install tasks, clean up, etc
 #
 finish_rootfs_build()
 {
