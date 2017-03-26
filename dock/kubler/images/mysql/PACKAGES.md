@@ -1,6 +1,6 @@
-### kubler/mysql:20170318
+### kubler/mysql:20170326
 
-Built: Sat Mar 18 07:35:44 CET 2017
+Built: Sun Mar 26 21:13:39 CEST 2017
 Image Size: 210 MB
 
 #### Installed
@@ -29,7 +29,7 @@ sys-process/procps-3.3.12 | `kill nls unicode -modern-top -ncurses (-selinux) -s
 Package | USE Flags
 --------|----------
 **FROM kubler/bash** |
-app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
+app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
@@ -55,7 +55,7 @@ sys-apps/s6-2.4.0.0 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016h | `nls -leaps`
+sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

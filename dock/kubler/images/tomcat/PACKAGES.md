@@ -1,6 +1,6 @@
-### kubler/tomcat:20170318
+### kubler/tomcat:20170326
 
-Built: Sat Mar 18 07:55:33 CET 2017
+Built: Sun Mar 26 21:33:17 CEST 2017
 Image Size: 181 MB
 
 #### Installed
@@ -23,7 +23,7 @@ dev-java/java-config-2.2.0-r3 | `{-test}`
 dev-java/oracle-jre-bin-1.8.0.121 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
-app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
+app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
@@ -49,7 +49,7 @@ sys-apps/s6-2.4.0.0 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016h | `nls -leaps`
+sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

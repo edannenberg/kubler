@@ -1,7 +1,7 @@
-### kubler/docker-registry:20170318
+### kubler/docker-registry:20170326
 
-Built: Sat Mar 18 07:14:51 CET 2017
-Image Size: 93.8 MB
+Built: Sun Mar 26 20:50:39 CEST 2017
+Image Size: 93.9 MB
 
 #### Installed
 Package | USE Flags
@@ -24,7 +24,7 @@ sys-apps/s6-2.4.0.0 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016h | `nls -leaps`
+sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

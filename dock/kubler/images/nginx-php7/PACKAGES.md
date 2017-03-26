@@ -1,26 +1,26 @@
-### kubler/nginx-php7:20170318
+### kubler/nginx-php7:20170326
 
-Built: Sat Mar 18 07:48:59 CET 2017
+Built: Sun Mar 26 21:27:04 CEST 2017
 Image Size: 117 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
+app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-7.1.2 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
+dev-lang/php-7.1.3-r1 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.3 | `-static-libs`
 dev-libs/libevent-2.1.8 | `ssl threads -debug (-libressl) -static-libs {-test}`
-dev-libs/libgcrypt-1.7.3 | `-doc -static-libs`
-dev-libs/libgpg-error-1.24 | `nls -common-lisp -static-libs`
+dev-libs/libgcrypt-1.7.6 | `-doc -static-libs`
+dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
 dev-libs/libmemcached-1.0.18-r3 | `libevent -debug -hsieh -sasl -static-libs`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
-dev-libs/libtasn1-4.10 | `-doc -static-libs -valgrind`
+dev-libs/libtasn1-4.10-r1 | `-doc -static-libs -valgrind`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
 dev-libs/nettle-3.2-r1 | `gmp -doc (-neon) -static-libs {-test}`
@@ -75,7 +75,7 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.39 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.11.10 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -luajit -mail -pam -pcre-jit -perftools -rrd (-selinux) -stream -vim-syntax`
+www-servers/nginx-1.11.11 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
@@ -90,7 +90,7 @@ sys-apps/s6-2.4.0.0 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016h | `nls -leaps`
+sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

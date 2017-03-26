@@ -1,13 +1,13 @@
-### kubler/riemann-dash:20170318
+### kubler/riemann-dash:20170326
 
-Built: Sat Mar 18 08:39:34 CET 2017
-Image Size: 222 MB
+Built: Sun Mar 26 21:44:29 CEST 2017
+Image Size: 223 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-dev-libs/libgcrypt-1.7.3 | `-doc -static-libs`
-dev-libs/libgpg-error-1.24 | `nls -common-lisp -static-libs`
+dev-libs/libgcrypt-1.7.6 | `-doc -static-libs`
+dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 *gem install*: riemann-client riemann-tools riemann-dash | https://github.com/aphyr/riemann
@@ -48,7 +48,7 @@ sys-devel/gcc-config-1.7.3 | ``
 sys-devel/make-4.2.1 | `nls -guile -static`
 sys-kernel/linux-headers-4.4 | ``
 **FROM kubler/bash** |
-app-admin/eselect-1.4.5 | `-doc -emacs -vim-syntax`
+app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
 app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
@@ -74,7 +74,7 @@ sys-apps/s6-2.4.0.0 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
-sys-libs/timezone-data-2016h | `nls -leaps`
+sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
