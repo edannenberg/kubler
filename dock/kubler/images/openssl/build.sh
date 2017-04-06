@@ -5,6 +5,8 @@ _packages="dev-libs/openssl"
 
 configure_bob()
 {
+    # suid bit of ssh-keysign may trigger an error during openssh uninstall
+    [[ -f /usr/lib64/misc/ssh-keysign ]] && rm /usr/lib64/misc/ssh-keysign
     # enable ECDH
     emerge -C net-misc/openssh
     update_use 'dev-libs/openssl' '-bindist'
