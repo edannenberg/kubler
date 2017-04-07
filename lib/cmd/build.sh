@@ -198,7 +198,7 @@ function main() {
     msgf "build sequence:" "${_build_order}"
     [[ -n ${_arg_exclude} ]] && msgf "excluded:" "${_arg_exclude[@]}"
 
-    engines=($_required_engines)
+    IFS=" " read -r -a engines <<< "${_required_engines}"
     for engine_id in "${engines[@]}"; do
        # shellcheck source=lib/engine/docker.sh
        source "${_LIB_DIR}/engine/${engine_id}.sh"
@@ -207,7 +207,7 @@ function main() {
 
     msg "*** gogo!"
 
-    builders=($_build_order_builder)
+    IFS=" " read -r -a builders <<< "${_build_order_builder}"
     for builder_id in "${builders[@]}"; do
         expand_image_id "${builder_id}" "${_BUILDER_PATH}"
         source_image_conf "${__expand_image_id}"
@@ -215,7 +215,7 @@ function main() {
         build_builder "${builder_id}"
     done
 
-    images=($_build_order)
+    IFS=" " read -r -a images <<< "${_build_order}"
     for image_id in "${images[@]}"; do
         expand_image_id "${image_id}" "${_IMAGE_PATH}"
         source_image_conf "${__expand_image_id}"
