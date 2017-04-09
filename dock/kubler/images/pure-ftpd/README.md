@@ -3,13 +3,13 @@
 Run this [pure-ftpd][] image with:
 
     $ docker run -d --name pureftpd \
-        -p "21:21" -p "50010-50010:50000-50010" \
+        -p "21:21" -p "50000-50010:50000-50010" \
         -v /some/path/pureftpd/ssl:/etc/ssl/private \
         -v /some/path/pureftpd/passwd:/etc/pureftpd \
         -v /some/path/mydata:/var/ftp-data \
         kubler/pure-ftpd
 
-Default config only allows explicit FTP over TLS. Unless you provide your own certs a self signed one is
+Default config only allows explicit FTP over TLS. Unless you provide your own cert a self signed one is
 created on container start. All users are chrooted to their configured home dir.
 
 The image is configured for [virtual user](https://download.pureftpd.org/pub/pure-ftpd/doc/README.Virtual-Users)
@@ -67,6 +67,7 @@ creating the self signed certificate and can also be omitted.
 Prior art this image is based on:
 
 https://github.com/stilliard/docker-pure-ftpd
+
 https://github.com/gimoh/docker-pureftpd
 
 ---
