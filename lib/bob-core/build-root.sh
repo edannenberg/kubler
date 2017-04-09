@@ -370,6 +370,20 @@ function install_oci_deps() {
     cp ./dist/acserver-v0-linux-amd64/acserver /usr/bin
 }
 
+function install_syslog_stdout() {
+    local syslog_stdout_version
+    syslog_stdout_version="1.1.1"
+    curl -L -o /syslog-stdout.tar.gz \
+        https://github.com/timonier/syslog-stdout/releases/download/v"${syslog_stdout_version}"/syslog-stdout.tar.gz
+    mkdir -p "${_EMERGE_ROOT}"/{usr/sbin,etc/service/syslog-stdout}
+    tar xzf /syslog-stdout.tar.gz -C "${_EMERGE_ROOT}"/usr/sbin
+    rm /syslog-stdout.tar.gz
+    # s6 setup
+    echo -e '#!/bin/sh\nexec /usr/sbin/syslog-stdout' > "${_EMERGE_ROOT}"/etc/service/syslog-stdout/run
+    ln -sr "${_EMERGE_ROOT}"/etc/s6_finish_default "${_EMERGE_ROOT}"/etc/service/syslog-stdout/finish
+    log_as_installed "manual install" "syslog-stdout-${syslog_stdout_version}" "https://github.com/timonier/syslog-stdout"
+}
+
 function install_docker_gen() {
     local dockergen_version
     dockergen_version="0.7.3"
