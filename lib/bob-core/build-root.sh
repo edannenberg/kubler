@@ -380,6 +380,7 @@ function install_syslog_stdout() {
     rm /syslog-stdout.tar.gz
     # s6 setup
     echo -e '#!/bin/sh\nexec /usr/sbin/syslog-stdout' > "${_EMERGE_ROOT}"/etc/service/syslog-stdout/run
+    chmod +x "${_EMERGE_ROOT}"/etc/service/syslog-stdout/run
     ln -sr "${_EMERGE_ROOT}"/etc/s6_finish_default "${_EMERGE_ROOT}"/etc/service/syslog-stdout/finish
     log_as_installed "manual install" "syslog-stdout-${syslog_stdout_version}" "https://github.com/timonier/syslog-stdout"
 }
