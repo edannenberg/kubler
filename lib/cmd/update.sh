@@ -21,7 +21,7 @@ function update_builders() {
                 if [[ "${remote_files}" =~ ${regex} ]]; then
                     s3date_remote="${BASH_REMATCH[1]}"
                     if [[ "${STAGE3_DATE}" -lt "${s3date_remote}" ]]; then
-                        sed -r -i s/^STAGE3_DATE=\"?\{0,1\}[0-9]*\"?/STAGE3_DATE=\""${s3date_remote}"\"/g \
+                        sed -r -i s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
                             "${builder_path}${current_builder}build.conf"
                         update_status="updated ${STAGE3_DATE} -> ${s3date_remote} - ${STAGE3_BASE}"
                         ((update_count++))
