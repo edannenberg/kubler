@@ -1,0 +1,13 @@
+FROM ${IMAGE_PARENT}
+LABEL maintainer ${MAINTAINER}
+
+ADD rootfs.tar /
+
+COPY etc /etc
+COPY helper/* /usr/sbin/
+
+RUN ln -s /etc/s6_finish_default /etc/service/pure-ftpd/finish && \
+    ln -s /etc/service/pure-ftpd /service && \
+    ln -s /etc/service/syslog-stdout /service
+
+EXPOSE 21 50000-50010

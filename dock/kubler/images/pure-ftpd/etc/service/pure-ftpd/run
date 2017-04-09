@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# create self signed certs if needed
+if [ ! -f /etc/ssl/private/pure-ftpd.pem ]; then
+    mkdir -p /etc/ssl/private
+    CRT_COUNTRY="${CRT_COUNTRY:-DE}"
+    CRT_STATE="${CRT_STATE:-SA}"
+    CRT_LOCACTION="${CRT_LOCACTION:-MD}"
+    CRT_ORG="${CRT_ORG:-ACME Inc - pure-ftpd}"
+    CRT_CN="${CRT_CN:-pureftpd.local}"
+    # rsa cert
+    openssl req -new -x509 -nodes -days 3650 -newkey rsa:4096 -sha256 \
+        -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
+        -keyout /etc/ssl/private/pure-ftpd.pem \
+        -out /etc/ssl/private/pure-ftpd.pem
+    # dh params
+    openssl dhparam -out /etc/ssl/private/pure-ftpd-dhparams.pem 2048
+    chmod 600 /etc/ssl/private/pure-ftpd*.pem
+fi
+
+# change UID/GID of virtual ftp user if requested and not matching with actual values
+if [ -n ${FTPD_VIRT_UID} ] && [ -n ${FTPD_VIRT_GID} ]; then
+    if ! grep -q "^ftp-data:x:${FTPD_VIRT_UID}:${FTPD_VIRT_GID}" /etc/passwd; then
+        echo "--> set ftp-data uid ${FTPD_VIRT_UID} and gid ${FTPD_VIRT_GID}"
+        sed -i "s/^ftp-data:x:[0-9]*:[0-9]*:/ftp-data:x:${FTPD_VIRT_UID}:${FTPD_VIRT_GID}:/g" /etc/passwd
+        sed -i "s/^ftp-data:x:[0-9]*:/ftp-data:x:${FTPD_VIRT_GID}:/g" /etc/group
+    fi
+fi
+
+# init pureftpd.pdb if passwd file exists
+if [ -f /etc/pureftpd/pureftpd.passwd ] && [ ! -f /etc/pureftpd.pdb ]; then
+    echo "--> init userdb /etc/pureftpd.pdb"
+    pure-pw mkdb /etc/pureftpd.pdb -f /etc/pureftpd/pureftpd.passwd
+fi
+
+SERVER="-S ${FTPD_PORT:-21}"
+MAX_CONN="-c ${FTPD_MAX_CONN:-25}"
+MAX_CONN_IP="-C ${FTPD_MAX_CONN_IP:-5}"
+DISK_FULL="-k ${FTPD_DISK_FULL:-90%}"
+AUTH="-l ${FTPD_AUTH:-puredb:/etc/pure-ftpd/pureftpd.pdb}"
+MISC="${FTPD_MISC:--p 50000:50010 -D -j -Z -Y 2 -A -b -E -R -k 99}"
+
+FTPD_CONFIG="$SERVER $MAX_CONN $MAX_CONN_IP $DISK_FULL $AUTH $MISC"
+echo "--> start pure-ftpd with ${FTPD_CONFIG}"
+
+exec 2>&1
+exec /usr/sbin/pure-ftpd \
+    $(echo ${FTPD_CONFIG} | sed 's@\([[:space:]]\+\|^\)-B\([[:space:]]\+\|$\)@\1@g')
