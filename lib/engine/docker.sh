@@ -437,8 +437,15 @@ function get_build_container() {
     local image_id image_type build_container parent_image parent_ns current_image builder_image
     image_id="${1}"
     image_type="${2:-${_IMAGE_PATH}}"
-    # set default
-    build_container="${DEFAULT_BUILDER}"
+    if [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
+        get_image_builder_id "${image_id}"
+        # shellcheck disable=SC2154
+        [[ -z "${__get_image_builder_id}" ]] && die "Couldn't find build container for image ${image_id}"
+        build_container="${__get_image_builder_id}"
+        expand_image_id "${image_id}" "${image_type}"
+        # shellcheck disable=SC2154
+        source_image_conf "${__expand_image_id}"
+    fi
     # get parent image basename
     parent_image="${IMAGE_PARENT##*/}"
     parent_ns="${IMAGE_PARENT%%/*}"

@@ -199,6 +199,29 @@ function source_push_conf() {
     _last_sourced_push_conf="${namespace}"
 }
 
+# Check image dependencies and return base build container for given image_id. Recursive.
+#
+# Arguments:
+#
+# 1: image_id
+function get_image_builder_id() {
+    __get_image_builder_id=
+    local image_id
+    image_id="$1"
+    expand_image_id "${image_id}" "${_IMAGE_PATH}"
+    if [[ -n "${image_id}" && "${image_id}" != "scratch" ]]; then
+        # shellcheck disable=SC2154
+        source_image_conf "${__expand_image_id}"
+        if [[ -n "${BUILDER}" ]];then
+            __get_image_builder_id="${BUILDER}"
+        elif [[ -n "${IMAGE_PARENT}" ]]; then
+            get_image_builder_id "${IMAGE_PARENT}"
+        else
+            __get_image_builder_id="${DEFAULT_BUILDER}"
+        fi
+    fi
+}
+
 # Download and verify stage3 tar ball
 function download_stage3() {
     ARCH="${ARCH:-amd64}"
