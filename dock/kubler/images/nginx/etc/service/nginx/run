@@ -9,7 +9,7 @@ if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhos
     CRT_ORG="${CRT_ORG:-ACME Inc - nginx}"
     CRT_CN="${CRT_CN:-nginx.local}"
     # rsa cert
-    openssl req -new -x509 -nodes -days 3650 -newkey rsa:4069 \
+    openssl req -new -x509 -nodes -days 3650 -newkey rsa:4096 \
         -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
         -keyout /etc/nginx/ssl/localhost/nginx.key \
         -out /etc/nginx/ssl/localhost/nginx.crt
