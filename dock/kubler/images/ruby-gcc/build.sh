@@ -17,7 +17,7 @@ configure_rootfs_build()
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=app-eselect/eselect-ruby-20161226' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
-    update_keywords '=dev-ruby/rdoc-5.0.0-r2' '+~amd64'
+    update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
     update_keywords '=dev-ruby/rubygems-2.6.8' '+~amd64'
     update_keywords '=dev-ruby/rake-12.0.0' '+~amd64'
     update_keywords '=dev-ruby/power_assert-0.4.1' '+~amd64'
