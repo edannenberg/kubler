@@ -1,17 +1,23 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="dev-java/icedtea-bin"
+_packages="dev-java/icedtea-bin:8"
 
 #
 # This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
-    update_use 'dev-java/icedtea-bin' '-webstart' '+headless-awt'
+    update_use 'dev-java/icedtea-bin' -webstart +headless-awt
+    update_keywords 'dev-java/icedtea-bin' +~amd64
     # skip python and nss
     provide_package dev-lang/python
     provide_package dev-libs/nss
+
+    # add user/group for unprivileged container usage
+    groupadd -g 808 java
+    useradd -u 8080 -g java -d /home/java java
+    mkdir -p "${_EMERGE_ROOT}"/home/java
 }
 
 #

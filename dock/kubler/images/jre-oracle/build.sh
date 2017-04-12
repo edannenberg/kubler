@@ -17,11 +17,16 @@ configure_rootfs_build()
     [[ -n "${jre_tar}" ]] && [[ ! -f /distfiles/"${jre_tar}" ]] && download_from_oracle "${jre_url}"
 
     jce_url=http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
-    [[ ! -f /distfiles/"${jce_url}" ]] && download_from_oracle "${jce_url}"
+    [[ ! -f /distfiles/jce_policy-8.zip ]] && download_from_oracle "${jce_url}"
 
-    update_use 'dev-java/oracle-jre-bin' '+headless-awt +jce -fontconfig'
+    update_use 'dev-java/oracle-jre-bin' +headless-awt +jce -fontconfig
     # skip python and iced-tea
     provide_package dev-lang/python dev-java/icedtea-bin
+
+    # add user/group for unprivileged container usage
+    groupadd -g 808 java
+    useradd -u 8080 -g java -d /home/java java
+    mkdir -p "${_EMERGE_ROOT}"/home/java
 }
 
 #
