@@ -6,7 +6,7 @@ _packages="dev-libs/apr dev-java/tomcat-native www-servers/tomcat"
 configure_bob()
 {
     # build tomcat-native package on the host
-    unprovide_package dev-java/java-config app-eselect/eselect-java
+    unprovide_package dev-java/java-config app-eselect/eselect-java app-arch/zip
     emerge dev-java/oracle-jdk-bin
     emerge dev-java/ant-core dev-java/ant-junit dev-java/java-config dev-java/tomcat-native www-servers/tomcat
 }
