@@ -17,7 +17,7 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     local riemann_version riemann_url riemann_file
-    riemann_version="0.2.12"
+    riemann_version="0.2.13"
     riemann_url=https://github.com/riemann/riemann/releases/download/"${riemann_version}"
     riemann_file="riemann-${riemann_version}.tar.bz2"
     wget "${riemann_url}/${riemann_file}"
