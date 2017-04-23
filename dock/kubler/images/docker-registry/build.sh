@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_distribution_version="2.6.0"
+_distribution_version="2.6.1"
 
 configure_bob()
 {
