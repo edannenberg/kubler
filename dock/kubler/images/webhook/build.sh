@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="dev-vcs/git"
-_webhook_version="2.6.2"
+_webhook_version="2.6.3"
 
 configure_bob()
 {
