@@ -25,6 +25,7 @@
 declare _keep_headers _keep_static_libs _headers_from _static_libs_from _iconv_from _install_docker_gen
 
 # lib dir name may vary for some stage3, musl for example only uses lib/ while glibc uses lib64/
+# shellcheck disable=SC2046
 readonly _LIB="$(portageq envvar LIBDIR_$(portageq envvar ARCH))"
 readonly _EMERGE_ROOT="/emerge-root"
 readonly _CONFIG="/config"
