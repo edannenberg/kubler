@@ -22,11 +22,12 @@ finish_rootfs_build()
     # s6 folders
     mkdir -p "${_EMERGE_ROOT}"/etc/service/.s6-svscan "${_EMERGE_ROOT}"/service
     # install entr
+    echo "building entr.."
     wget "http://entrproject.org/code/entr-${_entr_version}.tar.gz"
-    tar xzvf "entr-${_entr_version}.tar.gz"
+    tar xzf "entr-${_entr_version}.tar.gz"
     cd eradman* && ./configure && make && make install
     strip /usr/local/bin/entr
     cp /usr/local/bin/entr "${_EMERGE_ROOT}"/bin
-    rm -rf /eradman*
+    rm -rf /eradman* /entr*
     log_as_installed "manual install" "entr-${_entr_version}" "http://entrproject.org/"
 }
