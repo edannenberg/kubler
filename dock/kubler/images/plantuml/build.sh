@@ -31,5 +31,5 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    find /usr/lib64/gcc -name libgcc_s.so.1 -exec cp {} "${_EMERGE_ROOT}"/usr/lib64/ \;
+    find /usr/"${_LIB}"/gcc -name libgcc_s.so.1 -exec cp {} "${_EMERGE_ROOT}"/usr/"${_LIB}"/ \;
 }

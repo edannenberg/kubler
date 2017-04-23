@@ -24,6 +24,8 @@
 # declare some vars to satisfy shellcheck
 declare _keep_headers _keep_static_libs _headers_from _static_libs_from _iconv_from _install_docker_gen
 
+# lib dir name may vary for some stage3, musl for example only uses lib/ while glibc uses lib64/
+readonly _LIB="$(portageq envvar LIBDIR_$(portageq envvar ARCH))"
 readonly _EMERGE_ROOT="/emerge-root"
 readonly _CONFIG="/config"
 readonly _CONFIG_TMP="${_CONFIG}/tmp"
@@ -40,12 +42,12 @@ _emerge_opt="${BOB_EMERGE_OPT:-}"
 # Copy libgcc/libstdc++ libs
 function copy_gcc_libs() {
     local lib_gcc lib_stdc lib
-    mkdir -p "${_EMERGE_ROOT}"/lib64
+    mkdir -p "${_EMERGE_ROOT}/${_LIB}"
     lib_gcc="$(find /usr/lib/ -name libgcc_s.so.1)"
     lib_stdc="$(find /usr/lib/ -name libstdc++.so.6)"
 
     for lib in "${lib_gcc}" "${lib_stdc}"; do
-        cp "${lib}" "${_EMERGE_ROOT}"/lib64/
+        cp "${lib}" "${_EMERGE_ROOT}/${_LIB}/"
     done
 }
 
@@ -483,8 +485,8 @@ function build_rootfs() {
             find "${_EMERGE_ROOT}/usr/include" -type f -name '*.h' | \
                 tar -cpf "${_ROOTFS_BACKUP}/${target_id//\//_}-headers.tar" --files-from -
         fi
-        if [[ -d "${_EMERGE_ROOT}/usr/lib64" ]]; then
-            find "${_EMERGE_ROOT}/usr/lib64" -type f -name '*.a' | \
+        if [[ -d "${_EMERGE_ROOT}/usr/${_LIB}" ]]; then
+            find "${_EMERGE_ROOT}/usr/${_LIB}" -type f -name '*.a' | \
                 tar -cpf "${_ROOTFS_BACKUP}/${target_id//\//_}-static_libs.tar" --files-from -
         fi
 
@@ -516,14 +518,14 @@ function build_rootfs() {
 
     # clean up
     if [ -z "${BOB_SKIP_LIB_CLEANUP}" ]; then
-        for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
+        for lib_dir in "${_EMERGE_ROOT}"/{${_LIB},usr/${_LIB}}; do
             [[ -d "${lib_dir}" ]] && find "${lib_dir}" -type f \( -name '*.[co]' -o -name '*.prl' \) -delete
         done
     fi
 
     rm -rf \
         "${_EMERGE_ROOT}"/etc/ld.so.cache \
-        "${_EMERGE_ROOT}"/usr/lib64/qt*/mkspecs/ \
+        "${_EMERGE_ROOT}"/usr/"${_LIB}"/qt*/mkspecs/ \
         "${_EMERGE_ROOT}"/usr/share/aclocal/ \
         "${_EMERGE_ROOT}"/usr/share/gettext/ \
         "${_EMERGE_ROOT}"/usr/share/gir-[0-9]*/ \
@@ -538,13 +540,13 @@ function build_rootfs() {
 
     if [[ -z "${_keep_headers}" ]]; then
         rm -rf "${_EMERGE_ROOT}"/usr/include/* \
-               "${_EMERGE_ROOT}"/usr/lib64/pkgconfig/ \
+               "${_EMERGE_ROOT}"/usr/"${_LIB}"/pkgconfig/ \
                "${_EMERGE_ROOT}"/usr/bin/*-config \
-               "${_EMERGE_ROOT}"/usr/lib64/cmake/
+               "${_EMERGE_ROOT}"/usr/"${_LIB}"/cmake/
     fi
 
     local lib_dir
-    for lib_dir in "${_EMERGE_ROOT}"/{lib64,usr/lib64}; do
+    for lib_dir in "${_EMERGE_ROOT}"/{"${_LIB}",usr/"${_LIB}"}; do
         if [[ -z "${_keep_static_libs}" ]] && [[ -d "${lib_dir}" ]] && [[ "$(ls -A "${lib_dir}")" ]]; then
             find "${lib_dir}"/* -type f -name "*.a" -delete
         fi

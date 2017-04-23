@@ -58,12 +58,12 @@ finish_rootfs_build()
     aclocal; libtoolize --force; autoheader; autoconf
     ./configure --disable-memcached-sasl
     make
-    cp modules/* "${_EMERGE_ROOT}/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
+    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
+    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
         > "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/memcached.ini
     ln -sr "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/memcached.ini \
         "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext-active/memcached.ini
-    echo "extension=/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
+    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
         > "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/memcached.ini
     ln -sr ${_EMERGE_ROOT}/etc/php/fpm-php${_php_slot}/ext/memcached.ini \
         "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext-active/memcached.ini
@@ -78,8 +78,8 @@ finish_rootfs_build()
     aclocal; libtoolize --force; autoheader; autoconf
     ./configure
     make
-    cp modules/* "${_EMERGE_ROOT}/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/redis.so" \
+    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
+    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/redis.so" \
         > /emerge-root/etc/php/fpm-php${_php_slot}/ext-active/redis.ini
 
     # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
@@ -92,12 +92,12 @@ finish_rootfs_build()
     aclocal; libtoolize --force; autoheader; autoconf
     ./configure
     make
-    cp modules/* "${_EMERGE_ROOT}/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
+    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
+    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
         > "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/imagick.ini
     ln -sr "${_EMERGE_ROOT}"/etc/php/cli-php${_php_slot}/ext/imagick.ini \
         "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext-active/imagick.ini
-    echo "extension=/usr/lib64/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
+    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
         > "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/imagick.ini
     ln -sr "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/imagick.ini \
         "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext-active/imagick.ini
@@ -118,9 +118,9 @@ finish_rootfs_build()
     copy_gcc_libs
     chmod 0640 "${_EMERGE_ROOT}"/etc/nullmailer/remotes
     # apparently a bug with nullmailer? links to non existing gnutls lib
-    ln -sr "${_EMERGE_ROOT}"/usr/lib64/libgnutls.so.28 "${_EMERGE_ROOT}"/usr/lib64/libgnutls.so.26
+    ln -sr "${_EMERGE_ROOT}"/usr/"${_LIB}"/libgnutls.so.28 "${_EMERGE_ROOT}"/usr/"${_LIB}"/libgnutls.so.26
     # required by imagick
-    find /usr/lib64/gcc/x86_64-pc-linux-gnu -name libgomp.so.* -exec cp {} "${_EMERGE_ROOT}"/usr/lib64/ \;
+    find /usr/"${_LIB}"/gcc/x86_64-pc-linux-gnu -name libgomp.so.* -exec cp {} "${_EMERGE_ROOT}"/usr/"${_LIB}"/ \;
     # prepare adminer / phpinfo micro sites
     mkdir -p "${_EMERGE_ROOT}"/var/www/{adminer,phpinfo}
     wget -O "${_EMERGE_ROOT}"/var/www/adminer/adminer.php \

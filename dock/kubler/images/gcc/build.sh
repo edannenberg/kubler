@@ -15,8 +15,10 @@ configure_rootfs_build()
 {
     unprovide_package sys-kernel/linux-headers
     # ensure symbolic lib/ link won't get replaced with a dir from this image
-    mkdir -p "${_EMERGE_ROOT}"/lib64
-    ln -sr "${_EMERGE_ROOT}"/lib64 "${_EMERGE_ROOT}"/lib
+    if [[ "${_LIB}" == "lib64" ]]; then
+        mkdir -p "${_EMERGE_ROOT}"/lib64
+        ln -sr "${_EMERGE_ROOT}"/lib64 "${_EMERGE_ROOT}"/lib
+    fi
 }
 
 #
