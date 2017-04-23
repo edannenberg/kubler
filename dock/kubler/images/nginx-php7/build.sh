@@ -7,7 +7,7 @@ _zend_api="20160303"
 _packages="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick"
 #_packages="dev-lang/php dev-php/pecl-memcached dev-php/pecl-redis pecl-imagick"
 _php_timezone="${BOB_TIMEZONE:-UTC}"
-_adminer_version="4.3.0"
+_adminer_version="4.3.1"
 #_iconv_from=kubler/glibc
 
 configure_bob()
