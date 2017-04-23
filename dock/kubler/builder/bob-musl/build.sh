@@ -31,4 +31,42 @@ configure_bob() {
     # add musl overlay, it may exist already in the shared portage container
     layman -l | grep -q musl && layman -d musl
     layman -a musl
+    # install go
+    cd ~
+    wget https://raw.githubusercontent.com/docker-library/golang/7e9aedf483dc0a035747f37af37ed260f2a6cf57/1.8/alpine/no-pic.patch
+    wget https://storage.googleapis.com/golang/go1.4-bootstrap-20161024.tar.gz
+    tar xzvf go1.4-bootstrap-20161024.tar.gz
+    mv go go1.4
+    cd go1.4/src/
+    # always seems to exit with signal 1 :/
+    set +e
+    ./make.bash
+    set -e
+    export GOPATH=/go
+    cd /usr/lib
+    git clone https://go.googlesource.com/go
+    cd go/src
+    git checkout go1.8.1
+    patch -p2 -i ~/no-pic.patch
+    # always seems to exit with signal 1 :/
+    set +e
+    ./all.bash
+    set -e
+    cd ../
+    ln -sr bin/go /usr/bin/
+    ln -sr bin/gofmt /usr/bin/
+    # required by acserver build
+    go install cmd/fix
+    go install cmd/cover
+    go install cmd/vet
+    # taken from alpine build
+    mkdir -p /go/src/golang.org/x/
+    cd /go/src/golang.org/x/
+    git clone https://go.googlesource.com/tools
+    for tool in "cover" "godoc" "stringer"; do
+        go install \
+        golang.org/x/tools/cmd/$tool || return 1
+    done
+    # install aci/oci requirements
+    install_oci_deps
 }
