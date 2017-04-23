@@ -1,12 +1,12 @@
-### kubler/docker-registry:20170326
+### kubler/docker-registry:20170423
 
-Built: Sun Mar 26 20:50:39 CEST 2017
-Image Size: 93.9 MB
+Built: Sun Apr 23 18:07:28 CEST 2017
+Image Size: 93.8MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: docker-registry-2.6.0 | http://github.com/docker/distribution/
+*manual install*: docker-registry-2.6.1 | http://github.com/docker/distribution/
 #### Inherited
 Package | USE Flags
 --------|----------

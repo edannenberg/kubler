@@ -1,7 +1,7 @@
-### kubler/plantuml:20170326
+### kubler/plantuml:20170423
 
-Built: Sun Mar 26 21:36:36 CEST 2017
-Image Size: 268 MB
+Built: Sun Apr 23 18:46:06 CEST 2017
+Image Size: 268MB
 
 #### Installed
 Package | USE Flags
@@ -9,10 +9,10 @@ Package | USE Flags
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
-dev-libs/glib-2.48.2 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
+dev-libs/glib-2.50.3-r1 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libltdl-2.4.6 | `-static-libs`
-dev-libs/libpcre-8.39 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
 media-gfx/graphviz-2.38.0-r1 | `nls -`

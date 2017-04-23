@@ -1,7 +1,7 @@
-### kubler/gcc:20170326
+### kubler/gcc:20170423
 
-Built: Sun Mar 26 20:52:53 CEST 2017
-Image Size: 158 MB
+Built: Sun Apr 23 18:09:00 CEST 2017
+Image Size: 180MB
 
 #### Installed
 Package | USE Flags
@@ -11,7 +11,7 @@ dev-libs/mpc-1.0.2-r1 | `-static-libs`
 dev-libs/mpfr-3.1.3_p4 | `-static-libs`
 sys-devel/binutils-2.26.1 | `cxx nls -multitarget -static-libs {-test} -vanilla`
 sys-devel/binutils-config-5-r3 | ``
-sys-devel/gcc-4.9.4 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
+sys-devel/gcc-5.4.0-r3 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-jit) (-libssp) -mpx (-multilib) -nopie -nossp -objc -objc`
 sys-devel/gcc-config-1.7.3 | ``
 sys-devel/make-4.2.1 | `nls -guile -static`
 sys-kernel/linux-headers-4.4 | ``

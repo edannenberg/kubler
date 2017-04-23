@@ -1,14 +1,14 @@
-### kubler/memcache:20170326
+### kubler/memcache:20170423
 
-Built: Sun Mar 26 21:11:25 CEST 2017
-Image Size: 88.2 MB
+Built: Sun Apr 23 18:24:36 CEST 2017
+Image Size: 88.4MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/perl-cleaner-2.20 | ``
+app-admin/perl-cleaner-2.25 | ``
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
-dev-lang/perl-5.22.3_rc4 | `berkdb -debug -doc -gdbm -ithreads`
+dev-lang/perl-5.24.1-r1 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libevent-2.1.8 | `ssl threads -debug (-libressl) -static-libs {-test}`
 net-misc/memcached-1.4.33-r1 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
 perl-core/File-Temp-0.230.400-r1 | ``

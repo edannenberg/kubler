@@ -1,12 +1,14 @@
-### kubler/clojure:20170326
+### kubler/clojure:20170423
 
-Built: Sun Mar 26 20:50:08 CEST 2017
-Image Size: 170 MB
+Built: Sun Apr 23 18:06:57 CEST 2017
+Image Size: 170MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 *manual install*: clojure-1.9.0-alpha15 | http://clojure.org/
+*manual install*: boot-latest | https://github.com/boot-clj/boot
+*manual install*: lein-latest | https://leiningen.org/
 #### Inherited
 Package | USE Flags
 --------|----------

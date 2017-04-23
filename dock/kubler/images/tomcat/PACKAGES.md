@@ -1,7 +1,7 @@
-### kubler/tomcat:20170326
+### kubler/tomcat:20170423
 
-Built: Sun Mar 26 21:33:17 CEST 2017
-Image Size: 181 MB
+Built: Sun Apr 23 18:42:47 CEST 2017
+Image Size: 180MB
 
 #### Installed
 Package | USE Flags

@@ -1,7 +1,7 @@
-### kubler/cadvisor:20170326
+### kubler/cadvisor:20170423
 
-Built: Sun Mar 26 20:49:05 CEST 2017
-Image Size: 33.3 MB
+Built: Sun Apr 23 18:05:43 CEST 2017
+Image Size: 33.2MB
 
 #### Installed
 Package | USE Flags

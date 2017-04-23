@@ -1,7 +1,7 @@
-### kubler/bash:20170326
+### kubler/bash:20170423
 
-Built: Sun Mar 26 20:48:26 CEST 2017
-Image Size: 32.6 MB
+Built: Sun Apr 23 18:05:03 CEST 2017
+Image Size: 32.4MB
 
 #### Installed
 Package | USE Flags

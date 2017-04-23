@@ -1,7 +1,7 @@
-### kubler/nginx-php7:20170326
+### kubler/nginx-php7:20170423
 
-Built: Sun Mar 26 21:27:04 CEST 2017
-Image Size: 117 MB
+Built: Sun Apr 23 18:37:49 CEST 2017
+Image Size: 117MB
 
 #### Installed
 Package | USE Flags
@@ -23,12 +23,12 @@ dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libtasn1-4.10-r1 | `-doc -static-libs -valgrind`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
-dev-libs/nettle-3.2-r1 | `gmp -doc (-neon) -static-libs {-test}`
+dev-libs/nettle-3.3-r1 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-5.1.8 | `lock`
 dev-php/pecl-apcu_bc-1.0.3-r1 | ` `
-dev-php/xdebug-2.5.0 | ` `
-dev-php/xdebug-client-2.5.0 | `-libedit`
+dev-php/xdebug-2.5.3 | ` `
+dev-php/xdebug-client-2.5.3 | `-libedit`
 mail-mta/nullmailer-1.13-r5 | `ssl`
 media-gfx/imagemagick-6.9.7.4 | `bzip2 cxx jpeg jpeg2k png tiff webp zlib -`
 media-libs/giflib-5.1.4 | `-doc -static-libs`
@@ -49,7 +49,7 @@ sys-apps/file-5.29 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
 sys-apps/shadow-4.4-r2 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-sys-devel/gettext-0.19.7 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
+sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs {-test}`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 sys-libs/ncurses-6.0-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
@@ -74,8 +74,8 @@ Package | USE Flags
 --------|----------
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
-dev-libs/libpcre-8.39 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.11.11 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
+www-servers/nginx-1.12.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``

@@ -1,7 +1,7 @@
-### kubler/python3:20170326
+### kubler/python3:20170423
 
-Built: Sun Mar 26 21:42:10 CEST 2017
-Image Size: 128 MB
+Built: Sun Apr 23 18:51:22 CEST 2017
+Image Size: 128MB
 
 #### Installed
 Package | USE Flags
@@ -10,7 +10,7 @@ app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-arch/xz-utils-5.2.3 | `nls threads -static-libs`
 app-eselect/eselect-python-20160516 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.16.2 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-db/sqlite-3.17.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-3.4.5 | `hardened readline sqlite ssl (threads) xml -build -examples -gdbm -ipv6 (-libressl) -ncurses -tk -wininst`
 dev-lang/python-exec-2.4.4 | ` `
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
@@ -34,9 +34,9 @@ dev-python/py-1.4.30 | `-doc {-test}`
 dev-python/pyasn1-0.1.8 | `-doc`
 dev-python/pycparser-2.14 | `{-test}`
 dev-python/pyopenssl-16.2.0 | `-doc -examples {-test}`
-dev-python/pyparsing-2.1.8 | `-doc -examples`
+dev-python/pyparsing-2.1.10 | `-doc -examples`
 dev-python/PySocks-1.5.6 | ` `
-dev-python/requests-2.11.1 | `{-test}`
+dev-python/requests-2.12.5 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
 dev-python/setuptools-30.4.0 | `{-test}`
 dev-python/six-1.10.0 | `-doc {-test}`

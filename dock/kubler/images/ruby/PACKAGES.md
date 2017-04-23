@@ -1,13 +1,13 @@
-### kubler/ruby:20170326
+### kubler/ruby:20170423
 
-Built: Sun Mar 26 21:45:53 CEST 2017
-Image Size: 60.2 MB
+Built: Sun Apr 23 18:55:14 CEST 2017
+Image Size: 57.1MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-eselect/eselect-ruby-20161226 | ``
-dev-lang/ruby-2.4.0 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -tk -xemacs`
+dev-lang/ruby-2.4.1 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -tk -xemacs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libyaml-0.1.7 | `-doc -examples -static-libs {-test}`
@@ -17,7 +17,7 @@ dev-ruby/minitest-5.10.1 | `-doc {-test}`
 dev-ruby/net-telnet-0.1.1-r1 | `-doc {-test}`
 dev-ruby/power_assert-0.4.1 | `-doc {-test}`
 dev-ruby/rake-12.0.0 | `-doc {-test}`
-dev-ruby/rdoc-5.0.0-r2 | `-doc {-test}`
+dev-ruby/rdoc-5.1.0 | `-doc {-test}`
 dev-ruby/rubygems-2.6.8 | `-server {-test}`
 dev-ruby/test-unit-3.2.3 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`

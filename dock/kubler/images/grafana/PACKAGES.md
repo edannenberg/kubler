@@ -1,7 +1,7 @@
-### kubler/grafana:20170326
+### kubler/grafana:20170423
 
-Built: Sun Mar 26 20:58:34 CEST 2017
-Image Size: 87.3 MB
+Built: Sun Apr 23 18:14:35 CEST 2017
+Image Size: 79.7MB
 
 #### Installed
 Package | USE Flags

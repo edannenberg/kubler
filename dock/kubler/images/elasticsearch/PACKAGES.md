@@ -1,7 +1,7 @@
-### kubler/elasticsearch:20170326
+### kubler/elasticsearch:20170423
 
-Built: Sun Mar 26 20:51:55 CEST 2017
-Image Size: 204 MB
+Built: Sun Apr 23 18:08:09 CEST 2017
+Image Size: 204MB
 
 #### Installed
 Package | USE Flags

@@ -1,16 +1,15 @@
-### kubler/opensmtpd:20170423
+### kubler/pure-ftpd:20170423
 
-Built: Sun Apr 23 18:39:46 CEST 2017
-Image Size: 27MB
+Built: Sun Apr 23 18:47:26 CEST 2017
+Image Size: 18.8MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-dev-libs/libevent-2.1.8 | `ssl threads -debug (-libressl) -static-libs {-test}`
-mail-mta/opensmtpd-6.0.2_p1 | `mta -pam`
-net-libs/libasr-1.0.1 | ``
-net-mail/mailbase-1.1 | `-pam`
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
+dev-libs/libsodium-1.0.11 | `asm urandom -minimal -static-libs`
+net-ftp/ftpbase-0.01-r2 | `-pam`
+net-ftp/pure-ftpd-1.0.45-r1 | `ssl vchroot -anondel -anonperm -anonren -anonres -caps -charconv -implicittls -ldap (-libressl) -mysql -noiplog -pam -paranoidmsg -postgres -resolveids (-selinux) -sysquota -xinetd`
+*manual install*: syslog-stdout-1.1.1 | https://github.com/timonier/syslog-stdout
 #### Inherited
 Package | USE Flags
 --------|----------

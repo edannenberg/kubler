@@ -1,7 +1,7 @@
-### kubler/postgres:20170326
+### kubler/postgres:20170423
 
-Built: Sun Mar 26 21:37:32 CEST 2017
-Image Size: 52 MB
+Built: Sun Apr 23 18:46:56 CEST 2017
+Image Size: 50.1MB
 
 #### Installed
 Package | USE Flags
@@ -10,7 +10,7 @@ app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 app-eselect/eselect-postgresql-1.2.1 | ``
 app-misc/editor-wrapper-4 | ``
 dev-db/postgresql-9.5.5 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
-dev-libs/libpcre-8.39 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
+dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-487 | `pcre unicode`
 *manual install*: su-exec-0.2 | https://github.com/ncopa/su-exec/
 #### Inherited

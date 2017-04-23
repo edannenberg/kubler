@@ -1,7 +1,7 @@
-### kubler/redis:20170326
+### kubler/redis:20170423
 
-Built: Sun Mar 26 21:42:40 CEST 2017
-Image Size: 14.3 MB
+Built: Sun Apr 23 18:51:49 CEST 2017
+Image Size: 14.3MB
 
 #### Installed
 Package | USE Flags

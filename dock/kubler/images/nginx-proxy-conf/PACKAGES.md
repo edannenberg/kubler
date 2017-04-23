@@ -1,7 +1,7 @@
-### kubler/nginx-proxy-conf:20170326
+### kubler/nginx-proxy-conf:20170423
 
-Built: Sun Mar 26 21:28:10 CEST 2017
-Image Size: 22.7 MB
+Built: Sun Apr 23 18:38:25 CEST 2017
+Image Size: 22.6MB
 
 #### Installed
 Package | USE Flags

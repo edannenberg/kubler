@@ -1,7 +1,7 @@
-### kubler/jdk-oracle:20170326
+### kubler/jdk-oracle:20170423
 
-Built: Sun Mar 26 21:04:17 CEST 2017
-Image Size: 333 MB
+Built: Sun Apr 23 18:18:36 CEST 2017
+Image Size: 208MB
 
 #### Installed
 Package | USE Flags
@@ -13,16 +13,6 @@ sys-apps/baselayout-java-0.1.0 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
-**FROM kubler/gcc** |
-dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
-dev-libs/mpc-1.0.2-r1 | `-static-libs`
-dev-libs/mpfr-3.1.3_p4 | `-static-libs`
-sys-devel/binutils-2.26.1 | `cxx nls -multitarget -static-libs {-test} -vanilla`
-sys-devel/binutils-config-5-r3 | ``
-sys-devel/gcc-4.9.4 | `cxx hardened nls nptl openmp vtv (-altivec) (-awt) -cilk -debug -doc (-fixed-point) -fortran -gcj -go -graphite (-libssp) (-multilib) -nopie -nossp -objc -objc`
-sys-devel/gcc-config-1.7.3 | ``
-sys-devel/make-4.2.1 | `nls -guile -static`
-sys-kernel/linux-headers-4.4 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.62 | `nls -static`
@@ -56,7 +46,3 @@ sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev
 #### Purged
 - [x] Headers
 - [x] Static Libs
-
-#### Included
-- [x] Headers from kubler/glibc
-- [x] Static Libs from kubler/glibc

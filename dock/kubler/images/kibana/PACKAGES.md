@@ -1,7 +1,7 @@
-### kubler/kibana:20170326
+### kubler/kibana:20170423
 
-Built: Sun Mar 26 21:05:08 CEST 2017
-Image Size: 160 MB
+Built: Sun Apr 23 18:19:23 CEST 2017
+Image Size: 161MB
 
 #### Installed
 Package | USE Flags

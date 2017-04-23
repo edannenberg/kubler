@@ -1,7 +1,7 @@
-### kubler/s6:20170326
+### kubler/s6:20170423
 
-Built: Sun Mar 26 20:46:37 CEST 2017
-Image Size: 11.6 MB
+Built: Sun Apr 23 18:03:20 CEST 2017
+Image Size: 11.5MB
 
 #### Installed
 Package | USE Flags
