@@ -1,0 +1,4 @@
+FROM ${NAMESPACE}/musl
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
