@@ -149,7 +149,7 @@ function build_image() {
         if [[ ! -z "${BUILDER}" ]]; then
             builder_commit_id="${BUILDER##*/}-${current_image}"
         elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
-            builder_commit_id="${DEFAULT_BUILDER##*/}-${current_image}"
+            builder_commit_id="${builder_id##*/}-${current_image}"
         fi
 
         if [[ "${image_type}" == "${_BUILDER_PATH}" ]]; then
