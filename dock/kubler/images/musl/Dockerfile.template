@@ -1,0 +1,6 @@
+FROM ${IMAGE_PARENT}
+MAINTAINER ${MAINTAINER}
+
+#ENV LANG en_US.utf8
+
+ADD rootfs.tar /

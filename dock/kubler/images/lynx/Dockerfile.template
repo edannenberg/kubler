@@ -1,0 +1,11 @@
+FROM ${IMAGE_PARENT}
+MAINTAINER ${MAINTAINER}
+
+ADD rootfs.tar /
+
+# User setup
+USER user
+ENV HOME /home/user
+WORKDIR $HOME
+
+ENTRYPOINT [ "lynx" ]
