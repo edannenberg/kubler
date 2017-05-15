@@ -4,6 +4,9 @@
 
 _packages="www-client/lynx"
 
+# keep lynx docs
+export BOB_FEATURES="${BOB_FEATURES//nodoc/}"
+
 configure_bob(){
     update_use 'sys-libs/ncurses' +minimal
     update_use 'www-client/lynx'  -nls
