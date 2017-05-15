@@ -17,7 +17,7 @@ configure_bob()
     emerge -f libressl 
     emerge -C openssh
     emerge -C openssl 
-    emerge -1v libressl
+    emerge -1q libressl
     emerge -1q wget
     
     # select python
@@ -37,7 +37,7 @@ configure_bob()
 
     emerge -1q dev-vcs/git
 
-    emerge -v @preserved-rebuild
+    emerge -q @preserved-rebuild
 }
 
 #
