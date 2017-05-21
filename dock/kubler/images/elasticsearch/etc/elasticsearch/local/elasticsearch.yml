@@ -52,7 +52,7 @@
 #
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
-network.host: [_site_, _local_]
+network.host: 0.0.0.0
 http.cors.enabled: true
 #
 # Set a custom port for HTTP:
