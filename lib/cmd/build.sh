@@ -111,6 +111,9 @@ function main() {
 
     cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
 
+    # shellcheck disable=SC2154
+    [[ "${_arg_verbose_build}" == 'off' ]] && BOB_EMERGE_DEFAULT_OPTS="${BOB_EMERGE_DEFAULT_OPTS} --quiet-build"
+
     # --interactive build
     # shellcheck disable=SC2154
     if [[ "${_arg_interactive}" == 'on' ]]; then

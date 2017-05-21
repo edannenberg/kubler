@@ -10,6 +10,7 @@ _help_command_description="Build image(s) or namespace(s)"
 # ARG_OPTIONAL_BOOLEAN([clear-build-container],[c],[Force rebuild of required build container(s) if existing])
 # ARG_OPTIONAL_BOOLEAN([clear-everything],[C],[Force rebuild of required build container(s) and their respective stage3 images])
 # ARG_OPTIONAL_BOOLEAN([skip-gpg-check],[s],[Don't verify downloads with GPG, sha512 is still checked])
+# ARG_OPTIONAL_BOOLEAN([verbose-build],[v],[Show all build output])
 # ARG_OPTIONAL_REPEATED([exclude],[e],[Exclude given image from dependency graph for this run])
 # ARG_HELP([])
 # ARGBASH_WRAP([opt-global])
@@ -31,6 +32,7 @@ _arg_force_full_image_build=off
 _arg_clear_build_container=off
 _arg_clear_everything=off
 _arg_skip_gpg_check=off
+_arg_verbose_build=off
 _arg_exclude=()
 _arg_working_dir=
 _arg_debug=off
@@ -46,6 +48,7 @@ print_help ()
     printf "\t%s\n" "-c,--clear-build-container: Force rebuild of required build container(s) if existing"
     printf "\t%s\n" "-C,--clear-everything: Force rebuild of required build container(s) and their respective stage3 images"
     printf "\t%s\n" "-s,--skip-gpg-check: Don't verify downloads with GPG, sha512 is still checked"
+    printf "\t%s\n" "-v,--verbose-build: Show all build output"
     printf "\t%s\n" "-e,--exclude: Exclude given image from dependency graph for this run (repeatable)"
     printf "\t%s\n" "-h,--help: Prints help"
     printf "\t%s\n" "-w,--working-dir: Where to look for namespaces or images, default: current directory"
@@ -97,6 +100,12 @@ do
             _next="${_key##-s}"
             test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-s" "-${_next}" "$@"
             test "${1:0:5}" = "--no-" && _arg_skip_gpg_check="off"
+            ;;
+        -v*|--no-verbose-build|--verbose-build)
+            _arg_verbose_build="on"
+            _next="${_key##-v}"
+            test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-v" "-${_next}" "$@"
+            test "${1:0:5}" = "--no-" && _arg_verbose_build="off"
             ;;
         -e*|--exclude|--exclude=*)
             _val="${_key##--exclude=}"
