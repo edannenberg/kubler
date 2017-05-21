@@ -355,6 +355,19 @@ function configure_layman() {
     touch /etc/portage/repos.conf/layman.conf
 }
 
+# Arguments:
+# 1: overlay_id
+# n: more overlay_ids
+function add_layman_overlay() {
+    local overlay_id
+    # shellcheck disable=SC2068
+    for overlay_id in ${@}; do
+        layman -l | grep -q "${overlay_id}" && layman -d "${overlay_id}"
+    done
+    # shellcheck disable=SC2068
+    layman -a ${@}
+}
+
 function install_oci_deps() {
     local acserver_path
     export GOPATH='/go'
