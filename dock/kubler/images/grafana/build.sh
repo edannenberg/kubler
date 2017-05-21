@@ -2,13 +2,11 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_grafana_version="4.2.0"
+_grafana_version="4.3.0-beta1"
 
 configure_bob()
 {
-    # grafana 4.2.x requires go 1.8
-    update_keywords 'dev-lang/go' '+~amd64'
-    emerge -v net-libs/nodejs dev-lang/go
+    emerge -v net-libs/nodejs
     export DISTRIBUTION_DIR=/go/src/github.com/grafana/grafana
     mkdir -p "${DISTRIBUTION_DIR}"
     export GOPATH=/go
