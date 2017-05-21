@@ -28,9 +28,7 @@ configure_bob() {
     emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq
     install_git_postsync_hooks
     configure_layman
-    # add musl overlay, it may exist already in the shared portage container
-    layman -l | grep -q musl && layman -d musl
-    layman -a musl
+    add_layman_overlay musl
     # install go
     cd ~
     wget https://raw.githubusercontent.com/docker-library/golang/7e9aedf483dc0a035747f37af37ed260f2a6cf57/1.8/alpine/no-pic.patch
@@ -38,7 +36,7 @@ configure_bob() {
     tar xzvf go1.4-bootstrap-20161024.tar.gz
     mv go go1.4
     cd go1.4/src/
-    # always seems to exit with signal 1 :/
+    # some tests seem to be hardlinked against glibc and fail
     set +e
     ./make.bash
     set -e
@@ -48,7 +46,7 @@ configure_bob() {
     cd go/src
     git checkout go1.8.1
     patch -p2 -i ~/no-pic.patch
-    # always seems to exit with signal 1 :/
+    # some tests seem to be hardlinked against glibc and fail
     set +e
     ./all.bash
     set -e

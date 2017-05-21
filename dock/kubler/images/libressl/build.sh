@@ -5,8 +5,7 @@ _packages="dev-libs/libressl"
 
 configure_bob()
 {
-    layman -l | grep -q libressl && layman -d libressl
-    layman -a libressl
+    add_layman_overlay libressl
     # libressl
     # https://wiki.gentoo.org/wiki/Project:LibreSSL
     echo 'USE="${USE} libressl"'   >> /etc/portage/make.conf 
