@@ -7,6 +7,7 @@ configure_bob()
 {
     # build tomcat-native package on the host
     unprovide_package dev-java/java-config app-eselect/eselect-java app-arch/zip
+    update_use 'dev-java/oracle-jdk-bin' +headless-awt +jce -fontconfig
     emerge dev-java/oracle-jdk-bin
     emerge dev-java/ant-core dev-java/ant-junit dev-java/java-config dev-java/tomcat-native www-servers/tomcat
 }
