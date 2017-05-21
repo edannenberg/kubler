@@ -19,4 +19,6 @@ finish_rootfs_build()
     install_suexec
     uninstall_package app-shells/bash
     mkdir /backup
+    # since eselect-postgresql-2.1 /usr/share/pkgconfig folder is expected
+    mkdir -p "${_EMERGE_ROOT}"/usr/share/pkgconfig
 }
