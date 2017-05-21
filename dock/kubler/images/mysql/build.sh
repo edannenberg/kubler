@@ -9,10 +9,6 @@ _autosqlbackup_version="3.0_rc6"
 #
 configure_rootfs_build()
 {
-    # skip all perl 5.24 virtuals until next update
-    grep -ri 'dev-lang/perl-5.24' /var/sync/portage/virtual/perl-* \
-        | cut -d: -f1 | sed 's/\.ebuild//' | sed  's#/var/sync/portage/##' | sed 's#/perl-.*/#/#' \
-        >> /etc/portage/profile/package.provided
     # sadly perl is required for db init scripts
     #update_use 'dev-db/mysql' '-perl'
     # reinstall curl, needed at build time
@@ -34,7 +30,7 @@ finish_rootfs_build()
     amb_file="automysqlbackup-v${_autosqlbackup_version}.tar.gz"
     mkdir /root/automysqlbackup
     cd /root/automysqlbackup
-    wget https://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/"${amb_file}"
+    wget -U "" https://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/"${amb_file}"
     tar xzvf "${amb_file}"
     mkdir "${_EMERGE_ROOT}"/etc/automysqlbackup
     cp automysqlbackup "${_EMERGE_ROOT}"/usr/bin/
