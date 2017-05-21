@@ -1,15 +1,15 @@
-### kubler/postgres:20170423
+### kubler/postgres:20170521
 
-Built: Sun Apr 23 18:46:56 CEST 2017
-Image Size: 50.1MB
+Built: Sun May 21 22:05:06 CEST 2017
+Image Size: 51.6 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
-app-eselect/eselect-postgresql-1.2.1 | ``
+app-eselect/eselect-postgresql-2.1 | ``
 app-misc/editor-wrapper-4 | ``
-dev-db/postgresql-9.5.5 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
+dev-db/postgresql-9.5.7 | `nls readline server ssl threads zlib -doc -kerberos -ldap (-libressl) -pam -perl -pg`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-487 | `pcre unicode`
 *manual install*: su-exec-0.2 | https://github.com/ncopa/su-exec/
@@ -36,9 +36,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

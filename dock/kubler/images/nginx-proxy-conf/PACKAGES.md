@@ -1,14 +1,14 @@
-### kubler/nginx-proxy-conf:20170423
+### kubler/nginx-proxy-conf:20170521
 
-Built: Sun Apr 23 18:38:25 CEST 2017
-Image Size: 22.6MB
+Built: Sun May 21 21:37:19 CEST 2017
+Image Size: 22.6 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 *manual install*: docker-gen-0.7.3 | http://github.com/jwilder/docker-gen/
 #### Inherited

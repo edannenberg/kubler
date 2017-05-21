@@ -1,12 +1,15 @@
-### kubler/influxdb:20170521
+### kubler/libressl:20170521
 
-Built: Sun May 21 21:01:22 CEST 2017
-Image Size: 65.8 MB
+Built: Sun May 21 21:06:57 CEST 2017
+Image Size: 13.8 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: influxdb-1.2.4 | https://github.com/influxdb/influxdb/
+app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
+app-misc/c_rehash-1.7-r1 | ``
+dev-libs/libressl-2.4.5 | `asm -static-libs`
+sys-apps/debianutils-4.7 | `-static`
 #### Inherited
 Package | USE Flags
 --------|----------

@@ -1,14 +1,14 @@
-### kubler/nginx-proxy:20170423
+### kubler/nginx-proxy:20170521
 
-Built: Sun Apr 23 18:38:02 CEST 2017
-Image Size: 17.6MB
+Built: Sun May 21 21:36:57 CEST 2017
+Image Size: 17.6 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.12.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -19,9 +19,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

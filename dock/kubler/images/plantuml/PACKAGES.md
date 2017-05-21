@@ -1,7 +1,7 @@
-### kubler/plantuml:20170423
+### kubler/plantuml:20170521
 
-Built: Sun Apr 23 18:46:06 CEST 2017
-Image Size: 268MB
+Built: Sun May 21 21:44:38 CEST 2017
+Image Size: 268 MB
 
 #### Installed
 Package | USE Flags
@@ -17,7 +17,7 @@ dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python 
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
 media-gfx/graphviz-2.38.0-r1 | `nls -`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
-media-libs/freetype-2.7.1-r2 | `adobe-cff bindist bzip2 cleartype`
+media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/gd-2.2.4 | `fontconfig jpeg png truetype zlib -static-libs -tiff -webp -xpm`
 media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
@@ -30,14 +30,14 @@ dev-java/ant-core-1.9.2 | `-doc -source`
 dev-java/ant-eclipse-ecj-4.5.1 | `-doc -source`
 dev-java/eclipse-ecj-4.5.1 | `ant -doc -source`
 dev-java/tomcat-native-1.2.8 | `{-test}`
-dev-java/tomcat-servlet-api-8.0.39 | `-source`
+dev-java/tomcat-servlet-api-8.0.43 | `-source`
 dev-libs/apr-1.5.2 | `urandom -doc -older-kernels-compatibility (-selinux) -static-libs`
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-www-servers/tomcat-8.0.39 | `-doc -extra-webapps -source {-test}`
+www-servers/tomcat-8.0.43 | `-doc -extra-webapps -source {-test}`
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.121 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
@@ -59,9 +59,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

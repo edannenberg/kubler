@@ -1,12 +1,12 @@
-### kubler/clojure:20170423
+### kubler/clojure:20170521
 
-Built: Sun Apr 23 18:06:57 CEST 2017
-Image Size: 170MB
+Built: Sun May 21 20:47:53 CEST 2017
+Image Size: 170 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: clojure-1.9.0-alpha15 | http://clojure.org/
+*manual install*: clojure-1.9.0-alpha16 | http://clojure.org/
 *manual install*: boot-latest | https://github.com/boot-clj/boot
 *manual install*: lein-latest | https://leiningen.org/
 #### Inherited
@@ -15,7 +15,7 @@ Package | USE Flags
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.121 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
@@ -37,9 +37,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

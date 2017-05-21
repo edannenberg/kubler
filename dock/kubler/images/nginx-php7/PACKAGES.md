@@ -1,7 +1,7 @@
-### kubler/nginx-php7:20170423
+### kubler/nginx-php7:20170521
 
-Built: Sun Apr 23 18:37:49 CEST 2017
-Image Size: 117MB
+Built: Sun May 21 21:36:44 CEST 2017
+Image Size: 118 MB
 
 #### Installed
 Package | USE Flags
@@ -9,7 +9,7 @@ Package | USE Flags
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-7.1.3-r1 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
+dev-lang/php-7.1.5 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.3 | `-static-libs`
@@ -21,6 +21,7 @@ dev-libs/libmcrypt-2.5.8-r4 | ``
 dev-libs/libmemcached-1.0.18-r3 | `libevent -debug -hsieh -sasl -static-libs`
 dev-libs/libpthread-stubs-0.3-r1 | `-static-libs`
 dev-libs/libtasn1-4.10-r1 | `-doc -static-libs -valgrind`
+dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
 dev-libs/nettle-3.3-r1 | `gmp -doc (-neon) -static-libs {-test}`
@@ -38,10 +39,10 @@ media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
 media-libs/libwebp-0.5.2 | `gif jpeg png tiff -experimental (-neon) -opengl -static-libs -swap-16bit-csp`
 media-libs/openjpeg-2.1.1_p20160922 | `-doc -static-libs {-test}`
 media-libs/tiff-4.0.7 | `cxx jpeg zlib -jbig -lzma -static-libs {-test}`
-net-dns/libidn-1.33 | `nls -doc -emacs -java -mono -static-libs`
-net-libs/gnutls-3.3.26 | `crywrap cxx nls openssl zlib -dane -doc -examples -guile -pkcs11 -static-libs {-test}`
+net-dns/libidn2-0.16-r1 | `-static-libs`
+net-libs/gnutls-3.5.12 | `cxx idn nls openssl seccomp sslv3 tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -static-libs {-test} (-test-full) -tools -valgrind`
 net-misc/curl-7.53.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
-net-misc/memcached-1.4.33 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
+net-misc/memcached-1.4.36 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
@@ -75,7 +76,7 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.12.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
@@ -83,9 +84,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

@@ -1,7 +1,7 @@
-### kubler/mariadb:20170423
+### kubler/mariadb:20170521
 
-Built: Sun Apr 23 18:23:48 CEST 2017
-Image Size: 236MB
+Built: Sun May 21 21:15:11 CEST 2017
+Image Size: 237 MB
 
 #### Installed
 Package | USE Flags
@@ -22,6 +22,7 @@ dev-perl/PlRPC-0.202.0-r2 | ``
 dev-perl/TermReadKey-2.330.0 | ``
 dev-perl/Text-Unidecode-1.270.0 | ``
 dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
+perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-6.1 | `nls -static`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 sys-process/procps-3.3.12 | `kill nls unicode -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
@@ -49,9 +50,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

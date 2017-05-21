@@ -1,7 +1,7 @@
-### kubler/memcache:20170423
+### kubler/memcache:20170521
 
-Built: Sun Apr 23 18:24:36 CEST 2017
-Image Size: 88.4MB
+Built: Sun May 21 21:16:04 CEST 2017
+Image Size: 88.4 MB
 
 #### Installed
 Package | USE Flags
@@ -10,7 +10,7 @@ app-admin/perl-cleaner-2.25 | ``
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
 dev-lang/perl-5.24.1-r1 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libevent-2.1.8 | `ssl threads -debug (-libressl) -static-libs {-test}`
-net-misc/memcached-1.4.33-r1 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
+net-misc/memcached-1.4.36 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
 perl-core/File-Temp-0.230.400-r1 | ``
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 #### Inherited
@@ -36,9 +36,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

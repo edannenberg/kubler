@@ -1,34 +1,29 @@
-### kubler/webhook:20170423
+### kubler/webhook:20170521
 
-Built: Sun Apr 23 18:57:20 CEST 2017
-Image Size: 79.4MB
+Built: Sun May 21 22:17:04 CEST 2017
+Image Size: 81.3 MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r7 | `-static -static-libs`
-app-crypt/gnupg-2.1.18 | `bzip2 gnutls nls readline -doc -ldap (-selinux) -smartcard -tofu -tools -usb -wks-server`
+app-crypt/gnupg-2.1.20-r1 | `bzip2 gnutls nls readline -doc -ldap (-selinux) -smartcard -tofu -tools -usb -wks-server`
 app-crypt/pinentry-0.9.7-r1 | `ncurses -caps -emacs -gnome-keyring -gtk -qt4 -qt5 -static`
 app-eselect/eselect-lib-bin-symlink-0.1.1 | ``
 app-eselect/eselect-pinentry-0.7 | ``
-dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libassuan-2.4.3-r1 | `-static-libs`
 dev-libs/libgcrypt-1.7.6 | `-doc -static-libs`
 dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libksba-1.3.5-r1 | `-static-libs`
-dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libtasn1-4.10-r1 | `-doc -static-libs -valgrind`
-dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/nettle-3.3-r1 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/npth-1.3 | `-static-libs`
-dev-scheme/guile-1.8.8-r3 | `deprecated nls readline regex threads -debug -debug-freelist -debug-malloc -discouraged -emacs -networking`
-dev-vcs/git-2.10.2 | `blksha1 curl gpg iconv nls pcre threads -cgi -cvs -doc -emacs -gnome-keyring -gtk -highlight (-libressl) -mediawiki -mediawiki-experimental -perl (-ppcsha1) -python -subversion {-test} -tk -webdav -xinetd`
-net-dns/libidn-1.33 | `nls -doc -emacs -java -mono -static-libs`
-net-libs/gnutls-3.3.26 | `crywrap cxx nls openssl zlib -dane -doc -examples -guile -pkcs11 -static-libs {-test}`
-sys-devel/autogen-5.18.4 | `-libopts -static-libs`
-sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
+dev-vcs/git-2.13.0 | `blksha1 curl gpg iconv nls pcre threads -cgi -cvs -doc -emacs -highlight (-libressl) -libsecret -mediawiki -mediawiki-experimental -perl (-ppcsha1) -python -subversion {-test} -tk -webdav -xinetd`
+net-dns/libidn2-0.16-r1 | `-static-libs`
+net-libs/gnutls-3.5.12 | `cxx idn nls openssl seccomp sslv3 tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -static-libs {-test} (-test-full) -tools -valgrind`
 *manual install*: webhook-2.6.3 | https://github.com/adnanh/webhook/
 #### Inherited
 Package | USE Flags
@@ -53,9 +48,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

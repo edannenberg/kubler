@@ -1,7 +1,7 @@
-### kubler/mysql:20170423
+### kubler/mysql:20170521
 
-Built: Sun Apr 23 18:26:17 CEST 2017
-Image Size: 211MB
+Built: Sun May 21 21:18:11 CEST 2017
+Image Size: 211 MB
 
 #### Installed
 Package | USE Flags
@@ -20,6 +20,7 @@ dev-perl/Net-Daemon-0.480.0-r1 | ``
 dev-perl/PlRPC-0.202.0-r2 | ``
 dev-perl/Text-Unidecode-1.270.0 | ``
 dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
+perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-6.1 | `nls -static`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 sys-process/procps-3.3.12 | `kill nls unicode -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
@@ -47,9 +48,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

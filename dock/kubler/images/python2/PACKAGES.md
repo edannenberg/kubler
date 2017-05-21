@@ -1,7 +1,7 @@
-### kubler/python2:20170423
+### kubler/python2:20170521
 
-Built: Sun Apr 23 18:49:26 CEST 2017
-Image Size: 117MB
+Built: Sun May 21 22:08:32 CEST 2017
+Image Size: 116 MB
 
 #### Installed
 Package | USE Flags
@@ -14,10 +14,11 @@ dev-lang/python-2.7.12 | `hardened readline sqlite ssl (threads) (wide-unicode) 
 dev-lang/python-exec-2.4.4 | ` `
 dev-libs/expat-2.2.0-r1 | `unicode -examples -static-libs`
 dev-libs/libffi-3.2.1 | `pax`
+dev-python/appdirs-1.4.3 | ` `
 dev-python/backports-1.0 | ` `
 dev-python/backports-ssl-match-hostname-3.5.0.1-r1 | ` `
 dev-python/CacheControl-0.11.5 | `{-test}`
-dev-python/certifi-2016.9.26 | ` `
+dev-python/certifi-2017.1.23 | ` `
 dev-python/cffi-1.9.1 | `-doc {-test}`
 dev-python/chardet-2.3.0 | ` `
 dev-python/colorama-0.3.3 | `-examples`
@@ -29,7 +30,7 @@ dev-python/idna-2.0 | ` `
 dev-python/ipaddress-1.0.14 | ` `
 dev-python/lockfile-0.11.0-r1 | `-doc {-test}`
 dev-python/ndg-httpsclient-0.4.0 | ` `
-dev-python/packaging-16.6 | `{-test}`
+dev-python/packaging-16.8 | `{-test}`
 dev-python/pip-7.1.2 | ` `
 dev-python/ply-3.9 | `-examples`
 dev-python/progress-1.2 | ` `
@@ -41,7 +42,7 @@ dev-python/pyparsing-2.1.10 | `-doc -examples`
 dev-python/PySocks-1.5.6 | ` `
 dev-python/requests-2.12.5 | `{-test}`
 dev-python/retrying-1.3.3 | ` `
-dev-python/setuptools-30.4.0 | `{-test}`
+dev-python/setuptools-34.0.2-r1 | `{-test}`
 dev-python/six-1.10.0 | `-doc {-test}`
 dev-python/urllib3-1.16 | `-doc {-test}`
 #### Inherited
@@ -67,9 +68,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

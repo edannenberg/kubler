@@ -1,7 +1,7 @@
-### kubler/redis:20170423
+### kubler/redis:20170521
 
-Built: Sun Apr 23 18:51:49 CEST 2017
-Image Size: 14.3MB
+Built: Sun May 21 22:11:32 CEST 2017
+Image Size: 14.3 MB
 
 #### Installed
 Package | USE Flags
@@ -13,9 +13,9 @@ dev-libs/jemalloc-3.6.0 | `-debug -static-libs -stats`
 Package | USE Flags
 --------|----------
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``

@@ -1,7 +1,7 @@
-### kubler/jdk-icedtea:20170423
+### kubler/jdk-icedtea:20170521
 
-Built: Sun Apr 23 18:17:50 CEST 2017
-Image Size: 303MB
+Built: Sun May 21 21:03:17 CEST 2017
+Image Size: 303 MB
 
 #### Installed
 Package | USE Flags
@@ -18,7 +18,7 @@ dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -j
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
 media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
-media-libs/freetype-2.7.1-r2 | `adobe-cff bindist bzip2 cleartype`
+media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/lcms-2.8-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.0 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
@@ -57,9 +57,9 @@ dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos 
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.2.0.0 | `-static -static-libs`
-dev-libs/skalibs-2.4.0.2 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.4.0.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.5.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.5.0.0 | `-static -static-libs`
 *manual install*: entr-3.6 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
