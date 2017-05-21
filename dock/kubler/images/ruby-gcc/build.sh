@@ -15,7 +15,6 @@ configure_rootfs_build()
     echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     #echo '>=dev-lang/ruby-2.4.0' >> /etc/portage/package.mask/ruby
     update_keywords 'dev-lang/ruby' '+~amd64'
-    update_keywords '=app-eselect/eselect-ruby-20161226' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
     update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
     update_keywords '=dev-ruby/rubygems-2.6.8' '+~amd64'
