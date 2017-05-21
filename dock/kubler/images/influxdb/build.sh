@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_influxdb_version="1.2.3"
+_influxdb_version="1.2.4"
 
 configure_bob()
 {
