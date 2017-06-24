@@ -18,7 +18,7 @@ configure_rootfs_build()
     update_keywords '=dev-ruby/minitest-5.10.1' '+~amd64'
     update_keywords '=dev-ruby/test-unit-3.2.3' '+~amd64'
     update_keywords '=virtual/rubygems-12' '+~amd64'
-    update_keywords '=dev-ruby/json-2.0.2' '+~amd64'
+    update_keywords '=dev-ruby/json-2.1.0' '+~amd64'
     update_keywords '=dev-ruby/net-telnet-0.1.1-r1' '+~amd64'
     update_keywords '=dev-ruby/did_you_mean-1.1.0' '+~amd64'
     update_keywords '=dev-ruby/xmlrpc-0.2.1' '+~amd64'
