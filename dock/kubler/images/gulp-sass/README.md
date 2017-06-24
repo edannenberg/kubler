@@ -30,7 +30,7 @@ services:
 The referenced Dockerfile just points to the image:
 
 ```
-FROM kubler/nodejs
+FROM kubler/gulp-sass
 ```
 
 Note: The example above expects the environment variables `UID` and `GID`, on Bash `UID` is an internal
