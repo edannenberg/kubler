@@ -9,7 +9,6 @@ _packages="dev-java/icedtea-bin:8"
 configure_rootfs_build()
 {
     update_use 'dev-java/icedtea-bin' -webstart +headless-awt
-    update_keywords 'dev-java/icedtea-bin' +~amd64
     # skip python and nss
     provide_package dev-lang/python
     provide_package dev-libs/nss
