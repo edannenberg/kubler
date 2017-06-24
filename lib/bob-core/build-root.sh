@@ -451,9 +451,9 @@ function build_rootfs() {
 
     mkdir -p "${_EMERGE_ROOT}"
 
-    # read config, mounted via build.sh
+    # read mounted config
     # shellcheck source=dock/kubler/images/busybox/build.sh disable=SC2015
-    [[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh" || :
+    [[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh"
 
     # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
     export USE_BUILDER_FLAGS="true"
