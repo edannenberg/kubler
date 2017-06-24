@@ -375,11 +375,11 @@ function expand_requested_target_ids() {
                 if [[ -z "${is_processed}" ]]; then
                     [[ ! -d "${_NAMESPACE_DIR}/${target}/${_IMAGE_PATH}" ]] \
                         && die "Couldn't find namespace ${target} in ${_NAMESPACE_DIR}"
-                    pushd "${_NAMESPACE_DIR}" > /dev/null
+                    pushd "${_NAMESPACE_DIR}" > /dev/null || die "pushd error on directory ${_NAMESPACE_DIR}"
                     for image in "${target}/${_IMAGE_PATH}"*; do
                        expanded+=" ${image/${_IMAGE_PATH}/}"
                     done
-                    popd > /dev/null
+                    popd > /dev/null || die "popd failed in function expand_requested_target_ids"
                 fi
             fi
         done
