@@ -44,7 +44,7 @@ configure_bob() {
     cd /usr/lib
     git clone https://go.googlesource.com/go
     cd go/src
-    git checkout go1.8.1
+    git checkout go1.8.3
     patch -p2 -i ~/no-pic.patch
     # some tests seem to be hardlinked against glibc and fail
     set +e
