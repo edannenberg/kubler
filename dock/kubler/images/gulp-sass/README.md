@@ -23,7 +23,7 @@ services:
     working_dir: ${PWD}
     user: nodejs
     volumes:
-      - ~/.npm:$HOME/.npm
+      - ~/.npm:/home/nodejs/.npm
       - ${PWD}:${PWD}
 ```
 
