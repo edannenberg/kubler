@@ -1,7 +1,7 @@
-### kubler/libressl:20170521
+### kubler/libressl:20170624
 
-Built: Sun May 21 21:06:57 CEST 2017
-Image Size: 13.8 MB
+Built: Sat Jun 24 23:24:59 CEST 2017
+Image Size: 13.8MB
 
 #### Installed
 Package | USE Flags
@@ -15,7 +15,7 @@ Package | USE Flags
 --------|----------
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.23-r4 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

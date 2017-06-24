@@ -1,7 +1,7 @@
-### kubler/busybox:20170521
+### kubler/busybox:20170624
 
-Built: Sun May 21 20:42:34 CEST 2017
-Image Size: 1.17 MB
+Built: Sat Jun 24 23:01:02 CEST 2017
+Image Size: 1.17MB
 
 #### Installed
 Package | USE Flags

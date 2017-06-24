@@ -1,7 +1,7 @@
-### kubler/lynx:20170521
+### kubler/lynx:20170624
 
-Built: Sun May 21 21:12:47 CEST 2017
-Image Size: 13.3 MB
+Built: Sat Jun 24 23:31:25 CEST 2017
+Image Size: 13.3MB
 
 #### Installed
 Package | USE Flags

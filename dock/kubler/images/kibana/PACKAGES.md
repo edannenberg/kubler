@@ -1,18 +1,18 @@
-### kubler/kibana:20170521
+### kubler/kibana:20170624
 
-Built: Sun May 21 21:05:04 CEST 2017
-Image Size: 160 MB
+Built: Sat Jun 24 23:23:02 CEST 2017
+Image Size: 221MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-www-apps/kibana-bin-5.3.2 | ``
+www-apps/kibana-bin-5.4.1 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
-sys-libs/glibc-2.23-r3 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
+sys-libs/glibc-2.23-r4 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`
 sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
