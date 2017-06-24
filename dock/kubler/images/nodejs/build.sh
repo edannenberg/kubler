@@ -17,6 +17,10 @@ configure_rootfs_build()
 {
     # install binary packages with no deps when building the root fs
     _emerge_opt="--nodeps"
+    # add user/group for unprivileged container usage
+    groupadd -g 700 nodejs
+    useradd -u 7000 -g nodejs -d /home/nodejs nodejs
+    mkdir -p "${_EMERGE_ROOT}"/home/nodejs
 }
 
 #
