@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_grafana_version="4.3.0-beta1"
+_grafana_version="4.3.2"
 
 configure_bob()
 {
