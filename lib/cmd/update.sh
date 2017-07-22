@@ -17,7 +17,7 @@ function update_builders() {
                 ARCH="${ARCH:-amd64}"
                 ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
                 remote_files="$(wget -qO- "${ARCH_URL}")"
-                regex="${STAGE3_BASE//+/\\+}-([0-9]{8})\.tar\.bz2"
+                regex="${STAGE3_BASE//+/\\+}-([0-9]{8})\\.tar\\.bz2"
                 if [[ "${remote_files}" =~ ${regex} ]]; then
                     s3date_remote="${BASH_REMATCH[1]}"
                     if [[ "${STAGE3_DATE}" -lt "${s3date_remote}" ]]; then
@@ -59,11 +59,11 @@ function update_stage3_date() {
     fi
 
     if [[ ${update_count} -eq 0 ]]; then
-        msg "\nAll stage3 dates are up to date."
+        msg '\nAll stage3 dates are up to date.'
     else
-        msg "\nFound updates for ${update_count} stage3 file(s), to rebuild run:\n
+        msg "\\nFound updates for ${update_count} stage3 file(s), to rebuild run:\\n
     ${_KUBLER_BIN} clean
-    ${_KUBLER_BIN} build -c some_namespace\n"
+    ${_KUBLER_BIN} build -c some_namespace\\n"
     fi
 }
 

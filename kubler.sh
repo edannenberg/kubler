@@ -47,14 +47,14 @@ new     - Create a new namespace, image or builder
 push    - Push image(s) or namespace(s) to a registry
 update  - Check for stage3 updates and sync portage container
 
-${_KUBLER_BIN} <command> --help for more information\n"
+${_KUBLER_BIN} <command> --help for more information\\n"
     # shellcheck disable=SC2154
     [[ "${_is_valid_cmd}" == 'true' ]] && header_current_cmd=" ${_arg_command}"
-    echo -e "${_help_header}${header_current_cmd}\n"
-    [[ ! -z "${_help_command_description}" ]] && echo -e "${_help_command_description}\n"
+    echo -e "${_help_header}${header_current_cmd}\\n"
+    [[ ! -z "${_help_command_description}" ]] && echo -e "${_help_command_description}\\n"
     print_help
     # only show command listing if no/invalid command was provided
-    [[ -z "${_arg_command}" || -z "${_is_valid_cmd}" ]] && echo -e "\n${help_commands}"
+    [[ -z "${_arg_command}" || -z "${_is_valid_cmd}" ]] && echo -e "\\n${help_commands}"
 }
 
 # Get the absolute path for given file or directory, resolve symlinks.

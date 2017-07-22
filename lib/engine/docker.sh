@@ -32,7 +32,7 @@ function validate_engine() {
     local docker_version
     _required_binaries+=" docker"
     has_required_binaries
-    docker_version=$(${DOCKER} "version") || die "Failed to query the docker daemon:\n${docker_version}"
+    docker_version=$(${DOCKER} "version") || die "Failed to query the docker daemon:\\n${docker_version}"
 }
 
 # Has given image_id all requirements to start the build? Called once per image in current image dependency graph.

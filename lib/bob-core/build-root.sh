@@ -120,7 +120,7 @@ function generate_documentation_footer() {
     write_checkbox_line "Headers" "${_keep_headers}" "${_DOC_FOOTER_PURGED}" "negate"
     write_checkbox_line "Static Libs" "${_keep_static_libs}" "${_DOC_FOOTER_PURGED}" "negate"
     if [[ -n "${_headers_from}" ]] || [[ -n "${_static_libs_from}" ]] || [[ -n "${_iconv_from}" ]]; then
-        echo -e "\n#### Included" > "${_DOC_FOOTER_INCLUDES}"
+        echo -e '\n#### Included' > "${_DOC_FOOTER_INCLUDES}"
         if [[ -n "${_headers_from}" ]]; then
             write_checkbox_line "Headers from ${_headers_from}" "checked" "${_DOC_FOOTER_INCLUDES}"
         fi
@@ -136,7 +136,7 @@ function generate_documentation_footer() {
 function generate_documentation() {
     local doc_file table_header
     doc_file="${_CONFIG}/PACKAGES.md"
-    table_header="Package | USE Flags\n--------|----------"
+    table_header='Package | USE Flags\n--------|----------'
     echo "#### Installed" > "${doc_file}"
     if [[ -f "${_DOC_PACKAGE_INSTALLED}" ]]; then
         echo -e "${table_header}" >> "${doc_file}"
@@ -226,7 +226,7 @@ function init_docs() {
     image_name="${1}"
     touch -a "${_DOC_PACKAGE_PROVIDED}"
     [[ -f "${_DOC_PACKAGE_INSTALLED}" ]] && \
-        echo -e "$(cat "${_DOC_PACKAGE_INSTALLED}")\n$(cat "${_DOC_PACKAGE_PROVIDED}")" > "${_DOC_PACKAGE_PROVIDED}"
+        echo -e "$(cat "${_DOC_PACKAGE_INSTALLED}")\\n$(cat "${_DOC_PACKAGE_PROVIDED}")" > "${_DOC_PACKAGE_PROVIDED}"
 
     echo "**FROM ${image_name}** |" > "${_DOC_PACKAGE_INSTALLED}"
 }
@@ -439,6 +439,7 @@ function build_rootfs() {
         && echo "fatal: Expected a fully qualified image id in BOB_CURRENT_TARGET." && return 1
     target_id="${BOB_CURRENT_TARGET}"
 
+    # shellcheck disable=SC1091
     source /etc/profile
 
     if [[ -z "${_emerge_bin}" ]]; then
@@ -457,6 +458,7 @@ function build_rootfs() {
 
     # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
     export USE_BUILDER_FLAGS="true"
+    # shellcheck disable=SC1091
     source /etc/profile
 
     # call configure bob hook if declared in build.sh
@@ -464,6 +466,7 @@ function build_rootfs() {
 
     # switch back to BOB_{CHOST,CFLAGS,CXXFLAGS}
     unset USE_BUILDER_FLAGS
+    # shellcheck disable=SC1091
     source /etc/profile
 
     mkdir -p "${_ROOTFS_BACKUP}"

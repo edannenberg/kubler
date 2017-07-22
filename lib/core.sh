@@ -58,7 +58,7 @@ function msgf() {
     local msg_prefix
     msg_prefix="$1"
     shift
-    printf "%s %-20s %s\n" "-->" "${msg_prefix}" "$@"
+    printf '%s %-20s %s\n' '-->' "${msg_prefix}" "$@"
 }
 
 # Arguments:
@@ -500,5 +500,5 @@ function add_documentation_header() {
         echo -e "" > "${doc_file}"
     fi
     # add header
-    echo -e "${header}\n\nBuilt: $(date)\nImage Size: ${__get_image_size}\n\n$(cat "${doc_file}")" > "${doc_file}"
+    echo -e "${header}\\n\\nBuilt: $(date)\\nImage Size: ${__get_image_size}\\n\\n$(cat "${doc_file}")" > "${doc_file}"
 }

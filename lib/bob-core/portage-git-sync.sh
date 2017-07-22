@@ -3,6 +3,7 @@
 function main() {
     local portage_path
     portage_path="${1:-/var/sync/portage}"
+    # shellcheck disable=SC1091
     source /etc/profile
     # check for existing git repo, create one if it doesn't exist
     if [[ -d "${portage_path}" ]] && [[ ! -d "${portage_path}"/.git ]]; then

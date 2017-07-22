@@ -3,6 +3,7 @@
 # take care of some boiler plate for interactive build containers
 
 # setup portage
+# shellcheck disable=SC1091
 source /etc/profile
 
 # shellcheck disable=SC1091

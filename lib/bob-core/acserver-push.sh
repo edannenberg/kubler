@@ -9,7 +9,7 @@ function main() {
     registry_host='localhost'
 
     completed_url=$(curl -s -X POST -H "Content-Type: application/json" \
-        -d "\{\"image\":${image_id}\}" "${registry_host}/${image_id}/startupload" | jq -r '.completed_url')
+        -d "\\{\"image\":${image_id}\\}" "${registry_host}/${image_id}/startupload" | jq -r '.completed_url')
     upload_id="${completed_url#*/complete/}"
 
     echo "uploading ${image_name}"

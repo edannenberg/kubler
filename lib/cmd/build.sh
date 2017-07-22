@@ -158,13 +158,13 @@ function main() {
         _container_cmd=('/bin/bash')
 
         msg "using: ${BUILD_ENGINE} / builder: ${builder_id}"
-        msg "\nRunning interactive build container with ${_NAMESPACE_DIR}/${__expand_image_id} mounted as /config"
-        msg "Artifacts from previous builds: /backup-rootfs\n"
+        msg "\\nRunning interactive build container with ${_NAMESPACE_DIR}/${__expand_image_id} mounted as /config"
+        msg "Artifacts from previous builds: /backup-rootfs\\n"
         msg "You may run any helper function available in your image's build.sh, like update_use, etc."
-        msg "Once you are finished tinkering, history | cut -c 8- may prove useful ;)\n"
-        msg "To start the build:\n"
-        msg "    $ kubler-build-root \n\nNote: Starting a build twice in the same container is not recommended\n"
-        msg "Search packages: eix <search-string> / Check use flags: emerge -pv <package-atom>\n"
+        msg "Once you are finished tinkering, history | cut -c 8- may prove useful ;)\\n"
+        msg "To start the build:\\n"
+        msg "    $ kubler-build-root \\n\\nNote: Starting a build twice in the same container is not recommended\\n"
+        msg "Search packages: eix <search-string> / Check use flags: emerge -pv <package-atom>\\n"
 
         run_image "${builder_id}" "${builder_id}" 'true'
         exit $?

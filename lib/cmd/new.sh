@@ -52,7 +52,7 @@ function add_namespace() {
 
     _tmpl_namespace="${ns_name}"
 
-    [[ ! -f "${_LIB_DIR}/engine/${_tmpl_engine}.sh" ]] && die "\nUnknown engine: ${_tmpl_engine}"
+    [[ ! -f "${_LIB_DIR}/engine/${_tmpl_engine}.sh" ]] && die "\\nUnknown engine: ${_tmpl_engine}"
 
     local real_ns_dir default_conf
     real_ns_dir="${ns_dir}"
@@ -93,12 +93,12 @@ To manage the new namespace with GIT you may want to run:
     git init ${real_ns_dir}"
 
     if [[ "${_NAMESPACE_TYPE}" == 'none' && "${_tmpl_ns_type}" == 'single' ]]; then
-        _post_msg="${_post_msg}\n\n!!! As this is a new single namespace you need to create a new builder first:\n
+        _post_msg="${_post_msg}\\n\\n!!! As this is a new single namespace you need to create a new builder first:\\n
     cd ${ns_dir}/
     ${_KUBLER_BIN} new builder bob"
     fi
 
-    _post_msg="${_post_msg}\n\nTo create images in the new namespace run:
+    _post_msg="${_post_msg}\\n\\nTo create images in the new namespace run:
 
     cd ${ns_dir}/
     ${_KUBLER_BIN} new image ${ns_name}/<image_name>
@@ -144,7 +144,7 @@ function add_image() {
     cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
 
     _template_target="${image_path}"
-    _post_msg="Successfully created ${_arg_name} image at ${image_path}\n"
+    _post_msg="Successfully created ${_arg_name} image at ${image_path}\\n"
 }
 
 function add_builder() {
@@ -173,7 +173,7 @@ function add_builder() {
     cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/builder" "${builder_path}" || die
 
     _template_target="${builder_path}"
-    _post_msg="Successfully created ${_arg_name} builder at ${builder_path}\n"
+    _post_msg="Successfully created ${_arg_name} builder at ${builder_path}\\n"
 }
 
 function main() {
@@ -223,7 +223,7 @@ function main() {
         [[ -f "${tmpl_file}" ]] && replace_in_file "${tmpl_file}" sed_args[@]
     done
 
-    msg "\n${_post_msg}"
+    msg "\\n${_post_msg}"
 }
 
 main "$@"
