@@ -36,10 +36,7 @@ configure_bob() {
     tar xzvf go1.4-bootstrap-20161024.tar.gz
     mv go go1.4
     cd go1.4/src/
-    # some tests seem to be hardlinked against glibc and fail
-    set +e
-    ./make.bash
-    set -e
+    env CGO_ENABLED=0 ./make.bash
     export GOPATH=/go
     cd /usr/lib
     git clone https://go.googlesource.com/go
