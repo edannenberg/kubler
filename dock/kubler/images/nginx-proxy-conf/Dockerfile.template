@@ -7,10 +7,10 @@ ADD etc /etc
 
 WORKDIR /config
 
-ADD docker-gen /config/template
-
 RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/docker-gen /service
 
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
 VOLUME ["/etc/nginx/sites-enabled"]
+
+ADD docker-gen /config/template

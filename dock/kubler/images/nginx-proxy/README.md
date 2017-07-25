@@ -1,6 +1,6 @@
 ## kubler/nginx-proxy
 
-This image serves as an automated vhost proxy for any number of containers running on the same host.
+Automated vhost proxy for any number of containers running on the same host.
 
 Run this [Nginx][] proxy image with:
 
@@ -28,13 +28,13 @@ per host as needed.
 Example Docker Compose setup:
 
 ```
-version: '2.0'
+version: '2.2'
 services:
   nginx:
     image: kubler/nginx-proxy
     restart: always
     volumes:
-     - /home/data/runtime/nginx_proxy/certs:/etc/nginx/ssl
+     - /home/data/docker/nginx_proxy/certs:/etc/nginx/ssl
     ports:
      - "80:80"
      - "443:443"
@@ -42,14 +42,45 @@ services:
   conf:
     image: kubler/nginx-proxy-conf
     restart: always
+    environment:
+     - PROXY_NETWORK=network_name
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock:ro
     volumes_from:
      - nginx
 ```
 
-For security reasons the conf container is separated from the nginx container because [docker-gen][]
-requires the host's docker socket. Check the nginx-proxy-conf documentation for more details.
+Note: Docker Compose version 2 markup uses the Docker networks feature, to ensure the proxy-conf container picks the
+right network you either need to set `PROXY_NETWORK` (usually `${your_compose_project_name}_default`) or conform to
+the default by setting the expected `COMPOSE_PROJECT_NAME`. It's recommended to use the `.env` file for the latter:
+
+```
+COMPOSE_PROJECT_NAME=nginxproxy
+```
+
+Then connect your other containers you want to proxy to the `nginxproxy` network:
+
+```
+version: '2.2'
+services:
+  foo:
+    image: kubler/nginx-php7
+    environment:
+      - VIRTUAL_HOST=www.foo.local
+    networks:
+      - proxy
+      - default
+  db:
+    image: kubler/postgres
+
+networks:
+  proxy:
+    external:
+      name: nginxproxy_default
+```
+
+For security reasons the conf container is separated from the nginx container as [docker-gen][]
+requires the host's docker socket. Check the [nginx-proxy-conf][] documentation for more details.
 
 Finally to use the proxy container simply pass `VIRTUAL_HOST` and `VIRTUAL_PORT` ENVs to containers you
 wish to proxy:
@@ -60,37 +91,16 @@ wish to proxy:
         --hostname www \
         kubler/nginx-php7
 
-Provided your dns resolves foo.void to the host the www_proxy container is running on, you can now access
+Provided your dns resolves `foo.void` to the host the nginx-proxy container is running on, you can now access
 the www container via http://foo.void in your browser. `VIRTUAL_PORT` defaults to 80 and can be omitted.
 
 To create a http->https redirect set `VIRTUAL_FORCE_HTTPS=true`.
 
 Websocket proxying for any sub path can be enabled by setting `VIRTUAL_WS_PATH=/my-ws-connection`.
 
-Note: Docker Compose version 2 markup creates a custom network for each project, you need to connect containers
-to the nginx-proxy container:
-
-```
-version: '2'
-services:
-  foo:
-    image: kubler/nginx-php7
-    networks:
-      - extern
-      - default
-  db:
-    image: kubler/postgres
-networks:
-  extern:
-    external:
-      name: nginxproxy_default
-```
-
-The order of `networks` is important, always list the external network first or the nginx-proxy-conf container
-will use a non-reachable IP from `foo`'s default network.
-
 [Last Build][packages]
 
 [Nginx]: http://nginx.org/
 [docker-gen]: https://github.com/jwilder/docker-gen
+[nginx-proxy-conf]: ../nginx-proxy-conf/README.md
 [packages]: PACKAGES.md

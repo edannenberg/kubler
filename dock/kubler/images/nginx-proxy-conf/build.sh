@@ -9,7 +9,7 @@ _install_docker_gen=true
 #
 configure_rootfs_build()
 {
-    :
+    init_docs 'kubler/nginx-proxy-conf'
 }
 
 #

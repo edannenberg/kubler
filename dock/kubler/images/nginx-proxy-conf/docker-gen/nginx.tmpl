@@ -21,13 +21,15 @@ map $upstream_http_upgrade $sent_connection {
         default $sent_http_upgrade;
 }
 
+{{ $proxynet := coalesce .Env.PROXY_NETWORK "nginxproxy_default"}}
+
 {{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
 upstream {{ $host }} {
 
 {{ range $index, $container := $containers }}
 
     {{ $addrLen := len $container.Addresses }}
-    {{ $network := index $value.Networks 0 }}
+    {{ $network := index (where $container.Networks "Name" $proxynet) 0 }}
 
     {{/* If only 1 port exposed, use that */}}
     {{ if eq $addrLen 1 }}
