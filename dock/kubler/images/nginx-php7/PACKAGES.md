@@ -1,6 +1,6 @@
-### kubler/nginx-php7:20170624
+### kubler/nginx-php7:20170723
 
-Built: Sat Jun 24 23:51:26 CEST 2017
+Built: Sun Jul 23 16:37:31 CEST 2017
 Image Size: 117MB
 
 #### Installed
@@ -9,12 +9,12 @@ Package | USE Flags
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-7.1.6 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif -firebird -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
+dev-lang/php-7.1.7 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode webp xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif -firebird -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libressl -mssql -oci8-instant-client -odbc -phpdbg -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -systemd -sysvipc {-test} -tidy -truetype -wddx`
 dev-libs/expat-2.2.1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.3 | `-static-libs`
 dev-libs/libevent-2.1.8 | `ssl threads -debug (-libressl) -static-libs {-test}`
-dev-libs/libgcrypt-1.7.7 | `-doc -static-libs`
+dev-libs/libgcrypt-1.7.8 | `-doc -static-libs`
 dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
@@ -35,7 +35,7 @@ media-gfx/imagemagick-6.9.8.6 | `bzip2 cxx jpeg jpeg2k png tiff webp zlib -`
 media-libs/giflib-5.1.4 | `-doc -static-libs`
 media-libs/lcms-2.8-r1 | `jpeg threads tiff zlib -doc -static-libs {-test}`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
-media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
+media-libs/libpng-1.6.29 | `-apng (-neon) -static-libs`
 media-libs/libwebp-0.5.2 | `gif jpeg png tiff -experimental (-neon) -opengl -static-libs -swap-16bit-csp`
 media-libs/openjpeg-2.1.1_p20160922 | `-doc -static-libs {-test}`
 media-libs/tiff-4.0.8 | `cxx jpeg zlib -jbig -lzma -static-libs {-test}`
@@ -76,7 +76,7 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.13.1 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.3 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``

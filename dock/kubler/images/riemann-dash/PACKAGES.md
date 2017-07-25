@@ -1,12 +1,12 @@
-### kubler/riemann-dash:20170624
+### kubler/riemann-dash:20170723
 
-Built: Sun Jun 25 00:06:24 CEST 2017
-Image Size: 246MB
+Built: Sun Jul 23 16:52:13 CEST 2017
+Image Size: 253MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-dev-libs/libgcrypt-1.7.7 | `-doc -static-libs`
+dev-libs/libgcrypt-1.7.8 | `-doc -static-libs`
 dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`
@@ -17,7 +17,7 @@ Package | USE Flags
 **FROM kubler/ruby-gcc** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-eselect/eselect-ruby-20161226 | ``
-dev-lang/ruby-2.4.1-r2 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.1-r3 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/glib-2.50.3-r1 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
@@ -25,19 +25,19 @@ dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python 
 dev-libs/libyaml-0.1.7 | `-doc -examples -static-libs {-test}`
 dev-ruby/did_you_mean-1.1.0 | `{-test}`
 dev-ruby/json-2.1.0 | `-doc {-test}`
-dev-ruby/minitest-5.10.1 | `-doc {-test}`
+dev-ruby/minitest-5.10.3 | `-doc {-test}`
 dev-ruby/net-telnet-0.1.1-r1 | `-doc {-test}`
 dev-ruby/pkg-config-1.1.7 | `{-test}`
 dev-ruby/power_assert-0.4.1 | `-doc {-test}`
 dev-ruby/rake-12.0.0 | `-doc {-test}`
 dev-ruby/rdoc-5.1.0 | `-doc {-test}`
 dev-ruby/rubygems-2.6.8 | `-server {-test}`
-dev-ruby/test-unit-3.2.3 | `-doc {-test}`
+dev-ruby/test-unit-3.2.5 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
 dev-util/pkgconfig-0.28-r2 | `hardened -internal-glib`
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
-x11-misc/shared-mime-info-1.4 | `{-test}`
+x11-misc/shared-mime-info-1.8 | `{-test}`
 **FROM kubler/gcc** |
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/mpc-1.0.2-r1 | `-static-libs`

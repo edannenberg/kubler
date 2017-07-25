@@ -1,6 +1,6 @@
-### kubler/memcache:20170624
+### kubler/memcache:20170723
 
-Built: Sat Jun 24 23:34:58 CEST 2017
+Built: Sun Jul 23 15:50:16 CEST 2017
 Image Size: 88.7MB
 
 #### Installed

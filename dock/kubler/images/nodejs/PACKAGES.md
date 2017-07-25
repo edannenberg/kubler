@@ -1,6 +1,6 @@
-### kubler/nodejs:20170624
+### kubler/nodejs:20170723
 
-Built: Sat Jun 24 23:15:23 CEST 2017
+Built: Sun Jul 23 14:58:05 CEST 2017
 Image Size: 74.4MB
 
 #### Installed

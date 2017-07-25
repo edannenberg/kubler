@@ -1,12 +1,12 @@
-### kubler/riemann:20170624
+### kubler/riemann:20170723
 
-Built: Sun Jun 25 00:05:05 CEST 2017
-Image Size: 222MB
+Built: Sun Jul 23 16:50:48 CEST 2017
+Image Size: 262MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: riemann-0.2.13 | https://github.com/riemann/riemann
+*manual install*: riemann-0.2.14 | https://github.com/riemann/riemann
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -17,7 +17,7 @@ Package | USE Flags
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.141 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`

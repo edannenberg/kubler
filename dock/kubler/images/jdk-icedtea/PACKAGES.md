@@ -1,6 +1,6 @@
-### kubler/jdk-icedtea:20170624
+### kubler/jdk-icedtea:20170723
 
-Built: Sat Jun 24 23:20:28 CEST 2017
+Built: Sun Jul 23 15:02:09 CEST 2017
 Image Size: 303MB
 
 #### Installed
@@ -23,7 +23,7 @@ media-libs/lcms-2.8-r1 | `threads zlib -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-x11-misc/shared-mime-info-1.4 | `{-test}`
+x11-misc/shared-mime-info-1.8 | `{-test}`
 #### Inherited
 Package | USE Flags
 --------|----------

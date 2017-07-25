@@ -1,6 +1,6 @@
-### kubler/bash:20170624
+### kubler/bash:20170723
 
-Built: Sat Jun 24 23:04:25 CEST 2017
+Built: Sun Jul 23 14:47:30 CEST 2017
 Image Size: 32.5MB
 
 #### Installed

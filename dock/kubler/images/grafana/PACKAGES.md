@@ -1,12 +1,12 @@
-### kubler/grafana:20170624
+### kubler/grafana:20170723
 
-Built: Sat Jun 24 23:14:12 CEST 2017
-Image Size: 91.7MB
+Built: Sun Jul 23 14:57:00 CEST 2017
+Image Size: 92.6MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: grafana-4.3.2 | https://github.com/grafana/grafana/
+*manual install*: grafana-4.4.1 | https://github.com/grafana/grafana/
 #### Inherited
 Package | USE Flags
 --------|----------

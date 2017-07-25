@@ -1,7 +1,7 @@
-### kubler/mysql:20170624
+### kubler/mysql:20170723
 
-Built: Sat Jun 24 23:37:18 CEST 2017
-Image Size: 212MB
+Built: Sun Jul 23 16:00:48 CEST 2017
+Image Size: 211MB
 
 #### Installed
 Package | USE Flags
@@ -9,7 +9,7 @@ Package | USE Flags
 app-admin/perl-cleaner-2.25 | ``
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
-dev-db/mysql-5.6.35 | `openssl perl server -debug -embedded -extraengine -jemalloc -latin1 (-libressl) -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
+dev-db/mysql-5.6.36 | `openssl perl server -debug -embedded -extraengine -jemalloc -latin1 (-libressl) -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
 dev-db/mysql-init-scripts-2.1-r1 | ``
 dev-lang/perl-5.24.1-r2 | `berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
@@ -22,7 +22,7 @@ dev-perl/Text-Unidecode-1.270.0 | ``
 dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
-sys-apps/texinfo-6.1 | `nls -static`
+sys-apps/texinfo-6.3 | `nls -static`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 sys-process/procps-3.3.12 | `kill nls unicode -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/

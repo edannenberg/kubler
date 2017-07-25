@@ -1,12 +1,12 @@
-### kubler/elasticsearch:20170624
+### kubler/elasticsearch:20170723
 
-Built: Sat Jun 24 23:07:52 CEST 2017
+Built: Sun Jul 23 14:51:15 CEST 2017
 Image Size: 203MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-misc/elasticsearch-5.4.1 | ``
+app-misc/elasticsearch-5.4.3 | ``
 *manual install*: su-exec-0.2 | https://github.com/ncopa/su-exec/
 #### Inherited
 Package | USE Flags
@@ -14,7 +14,7 @@ Package | USE Flags
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.141 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`

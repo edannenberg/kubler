@@ -1,6 +1,6 @@
-### kubler/plantuml:20170624
+### kubler/plantuml:20170723
 
-Built: Sat Jun 24 23:59:46 CEST 2017
+Built: Sun Jul 23 16:45:24 CEST 2017
 Image Size: 268MB
 
 #### Installed
@@ -20,8 +20,8 @@ media-libs/fontconfig-2.11.1-r2 | `-doc -static-libs`
 media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/gd-2.2.4 | `fontconfig jpeg png truetype zlib -static-libs -tiff -webp -xpm`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
-media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
-x11-misc/shared-mime-info-1.4 | `{-test}`
+media-libs/libpng-1.6.29 | `-apng (-neon) -static-libs`
+x11-misc/shared-mime-info-1.8 | `{-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -37,7 +37,7 @@ www-servers/tomcat-8.0.43 | `-doc -extra-webapps -source {-test}`
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.141 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`

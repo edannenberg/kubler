@@ -1,6 +1,6 @@
-### kubler/clojure:20170624
+### kubler/clojure:20170723
 
-Built: Sat Jun 24 23:06:33 CEST 2017
+Built: Sun Jul 23 14:49:26 CEST 2017
 Image Size: 170MB
 
 #### Installed
@@ -15,7 +15,7 @@ Package | USE Flags
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jre-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
+dev-java/oracle-jre-bin-1.8.0.141 | `headless-awt jce -alsa -commercial -cups -fontconfig -javafx -nsplugin (-selinux)`
 sys-apps/baselayout-java-0.1.0 | ``
 **FROM kubler/bash** |
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`

@@ -1,6 +1,6 @@
-### kubler/python3:20170624
+### kubler/python3:20170723
 
-Built: Sun Jun 25 00:03:54 CEST 2017
+Built: Sun Jul 23 16:49:24 CEST 2017
 Image Size: 120MB
 
 #### Installed
@@ -10,7 +10,7 @@ app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-arch/xz-utils-5.2.3 | `nls threads -static-libs`
 app-eselect/eselect-python-20160516 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.17.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-db/sqlite-3.19.3 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-3.4.5 | `hardened readline sqlite ssl (threads) xml -build -examples -gdbm -ipv6 (-libressl) -ncurses -tk -wininst`
 dev-lang/python-exec-2.4.4 | ` `
 dev-libs/expat-2.2.1 | `unicode -examples -static-libs`

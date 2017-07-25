@@ -1,6 +1,6 @@
-### kubler/jdk-oracle:20170624
+### kubler/jdk-oracle:20170723
 
-Built: Sat Jun 24 23:21:22 CEST 2017
+Built: Sun Jul 23 15:03:00 CEST 2017
 Image Size: 208MB
 
 #### Installed
@@ -8,7 +8,7 @@ Package | USE Flags
 --------|----------
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
-dev-java/oracle-jdk-bin-1.8.0.131 | `headless-awt jce -alsa -commercial -cups -derby -doc -examples -fontconfig -javafx -nsplugin (-selinux) -source -visualvm`
+dev-java/oracle-jdk-bin-1.8.0.141 | `headless-awt jce -alsa -commercial -cups -derby -doc -examples -fontconfig -javafx -nsplugin (-selinux) -source -visualvm`
 sys-apps/baselayout-java-0.1.0 | ``
 #### Inherited
 Package | USE Flags

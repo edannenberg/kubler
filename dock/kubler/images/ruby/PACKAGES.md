@@ -1,25 +1,25 @@
-### kubler/ruby:20170624
+### kubler/ruby:20170723
 
-Built: Sun Jun 25 00:07:51 CEST 2017
+Built: Sun Jul 23 16:53:39 CEST 2017
 Image Size: 57.2MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-eselect/eselect-ruby-20161226 | ``
-dev-lang/ruby-2.4.1-r2 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.1-r3 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libffi-3.2.1 | `pax`
 dev-libs/libyaml-0.1.7 | `-doc -examples -static-libs {-test}`
 dev-ruby/did_you_mean-1.1.0 | `{-test}`
 dev-ruby/json-2.1.0 | `-doc {-test}`
-dev-ruby/minitest-5.10.1 | `-doc {-test}`
+dev-ruby/minitest-5.10.3 | `-doc {-test}`
 dev-ruby/net-telnet-0.1.1-r1 | `-doc {-test}`
 dev-ruby/power_assert-0.4.1 | `-doc {-test}`
 dev-ruby/rake-12.0.0 | `-doc {-test}`
 dev-ruby/rdoc-5.1.0 | `-doc {-test}`
 dev-ruby/rubygems-2.6.8 | `-server {-test}`
-dev-ruby/test-unit-3.2.3 | `-doc {-test}`
+dev-ruby/test-unit-3.2.5 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
 sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 #### Inherited

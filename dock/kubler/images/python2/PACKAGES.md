@@ -1,6 +1,6 @@
-### kubler/python2:20170624
+### kubler/python2:20170723
 
-Built: Sun Jun 25 00:02:33 CEST 2017
+Built: Sun Jul 23 16:48:05 CEST 2017
 Image Size: 108MB
 
 #### Installed
@@ -9,7 +9,7 @@ Package | USE Flags
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-eselect/eselect-python-20160516 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.17.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-db/sqlite-3.19.3 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-2.7.12 | `hardened readline sqlite ssl (threads) (wide-unicode) xml (-berkdb) -build -doc -examples -gdbm -ipv6 (-libressl) -ncurses -tk -wininst`
 dev-lang/python-exec-2.4.4 | ` `
 dev-libs/expat-2.2.1 | `unicode -examples -static-libs`

@@ -1,6 +1,6 @@
-### kubler/nginx-php5.6:20170624
+### kubler/nginx-php5.6:20170723
 
-Built: Sat Jun 24 23:43:45 CEST 2017
+Built: Sun Jul 23 16:20:03 CEST 2017
 Image Size: 111MB
 
 #### Installed
@@ -9,11 +9,11 @@ Package | USE Flags
 app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r1 | `unicode`
 app-eselect/eselect-php-0.9.2 | `fpm -apache2`
-dev-lang/php-5.6.30 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-lang/php-5.6.31 | `acl bcmath berkdb bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient (-libressl) -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
 dev-libs/expat-2.2.1 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.0 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.3 | `-static-libs`
-dev-libs/libgcrypt-1.7.7 | `-doc -static-libs`
+dev-libs/libgcrypt-1.7.8 | `-doc -static-libs`
 dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
@@ -26,7 +26,7 @@ dev-libs/nettle-3.3-r1 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.11 | `lock`
 dev-php/pecl-apcu-5.1.8 | `lock`
-dev-php/pecl-imagick-3.4.1 | `-examples {-test}`
+dev-php/pecl-imagick-3.4.3 | `-examples {-test}`
 dev-php/pecl-memcache-3.0.8-r2 | `session`
 dev-php/pecl-redis-3.1.2 | `session -igbinary`
 dev-php/xdebug-2.4.1 | ` `
@@ -34,7 +34,7 @@ dev-php/xdebug-client-2.4.1 | `-libedit`
 mail-mta/nullmailer-2.0-r1 | `ssl`
 media-gfx/imagemagick-6.9.8.6 | `bzip2 cxx zlib -`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
-media-libs/libpng-1.6.27 | `-apng (-neon) -static-libs`
+media-libs/libpng-1.6.29 | `-apng (-neon) -static-libs`
 net-dns/libidn2-0.16-r1 | `-static-libs`
 net-libs/gnutls-3.5.13 | `cxx idn nls openssl seccomp sslv3 tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -static-libs {-test} (-test-full) -tools -valgrind`
 net-misc/curl-7.54.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
@@ -71,7 +71,7 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.13.1 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.3 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``

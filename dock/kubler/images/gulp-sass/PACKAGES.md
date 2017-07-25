@@ -1,6 +1,6 @@
-### kubler/gulp-sass:20170624
+### kubler/gulp-sass:20170723
 
-Built: Sat Jun 24 23:16:10 CEST 2017
+Built: Sun Jul 23 14:58:50 CEST 2017
 Image Size: 83.1MB
 
 #### Installed
