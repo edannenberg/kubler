@@ -52,6 +52,23 @@ function copy_gcc_libs() {
     done
 }
 
+# Sync overlay with emaint
+# `sync_overlay repo_name url sync-type`
+# Example usage: sync_overlay musl https://anongit.gentoo.org/git/proj/musl.git git
+sync_overlay() {
+    local _repospath
+    _repospath="/var/lib/repos"
+    [ ! -d "${_repospath}" ] && mkdir -p "${_repospath}"
+    tee /etc/portage/repos.conf/"$1".conf >/dev/null <<END
+[$1]
+priority = 50
+location = $_repospath/$1
+sync-type = ${3:-git}
+sync-uri = $2
+END
+    emaint sync -r "${1}" 
+}
+
 # Fix profile symlink as we don't use default portage location, part of stage3 builder setup
 #
 # Arguments:
