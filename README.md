@@ -92,12 +92,15 @@ free, which you can utilize for your own images.
 * If you don't have GPG available use `build -s ..` to skip verification of downloaded files (SHA512 is still checked)
 * The directories in `./dock/kubler/images/` contain image specific documentation
 
+Note: If you get a 404 error on downloading a Gentoo stage3 tar ball try running `kubler update` to resolve the issue.
+The Gentoo servers only keep those files for a few weeks.
+
 The first run will take quite a bit of time, don't worry, once the build containers and binary package cache
 are seeded future runs will be much faster.
 
 ## Creating a new namespace
 
-Images are kept in a `namespace` directory in `--working_dir`. You may have any number of namespaces. A helper is
+Images are kept in a `namespace` directory in `--working-dir`. You may have any number of namespaces. A helper is
 provided to take care of the boiler plate for you: 
 
 ```
@@ -176,7 +179,7 @@ Once that finishes we are ready to take the image for a test drive:
  $ docker run -it --rm kubler/figlet figlet kubler sends his regards
 ```
 
-Some useful options for `build.sh` while working on an image:
+Some useful options for while working on an image:
 
 Start an interactive build container, same as used in the first phase to create the `rootfs.tar`:
 
@@ -186,7 +189,7 @@ Force rebuild of myimage and all images it depends on:
 
     $ ./kubler.sh build -f mynamespace/myimage
 
-Same as above, but also rebuild all `rootfs.tar` files:
+Same as above, but also force a rebuild of any existing `rootfs.tar` files:
 
     $ ./kubler.sh build -F mynamespace/myimage
 
@@ -209,22 +212,22 @@ If a new stage3 release was found simply rebuild the stack by running:
 
 ## How does it work?
 
-* `kubler.sh` determines `--working_dir` either by passed arg or by looking in the current dir and it's parents
+* `kubler.sh` determines `--working-dir` either by passed arg or by looking in the current dir and it's parents
 * `kubler.sh` reads global defaults from `kubler.conf`
-* iterates over current `--working_dir`
-* reads `kubler.conf` in each `working_dir/<namespace>/` directory and imports defined `BUILD_ENGINE`
+* iterates over current `--working-dir`
+* reads `kubler.conf` in each `working-dir/<namespace>/` directory and imports defined `BUILD_ENGINE`
 from `lib/engine/`
-* generates build order by iterating over `working_dir/<namespace>/images/` for each required image
+* generates build order by iterating over `working-dir/<namespace>/images/` for each required image
 * executes `build_core()` for each required engine to bootstrap the initial build container
-* executes `build_builder()` for any other required build containers in `working_dir/<namespace>/builder/<image>`
-* executes `build_image()` to build each `working_dir/<namespace>/images/<image>` 
+* executes `build_builder()` for any other required build containers in `working-dir/<namespace>/builder/<image>`
+* executes `build_image()` to build each `working-dir/<namespace>/images/<image>` 
 
 Each implementation is allowed to only implement parts of the build process, if no build containers
 are required thats fine too.
 
 ### Docker specific build details
 
-* `build_core()` builds a clean stage 3 image with portage snapshot and helper files from `./lib/bob-core/`
+* `build_core()` builds a clean stage 3 image with some helper files from `./lib/bob-core/`
 * `build_image()` mounts each `working_dir/<namespace>/images/<image>` directory into a fresh build container
 as `/config`
 * executes `build-root.sh` inside build container
