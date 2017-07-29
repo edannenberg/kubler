@@ -386,11 +386,11 @@ add_overlay() {
     repo_path='/var/lib/repos'
     [ ! -d "${repo_path}" ] && mkdir -p "${repo_path}"
     tee /etc/portage/repos.conf/"${repo_id}".conf >/dev/null <<END
-["${repo_id}"]
-priority = "${repo_priority}"
-location = "${repo_path}/${repo_id}"
-sync-type = "${repo_mode}"
-sync-uri = "${repo_url}"
+[${repo_id}]
+priority = ${repo_priority}
+location = ${repo_path}/${repo_id}
+sync-type = ${repo_mode}
+sync-uri = ${repo_url}
 END
     emaint sync -r "${repo_id}"
 }
