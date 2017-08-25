@@ -1,13 +1,13 @@
-### kubler/openssl-musl:20170723
+### kubler/openssl-musl:20170825
 
-Built: Sun Jul 23 16:39:28 CEST 2017
-Image Size: 6.51MB
+Built: Fri Aug 25 17:21:33 CEST 2017
+Image Size: 6.52MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/c_rehash-1.7-r1 | ``
-app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
+app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
 dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11 | `-minizip -static-libs`

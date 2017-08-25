@@ -1,6 +1,6 @@
-### kubler/nginx-php5.6:20170723
+### kubler/nginx-php5.6:20170825
 
-Built: Sun Jul 23 16:20:03 CEST 2017
+Built: Fri Aug 25 17:12:03 CEST 2017
 Image Size: 111MB
 
 #### Installed
@@ -22,7 +22,7 @@ dev-libs/libtasn1-4.10-r2 | `-doc -static-libs -valgrind`
 dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/libxml2-2.9.4-r1 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 dev-libs/libxslt-1.1.29-r1 | `crypt -debug -examples -python -static-libs`
-dev-libs/nettle-3.3-r1 | `gmp -doc (-neon) -static-libs {-test}`
+dev-libs/nettle-3.3-r2 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/oniguruma-5.9.5 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.11 | `lock`
 dev-php/pecl-apcu-5.1.8 | `lock`
@@ -32,18 +32,18 @@ dev-php/pecl-redis-3.1.2 | `session -igbinary`
 dev-php/xdebug-2.4.1 | ` `
 dev-php/xdebug-client-2.4.1 | `-libedit`
 mail-mta/nullmailer-2.0-r1 | `ssl`
-media-gfx/imagemagick-6.9.8.6 | `bzip2 cxx zlib -`
+media-gfx/imagemagick-6.9.9.0 | `bzip2 cxx zlib -`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 media-libs/libpng-1.6.29 | `-apng (-neon) -static-libs`
-net-dns/libidn2-0.16-r1 | `-static-libs`
-net-libs/gnutls-3.5.13 | `cxx idn nls openssl seccomp sslv3 tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -static-libs {-test} (-test-full) -tools -valgrind`
-net-misc/curl-7.54.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-dns/libidn2-2.0.2 | `-static-libs`
+net-libs/gnutls-3.5.13 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
+net-misc/curl-7.55.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.25 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -vanilla`
 sys-apps/file-5.30 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-apps/shadow-4.4-r2 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
+sys-apps/shadow-4.5 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.28.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs`
@@ -71,9 +71,9 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 dev-libs/libpcre-8.40-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.13.3 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.4 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
-app-misc/ca-certificates-20161102.3.27.2-r2 | `-cacert -insecure`
+app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2k | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
@@ -82,7 +82,7 @@ sys-libs/zlib-1.2.11 | `-minizip -static-libs`
 dev-lang/execline-2.3.0.1 | `-static -static-libs`
 dev-libs/skalibs-2.5.1.1 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.5.1.0 | `-static -static-libs`
-*manual install*: entr-3.6 | http://entrproject.org/
+*manual install*: entr-3.8 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r4 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`

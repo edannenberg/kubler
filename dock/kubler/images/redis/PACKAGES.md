@@ -1,6 +1,6 @@
-### kubler/redis:20170723
+### kubler/redis:20170825
 
-Built: Sun Jul 23 16:49:54 CEST 2017
+Built: Fri Aug 25 17:33:05 CEST 2017
 Image Size: 14.3MB
 
 #### Installed
@@ -16,7 +16,7 @@ Package | USE Flags
 dev-lang/execline-2.3.0.1 | `-static -static-libs`
 dev-libs/skalibs-2.5.1.1 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.5.1.0 | `-static -static-libs`
-*manual install*: entr-3.6 | http://entrproject.org/
+*manual install*: entr-3.8 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.10 | ``
 sys-libs/glibc-2.23-r4 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap -vanilla`

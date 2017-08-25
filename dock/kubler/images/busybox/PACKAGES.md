@@ -1,6 +1,6 @@
-### kubler/busybox:20170723
+### kubler/busybox:20170825
 
-Built: Sun Jul 23 14:44:21 CEST 2017
+Built: Fri Aug 25 16:32:56 CEST 2017
 Image Size: 1.17MB
 
 #### Installed

@@ -1,6 +1,6 @@
-### kubler/s6:20170723
+### kubler/s6:20170825
 
-Built: Sun Jul 23 14:45:33 CEST 2017
+Built: Fri Aug 25 16:34:08 CEST 2017
 Image Size: 11.5MB
 
 #### Installed
@@ -9,7 +9,7 @@ Package | USE Flags
 dev-lang/execline-2.3.0.1 | `-static -static-libs`
 dev-libs/skalibs-2.5.1.1 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.5.1.0 | `-static -static-libs`
-*manual install*: entr-3.6 | http://entrproject.org/
+*manual install*: entr-3.8 | http://entrproject.org/
 #### Inherited
 Package | USE Flags
 --------|----------
