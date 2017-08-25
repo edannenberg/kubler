@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="sys-apps/s6"
-_entr_version="3.6"
+_entr_version="3.8"
 
 #
 # This hook is called just before starting the build of the root fs
