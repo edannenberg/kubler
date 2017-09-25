@@ -27,19 +27,19 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     local tomcat_path catalina cata_conf tomcat_deps gentoo_classpath
-    tomcat_path="${_EMERGE_ROOT}"/usr/share/tomcat-8
+    tomcat_path="${_EMERGE_ROOT}"/usr/share/tomcat-8.5
     catalina="${tomcat_path}"/bin/catalina.sh
     cata_conf="${tomcat_path}"/conf/catalina.properties
 
     mkdir -p "${_EMERGE_ROOT}"/etc/init.d
 
     # adapted from Gentoo's Tomcat init.d script
-    tomcat_deps="$(java-config --query DEPEND --package tomcat-8)"
+    tomcat_deps="$(java-config --query DEPEND --package tomcat-8.5)"
     tomcat_deps=${tomcat_deps%:}
 
     gentoo_classpath="$(java-config --with-dependencies --classpath "${tomcat_deps//:/,}")"
     gentoo_classpath=${gentoo_classpath%:}
 
-    sed -i "s|CLASSPATH=\`java-config --classpath tomcat-8\`|CLASSPATH=`java-config --with-dependencies --classpath tomcat-8,tomcat-native`|g" "${catalina}"
+    sed -i "s|CLASSPATH=\`java-config --classpath tomcat-8.5\`|CLASSPATH=`java-config --with-dependencies --classpath tomcat-8.5,tomcat-native`|g" "${catalina}"
     sed -i "s|\${gentoo\.classpath}|${gentoo_classpath//:/,}|g" "${cata_conf}"
 }

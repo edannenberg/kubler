@@ -4,5 +4,5 @@ LABEL maintainer  ${MAINTAINER}
 ADD rootfs.tar /
 
 RUN dot -c && \
-    rm -rf /var/lib/tomcat-8-local/webapps/ROOT/* && \
-    echo '<% response.sendRedirect("/plantuml"); %>' > /var/lib/tomcat-8-local/webapps/ROOT/index.jsp
+    rm -rf /var/lib/tomcat-8.5-local/webapps/ROOT/* && \
+    echo '<% response.sendRedirect("/plantuml"); %>' > /var/lib/tomcat-8.5-local/webapps/ROOT/index.jsp
