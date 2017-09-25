@@ -9,6 +9,10 @@ ONBUILD RUN if [ -n "${NODEJS_UID}" ] && [ -n "${NODEJS_GID}" ]; then \
               sed -i "s/^nodejs:x:[0-9]*:/nodejs:x:${NODEJS_GID}:/g" /etc/group; \
               chown -R nodejs:nodejs /home/nodejs ; fi
 
+ENV PATH "${PATH}:/usr/local/yarn/bin"
+
 ADD rootfs.tar /
+
+RUN yarn config set prefix /usr/local/yarn && mkdir -p /usr/local/yarn/bin
 
 CMD ["/bin/sh"]
