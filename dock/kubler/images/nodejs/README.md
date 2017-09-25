@@ -4,7 +4,7 @@ Run this [nodejs][] image with:
 
     $ docker run -it --rm kubler/nodejs
 
-Includes [npm][]
+Includes [npm][] and [yarn][]
 
 The image comes with a `nodejs` user for unprivileged container usage. To ease development pains
 you can use the provided [ONBUILD][] instructions. Docker-Compose example:
@@ -48,5 +48,6 @@ export GID="$(id -g $(whoami))"
 
 [nodejs]: https://nodejs.org/
 [npm]: https://docs.npmjs.com/
+[yarn]: https://yarnpkg.com/en/
 [packages]: PACKAGES.md
 [ONBUILD]: https://docs.docker.com/engine/reference/builder/#onbuild
