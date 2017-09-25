@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_clojure_version=1.9.0-alpha17
+_clojure_version=1.9.0-beta1
 
 #
 # This hook is called just before starting the build of the root fs
