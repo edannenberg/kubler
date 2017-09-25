@@ -11,4 +11,4 @@ ONBUILD RUN if [ -n "${NODEJS_UID}" ] && [ -n "${NODEJS_GID}" ]; then \
 
 ADD rootfs.tar /
 
-RUN npm install --global gulp-cli
+RUN yarn global add gulp-cli
