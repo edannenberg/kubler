@@ -19,6 +19,8 @@ configure_bob() {
     env-update
     source /etc/profile
     # install default packages
+    emerge -C net-misc/openssh
+    update_use 'dev-libs/openssl' -bindist
     update_use 'dev-vcs/git' '-perl'
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'

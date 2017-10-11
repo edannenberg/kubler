@@ -14,7 +14,7 @@ configure_bob()
     echo "dev-libs/openssl"        >> /etc/portage/package.mask/openssl
     echo "=dev-libs/libressl-2.4*" >> /etc/portage/package.accept_keywords/libressl
     emerge -f dev-libs/libressl
-    emerge -C net-misc/openssh dev-libs/openssl
+    emerge -C dev-libs/openssl
     emerge -1 dev-libs/libressl net-misc/wget
     
     # select python
