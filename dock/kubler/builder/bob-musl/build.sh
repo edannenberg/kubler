@@ -21,6 +21,8 @@ configure_bob() {
     env-update
     source /etc/profile
     # install default packages
+    # when using overlay1 docker storage the created hard link will trigger an error during openssh uninstall
+    [[ -f /usr/"${_LIB}"/misc/ssh-keysign ]] && rm /usr/"${_LIB}"/misc/ssh-keysign
     emerge -C net-misc/openssh
     update_use 'dev-libs/openssl' -bindist
     update_use 'dev-vcs/git' '-perl'

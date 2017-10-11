@@ -5,8 +5,6 @@ _packages="dev-libs/openssl"
 
 configure_bob()
 {
-    # when using overlay1 docker storage the created hard link will trigger an error during openssh uninstall
-    [[ -f /usr/"${_LIB}"/misc/ssh-keysign ]] && rm /usr/"${_LIB}"/misc/ssh-keysign
     update_use 'app-misc/ca-certificates' '-cacert' '-insecure_certs'
 }
 
