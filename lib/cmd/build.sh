@@ -107,7 +107,7 @@ function check_builder_dependencies() {
 }
 
 function main() {
-    local target_id engine_id engines builder_id builders image_id images bob_var
+    local target_id build_type engine_id engines builder_id builders image_id images bob_var
 
     cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
 
@@ -129,10 +129,16 @@ function main() {
                 die "--interactive expects an image, but only got a namespace."
             fi
         fi
-        expand_image_id "${target_id}" "${_IMAGE_PATH}"
+        build_type="${_IMAGE_PATH}"
+        expand_image_id "${target_id}" "${build_type}"
+        if [[ ! -d "${__expand_image_id}" ]]; then
+            expand_image_id "${target_id}" "${_BUILDER_PATH}"
+            [[ ! -d "${__expand_image_id}" ]] && die "Couldn't find image or builder ${target_id}"
+            build_type="${_BUILDER_PATH}"
+        fi
         source_image_conf "${__expand_image_id}"
 
-        get_build_container "${target_id}" "${_IMAGE_PATH}"
+        get_build_container "${target_id}" "${build_type}"
         [[ $? -eq 1 ]] && die "Error while executing get_build_container(): ${builder_id}"
         builder_id="${__get_build_container}"
 
