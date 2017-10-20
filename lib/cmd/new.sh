@@ -160,9 +160,11 @@ function add_image() {
 
 # Arguments
 # 1: Namespace
+# 2: Builder name
 function add_builder() {
-    local ns_name builder_base_path builder_path
+    local ns_name builder_name builder_base_path builder_path
     ns_name="$1"
+    builder_name="$2"
 
     get_ns_conf "${ns_name}"
     # shellcheck source=dock/kubler/kubler.conf
@@ -179,7 +181,7 @@ function add_builder() {
     [[ "${_tmpl_builder_type}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
 
     builder_base_path="${_NAMESPACE_DIR}/${ns_name}/builder"
-    builder_path="${builder_base_path}/${_tmpl_image_name}"
+    builder_path="${builder_base_path}/${builder_name}"
 
     [ -d "${builder_path}" ] && die "${builder_path} already exists, aborting!"
     [ ! -d "${builder_base_path}" ] && mkdir -p "${builder_base_path}"
@@ -208,7 +210,7 @@ function main() {
             add_image "${_tmpl_namespace}" "${_tmpl_image_name}"
             ;;
         builder)
-            add_builder "${_tmpl_namespace}"
+            add_builder "${_tmpl_namespace}" "${_tmpl_image_name}"
             ;;
         *)
             show_help
