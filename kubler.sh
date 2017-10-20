@@ -135,7 +135,8 @@ function main() {
     [[ -z "${_arg_command}" && "${_arg_help}" == 'on' ]] && { show_help; exit 0; }
 
     # KUBLER_WORKING_DIR overrides --working-dir, else use current working directory
-    working_dir="${KUBLER_WORKING_DIR:-${_arg_working_dir}}"
+    get_absolute_path "${KUBLER_WORKING_DIR:-${_arg_working_dir}}"
+    working_dir="${__get_absolute_path}"
     [[ -z "${working_dir}" ]] && working_dir="${PWD}"
     detect_namespace "${working_dir}"
 
