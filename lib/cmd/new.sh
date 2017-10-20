@@ -168,10 +168,6 @@ function add_builder() {
     ns_name="$1"
     builder_name="$2"
 
-    get_ns_conf "${ns_name}" "${builder_name}"
-    # shellcheck source=dock/kubler/kubler.conf
-    source "${__get_ns_conf}"
-
     msg '\n<enter> to accept default value\n'
 
     msg 'Extend an existing builder? Fully qualified image id (i.e. kubler/bob) if yes or else stage3'
@@ -215,6 +211,9 @@ function main() {
             add_image "${_tmpl_namespace}" "${BUILD_ENGINE}" "${_tmpl_image_name}"
             ;;
         builder)
+            get_ns_conf "${ns_name}" "${builder_name}"
+            # shellcheck source=dock/kubler/kubler.conf
+            source "${__get_ns_conf}"
             add_builder "${_tmpl_namespace}" "${_tmpl_image_name}"
             ;;
         *)
