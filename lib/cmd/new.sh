@@ -162,11 +162,13 @@ function add_image() {
 
 # Arguments
 # 1: Namespace
-# 2: Builder name
+# 2: Build engine used by the namespace
+# 3: Builder name
 function add_builder() {
-    local ns_name builder_name builder_base_path builder_path
+    local ns_name build_engine builder_name builder_base_path builder_path
     ns_name="$1"
-    builder_name="$2"
+    build_engine="$2"
+    builder_name="$3"
 
     msg '\n<enter> to accept default value\n'
 
@@ -184,7 +186,7 @@ function add_builder() {
     [ -d "${builder_path}" ] && die "${builder_path} already exists, aborting!"
     [ ! -d "${builder_base_path}" ] && mkdir -p "${builder_base_path}"
 
-    cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/builder" "${builder_path}" || die
+    cp -r "${_LIB_DIR}/template/${build_engine}/builder" "${builder_path}" || die
 
     _template_target="${builder_path}"
     _post_msg="Successfully created ${_arg_name} builder at ${builder_path}\\n"
@@ -211,10 +213,10 @@ function main() {
             add_image "${_tmpl_namespace}" "${BUILD_ENGINE}" "${_tmpl_image_name}"
             ;;
         builder)
-            get_ns_conf "${ns_name}" "${builder_name}"
+            get_ns_conf "${_tmpl_namespace}" "${_tmpl_image_name}"
             # shellcheck source=dock/kubler/kubler.conf
             source "${__get_ns_conf}"
-            add_builder "${_tmpl_namespace}" "${_tmpl_image_name}"
+            add_builder "${_tmpl_namespace}" "${BUILD_ENGINE}" "${_tmpl_image_name}"
             ;;
         *)
             show_help
