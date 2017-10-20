@@ -107,19 +107,22 @@ To manage the new namespace with GIT you may want to run:
 "
 }
 
+# Arguments
+# 1: Namespace
 function get_ns_conf() {
     __get_ns_conf=
-    local ns_conf_file
+    local ns_name ns_conf_file
+    ns_name="$1"
 
-    if [[ -z "${_tmpl_namespace}" || -z "${_tmpl_image_name}" ]] && [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
+    if [[ -z "${ns_name}" || -z "${_tmpl_image_name}" ]] && [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
         # shellcheck disable=SC2154
         die "${_arg_name} should have format <namespace>/<image_name>"
     fi
 
-    ns_conf_file="${_NAMESPACE_DIR}/${_tmpl_namespace}/${_KUBLER_CONF}"
+    ns_conf_file="${_NAMESPACE_DIR}/${ns_name}/${_KUBLER_CONF}"
     [ -f "${ns_conf_file}" ] || die "Couldn't read ${ns_conf_file}
 
-You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${_tmpl_namespace}
+You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${ns_name}
 "
     __get_ns_conf="${ns_conf_file}"
 }
@@ -127,7 +130,7 @@ You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${_tmpl_
 function add_image() {
     local image_base_path image_path
 
-    get_ns_conf
+    get_ns_conf "${_tmpl_namespace}"
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
@@ -152,7 +155,7 @@ function add_image() {
 function add_builder() {
     local builder_base_path builder_path
 
-    get_ns_conf
+    get_ns_conf "${_tmpl_namespace}"
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
