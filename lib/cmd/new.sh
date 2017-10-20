@@ -105,29 +105,35 @@ To manage the new namespace with GIT you may want to run:
 "
 }
 
+# Arguments
+# 1: Namespace
 function get_ns_conf() {
     __get_ns_conf=
-    local ns_conf_file
+    local ns_name ns_conf_file
+    ns_name="$1"
 
-    if [[ -z "${_tmpl_namespace}" || -z "${_tmpl_image_name}" ]] && [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
+    if [[ -z "${ns_name}" || -z "${_tmpl_image_name}" ]] && [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
         # shellcheck disable=SC2154
         die "${_arg_name} should have format <namespace>/<image_name>"
     fi
 
-    ns_conf_file="${_NAMESPACE_DIR}/${_tmpl_namespace}/${_KUBLER_CONF}"
+    ns_conf_file="${_NAMESPACE_DIR}/${ns_name}/${_KUBLER_CONF}"
     [ -f "${ns_conf_file}" ] || die "Couldn't read ${ns_conf_file}
 
-You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${_tmpl_namespace}
+You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${ns_name}
 "
     __get_ns_conf="${ns_conf_file}"
 }
 
+# Arguments
+# 1: Namespace
+# 2: Build engine used by the namespace
+# 3: Image name
 function add_image() {
-    local image_base_path image_path
-
-    get_ns_conf "${_IMAGE_PATH}"
-    # shellcheck source=dock/kubler/kubler.conf
-    source "${__get_ns_conf}"
+    local ns_name build_engine image_name image_base_path image_path
+    ns_name="$1"
+    build_engine="$2"
+    image_name="$3"
 
     msg '\n<enter> to accept default value\n'
 
@@ -135,24 +141,26 @@ function add_image() {
     read -r -p 'Parent Image (scratch): ' _tmpl_image_parent
     [ -z "${_tmpl_image_parent}" ] && _tmpl_image_parent='scratch'
 
-    image_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/images"
-    image_path="${image_base_path}/${_tmpl_image_name}"
+    image_base_path="${_NAMESPACE_DIR}/${ns_name}/images"
+    image_path="${image_base_path}/${image_name}"
 
     [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
     [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
 
-    cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
+    cp -r "${_LIB_DIR}/template/${build_engine}/image" "${image_path}" || die
 
     _template_target="${image_path}"
-    _post_msg="Successfully created ${_arg_name} image at ${image_path}\\n"
+    _post_msg="Successfully created image \"${image_name}\" in namespace \"${ns_name}\" at ${image_path}\\n"
 }
 
-function add_builder() {
-    local builder_base_path builder_path
 
-    get_ns_conf "${_BUILDER_PATH}"
-    # shellcheck source=dock/kubler/kubler.conf
-    source "${__get_ns_conf}"
+# Arguments
+# 1: Namespace
+# 2: Builder name
+function add_builder() {
+    local ns_name builder_name builder_base_path builder_path
+    ns_name="$1"
+    builder_name="$2"
 
     msg '\n<enter> to accept default value\n'
 
@@ -164,8 +172,8 @@ function add_builder() {
     # shellcheck disable=SC2016,SC2034
     [[ "${_tmpl_builder_type}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
 
-    builder_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/builder"
-    builder_path="${builder_base_path}/${_tmpl_image_name}"
+    builder_base_path="${_NAMESPACE_DIR}/${ns_name}/builder"
+    builder_path="${builder_base_path}/${builder_name}"
 
     [ -d "${builder_path}" ] && die "${builder_path} already exists, aborting!"
     [ ! -d "${builder_base_path}" ] && mkdir -p "${builder_base_path}"
@@ -178,7 +186,7 @@ function add_builder() {
 
 function main() {
     local sed_args tmpl_var tmpl_file
-    target_id="${_arg_name}"
+    local target_id="${_arg_name}"
     _sub_tmpl_target=
     # shellcheck disable=SC2154
     [[ "${target_id}" != *"/"* && "${_arg_template_type}" != 'namespace' && -n "${_NAMESPACE_DEFAULT}" ]] \
@@ -191,10 +199,16 @@ function main() {
             add_namespace "${target_id}"
             ;;
         image)
-            add_image
+            get_ns_conf "${_tmpl_namespace}" "${_tmpl_image_name}"
+            # shellcheck source=dock/kubler/kubler.conf
+            source "${__get_ns_conf}"
+            add_image "${_tmpl_namespace}" "${BUILD_ENGINE}" "${_tmpl_image_name}"
             ;;
         builder)
-            add_builder
+            get_ns_conf "${ns_name}" "${builder_name}"
+            # shellcheck source=dock/kubler/kubler.conf
+            source "${__get_ns_conf}"
+            add_builder "${_tmpl_namespace}" "${_tmpl_image_name}"
             ;;
         *)
             show_help
