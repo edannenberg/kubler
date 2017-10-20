@@ -156,7 +156,7 @@ function add_image() {
     cp -r "${_LIB_DIR}/template/${build_engine}/image" "${image_path}" || die
 
     _template_target="${image_path}"
-    _post_msg="Successfully created ${_arg_name} image at ${image_path}\\n"
+    _post_msg="Successfully created image \"${image_name}\" in namespace \"${ns_name}\" at ${image_path}\\n"
 }
 
 
