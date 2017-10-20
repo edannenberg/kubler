@@ -172,15 +172,18 @@ function add_builder() {
     build_engine="$2"
     builder_name="$3"
 
+    local builder_settings=([type]='stage3')
+
     msg '\n<enter> to accept default value\n'
 
     msg 'Extend an existing builder? Fully qualified image id (i.e. kubler/bob) if yes or else stage3'
-    read -r -p 'Parent Image (stage3): ' _tmpl_builder_type
-    [ -z "${_tmpl_builder_type}" ] && _tmpl_builder_type='stage3'
+    local builder_type
+    read -r -p "Parent Image (${builder_settings[type]}): " builder_type
+    [ -n "${builder_type}" ] && builder_settings[type]="${builder_type}"
 
-    _tmpl_builder="${_tmpl_builder_type}"
+    _tmpl_builder="${builder_settings[type]}"
     # shellcheck disable=SC2016,SC2034
-    [[ "${_tmpl_builder_type}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
+    [[ "${builder_settings[type]}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
 
     builder_base_path="${_NAMESPACE_DIR}/${ns_name}/builder"
     builder_path="${builder_base_path}/${builder_name}"
@@ -192,7 +195,7 @@ function add_builder() {
 
     _template_target="${builder_path}"
     _post_msg="Successfully created ${_arg_name} builder at ${builder_path}\\n"
-    __add_builder="${_tmpl_builder_type}"
+    __add_builder="${builder_settings[type]}"
 }
 
 function main() {
