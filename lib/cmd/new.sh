@@ -190,7 +190,7 @@ function add_builder() {
 
 function main() {
     local sed_args tmpl_var tmpl_file
-    target_id="${_arg_name}"
+    local target_id="${_arg_name}"
     _sub_tmpl_target=
     # shellcheck disable=SC2154
     [[ "${target_id}" != *"/"* && "${_arg_template_type}" != 'namespace' && -n "${_NAMESPACE_DEFAULT}" ]] \
