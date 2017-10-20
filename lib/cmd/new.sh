@@ -139,10 +139,6 @@ function add_image() {
     ns_name="$1"
     image_name="$2"
 
-    get_ns_conf "${ns_name}" "${image_name}"
-    # shellcheck source=dock/kubler/kubler.conf
-    source "${__get_ns_conf}"
-
     msg '\n<enter> to accept default value\n'
 
     msg 'Extend an existing image? Fully qualified image id (i.e. kubler/busybox) if yes or scratch'
@@ -211,6 +207,9 @@ function main() {
             add_namespace "${_NAMESPACE_DIR}" "${target_id}" "${_NAMESPACE_TYPE}"
             ;;
         image)
+            get_ns_conf "${_tmpl_namespace}" "${_tmpl_image_name}"
+            # shellcheck source=dock/kubler/kubler.conf
+            source "${__get_ns_conf}"
             add_image "${_tmpl_namespace}" "${_tmpl_image_name}"
             ;;
         builder)
