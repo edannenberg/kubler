@@ -127,10 +127,13 @@ You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${ns_nam
     __get_ns_conf="${ns_conf_file}"
 }
 
+# Arguments
+# 1: Namespace
 function add_image() {
-    local image_base_path image_path
+    local ns_name image_base_path image_path
+    ns_name="$1"
 
-    get_ns_conf "${_tmpl_namespace}"
+    get_ns_conf "${ns_name}"
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
@@ -140,7 +143,7 @@ function add_image() {
     read -r -p 'Parent Image (scratch): ' _tmpl_image_parent
     [ -z "${_tmpl_image_parent}" ] && _tmpl_image_parent='scratch'
 
-    image_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/images"
+    image_base_path="${_NAMESPACE_DIR}/${ns_name}/images"
     image_path="${image_base_path}/${_tmpl_image_name}"
 
     [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
@@ -200,7 +203,7 @@ function main() {
             add_namespace "${_NAMESPACE_DIR}" "${target_id}"
             ;;
         image)
-            add_image
+            add_image "${_tmpl_namespace}"
             ;;
         builder)
             add_builder "${_tmpl_namespace}"
