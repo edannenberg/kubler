@@ -127,7 +127,7 @@ You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${_tmpl_
 function add_image() {
     local image_base_path image_path
 
-    get_ns_conf "${_IMAGE_PATH}"
+    get_ns_conf
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
@@ -152,7 +152,7 @@ function add_image() {
 function add_builder() {
     local builder_base_path builder_path
 
-    get_ns_conf "${_BUILDER_PATH}"
+    get_ns_conf
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
