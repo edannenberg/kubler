@@ -3,13 +3,15 @@
 # All rights reserved.
 
 # Arguments:
-# 1: namespace_name
+# 1: namespaces_base_dir
+# 2: namespace_name
 function add_namespace() {
-    local ns_name ns_dir def_type def_name def_mail def_engine def_mail def_image_tag regex
-    ns_name="$1"
-    ns_dir="${_NAMESPACE_DIR}/${ns_name}"
+    local ns_base_dir ns_name ns_dir def_type def_name def_mail def_engine def_mail def_image_tag regex
+    ns_base_dir="$1"
+    ns_name="$2"
+    ns_dir="${ns_base_dir}/${ns_name}"
     [[ -d "${ns_dir}" ]] && die "${ns_dir} already exists, aborting."
-    [[ "${_NAMESPACE_TYPE}" == 'single' ]] && die "${_NAMESPACE_DIR} namespace is of type single, aborting."
+    [[ "${_NAMESPACE_TYPE}" == 'single' ]] && die "${ns_base_dir} namespace is of type single, aborting."
 
     def_type='multi'
     def_name='John Doe'
@@ -188,7 +190,7 @@ function main() {
 
     case "${_arg_template_type}" in
         namespace)
-            add_namespace "${target_id}"
+            add_namespace "${_NAMESPACE_DIR}" "${target_id}"
             ;;
         image)
             add_image
