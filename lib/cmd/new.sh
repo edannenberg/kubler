@@ -133,11 +133,13 @@ You can create a new namespace by running: ${_KUBLER_BIN} new namespace ${ns_nam
 
 # Arguments
 # 1: Namespace
-# 2: Image name
+# 2: Build engine used by the namespace
+# 3: Image name
 function add_image() {
-    local ns_name image_name image_base_path image_path
+    local ns_name build_engine image_name image_base_path image_path
     ns_name="$1"
-    image_name="$2"
+    build_engine="$2"
+    image_name="$3"
 
     msg '\n<enter> to accept default value\n'
 
@@ -151,7 +153,7 @@ function add_image() {
     [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
     [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
 
-    cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
+    cp -r "${_LIB_DIR}/template/${build_engine}/image" "${image_path}" || die
 
     _template_target="${image_path}"
     _post_msg="Successfully created ${_arg_name} image at ${image_path}\\n"
@@ -210,7 +212,7 @@ function main() {
             get_ns_conf "${_tmpl_namespace}" "${_tmpl_image_name}"
             # shellcheck source=dock/kubler/kubler.conf
             source "${__get_ns_conf}"
-            add_image "${_tmpl_namespace}" "${_tmpl_image_name}"
+            add_image "${_tmpl_namespace}" "${BUILD_ENGINE}" "${_tmpl_image_name}"
             ;;
         builder)
             add_builder "${_tmpl_namespace}" "${_tmpl_image_name}"
