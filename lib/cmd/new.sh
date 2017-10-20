@@ -152,10 +152,14 @@ function add_image() {
     _post_msg="Successfully created ${_arg_name} image at ${image_path}\\n"
 }
 
-function add_builder() {
-    local builder_base_path builder_path
 
-    get_ns_conf "${_tmpl_namespace}"
+# Arguments
+# 1: Namespace
+function add_builder() {
+    local ns_name builder_base_path builder_path
+    ns_name="$1"
+
+    get_ns_conf "${ns_name}"
     # shellcheck source=dock/kubler/kubler.conf
     source "${__get_ns_conf}"
 
@@ -169,7 +173,7 @@ function add_builder() {
     # shellcheck disable=SC2016,SC2034
     [[ "${_tmpl_builder_type}" == "stage3" ]] && _tmpl_builder='\${_current_namespace}/bob'
 
-    builder_base_path="${_NAMESPACE_DIR}/${_tmpl_namespace}/builder"
+    builder_base_path="${_NAMESPACE_DIR}/${ns_name}/builder"
     builder_path="${builder_base_path}/${_tmpl_image_name}"
 
     [ -d "${builder_path}" ] && die "${builder_path} already exists, aborting!"
@@ -199,7 +203,7 @@ function main() {
             add_image
             ;;
         builder)
-            add_builder
+            add_builder "${_tmpl_namespace}"
             ;;
         *)
             show_help
