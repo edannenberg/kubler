@@ -3,15 +3,17 @@
 # All rights reserved.
 
 # Arguments:
-# 1: namespaces_base_dir
-# 2: namespace_name
+# 1: Namespace base directory
+# 2: Namespace name
+# 3: Namespace type
 function add_namespace() {
-    local ns_base_dir ns_name ns_dir def_type def_name def_mail def_engine def_mail def_image_tag regex
+    local ns_base_dir ns_name ns_type ns_dir def_type def_name def_mail def_engine def_mail def_image_tag regex
     ns_base_dir="$1"
     ns_name="$2"
+    ns_type="$3"
     ns_dir="${ns_base_dir}/${ns_name}"
     [[ -d "${ns_dir}" ]] && die "${ns_dir} already exists, aborting."
-    [[ "${_NAMESPACE_TYPE}" == 'single' ]] && die "${ns_base_dir} namespace is of type single, aborting."
+    [[ "${ns_type}" == 'single' ]] && die "${ns_base_dir} namespace is of type single, aborting."
 
     def_type='multi'
     def_name='John Doe'
@@ -27,7 +29,7 @@ function add_namespace() {
 
     msg "New namespace location:  ${ns_dir}"
 
-    if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
+    if [[ "${ns_type}" == 'none' ]]; then
         msg "--> What type of namespace? To allow multiple namespaces choose 'multi', else 'single'.
     The only upshot of 'single' mode is saving one directory level, the downside is loss of cross-namespace access."
         read -r -p "Type (${def_type}): " _tmpl_ns_type
@@ -38,7 +40,7 @@ function add_namespace() {
         read -r -p "Image Tag (${def_image_tag}): " _tmpl_image_tag
         [[ -z "${_tmpl_image_tag}" ]] && _tmpl_image_tag="${def_image_tag}"
     else
-        msg "Namespace Type:          ${_NAMESPACE_TYPE}"
+        msg "Namespace Type:          ${ns_type}"
     fi
 
     msg '\n--> Who maintains the new namespace?'
@@ -59,7 +61,7 @@ function add_namespace() {
     local real_ns_dir default_conf
     real_ns_dir="${ns_dir}"
 
-    if [[ "${_NAMESPACE_TYPE}" == 'none' && "${_tmpl_ns_type}" == 'multi' ]]; then
+    if [[ "${ns_type}" == 'none' && "${_tmpl_ns_type}" == 'multi' ]]; then
         real_ns_dir="${ns_dir}/${ns_name}"
         mkdir "${ns_dir}"
         _sub_tmpl_target="${real_ns_dir}"
@@ -68,7 +70,7 @@ function add_namespace() {
     cp -r "${_LIB_DIR}/template/${_tmpl_engine}/namespace" "${real_ns_dir}" || die
 
 
-    if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
+    if [[ "${ns_type}" == 'none' ]]; then
         if [[ "${_tmpl_ns_type}" == 'multi' ]]; then
             # link kubler namespace per default for multi namespaces
             ln -s "${_KUBLER_NAMESPACE_DIR}/kubler" "${ns_dir}"/
@@ -94,7 +96,7 @@ To manage the new namespace with GIT you may want to run:
 
     git init ${real_ns_dir}"
 
-    if [[ "${_NAMESPACE_TYPE}" == 'none' && "${_tmpl_ns_type}" == 'single' ]]; then
+    if [[ "${ns_type}" == 'none' && "${_tmpl_ns_type}" == 'single' ]]; then
         _post_msg="${_post_msg}\\n\\n!!! As this is a new single namespace you need to create a new builder first:\\n
     cd ${ns_dir}/
     ${_KUBLER_BIN} new builder bob"
@@ -206,7 +208,7 @@ function main() {
 
     case "${_arg_template_type}" in
         namespace)
-            add_namespace "${_NAMESPACE_DIR}" "${target_id}"
+            add_namespace "${_NAMESPACE_DIR}" "${target_id}" "${_NAMESPACE_TYPE}"
             ;;
         image)
             add_image "${_tmpl_namespace}" "${_tmpl_image_name}"
