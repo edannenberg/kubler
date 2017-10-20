@@ -164,7 +164,9 @@ function add_image() {
 # 1: Namespace
 # 2: Build engine used by the namespace
 # 3: Builder name
+# Return value: Type of the created builder
 function add_builder() {
+    __add_builder=
     local ns_name build_engine builder_name builder_base_path builder_path
     ns_name="$1"
     build_engine="$2"
@@ -190,6 +192,7 @@ function add_builder() {
 
     _template_target="${builder_path}"
     _post_msg="Successfully created ${_arg_name} builder at ${builder_path}\\n"
+    __add_builder="${_tmpl_builder_type}"
 }
 
 function main() {
@@ -231,7 +234,7 @@ function main() {
         sed_args+=('-e' "s|\${${tmpl_var}}|${!tmpl_var}|g")
     done
     if [[ "${_arg_template_type}" == "builder" ]]; then
-        if [[ "${_tmpl_builder_type}" == "stage3" ]]; then
+        if [[ "${__add_builder}" == "stage3" ]]; then
             sed_args+=('-e' "s|^BUILDER|#BUILDER|g")
         else
             sed_args+=('-e' "s|^STAGE3|#STAGE3|g")
