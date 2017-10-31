@@ -8,7 +8,7 @@ _packages="net-misc/memcached"
 #
 configure_rootfs_build()
 {
-    update_keywords '=memcached-1.4.33-r1' '+~amd64'
+    :
 }
 
 #
