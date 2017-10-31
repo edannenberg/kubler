@@ -7,7 +7,7 @@ configure_bob()
 {
     update_use net-libs/nodejs +icu
     # use a more recent 6.x release as some libs require node > 6.10
-    update_keywords =net-libs/nodejs-6.11.2 +~amd64
+    update_keywords =net-libs/nodejs-6.11.5 +~amd64
     # build binary packages first to avoid pulling in python in the next phase
     emerge net-libs/http-parser dev-libs/libuv dev-libs/icu net-libs/nodejs
 }
