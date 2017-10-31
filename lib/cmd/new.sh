@@ -277,9 +277,10 @@ function main() {
     target_namespace="${target_id%%/*}"
     target_image_name="${target_id##*/}"
 
-    if [[ "${target_id}" != *"/"* && "${_arg_template_type}" != 'namespace' ]]; then
-        # shellcheck disable=SC2154
-        die "\"${target_id}\" should have format <namespace>/<image_name>"
+    if [[ "${_arg_template_type}" != 'namespace' ]]; then
+        [[ "${target_id}" != *"/"* ]] && die "\"${target_id}\" should have format <namespace>/<image_name>"
+        [[ "${_NAMESPACE_TYPE}" == 'none' ]] \
+            && die "${_NAMESPACE_DIR} is not a valid Kubler namespace dir"
     fi
 
     add_template_filter_var '_tmpl_namespace' "${target_namespace}"
