@@ -9,10 +9,12 @@ _packages="dev-libs/gmp app-eselect/eselect-ruby dev-lang/ruby"
 configure_rootfs_build()
 {
     echo 'RUBY_TARGETS="ruby24"' >> /etc/portage/make.conf
+    # pkg-config needs unmasked ruby24 target
+    mkdir "${_EMERGE_ROOT}"/etc
+    echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
     update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
-    update_keywords '=dev-ruby/rubygems-2.6.12' '+~amd64'
     update_keywords '=dev-ruby/rake-12.0.0' '+~amd64'
     update_keywords '=dev-ruby/power_assert-0.4.1' '+~amd64'
     update_keywords '=dev-ruby/minitest-5.10.3' '+~amd64'
