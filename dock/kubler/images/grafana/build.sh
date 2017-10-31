@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_grafana_version="4.5.2"
+_grafana_version="4.6.0"
 
 configure_bob()
 {
@@ -17,14 +17,12 @@ configure_bob()
     echo "building grafana.."
     go run build.go build
 
-    npm install
-    npm install -g grunt-cli gyp
-    #TODO: release fails due to not being able to execute phantomjs tests, figure out how to skip those for release target
-    #grunt release
-    grunt --force
+    npm install -g yarn
+    yarn install --pure-lockfile
+    npm run build
 
     mkdir -p "${_EMERGE_ROOT}"/opt/grafana/{bin,conf,data}
-    cp -rp "${DISTRIBUTION_DIR}"/public_gen "${_EMERGE_ROOT}"/opt/grafana/
+    cp -rp "${DISTRIBUTION_DIR}"/public "${_EMERGE_ROOT}"/opt/grafana/
     cp "${DISTRIBUTION_DIR}"/conf/defaults.ini "${_EMERGE_ROOT}"/opt/grafana/conf/
     cp "${DISTRIBUTION_DIR}"/conf/sample.ini "${_EMERGE_ROOT}"/opt/grafana/conf/custom.ini
     cp "${DISTRIBUTION_DIR}"/bin/* "${_EMERGE_ROOT}"/opt/grafana/bin
