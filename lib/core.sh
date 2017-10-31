@@ -61,6 +61,21 @@ function msgf() {
     printf '%s %-20s %s\n' '-->' "${msg_prefix}" "$@"
 }
 
+# Read user input displaying given question
+#
+# Arguments:
+# 1: question
+# 2: default_value
+# Return value: user input or passed default_value
+function ask() {
+    __ask=
+    local question default_value
+    question="$1"
+    default_value="$2"
+    read -r -p "${question} (${default_value}): " __ask
+    [[ -z "${__ask}" ]] && __ask="${default_value}"
+}
+
 # Arguments:
 # 1: file_path as string
 # 2: error_msg, optional
