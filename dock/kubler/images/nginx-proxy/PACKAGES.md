@@ -1,14 +1,14 @@
-### kubler/nginx-proxy:20170925
+### kubler/nginx-proxy:20171030
 
-Built: Mon Sep 25 17:56:05 CEST 2017
-Image Size: 17.8MB
+Built: Mon Oct 30 15:30:06 CET 2017
+Image Size: 18.1MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 dev-libs/libpcre-8.41 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.13.5 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.13.6-r1 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -17,15 +17,15 @@ app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2l | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
-sys-libs/zlib-1.2.11 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.3.0.1 | `-static -static-libs`
-dev-libs/skalibs-2.5.1.1 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.5.1.0 | `-static -static-libs`
+dev-lang/execline-2.3.0.2 | `-static -static-libs`
+dev-libs/skalibs-2.6.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.6.1.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.23-r4 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r8 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017a | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

@@ -35,7 +35,8 @@ configure_bob() {
     add_layman_overlay musl
     # install go
     cd ~
-    wget https://raw.githubusercontent.com/docker-library/golang/7e9aedf483dc0a035747f37af37ed260f2a6cf57/1.8/alpine/no-pic.patch
+    wget https://raw.githubusercontent.com/docker-library/golang/master/1.9/alpine3.6/no-pic.patch
+    wget https://raw.githubusercontent.com/docker-library/golang/master/1.9/alpine3.6/make-sure-R0-is-zero-before-main-on-ppc64le.patch
     wget https://storage.googleapis.com/golang/go1.4-bootstrap-20161024.tar.gz
     tar xzvf go1.4-bootstrap-20161024.tar.gz
     mv go go1.4
@@ -45,8 +46,9 @@ configure_bob() {
     cd /usr/lib
     git clone https://go.googlesource.com/go
     cd go/src
-    git checkout go1.8.3
+    git checkout go1.9.1
     patch -p2 -i ~/no-pic.patch
+    patch -p2 -i ~/make-sure-R0-is-zero-before-main-on-ppc64le.patch
     # some tests seem to be hardlinked against glibc and fail
     set +e
     ./all.bash
