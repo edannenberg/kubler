@@ -4,8 +4,7 @@
 _php_slot="7.1"
 _php_target="php${_php_slot/\./-}"
 _zend_api="20160303"
-_packages="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick"
-#_packages="dev-lang/php dev-php/pecl-memcached dev-php/pecl-redis pecl-imagick"
+_packages="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis pecl-imagick dev-php/pecl-memcached"
 _php_timezone="${BOB_TIMEZONE:-UTC}"
 _adminer_version="4.3.1"
 #_iconv_from=kubler/glibc
@@ -36,7 +35,6 @@ configure_rootfs_build()
 {
     update_keywords 'dev-php/xdebug' '+~amd64'
     update_keywords 'dev-php/xdebug-client' '+~amd64'
-    #update_keywords 'dev-php/pecl-redis' '+~amd64'
 
     update_use 'dev-php/pecl-apcu' '+mmap'
 
@@ -49,59 +47,6 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    # php memcached support - currently not in portage tree
-    git clone https://github.com/php-memcached-dev/php-memcached.git
-    cd php-memcached/
-    git checkout php7
-    phpize
-    # our libtool is too new, regen some stuff with current version
-    aclocal; libtoolize --force; autoheader; autoconf
-    ./configure --disable-memcached-sasl
-    make
-    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
-        > "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/memcached.ini
-    ln -sr "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/memcached.ini \
-        "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext-active/memcached.ini
-    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/memcached.so" \
-        > "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/memcached.ini
-    ln -sr ${_EMERGE_ROOT}/etc/php/fpm-php${_php_slot}/ext/memcached.ini \
-        "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext-active/memcached.ini
-
-    # php redis support
-    cd ..
-    git clone https://github.com/phpredis/phpredis.git
-    cd phpredis/
-    git checkout php7
-    phpize
-    # our libtool is too new, regen some stuff with current version
-    aclocal; libtoolize --force; autoheader; autoconf
-    ./configure
-    make
-    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/redis.so" \
-        > /emerge-root/etc/php/fpm-php${_php_slot}/ext-active/redis.ini
-
-    # php imagick support - ebuild currently buggy (doesn't find php7 target even though it is active)
-    cd ..
-    wget https://pecl.php.net/get/imagick-3.4.3RC1.tgz
-    tar xvzf imagick-3.4.3RC1.tgz
-    cd imagick-3.4.3RC1/
-    phpize
-    # our libtool is too new, regen some stuff with current version
-    aclocal; libtoolize --force; autoheader; autoconf
-    ./configure
-    make
-    cp modules/* "${_EMERGE_ROOT}/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/"
-    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
-        > "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext/imagick.ini
-    ln -sr "${_EMERGE_ROOT}"/etc/php/cli-php${_php_slot}/ext/imagick.ini \
-        "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/ext-active/imagick.ini
-    echo "extension=/usr/${_LIB}/php${_php_slot}/lib/extensions/no-debug-zts-${_zend_api}/imagick.so" \
-        > "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/imagick.ini
-    ln -sr "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext/imagick.ini \
-        "${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/ext-active/imagick.ini
-
     # set php iconv default to UTF-8, if you need full iconv functionality set ICONV_FROM=kubler/glibc above
     local fpm_php_ini
     fpm_php_ini="${_EMERGE_ROOT}"/etc/php/fpm-php"${_php_slot}"/php.ini
