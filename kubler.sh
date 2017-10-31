@@ -141,7 +141,7 @@ function main() {
     detect_namespace "${working_dir}"
     
     if [[ -n "${_arg_working_dir}" ]]; then
-        _KUBLER_BIN_HINT=" --working-dir=${working_dir}"
+        readonly _KUBLER_BIN_HINT=" --working-dir=${working_dir}"
     fi
 
     # valid command?
