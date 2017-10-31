@@ -141,14 +141,12 @@ To manage the new namespace with GIT you may want to run:
 
     if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'single' ]]; then
         msg "\\n\\n!!! As this is a new single namespace you need to create a new builder first:\\n
-    cd ${ns_dir}/
-    ${_KUBLER_BIN} new builder bob"
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new builder ${ns_name}/bob"
     fi
 
     msg "\\n\\nTo create images in the new namespace run:
 
-    cd ${ns_dir}/
-    ${_KUBLER_BIN} new image ${ns_name}/<image_name>
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new image ${ns_name}/<image_name>
 "
 }
 
