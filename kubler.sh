@@ -139,6 +139,11 @@ function main() {
     working_dir="${__get_absolute_path}"
     [[ -z "${working_dir}" ]] && working_dir="${PWD}"
     detect_namespace "${working_dir}"
+    
+    if [[ -n "${_arg_working_dir}" ]]; then
+        # shellcheck disable=SC2034
+        readonly _KUBLER_BIN_HINT=" --working-dir=${working_dir}"
+    fi
 
     # valid command?
     cmd_script="${_LIB_DIR}/cmd/${_arg_command}.sh"
