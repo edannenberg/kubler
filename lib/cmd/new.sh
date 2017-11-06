@@ -46,7 +46,7 @@ function replace_template_placeholders() {
 # Arguments:
 # 1: ns_name
 function add_namespace() {
-    local ns_name ns_dir ns_type ns_engine regex
+    local ns_name ns_dir ns_type ns_engine regex kubler_bin_hint
     ns_name="$1"
     ns_dir="${_NAMESPACE_DIR}/${ns_name}"
     get_absolute_path "${ns_dir}"
@@ -109,6 +109,7 @@ function add_namespace() {
 
     cp -r "${_LIB_DIR}/template/${ns_engine}/namespace" "${real_ns_dir}" || die
 
+    kubler_bin_hint="${_KUBLER_BIN}${_KUBLER_BIN_HINT}"
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
         if [[ "${ns_type}" == 'multi' ]]; then
             # link kubler namespace per default for multi namespaces
@@ -119,6 +120,11 @@ function add_namespace() {
         fi
         # default multi conf file can also be used for new single namespaces..
         default_conf='multi'
+        if [[ -z "${_KUBLER_BIN_HINT}" ]];then
+            kubler_bin_hint="cd ${ns_dir}\\n    ${kubler_bin_hint}"
+        else
+            kubler_bin_hint+="/${ns_name}"
+        fi
     else
         # ..else use default single conf file when inside an existing namespace
         default_conf='single'
@@ -140,13 +146,13 @@ To manage the new namespace with GIT you may want to run:
     git init ${real_ns_dir}"
 
     if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'single' ]]; then
-        msg "\\n\\n!!! As this is a new single namespace you need to create a new builder first:\\n
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new builder ${ns_name}/bob"
+        msg "\\n!!! As this is a new single namespace you need to create a new builder first:\\n
+    ${kubler_bin_hint} new builder ${ns_name}/bob"
     fi
 
-    msg "\\n\\nTo create images in the new namespace run:
+    msg "\\nTo create images in the new namespace run:
 
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new image ${ns_name}/<image_name>
+    ${kubler_bin_hint} new image ${ns_name}/<image_name>
 "
 }
 
@@ -165,7 +171,7 @@ function get_ns_conf() {
 
 Check spelling of \"${namespace}\" or create a new namespace by running:
 
-    ${_KUBLER_BIN} new namespace ${namespace}
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new namespace ${namespace}
 "
     __get_ns_conf="${ns_conf_file}"
 }
@@ -244,7 +250,7 @@ function add_builder() {
         builder_parent='\${NAMESPACE}/bob'
         add_template_sed_replace '^BUILDER' '#BUILDER'
         update_hint="You should check for latest stage3 files by running:\\n
-    ${_KUBLER_BIN} update --no-sync
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} update --no-sync
         "
     else
         add_template_sed_replace '^STAGE3' '#STAGE3'

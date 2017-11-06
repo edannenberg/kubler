@@ -62,8 +62,8 @@ function update_stage3_date() {
         msg '\nAll stage3 dates are up to date.'
     else
         msg "\\nFound updates for ${update_count} stage3 file(s), to rebuild run:\\n
-    ${_KUBLER_BIN} clean
-    ${_KUBLER_BIN} build -c some_namespace\\n"
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} clean
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} build -c some_namespace\\n"
     fi
 }
 
