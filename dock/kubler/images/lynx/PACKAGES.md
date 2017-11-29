@@ -1,6 +1,6 @@
-### kubler/lynx:20171030
+### kubler/lynx:20171128
 
-Built: Mon Oct 30 14:40:24 CET 2017
+Built: Tue Nov 28 13:57:37 CET 2017
 Image Size: 13.2MB
 
 #### Installed
@@ -14,11 +14,11 @@ Package | USE Flags
 --------|----------
 **FROM kubler/libressl-musl** |
 app-misc/c_rehash-1.7-r1 | ``
-app-misc/ca-certificates-20170717.3.33 | `-cacert -insecure`
+app-misc/ca-certificates-20170717.3.34 | `-cacert -insecure`
 dev-libs/libressl-2.6.0 | `asm -static-libs`
 sys-apps/debianutils-4.7 | `-static`
 **FROM kubler/musl** |
-sys-libs/musl-1.1.16 | ``
+sys-libs/musl-1.1.18 | ``
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog (-systemd)`
 #### Purged
