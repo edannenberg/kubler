@@ -1,7 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="dev-lang/python dev-python/pip"
+_packages="dev-lang/python:3.5 dev-python/pip"
 #_keep_headers=true
 
 #
@@ -9,9 +9,9 @@ _packages="dev-lang/python dev-python/pip"
 #
 configure_rootfs_build()
 {
-    echo 'PYTHON_TARGETS="python3_4"' >> /etc/portage/make.conf
-    echo 'PYTHON_SINGLE_TARGET="python3_4"' >> /etc/portage/make.conf
-    echo 'USE_PYTHON="3.4"' >> /etc/portage/make.conf
+    echo 'PYTHON_TARGETS="python3_5"' >> /etc/portage/make.conf
+    echo 'PYTHON_SINGLE_TARGET="python3_5"' >> /etc/portage/make.conf
+    echo 'USE_PYTHON="3.5"' >> /etc/portage/make.conf
     update_use '+sqlite'
 }
 
