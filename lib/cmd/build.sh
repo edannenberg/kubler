@@ -137,6 +137,8 @@ function main() {
             build_type="${_BUILDER_PATH}"
         fi
         source_image_conf "${__expand_image_id}"
+        unset _use_parent_builder_mounts
+        [[ "${PARENT_BUILDER_MOUNTS}" == 'true' ]] && _use_parent_builder_mounts='true'
 
         get_build_container "${target_id}" "${build_type}"
         [[ $? -eq 1 ]] && die "Error while executing get_build_container(): ${builder_id}"
@@ -160,6 +162,7 @@ function main() {
             "${_KUBLER_DIR}/tmp/oci-registry:/oci-registry"
             "${__get_absolute_path}:/config"
         )
+        [[ ${#BUILDER_MOUNTS[@]} -gt 0 ]] && _container_mounts+=("${BUILDER_MOUNTS[@]}")
         _container_mount_portage='true'
         _container_cmd=('/bin/bash')
 

@@ -140,6 +140,11 @@ function build_image() {
 
         msg "--> phase 1: building root fs"
 
+        # save value of target image's PARENT_BUILDER_MOUNTS config as get_build_container() may override the ENV
+        unset _use_parent_builder_mounts
+        # shellcheck disable=SC2034
+        [[ "${PARENT_BUILDER_MOUNTS}" == 'true' ]] && _use_parent_builder_mounts='true'
+
         get_build_container "${image_id}" "${image_type}"
         builder_id="${__get_build_container}"
 
@@ -170,6 +175,8 @@ function build_image() {
                            "${_KUBLER_DIR}/tmp/distfiles:/distfiles"
                            "${_KUBLER_DIR}/tmp/packages:/packages"
                           )
+        [[ ${#BUILDER_MOUNTS[@]} -gt 0 ]] && _container_mounts+=("${BUILDER_MOUNTS[@]}")
+
         # shellcheck disable=SC2034
         BOB_CURRENT_TARGET="${image_id}"
 

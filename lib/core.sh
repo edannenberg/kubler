@@ -187,6 +187,8 @@ function source_image_conf() {
         source_namespace_conf "${image_path}"
     fi
     unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILD_PRIVILEGED
+    [[ -z "${_use_parent_builder_mounts}" ]] && unset BUILDER_MOUNTS
+
     build_conf="${image_path}/build.conf"
     # shellcheck source=dock/kubler/images/busybox/build.conf
     file_exists_or_die "${build_conf}" && source "${build_conf}"
