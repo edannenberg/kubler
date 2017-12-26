@@ -2,6 +2,24 @@
 # Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
+# Compare given local and remote stage3 date, returns 0 if remote is newer or 1 if not
+#
+# Arguments:
+# 1: stage3_date_local
+# 2: stage3_date_remote
+function is_newer_stage3_date {
+    local stage3_date_local stage3_date_remote
+    # parsing ISO8601 with the date command is a bit tricky due to differences on macOS
+    # as a workaround we just remove any possible non-numeric chars and compare as integers
+    stage3_date_local="${1//[!0-9]/}"
+    stage3_date_remote="${2//[!0-9]/}"
+    if [[ "${stage3_date_local}" -lt "${stage3_date_remote}" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function update_builders() {
     __update_builders=
     local builder_path current_builder update_status remote_files regex s3date_remote update_count
@@ -17,11 +35,13 @@ function update_builders() {
                 ARCH="${ARCH:-amd64}"
                 ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
                 remote_files="$(wget -qO- "${ARCH_URL}")"
-                regex="${STAGE3_BASE//+/\\+}-([0-9]{8})\\.tar\\.bz2"
+                regex="${STAGE3_BASE//+/\\+}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.bz2"
                 if [[ "${remote_files}" =~ ${regex} ]]; then
                     s3date_remote="${BASH_REMATCH[1]}"
-                    if [[ "${STAGE3_DATE}" -lt "${s3date_remote}" ]]; then
-                        sed -r -i s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
+                    # add time string if captured
+                    [[ ! -z "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
+                    if is_newer_stage3_date "${STAGE3_DATE}" "${s3date_remote}"; then
+                        sed -r -i s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
                             "${builder_path}${current_builder}build.conf"
                         update_status="updated ${STAGE3_DATE} -> ${s3date_remote} - ${STAGE3_BASE}"
                         ((update_count++))
