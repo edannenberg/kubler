@@ -46,7 +46,7 @@ configure_bob() {
     cd /usr/lib
     git clone https://go.googlesource.com/go
     cd go/src
-    git checkout go1.9.1
+    git checkout go1.9.2
     patch -p2 -i ~/no-pic.patch
     patch -p2 -i ~/make-sure-R0-is-zero-before-main-on-ppc64le.patch
     # some tests seem to be hardlinked against glibc and fail
