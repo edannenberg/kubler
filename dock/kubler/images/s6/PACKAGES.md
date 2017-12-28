@@ -1,7 +1,7 @@
-### kubler/s6:20171128
+### kubler/s6:20171228
 
-Built: Tue Nov 28 13:28:27 CET 2017
-Image Size: 12MB
+Built: Thu Dec 28 07:39:56 CET 2017
+Image Size: 12.1MB
 
 #### Installed
 Package | USE Flags
@@ -16,7 +16,7 @@ Package | USE Flags
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2017a | `nls -leaps`
+sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

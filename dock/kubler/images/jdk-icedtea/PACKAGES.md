@@ -1,6 +1,6 @@
-### kubler/jdk-icedtea:20171128
+### kubler/jdk-icedtea:20171228
 
-Built: Tue Nov 28 13:47:47 CET 2017
+Built: Thu Dec 28 08:00:06 CET 2017
 Image Size: 316MB
 
 #### Installed
@@ -15,7 +15,7 @@ dev-libs/expat-2.2.1 | `unicode -examples -static-libs`
 dev-libs/glib-2.50.3-r1 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
-dev-libs/libxml2-2.9.4-r3 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/libxml2-2.9.6 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
 media-libs/fontconfig-2.12.4 | `-doc -static-libs`
 media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
@@ -23,7 +23,7 @@ media-libs/lcms-2.9 | `threads -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-x11-misc/shared-mime-info-1.8 | `{-test}`
+x11-misc/shared-mime-info-1.9 | `{-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -42,7 +42,7 @@ app-admin/eselect-1.4.8 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.3_p48-r1 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.56.1 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.57.0 | `ssl threads -adns -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
@@ -53,7 +53,7 @@ sys-libs/readline-6.3_p8-r3 | `-static-libs -utils`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2m | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2n | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.7 | `-static`
 sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
 **FROM kubler/s6** |
@@ -64,7 +64,7 @@ sys-apps/s6-2.6.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2017a | `nls -leaps`
+sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

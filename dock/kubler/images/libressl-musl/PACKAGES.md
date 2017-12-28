@@ -1,13 +1,13 @@
-### kubler/libressl-musl:20171128
+### kubler/libressl-musl:20171228
 
-Built: Tue Nov 28 13:54:13 CET 2017
+Built: Thu Dec 28 08:53:04 CET 2017
 Image Size: 5.42MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-misc/c_rehash-1.7-r1 | ``
-app-misc/ca-certificates-20170717.3.34 | `-cacert -insecure`
+app-misc/ca-certificates-20170717.3.34.1 | `-cacert -insecure`
 dev-libs/libressl-2.6.0 | `asm -static-libs`
 sys-apps/debianutils-4.7 | `-static`
 #### Inherited
