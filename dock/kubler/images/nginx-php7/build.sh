@@ -4,7 +4,7 @@
 _php_slot="7.1"
 _php_target="php${_php_slot/\./-}"
 _zend_api="20160303"
-_packages="dev-lang/php dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis pecl-imagick dev-php/pecl-memcached"
+_packages="dev-lang/php:${_php_slot} dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis pecl-imagick dev-php/pecl-memcached"
 _php_timezone="${BOB_TIMEZONE:-UTC}"
 _adminer_version="4.3.1"
 #_iconv_from=kubler/glibc
@@ -25,7 +25,7 @@ configure_bob()
     echo 'dev-lang/php gd' >> /etc/portage/package.use/php
     update_use 'app-eselect/eselect-php' '+fpm'
     update_use 'media-gfx/imagemagick' '-openmp'
-    emerge php git libmemcached imagemagick
+    emerge "php:${_php_slot}" git libmemcached imagemagick
 }
 
 #
