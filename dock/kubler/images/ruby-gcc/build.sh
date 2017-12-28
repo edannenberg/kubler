@@ -1,7 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="app-eselect/eselect-ruby dev-lang/ruby dev-util/pkgconfig sys-apps/coreutils dev-ruby/pkg-config"
+_packages="app-eselect/eselect-ruby dev-lang/ruby:2.4 dev-util/pkgconfig sys-apps/coreutils dev-ruby/pkg-config"
 _keep_headers='true'
 
 #
@@ -13,7 +13,6 @@ configure_rootfs_build()
     # pkg-config needs unmasked ruby24 target
     mkdir "${_EMERGE_ROOT}"/etc
     echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
-    #echo '>=dev-lang/ruby-2.4.0' >> /etc/portage/package.mask/ruby
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=dev-ruby/racc-1.4.14' '+~amd64'
     update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
@@ -24,7 +23,7 @@ configure_rootfs_build()
     update_keywords '=virtual/rubygems-12' '+~amd64'
     update_keywords '=dev-ruby/json-2.1.0' '+~amd64'
     update_keywords '=dev-ruby/net-telnet-0.1.1-r1' '+~amd64'
-    update_keywords '=dev-ruby/did_you_mean-1.1.0' '+~amd64'
+    update_keywords '=dev-ruby/did_you_mean-1.1.2' '+~amd64'
     update_keywords '=dev-ruby/xmlrpc-0.2.1' '+~amd64'
     update_keywords '=dev-ruby/kpeg-1.1.0' '+~amd64'
 }
