@@ -225,6 +225,7 @@ function get_image_builder_id() {
     __get_image_builder_id=
     local image_id
     image_id="$1"
+    [[ "${image_id}" == 'scratch' ]] && __get_image_builder_id="${DEFAULT_BUILDER}" && return 0
     expand_image_id "${image_id}" "${_IMAGE_PATH}"
     if [[ -n "${image_id}" && "${image_id}" != "scratch" ]]; then
         # shellcheck disable=SC2154
