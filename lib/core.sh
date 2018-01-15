@@ -240,15 +240,38 @@ function get_image_builder_id() {
     fi
 }
 
-# Download and verify stage3 tar ball
-function download_stage3() {
+# Return a Bash regex that should match for any given stage3_base
+# Arguments:
+# 1: stage3_base (i.e. stage3-amd64-hardened+nomultilib)
+function get_stage3_archive_regex() {
+    __get_stage3_archive_regex=
+    local stage3_base
+    stage3_base="$1"
+    __get_stage3_archive_regex="${stage3_base//+/\\+}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.(bz2|xz)"
+}
+
+# Fetch current stage3 archive name/type, returns exit signal 3 if no archive could be found
+function fetch_stage3_archive_name() {
+    __fetch_stage3_archive_name=
     ARCH="${ARCH:-amd64}"
     ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
+    local remote_files
+    remote_files="$(wget -qO- "${ARCH_URL}")"
+    get_stage3_archive_regex "${STAGE3_BASE}"
+    if [[ "${remote_files}" =~ ${__get_stage3_archive_regex} ]]; then
+        __fetch_stage3_archive_name="${BASH_REMATCH[0]}"
+        return 0
+    fi
+    return 3
+}
 
+# Download and verify stage3 tar ball
+function download_stage3() {
     [[ -d "${DOWNLOAD_PATH}" ]] || mkdir -p "${DOWNLOAD_PATH}"
     local is_autobuild stage3_contents stage3_digests sha512_hashes sha512_check sha512_failed wget_exit
     is_autobuild=false
-    _stage3_file="${STAGE3_BASE}-${STAGE3_DATE}.tar.bz2"
+    fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
+    _stage3_file="${__fetch_stage3_archive_name}"
     stage3_contents="${_stage3_file}.CONTENTS"
     stage3_digests="${_stage3_file}.DIGESTS"
     if [[ "${ARCH_URL}" == *autobuilds*  ]]; then

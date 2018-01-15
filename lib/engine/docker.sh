@@ -367,14 +367,17 @@ function import_portage_tree() {
 # Arguments:
 # 1: stage3_image_id (i.e. bob/${STAGE3_BASE})
 function import_stage3() {
-    local image_id
+    local image_id cat_bin
     image_id="${1//+/-}"
     image_exists_or_rm "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
 
     download_stage3 || die "failed to download stage3 files"
     # shellcheck disable=SC2154
     msg "--> import ${image_id}:${STAGE3_DATE} using ${_stage3_file}"
-    bzcat < "${DOWNLOAD_PATH}/${_stage3_file}" | bzip2 | "${DOCKER}" import - "${image_id}:${STAGE3_DATE}" || die "failed to import ${_stage3_file}"
+    cat_bin='bzcat'
+    [[ "${_stage3_file##*.}" == 'xz' ]] && cat_bin='xzcat'
+    "${cat_bin}" < "${DOWNLOAD_PATH}/${_stage3_file}" | bzip2 | "${DOCKER}" import - "${image_id}:${STAGE3_DATE}" \
+        || die "failed to import ${_stage3_file}"
 
     msg "tag ${image_id}:latest"
     "${DOCKER}" tag "${image_id}:${STAGE3_DATE}" "${image_id}:latest" || die "failed to tag"

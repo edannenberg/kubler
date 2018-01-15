@@ -22,7 +22,7 @@ function is_newer_stage3_date {
 
 function update_builders() {
     __update_builders=
-    local builder_path current_builder update_status remote_files regex s3date_remote update_count
+    local builder_path current_builder update_status s3date_remote update_count
     builder_path="$1"
     update_count=0
     if [[ -d "${builder_path}" ]]; then
@@ -32,11 +32,10 @@ function update_builders() {
             cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
             source_image_conf "${current_ns}${_BUILDER_PATH}/${current_builder}"
             if [[ ! -z "${STAGE3_BASE}" ]]; then
-                ARCH="${ARCH:-amd64}"
-                ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
-                remote_files="$(wget -qO- "${ARCH_URL}")"
-                regex="${STAGE3_BASE//+/\\+}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.bz2"
-                if [[ "${remote_files}" =~ ${regex} ]]; then
+                fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
+                get_stage3_archive_regex "${STAGE3_BASE}"
+                # shellcheck disable=SC2154
+                if [[ "${__fetch_stage3_archive_name}" =~ ${__get_stage3_archive_regex} ]]; then
                     s3date_remote="${BASH_REMATCH[1]}"
                     # add time string if captured
                     [[ ! -z "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
@@ -83,7 +82,7 @@ function update_stage3_date() {
     else
         msg "\\nFound updates for ${update_count} stage3 file(s), to rebuild run:\\n
     ${_KUBLER_BIN}${_KUBLER_BIN_HINT} clean
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} build -c some_namespace\\n"
+    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} build -C some_namespace\\n"
     fi
 }
 
