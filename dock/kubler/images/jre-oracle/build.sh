@@ -10,7 +10,7 @@ configure_rootfs_build()
 {
     local jre_url jce_url jre_tar
     # download oracle jre bin
-    jre_url=http://download.oracle.com/otn-pub/java/jdk/8u152-b16/aa0333dd3019491ca4f6ddbe78cdb6d0/jre-8u152-linux-x64.tar.gz
+    jre_url=http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jre-8u162-linux-x64.tar.gz
     #jre_tar=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
     regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
     [[ ${jre_url} =~ $regex ]] && jre_tar="${BASH_REMATCH[1]}"
