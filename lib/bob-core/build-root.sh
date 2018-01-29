@@ -430,7 +430,7 @@ function install_syslog_stdout() {
 
 function install_docker_gen() {
     local dockergen_version
-    dockergen_version="0.7.3"
+    dockergen_version="0.7.4"
     wget "http://github.com/jwilder/docker-gen/releases/download/${dockergen_version}/docker-gen-linux-amd64-${dockergen_version}.tar.gz"
     mkdir -p "${_EMERGE_ROOT}/bin"
     tar -C  "${_EMERGE_ROOT}/bin" -xvzf "docker-gen-linux-amd64-${dockergen_version}.tar.gz"
