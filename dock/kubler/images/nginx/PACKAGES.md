@@ -1,13 +1,13 @@
-### kubler/nginx:20171228
+### kubler/nginx:20180127
 
-Built: Thu Dec 28 09:21:57 CET 2017
-Image Size: 18.4MB
+Built: Mon Jan 29 16:26:28 CET 2018
+Image Size: 18.5MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
-dev-libs/libpcre-8.41 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
+dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
 www-servers/nginx-1.13.8 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 #### Inherited
 Package | USE Flags
@@ -16,19 +16,19 @@ Package | USE Flags
 app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2n | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
-sys-apps/debianutils-4.7 | `-static`
+sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
 **FROM kubler/s6** |
-dev-lang/execline-2.3.0.3 | `-static -static-libs`
-dev-libs/skalibs-2.6.1.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.6.1.1 | `-static -static-libs`
+dev-lang/execline-2.3.0.4 | `-static -static-libs`
+dev-libs/skalibs-2.6.3.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.25.1 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs
