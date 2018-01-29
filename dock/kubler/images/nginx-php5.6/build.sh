@@ -5,7 +5,7 @@ _php_slot="5.6"
 _php_target="php${_php_slot/\./-}"
 _packages="dev-lang/php:${_php_slot} dev-php/xdebug dev-php/pecl-memcache dev-php/pecl-redis dev-php/pecl-apcu pecl-imagick"
 _php_timezone="${BOB_TIMEZONE:-UTC}"
-_adminer_version="4.3.1"
+_adminer_version="4.5.0"
 #_iconv_from=kubler/glibc
 
 configure_bob()
