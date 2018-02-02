@@ -459,8 +459,38 @@ function download_from_oracle() {
          "$1"
 }
 
+# Return unix timestamp of modification date for given file_path
+#
+# Arguments:
+# 1: file_path
+function get_file_mod_stamp() {
+    __get_file_mod_stamp=
+    local file_path mod_date
+    file_path="$1"
+    mod_date="$(stat "${file_path}" | awk -F': ' '/Modify: /{print $2}')"
+    __get_file_mod_stamp="$(date --date "${mod_date}"  +"%s")"
+}
+
+# Copy given file_path from builder to "${_EMERGE_ROOT}" if modification date is newer than given orig_mod_stamp.
+# Creates any required paths in "${_EMERGE_ROOT}" if missing.
+#
+# Arguments
+# 1: file_path
+# 2: orig_mod_stamp
+function copy_from_builder_if_changed() {
+    local file_path orig_mod_stamp target_path
+    file_path="$1"
+    orig_mod_stamp="$2"
+    get_file_mod_stamp "${file_path}"
+    if [[ "${orig_mod_stamp}" -lt "${__get_file_mod_stamp}" ]]; then
+        target_path="$(dirname "${_EMERGE_ROOT}/${file_path}")"
+        [[ -d "${target_path}" ]] || mkdir -p "${target_path}"
+        cp -f "${file_path}" "${target_path}"
+    fi
+}
+
 function build_rootfs() {
-    local target_id
+    local target_id passwd_date group_date
 
     [[ -z "${BOB_CURRENT_TARGET}" || "${BOB_CURRENT_TARGET}" != *'/'* ]] \
         && echo "fatal: Expected a fully qualified image id in BOB_CURRENT_TARGET." && return 1
@@ -478,6 +508,10 @@ function build_rootfs() {
     fi
 
     mkdir -p "${_EMERGE_ROOT}"
+
+    # save initial passwd/group modification date
+    get_file_mod_stamp '/etc/passwd' && passwd_date="${__get_file_mod_stamp}"
+    get_file_mod_stamp '/etc/group' && group_date="${__get_file_mod_stamp}"
 
     # read mounted config
     # shellcheck source=dock/kubler/images/busybox/build.sh disable=SC2015
@@ -539,14 +573,16 @@ function build_rootfs() {
             extract_build_dependencies "${resource}"
         done
 
-        # handle bug in portage when using custom root, user/groups created during install are not created at the custom root but on the host
-        mkdir -p "${_EMERGE_ROOT}"/etc
-        cp -f /etc/{passwd,group} "${_EMERGE_ROOT}/etc"
         # merge with ld.so.conf from builder
         cat /etc/ld.so.conf >> "${_EMERGE_ROOT}/etc/ld.so.conf"
         sort -u "${_EMERGE_ROOT}/etc/ld.so.conf" -o "${_EMERGE_ROOT}/etc/ld.so.conf"
 
     fi
+
+    # handle bug in portage when using custom root, any user/groups created during package installs are not created
+    # at the custom root but on the host
+    copy_from_builder_if_changed '/etc/passwd' "${passwd_date}"
+    copy_from_builder_if_changed '/etc/group' "${group_date}"
 
     # call post install hook if declared in build.sh
     declare -F finish_rootfs_build &>/dev/null && finish_rootfs_build
