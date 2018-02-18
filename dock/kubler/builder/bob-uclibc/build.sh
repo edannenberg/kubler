@@ -27,10 +27,11 @@ configure_bob() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
-    emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq
+    emerge dev-vcs/git app-portage/layman app-misc/jq
     install_git_postsync_hooks
     configure_layman
+    add_overlay kubler https://github.com/edannenberg/kubler-overlay.git
     # install aci/oci requirements
-    emerge dev-lang/go app-crypt/gnupg
+    emerge dev-lang/go
     install_oci_deps
 }
