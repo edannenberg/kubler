@@ -9,6 +9,6 @@ VOLUME ["/opt/grafana/data"]
 
 WORKDIR /opt/grafana
 
-RUN ./bin/grafana-cli --pluginsDir "./data/plugins" plugins install grafana-piechart-panel
+RUN /usr/bin/grafana-cli --pluginsDir "/opt/grafana/data/plugins" plugins install grafana-piechart-panel
 
-ENTRYPOINT ["./bin/grafana-server", "web"]
+ENTRYPOINT ["/usr/bin/grafana-server"]
