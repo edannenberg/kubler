@@ -3,9 +3,9 @@ LABEL maintainer ${MAINTAINER}
 
 ADD rootfs.tar /
 
-EXPOSE 8083 8086 8090 8099
+EXPOSE 8086 8090 8099
 
-VOLUME ["/var/opt/influxdb/"]
+VOLUME ["/var/lib/influxdb/"]
 
-ENTRYPOINT ["influxd"]
+ENTRYPOINT ["/usr/bin/influxd"]
 CMD ["--config=/etc/influxdb.conf"]
