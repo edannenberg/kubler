@@ -19,7 +19,7 @@ configure_bob()
     update_use 'sys-libs/ncurses' '+minimal'
 
     update_use '+gif' '+jpeg' '+jpeg2k' '+png' '+tiff' '+webp'
-    update_use 'dev-lang/php' '+bcmath' '+calendar' '+curl' '+fpm' '+mhash' \
+    update_use 'dev-lang/php' '+cli' '+bcmath' '+calendar' '+curl' '+fpm' '+mhash' \
                '+mysql' '+mysqli' '+pcntl' '+pdo' '+soap' '+sockets' '+webp' '+xmlreader' '+xmlrpc' '+xmlwriter' '+xpm' '+xslt' '+zip'
     # flaggie issue with gd use flag, apparently there now is a conflicting license with the same name
     echo 'dev-lang/php gd' >> /etc/portage/package.use/php
@@ -56,9 +56,10 @@ finish_rootfs_build()
     # set php time zone
     sed -i "s@^;date.timezone =@date.timezone = $_php_timezone@g" "${fpm_php_ini}"
     # use above changes also for php cli config
+    mkdir -p "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"
     cp "${fpm_php_ini}" "${_EMERGE_ROOT}"/etc/php/cli-php"${_php_slot}"/php.ini
     # disable xdebug
-    rm "${_EMERGE_ROOT}"/etc/php/{cli,fpm}-php"${_php_slot}"/ext-active/xdebug.ini
+#    rm "${_EMERGE_ROOT}"/etc/php/{cli,fpm}-php"${_php_slot}"/ext-active/xdebug.ini
     # required by null-mailer
     copy_gcc_libs
     chmod 0640 "${_EMERGE_ROOT}"/etc/nullmailer/remotes
