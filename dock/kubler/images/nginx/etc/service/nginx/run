@@ -7,8 +7,8 @@ if [ "${NGINX_RELOAD_ON_CONTAINER_SIGHUP}" = true ]; then
 fi
 
 # create self signed certs if needed
-if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhost/nginx.key ]; then
-    mkdir -p /etc/nginx/ssl/localhost
+if [ ! -f /etc/nginx/certs/default.crt ] || [ ! -f /etc/nginx/certs/default.key ]; then
+    mkdir -p /etc/nginx/certs
     CRT_COUNTRY="${CRT_COUNTRY:-DE}"
     CRT_STATE="${CRT_STATE:-SA}"
     CRT_LOCACTION="${CRT_LOCACTION:-MD}"
@@ -17,14 +17,14 @@ if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhos
     # rsa cert
     openssl req -new -x509 -nodes -days 3650 -newkey rsa:4096 \
         -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
-        -keyout /etc/nginx/ssl/localhost/nginx.key \
-        -out /etc/nginx/ssl/localhost/nginx.crt
+        -keyout /etc/nginx/certs/default.key \
+        -out /etc/nginx/certs/default.crt
     # ecc cert
-    openssl ecparam -name secp521r1 -genkey -param_enc explicit -out /etc/nginx/ssl/localhost/nginx-ecc.key
+    openssl ecparam -name secp521r1 -genkey -param_enc explicit -out /etc/nginx/certs/default.ecc.key
     openssl req -new -x509 -nodes -days 3650  \
         -subj "/C=${CRT_COUNTRY}/ST=${CRT_STATE}/L=${CRT_LOCACTION}/O=${CRT_ORG}/CN=${CRT_CN}" \
-        -key /etc/nginx/ssl/localhost/nginx-ecc.key \
-        -out /etc/nginx/ssl/localhost/nginx-ecc.crt
+        -key /etc/nginx/certs/default.ecc.key \
+        -out /etc/nginx/certs/default.ecc.crt
 fi
 
 # create dh parameters and enable forward secrecy
