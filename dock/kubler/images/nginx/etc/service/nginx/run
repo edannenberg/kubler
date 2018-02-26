@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ "${NGINX_RELOAD_ON_CONTAINER_SIGHUP}" = true ]; then
+    # instead of shutting down the container just send a SIGHUP to nginx and carry on
+    echo -e '#!/bin/sh\n[[ -f /run/nginx.pid ]] && pkill -HUP nginx' \
+        > /etc/service/.s6-svscan/SIGHUP
+fi
+
 # create self signed certs if needed
 if [ ! -f /etc/nginx/ssl/localhost/nginx.crt ] || [ ! -f /etc/nginx/ssl/localhost/nginx.key ]; then
     mkdir -p /etc/nginx/ssl/localhost
