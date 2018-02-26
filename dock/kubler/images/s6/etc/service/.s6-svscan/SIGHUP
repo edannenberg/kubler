@@ -1,0 +1,6 @@
+#!/bin/execlineb -P
+
+#foreground { shutdown-the-services }
+
+# the default s6 action for SIGHUP, your customizations should be above this line unless you don't wan't s6 to quit
+s6-svscanctl -h .

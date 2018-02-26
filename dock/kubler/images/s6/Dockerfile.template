@@ -3,8 +3,6 @@ LABEL maintainer ${MAINTAINER}
 
 ADD rootfs.tar /
 
-ADD etc /etc
-
 RUN ldconfig && chmod +x $(find /etc/service -name run) && \
     chmod +x /etc/s6_finish_default && \
     ln -s /etc/s6_finish_default /etc/service/cron/finish && \
@@ -12,4 +10,4 @@ RUN ldconfig && chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/.s6-svscan/finish && \
     ln -s /etc/service/.s6-svscan /service
 
-CMD ["/bin/s6-svscan", "-t0", "/service"]
+CMD ["/bin/s6-svscan", "-s", "-t0", "/service"]

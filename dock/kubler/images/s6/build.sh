@@ -20,7 +20,8 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     # s6 folders
-    mkdir -p "${_EMERGE_ROOT}"/etc/service/.s6-svscan "${_EMERGE_ROOT}"/service
+    cp -r /config/etc/* "${_EMERGE_ROOT}"/etc/
+    mkdir -p "${_EMERGE_ROOT}"/service
     # install entr
     echo "building entr.."
     wget "http://entrproject.org/code/entr-${_entr_version}.tar.gz"
