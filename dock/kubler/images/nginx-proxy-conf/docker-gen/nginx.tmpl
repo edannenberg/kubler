@@ -185,6 +185,10 @@ upstream {{ $upstream_name }} {
 {{/* Use the cert specified on the container or fallback to the best vhost match */}}
 {{ $cert := (coalesce $certName $vhostCert) }}
 
+{{ $is_cert_fallback := or ($.Env.CERT_DEFAULT_FALLBACK) "" }}
+{{/* If CERT_DEFAULT_FALLBACK is set and the cert doesn't exist fallback to default.crt */}}
+{{ $cert := when (or (eq $is_cert_fallback "") (and (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert)))) $cert "default" }}
+
 {{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
 
 {{ if $is_https }}
