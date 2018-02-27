@@ -3,14 +3,9 @@ LABEL maintainer ${MAINTAINER}
 
 ADD rootfs.tar /
 
-ADD etc /etc
+ADD docker-gen /etc/docker-gen/
 
-WORKDIR /config
+ENV DOCKER_HOST=unix:///var/run/docker.sock \
+    NGINX_ID=nginxproxy_nginx_1
 
-RUN chmod +x $(find /etc/service -name run) && ln -s /etc/service/docker-gen /service
-
-ENV DOCKER_HOST unix:///var/run/docker.sock
-
-VOLUME ["/etc/nginx/sites-enabled"]
-
-ADD docker-gen /config/template
+CMD ["/bin/sh", "-c", "docker-gen -wait 5s -notify-sighup ${NGINX_ID} -watch /etc/docker-gen/nginx.tmpl /etc/nginx/sites-enabled/default.conf"]
