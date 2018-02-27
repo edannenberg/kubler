@@ -574,8 +574,9 @@ function build_rootfs() {
         done
 
         # merge with ld.so.conf from builder
-        cat /etc/ld.so.conf >> "${_EMERGE_ROOT}/etc/ld.so.conf"
-        sort -u "${_EMERGE_ROOT}/etc/ld.so.conf" -o "${_EMERGE_ROOT}/etc/ld.so.conf"
+        [[ ! -d "${_EMERGE_ROOT}"/etc/ ]] && mkdir "${_EMERGE_ROOT}"/etc/
+        cat /etc/ld.so.conf >> "${_EMERGE_ROOT}"/etc/ld.so.conf
+        sort -u "${_EMERGE_ROOT}"/etc/ld.so.conf -o "${_EMERGE_ROOT}"/etc/ld.so.conf
 
     fi
 
