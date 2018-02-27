@@ -1,6 +1,6 @@
-### kubler/jdk-icedtea:20180127
+### kubler/jdk-icedtea:20180227
 
-Built: Mon Jan 29 15:59:19 CET 2018
+Built: Tue Feb 27 15:33:02 CET 2018
 Image Size: 317MB
 
 #### Installed
@@ -17,7 +17,7 @@ dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libxml2-2.9.7 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
-media-libs/fontconfig-2.12.4 | `-doc -static-libs`
+media-libs/fontconfig-2.12.6 | `-doc -static-libs`
 media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/lcms-2.9 | `threads -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
@@ -63,7 +63,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

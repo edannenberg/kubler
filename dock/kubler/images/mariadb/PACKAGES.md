@@ -1,7 +1,7 @@
-### kubler/mariadb:20180127
+### kubler/mariadb:20180227
 
-Built: Mon Jan 29 16:13:58 CET 2018
-Image Size: 266MB
+Built: Tue Feb 27 15:46:48 CET 2018
+Image Size: 257MB
 
 #### Installed
 Package | USE Flags
@@ -13,7 +13,7 @@ app-arch/pbzip2-1.1.12 | `-static -symlink`
 app-arch/xz-utils-5.2.3 | `extra-filters nls threads -static-libs`
 dev-db/mariadb-10.1.29 | `backup bindist openssl perl server -cracklib -debug -embedded -extraengine -galera -innodb-lz4 -innodb-lzo -innodb-snappy -jdbc -jemalloc -kerberos -latin1 -libressl (-mroonga) -odbc -oqgraph -pam -profiling (-selinux) -sphinx -sst-mariabackup -sst-rsync -sst-xtrabackup -static -static-libs -systemd -systemtap -tcmalloc {-test} -tokudb -xml -yassl`
 dev-db/mysql-init-scripts-2.2-r3 | ``
-dev-lang/perl-5.24.3 | `berkdb -debug -doc -gdbm -ithreads`
+dev-lang/perl-5.24.3 | `-berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libxml2-2.9.7 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
@@ -28,8 +28,7 @@ dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-6.3 | `nls -static`
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
-sys-process/procps-3.3.12-r1 | `kill nls unicode (-elogind) -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
+sys-process/procps-3.3.12-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/
 #### Inherited
 Package | USE Flags
@@ -60,7 +59,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

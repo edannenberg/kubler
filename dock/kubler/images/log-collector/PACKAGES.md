@@ -1,7 +1,7 @@
-### kubler/log-collector:20180127
+### kubler/log-collector:20180227
 
-Built: Mon Jan 29 16:10:37 CET 2018
-Image Size: 265MB
+Built: Tue Feb 27 15:43:28 CET 2018
+Image Size: 255MB
 
 #### Installed
 Package | USE Flags
@@ -15,7 +15,7 @@ Package | USE Flags
 **FROM kubler/ruby-gcc** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-eselect/eselect-ruby-20170723 | ``
-dev-lang/ruby-2.4.3 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.3 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/glib-2.52.3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
@@ -34,7 +34,6 @@ dev-ruby/test-unit-3.2.5 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
 dev-util/pkgconfig-0.29.2 | `hardened -internal-glib`
 sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 x11-misc/shared-mime-info-1.9 | `{-test}`
 **FROM kubler/gcc** |
 dev-libs/gmp-6.1.2 | `asm cxx -doc -pgo -static-libs`
@@ -72,7 +71,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

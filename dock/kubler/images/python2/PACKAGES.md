@@ -1,6 +1,6 @@
-### kubler/python2:20180127
+### kubler/python2:20180227
 
-Built: Mon Jan 29 16:50:20 CET 2018
+Built: Tue Feb 27 16:18:12 CET 2018
 Image Size: 109MB
 
 #### Installed
@@ -9,7 +9,7 @@ Package | USE Flags
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-eselect/eselect-python-20160516 | ``
 app-misc/mime-types-9 | ``
-dev-db/sqlite-3.20.1-r1 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
+dev-db/sqlite-3.21.0 | `readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools`
 dev-lang/python-2.7.14-r1 | `hardened readline sqlite ssl (threads) (wide-unicode) xml (-berkdb) -build -doc -examples -gdbm -ipv6 -libressl -ncurses -tk -wininst`
 dev-lang/python-exec-2.4.5 | ` `
 dev-libs/expat-2.2.5 | `unicode -examples -static-libs`
@@ -46,7 +46,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

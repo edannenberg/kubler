@@ -1,6 +1,6 @@
-### kubler/tomcat:20180127
+### kubler/tomcat:20180227
 
-Built: Mon Jan 29 16:43:30 CET 2018
+Built: Tue Feb 27 16:09:36 CET 2018
 Image Size: 183MB
 
 #### Installed
@@ -10,10 +10,10 @@ dev-java/ant-core-1.9.2 | `-doc -source`
 dev-java/ant-eclipse-ecj-4.5.1 | `-doc -source`
 dev-java/eclipse-ecj-4.5.1 | `ant -doc -source`
 dev-java/tomcat-native-1.2.14 | `{-test}`
-dev-java/tomcat-servlet-api-8.5.23 | `-source`
+dev-java/tomcat-servlet-api-8.5.24 | `-source`
 dev-libs/apr-1.5.2 | `urandom -doc -older-kernels-compatibility (-selinux) -static-libs`
 sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-www-servers/tomcat-8.5.23 | `-doc -extra-webapps -source {-test}`
+www-servers/tomcat-8.5.24 | `-doc -extra-webapps -source {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -48,7 +48,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

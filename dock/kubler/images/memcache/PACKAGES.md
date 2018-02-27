@@ -1,19 +1,18 @@
-### kubler/memcache:20180127
+### kubler/memcache:20180227
 
-Built: Mon Jan 29 16:14:58 CET 2018
-Image Size: 89.8MB
+Built: Tue Feb 27 15:47:43 CET 2018
+Image Size: 80.6MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/perl-cleaner-2.25 | ``
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
-dev-lang/perl-5.24.3 | `berkdb -debug -doc -gdbm -ithreads`
+dev-lang/perl-5.24.3 | `-berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libevent-2.1.8 | `ssl threads -debug -libressl -static-libs {-test}`
 net-misc/memcached-1.5.2 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -43,7 +42,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

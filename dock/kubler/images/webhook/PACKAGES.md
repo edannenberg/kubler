@@ -1,13 +1,13 @@
-### kubler/webhook:20180127
+### kubler/webhook:20180227
 
-Built: Mon Jan 29 16:57:04 CET 2018
-Image Size: 75.5MB
+Built: Tue Feb 27 16:27:58 CET 2018
+Image Size: 78.9MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
-app-crypt/gnupg-2.2.4 | `bzip2 gnutls nls readline -doc -ldap (-selinux) -smartcard -tofu -tools -usb -wks-server`
+app-crypt/gnupg-2.2.4-r2 | `bzip2 nls readline ssl -doc -ldap (-selinux) -smartcard -tofu -tools -usb -wks-server`
 app-crypt/pinentry-1.0.0-r2 | `ncurses -caps -emacs -gnome-keyring -gtk -qt5 -static`
 app-eselect/eselect-lib-bin-symlink-0.1.1 | ``
 app-eselect/eselect-pinentry-0.7 | ``
@@ -21,7 +21,7 @@ dev-libs/libtasn1-4.12-r1 | `-doc -static-libs -valgrind`
 dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/nettle-3.3-r2 | `gmp -doc (-neon) -static-libs {-test}`
 dev-libs/npth-1.3 | `-static-libs`
-dev-vcs/git-2.13.6 | `blksha1 curl gpg iconv nls pcre threads -cgi -cvs -doc -emacs -gnome-keyring -highlight -libressl -mediawiki -mediawiki-experimental -perl (-ppcsha1) -python -subversion {-test} -tk -webdav -xinetd`
+dev-vcs/git-2.16.1 | `blksha1 curl gpg iconv nls pcre threads -cgi -cvs -doc -emacs -gnome-keyring -highlight -libressl -mediawiki -mediawiki-experimental (-pcre-jit) -perl (-ppcsha1) -python -subversion {-test} -tk -webdav -xinetd`
 net-dns/libidn2-2.0.4 | `-static-libs`
 net-libs/gnutls-3.5.15 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
 *manual install*: webhook-2.6.8 | https://github.com/adnanh/webhook/
@@ -54,7 +54,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

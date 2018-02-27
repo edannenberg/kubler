@@ -1,7 +1,7 @@
-### kubler/mysql:20180127
+### kubler/mysql:20180227
 
-Built: Mon Jan 29 16:25:54 CET 2018
-Image Size: 212MB
+Built: Tue Feb 27 15:50:00 CET 2018
+Image Size: 203MB
 
 #### Installed
 Package | USE Flags
@@ -11,7 +11,7 @@ app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
 dev-db/mysql-5.6.39 | `openssl perl server -debug -embedded -extraengine -jemalloc -latin1 -libressl -numa -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
 dev-db/mysql-init-scripts-2.2-r3 | ``
-dev-lang/perl-5.24.3 | `berkdb -debug -doc -gdbm -ithreads`
+dev-lang/perl-5.24.3 | `-berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
 dev-perl/DBD-mysql-4.41.0 | `ssl -embedded {-test}`
 dev-perl/DBI-1.637.0 | `-examples {-test}`
@@ -23,8 +23,7 @@ dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-6.3 | `nls -static`
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
-sys-process/procps-3.3.12-r1 | `kill nls unicode (-elogind) -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
+sys-process/procps-3.3.12-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/
 #### Inherited
 Package | USE Flags
@@ -55,7 +54,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

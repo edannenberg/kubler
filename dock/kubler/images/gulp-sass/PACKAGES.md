@@ -1,7 +1,7 @@
-### kubler/gulp-sass:20180127
+### kubler/gulp-sass:20180227
 
-Built: Mon Jan 29 15:55:32 CET 2018
-Image Size: 93.8MB
+Built: Tue Feb 27 15:30:39 CET 2018
+Image Size: 94.9MB
 
 #### Installed
 Package | USE Flags
@@ -12,7 +12,7 @@ dev-libs/libsass-3.4.7 | `-static-libs`
 Package | USE Flags
 --------|----------
 **FROM kubler/nodejs** |
-dev-libs/icu-58.2-r1 | `-debug -doc -examples -static-libs`
+dev-libs/icu-60.2 | `-debug -doc -examples -static-libs`
 dev-libs/libuv-1.10.2 | `-static-libs`
 net-libs/http-parser-2.6.2 | `-static-libs`
 net-libs/nodejs-6.11.5 | `icu npm snapshot ssl -debug -doc {-test}`
@@ -30,7 +30,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

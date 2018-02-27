@@ -1,6 +1,6 @@
-### kubler/plantuml:20180127
+### kubler/plantuml:20180227
 
-Built: Mon Jan 29 16:47:49 CET 2018
+Built: Tue Feb 27 16:15:29 CET 2018
 Image Size: 215MB
 
 #### Installed
@@ -16,7 +16,7 @@ dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -j
 dev-libs/libxml2-2.9.7 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r1 | `-`
 media-gfx/graphviz-2.40.1-r1 | `nls -`
-media-libs/fontconfig-2.12.4 | `-doc -static-libs`
+media-libs/fontconfig-2.12.6 | `-doc -static-libs`
 media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/gd-2.2.4 | `fontconfig jpeg png truetype zlib -static-libs -tiff -webp -xpm`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
@@ -30,10 +30,10 @@ dev-java/ant-core-1.9.2 | `-doc -source`
 dev-java/ant-eclipse-ecj-4.5.1 | `-doc -source`
 dev-java/eclipse-ecj-4.5.1 | `ant -doc -source`
 dev-java/tomcat-native-1.2.14 | `{-test}`
-dev-java/tomcat-servlet-api-8.5.23 | `-source`
+dev-java/tomcat-servlet-api-8.5.24 | `-source`
 dev-libs/apr-1.5.2 | `urandom -doc -older-kernels-compatibility (-selinux) -static-libs`
 sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
-www-servers/tomcat-8.5.23 | `-doc -extra-webapps -source {-test}`
+www-servers/tomcat-8.5.24 | `-doc -extra-webapps -source {-test}`
 **FROM kubler/jre-oracle** |
 app-eselect/eselect-java-0.3.0 | ``
 dev-java/java-config-2.2.0-r3 | `{-test}`
@@ -65,7 +65,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

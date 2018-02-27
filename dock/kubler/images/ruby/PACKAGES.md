@@ -1,13 +1,13 @@
-### kubler/ruby:20180127
+### kubler/ruby:20180227
 
-Built: Mon Jan 29 16:55:45 CET 2018
-Image Size: 58.3MB
+Built: Tue Feb 27 16:26:34 CET 2018
+Image Size: 49.1MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-eselect/eselect-ruby-20170723 | ``
-dev-lang/ruby-2.4.3 | `berkdb rdoc ssl -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.3 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/gmp-6.1.2 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libyaml-0.1.7 | `-doc -examples -static-libs {-test}`
@@ -21,7 +21,6 @@ dev-ruby/rdoc-5.1.0 | `-doc {-test}`
 dev-ruby/rubygems-2.6.14 | `-server {-test}`
 dev-ruby/test-unit-3.2.5 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
-sys-libs/db-5.3.28-r2 | `cxx -doc -examples -java -tcl {-test}`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -51,7 +50,7 @@ sys-apps/s6-2.7.0.0 | `-static -static-libs`
 *manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r9 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
