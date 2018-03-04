@@ -281,6 +281,9 @@ function main() {
     target_namespace="${target_id%%/*}"
     target_image_name="${target_id##*/}"
 
+    [[ "${target_id}" =~ [A-Z] ]] \
+            && die "Invalid ${_arg_template_type} name '${target_id}', should be lower case only."
+
     if [[ "${_arg_template_type}" != 'namespace' ]]; then
         [[ "${target_id}" != *"/"* ]] && die "\"${target_id}\" should have format <namespace>/<image_name>"
         [[ "${_NAMESPACE_TYPE}" == 'none' ]] \
