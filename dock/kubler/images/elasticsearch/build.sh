@@ -20,6 +20,6 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
-    uninstall_package app-shells/bash virtual/jre-1.7.0
+    uninstall_package app-shells/bash virtual/jre-1.8.0-r1
     install_suexec
 }
