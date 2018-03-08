@@ -54,6 +54,11 @@ not exist the generated config serves a `500` for https attempts on those urls. 
 now circumvented by passing `-e CERT_DEFAULT_FALLBACK=true` on container start, as in the Compose example above. 
 If set, the auto-generated `default.crt` is used if the expected cert is missing.
 
+##### HTTP2_DISABLE
+
+Some browsers have issues with HTTP/2 and self signed certificates. Passing `-e HTTP2_DISABLE=true` on
+container start disables HTTP/2 for all proxied sites. 
+
 [Last Build][packages]
 
 [jwilder-proxy]: https://github.com/jwilder/nginx-proxy
