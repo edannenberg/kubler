@@ -46,13 +46,14 @@ function replace_template_placeholders() {
 # Arguments:
 # 1: ns_name
 function add_namespace() {
-    local ns_name ns_dir ns_type ns_engine regex kubler_bin_hint
+    local ns_name ns_dir ns_type ns_engine regex kubler_bin_hint real_ns_dir default_conf
     ns_name="$1"
     ns_dir="${_NAMESPACE_DIR}/${ns_name}"
+    real_ns_dir="${ns_dir}"
     get_absolute_path "${ns_dir}"
     # shellcheck disable=SC2154
     ns_dir="${__get_absolute_path}"
-    [[ -d "${ns_dir}" ]] && die "${ns_dir} already exists, aborting."
+    [[ -e "${ns_dir}" ]] && die "${ns_dir} already exists, aborting."
     [[ "${_NAMESPACE_TYPE}" == 'single' ]] && die "${_NAMESPACE_DIR} namespace is of type single, aborting."
 
     local def_author def_mail def_engine
@@ -67,8 +68,6 @@ function add_namespace() {
 
     msg '\n<enter> to accept default value\n'
 
-    msg "New namespace location:  ${ns_dir}"
-
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
         msg "--> What type of namespace? To allow multiple namespaces choose 'multi', else 'single'.
     The only upshot of 'single' mode is saving one directory level, the downside is loss of cross-namespace access."
@@ -79,12 +78,23 @@ function add_namespace() {
 
         [[ "${ns_type}" != 'single' && "${ns_type}" != 'multi' ]] && die "\\nUnknown type: \"${ns_type}\""
 
+        if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]]; then
+            msg '\n--> What dir name should be used for the top level dir holding the new namespace(s)?'
+            ask 'Namespaces Dir' 'kubler-images'
+            ns_dir="${_NAMESPACE_DIR}/${__ask}"
+            [[ -e "${ns_dir}" ]] && die "${ns_dir} already exists, aborting. If you intended to create the new namespace at this location use: \\n
+    ${_KUBLER_BIN} --working-dir=${ns_dir} new namespace ${ns_name}"
+            real_ns_dir="${ns_dir}/${ns_name}"
+        fi
+
         msg "--> Initial image tag, a.k.a. version?"
         ask 'Image Tag' "${_TODAY}"
         add_template_filter_var '_tmpl_image_tag' "${__ask}"
     else
         msg "Namespace Type:          ${_NAMESPACE_TYPE}"
     fi
+
+    msg "\\nNew namespace location:  ${real_ns_dir}"
 
     msg '\n--> Who maintains the new namespace?'
     ask 'Name' "${def_author}"
@@ -100,12 +110,7 @@ function add_namespace() {
 
     [[ ! -f "${_LIB_DIR}/engine/${ns_engine}.sh" ]] && die "\\nUnknown engine: ${ns_engine}"
 
-    local real_ns_dir default_conf
-    real_ns_dir="${ns_dir}"
-    if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]]; then
-        real_ns_dir="${ns_dir}/${ns_name}"
-        mkdir "${ns_dir}"
-    fi
+    [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]] && mkdir "${ns_dir}"
 
     cp -r "${_LIB_DIR}/template/${ns_engine}/namespace" "${real_ns_dir}" || die
 
@@ -123,7 +128,7 @@ function add_namespace() {
         if [[ -z "${_KUBLER_BIN_HINT}" ]];then
             kubler_bin_hint="cd ${ns_dir}\\n    ${kubler_bin_hint}"
         else
-            kubler_bin_hint+="/${ns_name}"
+            kubler_bin_hint="${_KUBLER_BIN} --working-dir ${ns_dir}"
         fi
     else
         # ..else use default single conf file when inside an existing namespace
@@ -139,7 +144,7 @@ function add_namespace() {
 
      msg "*** Successfully created \"${ns_name}\" namespace at ${ns_dir}
 
-Configuration file: ${ns_dir}/${_KUBLER_CONF}
+Configuration file: ${real_ns_dir}/${_KUBLER_CONF}
 
 To manage the new namespace with GIT you may want to run:
 
@@ -199,7 +204,7 @@ function init_image_base_dir() {
 
     image_path="${image_base_path}/${image_name}"
 
-    [ -d "${image_path}" ] && die "${image_path} already exists, aborting!"
+    [ -e "${image_path}" ] && die "${image_path} already exists, aborting!"
     [ ! -d "${image_base_path}" ] && mkdir -p "${image_base_path}"
 
     __init_image_base_dir="${image_path}"
