@@ -467,7 +467,7 @@ function detect_namespace() {
     real_ns_dir="${__find_in_parents}"
 
     # working dir inside kubler project root?
-    if [[ "${working_dir}" == "${_KUBLER_DIR}"* ]]; then
+    if [[ "${working_dir}" == "${_KUBLER_DIR}" || "${working_dir}" == "${_KUBLER_DIR}/"* ]]; then
         # ..and inside a namespace dir?
         if [[ -d "${real_ns_dir}/${_IMAGE_PATH}" ]]; then
             readonly _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
