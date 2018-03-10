@@ -518,7 +518,9 @@ function detect_namespace() {
 
     [[ "${_NAMESPACE_TYPE}" == 'single' ]] && source_build_engine
 
-    readonly _NAMESPACE_DIR="${real_ns_dir}"
+    # just for well formatted output
+    get_absolute_path "${real_ns_dir}"
+    readonly _NAMESPACE_DIR="${__get_absolute_path}"
 }
 
 # Generate PACKAGES.md header
