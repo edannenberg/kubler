@@ -48,6 +48,7 @@ function replace_template_placeholders() {
 function add_namespace() {
     local ns_name ns_dir ns_type ns_engine regex kubler_bin_hint real_ns_dir default_conf
     ns_name="$1"
+    [[ "${ns_name}" == 'kubler' ]] && die "\"kubler\" is a reserved namespace, aborting."
     ns_dir="${_NAMESPACE_DIR}/${ns_name}"
     real_ns_dir="${ns_dir}"
     get_absolute_path "${ns_dir}"
