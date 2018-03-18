@@ -46,7 +46,9 @@ function validate_image() {
     image_type="$2"
     expand_image_id "${image_id}" "${image_type}"
     # shellcheck disable=SC2154
-    file_exists_or_die "${__expand_image_id}/Dockerfile.template"
+    get_abs_ns_path "${__expand_image_id}"
+    # shellcheck disable=SC2154
+    file_exists_or_die "${__get_abs_ns_path}/Dockerfile.template"
 }
 
 # Generate Dockerfile from Dockerfile.template
@@ -61,6 +63,8 @@ function generate_dockerfile() {
     for bob_var in ${!BOB_*}; do
         sed_param+=(-e "s|\${${bob_var}}|${!bob_var}|")
     done
+    get_abs_ns_path "${image_path}"
+    image_path="${__get_abs_ns_path}"
     # shellcheck disable=SC2016,SC2153,SC2154
     sed "${sed_param[@]}" \
         -e 's|${IMAGE_PARENT}|'"${IMAGE_PARENT}"'|g' \
@@ -83,6 +87,8 @@ function get_dockerfile_tag() {
     local tag image_path dockerfile grep_out regex
     tag="$1"
     image_path="$2"
+    get_abs_ns_path "${image_path}"
+    image_path="${__get_abs_ns_path}"
     dockerfile="${image_path}/Dockerfile"
     file_exists_or_die "${dockerfile}"
     grep_out="$(grep ^"${tag}" "${dockerfile}")"
@@ -116,11 +122,13 @@ function remove_image() {
 # 1: image_id (i.e. kubler/busybox)
 # 2: image_type - $_IMAGE_PATH or $_BUILDER_PATH, defaults to $_IMAGE_PATH
 function build_image() {
-    local image_id image_type image_expanded builder_id builder_commit_id current_image bob_var run_id
+    local image_id image_type image_expanded image_path builder_id builder_commit_id current_image bob_var run_id
     image_id="${1}"
     image_type="${2:-${_IMAGE_PATH}}"
     expand_image_id "${image_id}" "${image_type}"
     image_expanded="${__expand_image_id}"
+    get_abs_ns_path "${image_expanded}"
+    image_path="${__get_abs_ns_path}"
 
     msg "--> build image ${image_id}"
     image_exists_or_rm "${image_id}" "${image_type}"
@@ -128,14 +136,14 @@ function build_image() {
     [[ ${exists_return} -eq 0 ]] && return 0
     # if the builder image does not exist we need to ensure there is no pre-existing rootfs.tar
     if [[ ${exists_return} -eq 3 && "${image_type}" == "${_BUILDER_PATH}" ]]; then
-        [[ -f "${image_expanded}/rootfs.tar" ]] && rm "${image_expanded}/rootfs.tar"
+        [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
     fi
 
     generate_dockerfile "${image_expanded}"
 
     # build rootfs?
     # shellcheck disable=SC2154
-    if [[ ! -f "${image_expanded}/rootfs.tar" || "${_arg_force_full_image_build}" == 'on' ]] && \
+    if [[ ! -f "${image_path}/rootfs.tar" || "${_arg_force_full_image_build}" == 'on' ]] && \
        [[ "${image_type}" == "${_IMAGE_PATH}" || "${image_id}" != "${_current_namespace}"/*-core ]]; then
 
         msg "--> phase 1: building root fs"
@@ -166,12 +174,7 @@ function build_image() {
             builder_commit_id="${image_id##*/}"
         fi
 
-        local config_dir
-        # mounts for build container
-        get_absolute_path "${image_expanded}"
-        # shellcheck disable=SC2154
-        config_dir="${__get_absolute_path}"
-        _container_mounts=("${config_dir}:/config"
+        _container_mounts=("${image_path}:/config"
                            "${_KUBLER_DIR}/tmp/distfiles:/distfiles"
                            "${_KUBLER_DIR}/tmp/packages:/packages"
                           )
@@ -209,7 +212,7 @@ function build_image() {
 
     msg "--> phase 2: build ${image_id}:${IMAGE_TAG}"
     # shellcheck disable=SC2086
-    "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_expanded}" || die "failed to build ${image_expanded}"
+    "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_path}" || die "failed to build ${image_expanded}"
 
     msg "tag ${image_id}:latest"
     "${DOCKER}" tag "${image_id}:${IMAGE_TAG}" "${image_id}:latest" || die "failed to tag ${image_expanded}"
@@ -389,7 +392,7 @@ function import_stage3() {
 # Arguments:
 # 1: builder_id (i.e. kubler/bob)
 function build_core() {
-    local builder_id core_id
+    local builder_id core_id image_path
     builder_id="$1"
     import_portage_tree "${_PORTAGE_IMAGE}" "${PORTAGE_DATE}"
 
@@ -405,16 +408,18 @@ function build_core() {
     core_id="${builder_id}-core"
     image_exists_or_rm "${core_id}" "${_BUILDER_PATH}" && return 0
     expand_image_id "${core_id}" "${_BUILDER_PATH}"
-    mkdir -p "${__expand_image_id}"
+    get_abs_ns_path "${__expand_image_id}"
+    image_path="${__get_abs_ns_path}"
+    mkdir -p "${image_path}"
 
     # copy build-root.sh and emerge defaults so we can access it via dockerfile context
-    cp -r "${_KUBLER_DIR}"/lib/bob-core/{*.sh,etc,Dockerfile.template} "${__expand_image_id}/"
+    cp -r "${_KUBLER_DIR}"/lib/bob-core/{*.sh,etc,Dockerfile.template} "${image_path}/"
 
     generate_dockerfile "${__expand_image_id}"
     build_image "${builder_id}-core" "${_BUILDER_PATH}"
 
     # clean up
-    rm -r "${__expand_image_id}"
+    rm -r "${image_path}"
 }
 
 # Produces a build container image for given builder_id

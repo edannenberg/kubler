@@ -3,13 +3,16 @@
 # All rights reserved.
 
 function main() {
+    local namespace_dirs
+    namespace_dirs=( "${_NAMESPACE_DIR}" )
+    [[ "${_NAMESPACE_TYPE}" != 'local' ]] && namespace_dirs+=( "${_KUBLER_NAMESPACE_DIR}" )
     msg "--> remove build artifacts"
     msg "rootfs.tar files"
-    find -L "${_NAMESPACE_DIR}" -name rootfs.tar -delete
+    find -L "${namespace_dirs[@]}" -name rootfs.tar -delete
     msg "generated Dockerfiles"
-    find -L "${_NAMESPACE_DIR}" -name Dockerfile -delete
+    find -L "${namespace_dirs[@]}" -name Dockerfile -delete
     msg "PACKAGES.md files"
-    find -L "${_NAMESPACE_DIR}" -name PACKAGES.md -delete
+    find -L "${namespace_dirs[@]}" -name PACKAGES.md -delete
 }
 
 main "$@"

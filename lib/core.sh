@@ -161,7 +161,8 @@ function source_namespace_conf() {
     [[ "${image_id}" != *"/"* ]] && return 0
 
     current_ns="${image_id%%/*}"
-    conf_file="${_NAMESPACE_DIR}/${current_ns}/${_KUBLER_CONF}"
+    get_abs_ns_path "${current_ns}"
+    conf_file="${__get_abs_ns_path}"/"${_KUBLER_CONF}"
 
     # ..then read current namespace conf
     # shellcheck source=dock/kubler/kubler.conf
@@ -189,7 +190,9 @@ function source_image_conf() {
     unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILD_PRIVILEGED
     [[ -z "${_use_parent_builder_mounts}" ]] && unset BUILDER_MOUNTS
 
-    build_conf="${image_path}/build.conf"
+    get_abs_ns_path "${image_path}"
+    build_conf="${__get_abs_ns_path}/"build.conf
+
     # shellcheck source=dock/kubler/images/busybox/build.conf
     file_exists_or_die "${build_conf}" && source "${build_conf}"
 
@@ -348,6 +351,29 @@ function handle_download_error() {
     die "${msg}"
 }
 
+# Return the correct absolute path for given relative_image_path:
+#
+# 1. returns input if path is actually absolute
+# 2. the path starts with kubler -> return abs path for internal kubler namespace
+# 3. else -> return abs path for current namespace dir
+#
+# Arguments:
+# 1: relative_image_path
+function get_abs_ns_path() {
+    __get_abs_ns_path=
+    local relative_image_path abs_path
+    relative_image_path="$1"
+    # return input if it's actually an absolute path
+    [[ "${relative_image_path}" == "/"* ]] && __get_abs_ns_path="${relative_image_path}" && return 0
+
+    if [[  "${relative_image_path}" == "kubler" || "${relative_image_path}" == "kubler/"* ]]; then
+        abs_path="${_KUBLER_NAMESPACE_DIR}"/"${relative_image_path}"
+    else
+        abs_path="${_NAMESPACE_DIR}"/"${relative_image_path}"
+    fi
+    __get_abs_ns_path="${abs_path}"
+}
+
 # Sets __expand_image_id to image sub-path for given image_id
 #
 # 1: image_id (i.e. kubler/busybox)
@@ -460,6 +486,7 @@ function detect_namespace() {
     _ns_conf="${_global_conf}"
 
     get_absolute_path "${working_dir}"
+    # shellcheck disable=SC2154
     [[ -d "${__get_absolute_path}" ]] || die "Couldn't find namespace location: ${working_dir}"
 
     # find next namespace dir, respect symlink paths, as in don't resolve
@@ -529,11 +556,13 @@ function detect_namespace() {
 # 1: image
 # 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
 function add_documentation_header() {
-    local image image_type doc_file header
+    local image image_type image_path doc_file header
     image="$1"
     image_type="$2"
     expand_image_id "${image}" "${image_type}"
-    doc_file="${__expand_image_id}/PACKAGES.md"
+    get_abs_ns_path "${__expand_image_id}"
+    image_path="${__get_abs_ns_path}"
+    doc_file="${image_path}/PACKAGES.md"
     header="### ${image}:${IMAGE_TAG}"
     get_image_size "${image}" "${IMAGE_TAG}"
     # remove existing header

@@ -20,17 +20,21 @@ function is_newer_stage3_date {
     fi
 }
 
+# Arguments:
+# 1: namespace_id
+# 2: builder_path
 function update_builders() {
     __update_builders=
-    local builder_path current_builder update_status s3date_remote update_count
-    builder_path="$1"
+    local builder_path current_ns current_builder update_status s3date_remote update_count
+    current_ns="$1"
+    builder_path="$2"
     update_count=0
     if [[ -d "${builder_path}" ]]; then
         cd "${builder_path}" || die "Failed to change dir to ${builder_path}"
         for current_builder in */; do
             update_status=
             cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
-            source_image_conf "${current_ns}${_BUILDER_PATH}/${current_builder}"
+            source_image_conf "${current_ns}/${_BUILDER_PATH}/${current_builder}"
             if [[ ! -z "${STAGE3_BASE}" ]]; then
                 fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
                 get_stage3_archive_regex "${STAGE3_BASE}"
@@ -67,16 +71,20 @@ function update_stage3_date() {
     update_count=0
     cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
     if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
-        update_builders "${_NAMESPACE_DIR}/${_BUILDER_PATH}"
+        update_builders "${current_ns}" "${_NAMESPACE_DIR}/${_BUILDER_PATH}"
     else
         for current_ns in */; do
             msg "${current_ns}"
             builder_path="${_NAMESPACE_DIR}/${current_ns}${_BUILDER_PATH}"
             update_count=$((update_count+=__update_builders))
-            update_builders "${builder_path}"
+            update_builders "${current_ns}" "${builder_path}"
         done
     fi
-
+    if [[ "${_NAMESPACE_TYPE}" != 'local' ]]; then
+        msg "kubler"
+        update_builders 'kubler' "${_KUBLER_NAMESPACE_DIR}/kubler/${_BUILDER_PATH}"
+        update_count=$((update_count+=__update_builders))
+    fi
     if [[ ${update_count} -eq 0 ]]; then
         msg '\nAll stage3 dates are up to date.'
     else

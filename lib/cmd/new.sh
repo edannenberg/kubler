@@ -118,8 +118,6 @@ function add_namespace() {
     kubler_bin_hint="${_KUBLER_BIN}${_KUBLER_BIN_HINT}"
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
         if [[ "${ns_type}" == 'multi' ]]; then
-            # link kubler namespace per default for multi namespaces
-            ln -s "${_KUBLER_NAMESPACE_DIR}/kubler" "${ns_dir}"/
             mv "${real_ns_dir}/${_KUBLER_CONF}.single" "${real_ns_dir}/${_KUBLER_CONF}"
         else
             rm "${real_ns_dir}/${_KUBLER_CONF}.single"
@@ -150,11 +148,6 @@ Configuration file: ${real_ns_dir}/${_KUBLER_CONF}
 To manage the new namespace with GIT you may want to run:
 
     git init ${real_ns_dir}"
-
-    if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'single' ]]; then
-        msg "\\n!!! As this is a new single namespace you need to create a new builder first:\\n
-    ${kubler_bin_hint} new builder ${ns_name}/bob"
-    fi
 
     msg "\\nTo create images in the new namespace run:
 
