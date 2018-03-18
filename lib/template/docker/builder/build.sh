@@ -6,6 +6,7 @@
 # This hook can be used to configure the build container itself, install packages, run any command, etc
 #
 configure_bob() {
+    ### example for a stage3 builder setup, not required when extending an existing build container, like `kubler/bob`
     fix_portage_profile_symlink
     # install basics used by helper functions
     emerge app-portage/flaggie app-portage/eix app-portage/gentoolkit
@@ -31,7 +32,7 @@ configure_bob() {
     emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq
     install_git_postsync_hooks
     configure_layman
-    # install aci/oci requirements, note: currently broken for musl based stage3 builders
+    # install aci/oci requirements
     emerge dev-lang/go app-crypt/gnupg
     install_oci_deps
 }
