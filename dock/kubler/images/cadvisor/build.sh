@@ -2,7 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages=""
-_cadvisor_version="0.28.3"
+_cadvisor_version="0.29.1"
 
 configure_bob()
 {
