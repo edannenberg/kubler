@@ -5,4 +5,4 @@
 
 user_name="$1"
 
-/usr/bin/pure-pw show "${user_name}" -f /etc/pureftpd/pureftpd.passwd
+/usr/bin/pure-pw show "${user_name}" -f /etc/pure-ftpd/pureftpd.passwd

@@ -5,7 +5,7 @@ Run this [pure-ftpd][] image with:
     $ docker run -d --name pureftpd \
         -p "21:21" -p "50000-50010:50000-50010" \
         -v /some/path/pureftpd/ssl:/etc/ssl/private \
-        -v /some/path/pureftpd/passwd:/etc/pureftpd \
+        -v /some/path/pureftpd/passwd:/etc/pure-ftpd \
         -v /some/path/mydata:/var/ftp-data \
         kubler/pure-ftpd
 
@@ -36,7 +36,7 @@ services:
       - FTPD_MAX_CONN=25
       - FTPD_MAX_CONN_IP=5
       - FTPD_DISK_FULL=90%
-      - FTPD_AUTH=puredb:/etc/pureftpd.pdb
+      - FTPD_AUTH=puredb:/etc/pure-ftpd/pureftpd.pdb
       - FTPD_MISC=-p 50000:50010 -D -j -Z -Y 2 -A -b -E -R -k 99
       - CRT_COUNTRY=DE
       - CRT_STATE=SA
@@ -48,7 +48,7 @@ services:
       - "50000:50010"
     volumes:
       - /var/docker-data/pureftpd/cert:/etc/ssl/private
-      - /var/docker-data/pureftpd/passwd:/etc/pureftpd
+      - /var/docker-data/pureftpd/passwd:/etc/pure-ftpd
       - /var/www:/var/ftp-data
     restart: unless-stopped
     network_mode: host

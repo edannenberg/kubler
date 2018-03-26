@@ -5,4 +5,6 @@
 
 user_name="$1"
 
-/usr/bin/pure-pw userdel "${user_name}" -f /etc/pureftpd/pureftpd.passwd -m
+/usr/bin/pure-pw userdel "${user_name}" -f /etc/pure-ftpd/pureftpd.passwd -m
+echo "Updating /etc/pure-ftpd/pureftpd.pdb"
+/usr/bin/pure-pw mkdb /etc/pure-ftpd/pureftpd.pdb -f /etc/pure-ftpd/pureftpd.passwd
