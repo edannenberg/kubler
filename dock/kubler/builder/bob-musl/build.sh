@@ -52,6 +52,6 @@ configure_bob() {
     # go binary bootstrap fails on musl so we need to bootstrap from source
     update_use 'dev-lang/go' +srcgo
     # install aci/oci requirements
-    emerge dev-lang/go
+    emerge dev-lang/go::kubler
     install_oci_deps
 }
