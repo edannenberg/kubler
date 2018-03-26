@@ -1,7 +1,7 @@
-### kubler/docker-registry:20180227
+### kubler/docker-registry:20180326
 
-Built: Tue Feb 27 15:25:33 CET 2018
-Image Size: 48.9MB
+Built: Mon Mar 26 19:36:24 CEST 2018
+Image Size: 49MB
 
 #### Installed
 Package | USE Flags

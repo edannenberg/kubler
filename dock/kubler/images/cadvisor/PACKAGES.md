@@ -1,12 +1,12 @@
-### kubler/cadvisor:20180227
+### kubler/cadvisor:20180326
 
-Built: Tue Feb 27 15:23:47 CET 2018
-Image Size: 39.1MB
+Built: Mon Mar 26 19:33:25 CEST 2018
+Image Size: 40MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-*manual install*: cadvisor-0.28.3 | https://github.com/google/cadvisor/
+*manual install*: cadvisor-0.29.1 | https://github.com/google/cadvisor/
 #### Inherited
 Package | USE Flags
 --------|----------

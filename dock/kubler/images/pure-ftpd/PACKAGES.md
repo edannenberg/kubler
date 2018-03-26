@@ -1,15 +1,15 @@
-### kubler/pure-ftpd:20180227
+### kubler/pure-ftpd:20180326
 
-Built: Tue Feb 27 16:17:04 CET 2018
+Built: Tue Mar 27 00:09:42 CEST 2018
 Image Size: 19.4MB
 
 #### Installed
 Package | USE Flags
 --------|----------
+app-emulation/syslog-stdout-1.1.1 | ``
 dev-libs/libsodium-1.0.15 | `asm urandom -minimal -static-libs`
 net-ftp/ftpbase-0.01-r2 | `-pam`
 net-ftp/pure-ftpd-1.0.45-r2 | `ssl vchroot -anondel -anonperm -anonren -anonres -caps -charconv -implicittls -ldap -libressl -mysql -noiplog -pam -paranoidmsg -postgres -resolveids (-selinux) -sysquota -xinetd`
-*manual install*: syslog-stdout-1.1.1 | https://github.com/timonier/syslog-stdout
 #### Inherited
 Package | USE Flags
 --------|----------

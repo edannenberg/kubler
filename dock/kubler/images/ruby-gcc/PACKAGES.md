@@ -1,6 +1,6 @@
-### kubler/ruby-gcc:20180227
+### kubler/ruby-gcc:20180326
 
-Built: Tue Feb 27 15:42:06 CET 2018
+Built: Mon Mar 26 21:06:48 CEST 2018
 Image Size: 225MB
 
 #### Installed
@@ -26,7 +26,7 @@ dev-ruby/rubygems-2.6.14 | `-server {-test}`
 dev-ruby/test-unit-3.2.5 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
 dev-util/pkgconfig-0.29.2 | `hardened -internal-glib`
-sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
+sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 x11-misc/shared-mime-info-1.9 | `{-test}`
 #### Inherited
 Package | USE Flags
@@ -46,13 +46,13 @@ app-admin/eselect-1.4.11 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.4_p12 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.58.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
 sys-apps/file-5.32 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-libs/ncurses-6.0-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/ncurses-6.1-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`

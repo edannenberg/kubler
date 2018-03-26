@@ -1,16 +1,16 @@
-### kubler/jdk-icedtea:20180227
+### kubler/jdk-icedtea:20180326
 
-Built: Tue Feb 27 15:33:02 CET 2018
-Image Size: 317MB
+Built: Mon Mar 26 20:15:58 CEST 2018
+Image Size: 318MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
-app-eselect/eselect-java-0.3.0 | ``
-dev-java/icedtea-bin-3.6.0 | `headless-awt -alsa (-big-endian) -cups -doc -examples -gtk (-multilib) -nsplugin -pulseaudio (-selinux) -source -webstart`
-dev-java/java-config-2.2.0-r3 | `{-test}`
+app-eselect/eselect-java-0.4.0 | ``
+dev-java/icedtea-bin-3.7.0 | `headless-awt -alsa (-big-endian) -cups -doc -examples -gtk (-multilib) -nsplugin -pulseaudio (-selinux) -source -webstart`
+dev-java/java-config-2.2.0-r4 | `{-test}`
 dev-libs/expat-2.2.5 | `unicode -examples -static-libs`
 dev-libs/glib-2.52.3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `-debug -pax`
@@ -22,7 +22,7 @@ media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
 media-libs/lcms-2.9 | `threads -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
-sys-apps/util-linux-2.30.2 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
+sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 x11-misc/shared-mime-info-1.9 | `{-test}`
 #### Inherited
 Package | USE Flags
@@ -42,13 +42,13 @@ app-admin/eselect-1.4.11 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.4_p12 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.58.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
 sys-apps/file-5.32 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-libs/ncurses-6.0-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/ncurses-6.1-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
