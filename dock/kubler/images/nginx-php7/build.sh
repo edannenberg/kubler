@@ -6,7 +6,7 @@ _php_target="php${_php_slot/\./-}"
 _zend_api="20160303"
 _packages="dev-lang/php:${_php_slot} dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis pecl-imagick dev-php/pecl-memcached"
 _php_timezone="${BOB_TIMEZONE:-UTC}"
-_adminer_version="4.5.0"
+_adminer_version="4.6.2"
 #_iconv_from=kubler/glibc
 
 configure_bob()
