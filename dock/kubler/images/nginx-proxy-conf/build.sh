@@ -1,15 +1,14 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages=""
-_install_docker_gen=true
+_packages="app-emulation/docker-gen"
 
 #
 # This hook is called just before starting the build of the root fs
 #
 configure_rootfs_build()
 {
-    init_docs 'kubler/nginx-proxy-conf'
+    :
 }
 
 #

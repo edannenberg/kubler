@@ -1,7 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="app-shells/bash app-misc/elasticsearch"
+_packages="app-admin/su-exec app-shells/bash app-misc/elasticsearch"
 
 #
 # This hook is called just before starting the build of the root fs
@@ -21,5 +21,4 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     uninstall_package app-shells/bash virtual/jre-1.8.0-r1
-    install_suexec
 }

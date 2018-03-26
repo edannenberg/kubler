@@ -27,6 +27,7 @@ configure_bob() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'app-portage/layman' '+~amd64'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
+    update_keywords 'app-admin/su-exec' '+~amd64'
     emerge dev-vcs/git app-portage/layman app-misc/jq
     install_git_postsync_hooks
     configure_layman

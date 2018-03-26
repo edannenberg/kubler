@@ -1,8 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="net-misc/curl" # just to trigger the root fs build, curl is already provided and ignored
-_install_docker_gen=true
+_packages="app-emulation/docker-gen"
 _keep_headers=true
 # need curl headers for fluentd gem installs
 _headers_from=kubler/bash

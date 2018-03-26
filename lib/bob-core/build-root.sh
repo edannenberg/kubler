@@ -413,43 +413,6 @@ function install_oci_deps() {
     cp ./dist/acserver-v0-linux-amd64/acserver /usr/bin
 }
 
-function install_syslog_stdout() {
-    local syslog_stdout_version
-    syslog_stdout_version="1.1.1"
-    curl -L -o /syslog-stdout.tar.gz \
-        https://github.com/timonier/syslog-stdout/releases/download/v"${syslog_stdout_version}"/syslog-stdout.tar.gz
-    mkdir -p "${_EMERGE_ROOT}"/{usr/sbin,etc/service/syslog-stdout}
-    tar xzf /syslog-stdout.tar.gz -C "${_EMERGE_ROOT}"/usr/sbin
-    rm /syslog-stdout.tar.gz
-    # s6 setup
-    echo -e '#!/bin/sh\nexec /usr/sbin/syslog-stdout' > "${_EMERGE_ROOT}"/etc/service/syslog-stdout/run
-    chmod +x "${_EMERGE_ROOT}"/etc/service/syslog-stdout/run
-    ln -sr "${_EMERGE_ROOT}"/etc/s6_finish_default "${_EMERGE_ROOT}"/etc/service/syslog-stdout/finish
-    log_as_installed "manual install" "syslog-stdout-${syslog_stdout_version}" "https://github.com/timonier/syslog-stdout"
-}
-
-function install_docker_gen() {
-    local dockergen_version
-    dockergen_version="0.7.4"
-    wget "http://github.com/jwilder/docker-gen/releases/download/${dockergen_version}/docker-gen-linux-amd64-${dockergen_version}.tar.gz"
-    mkdir -p "${_EMERGE_ROOT}/bin"
-    tar -C  "${_EMERGE_ROOT}/bin" -xvzf "docker-gen-linux-amd64-${dockergen_version}.tar.gz"
-    mkdir -p  "${_EMERGE_ROOT}/config/template"
-    log_as_installed "manual install" "docker-gen-${dockergen_version}" "http://github.com/jwilder/docker-gen/"
-}
-
-function install_suexec() {
-    local suexec_version
-    suexec_version="0.2"
-    git clone https://github.com/ncopa/su-exec.git
-    cd su-exec/
-    git checkout tags/v${suexec_version}
-    make && strip su-exec
-    mkdir -p "${_EMERGE_ROOT}/usr/local/bin"
-    cp su-exec "${_EMERGE_ROOT}/usr/local/bin/"
-    log_as_installed "manual install" "su-exec-${suexec_version}" "https://github.com/ncopa/su-exec/"
-}
-
 # Arguments:
 # 1: url
 function download_from_oracle() {
@@ -632,10 +595,6 @@ function build_rootfs() {
             find "${lib_dir}"/* -type f -name "*.a" -delete
         fi
     done
-
-    if [[ -n "${_install_docker_gen}" ]]; then
-        install_docker_gen
-    fi
 
     # if this is not an interactive build create the tar ball and clean up
     if [[ -z "${BOB_IS_INTERACTIVE}" && "$(ls -A "${_EMERGE_ROOT}")" ]]; then
