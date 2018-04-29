@@ -1,15 +1,15 @@
-### kubler/nginx-php5.6:20180326
+### kubler/nginx-php5.6:20180428
 
-Built: Mon Mar 26 22:23:48 CEST 2018
-Image Size: 105MB
+Built: Sun Apr 29 01:04:16 CEST 2018
+Image Size: 104MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/eselect-1.4.11 | `-doc -emacs -vim-syntax`
+app-admin/eselect-1.4.12 | `-doc -emacs -vim-syntax`
 app-admin/metalog-3-r2 | `unicode`
 app-eselect/eselect-php-0.9.4-r5 | `fpm -apache2`
-dev-lang/php-5.6.34 | `acl bcmath bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -berkdb -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -libressl -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
+dev-lang/php-5.6.35-r1 | `acl bcmath bzip2 calendar cli crypt ctype curl fileinfo filter fpm gd hash iconv json mhash mysql mysqli nls opcache pcntl pdo phar posix readline session simplexml soap sockets ssl threads tokenizer unicode xml xmlreader xmlrpc xmlwriter xpm xslt zip zlib -apache2 -berkdb -cdb -cgi -cjk -coverage -debug -embed -enchant -exif (-firebird) -flatfile -ftp -gdbm -gmp -imap -inifile -intl -iodbc -ipv6 -kerberos -ldap -ldap-sasl -libedit -libmysqlclient -libressl -mssql -oci8-instant-client -odbc -postgres -qdbm -recode (-selinux) -sharedmem -snmp -spell -sqlite -sybase-ct -systemd -sysvipc -tidy -truetype -vpx -wddx`
 dev-libs/expat-2.2.5 | `unicode -examples -static-libs`
 dev-libs/gmp-6.1.2 | `asm cxx -doc -pgo -static-libs`
 dev-libs/libbsd-0.8.6 | `-static-libs`
@@ -17,26 +17,26 @@ dev-libs/libgcrypt-1.8.1 | `-doc -static-libs`
 dev-libs/libgpg-error-1.27-r1 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
-dev-libs/libpthread-stubs-0.4 | `-static-libs`
-dev-libs/libtasn1-4.12-r1 | `-doc -static-libs -valgrind`
+dev-libs/libpthread-stubs-0.4 | ``
+dev-libs/libtasn1-4.13 | `-doc -static-libs -valgrind`
 dev-libs/libunistring-0.9.7 | `-doc -static-libs`
-dev-libs/libxml2-2.9.7 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
-dev-libs/libxslt-1.1.30-r2 | `crypt -debug -examples -python -static-libs`
-dev-libs/nettle-3.3-r2 | `gmp -doc (-neon) -static-libs {-test}`
-dev-libs/oniguruma-6.6.1 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
+dev-libs/libxml2-2.9.8 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
+dev-libs/libxslt-1.1.32 | `crypt -debug -examples -python -static-libs`
+dev-libs/nettle-3.4 | `gmp -doc (-neon) -static-libs {-test}`
+dev-libs/oniguruma-6.7.1 | `-combination-explosion-check -crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.11 | `lock`
 dev-php/pecl-apcu-5.1.8 | `lock`
 dev-php/pecl-imagick-3.4.3 | `-examples {-test}`
 dev-php/pecl-memcache-3.0.8-r2 | `session`
-dev-php/pecl-redis-3.1.2 | `session -igbinary`
+dev-php/pecl-redis-3.1.6-r1 | `session -igbinary`
 dev-php/xdebug-2.5.3 | ` `
 dev-php/xdebug-client-2.5.3 | `-libedit`
 mail-mta/nullmailer-2.0-r1 | `ssl`
-media-gfx/imagemagick-7.0.7.19 | `bzip2 cxx zlib -`
+media-gfx/imagemagick-7.0.7.28 | `bzip2 cxx zlib -`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
-media-libs/libpng-1.6.29 | `-apng (-neon) -static-libs`
+media-libs/libpng-1.6.34 | `-apng (-neon) -static-libs`
 net-dns/libidn2-2.0.4 | `-static-libs`
-net-libs/gnutls-3.5.15 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
+net-libs/gnutls-3.5.18 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
 net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
@@ -47,7 +47,7 @@ sys-apps/shadow-4.5 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs`
-sys-libs/ncurses-6.1-r1 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
+sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
 x11-base/xorg-proto-2018.4 | ``
 x11-libs/libICE-1.0.9-r1 | `-doc -ipv6 -static-libs`
@@ -71,21 +71,21 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.13.10 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.14.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
-app-misc/ca-certificates-20161130.3.30.2 | `-cacert -insecure`
+app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2n | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2o | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
 **FROM kubler/s6** |
+app-admin/entr-4.0 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`
 dev-libs/skalibs-2.6.3.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.7.0.0 | `-static -static-libs`
-*manual install*: entr-3.9 | http://entrproject.org/
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r10 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.25-r11 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2017c | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
