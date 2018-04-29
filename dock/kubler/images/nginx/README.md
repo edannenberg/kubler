@@ -47,6 +47,18 @@ The Nginx startup script also provides a simple templating mechanism for site co
 This would replace the marker named `##_NG_TMPL_MY_VAR_##` with the provided value in all `.conf` files in 
 `/etc/nginx/sites-enabled`. Template variable names must start with `NG_TMPL_`.
 
+#### RealIP
+
+If your Nginx container is running behind a proxy you may want to set `NGINX_REAL_IP_FROM` to get the real ip for all
+requests:
+
+$ docker run -d --name nginx-0 -v /var/www/nginx-0/htdocs:/var/www/localhost \
+        -e "VIRTUAL_HOST=foo.net"
+        -e "NGINX_REAL_IP_FROM=172.18.0.0/16" \
+        kubler/nginx 
+
+See [real_ip_from][] docs for details.
+
 ##### SIGHUP signal handling
 
 To mirror the Nginx process behaviour for handling `SIGHUP` you may pass `-e NGINX_RELOAD_ON_CONTAINER_SIGHUP=true` on
@@ -55,6 +67,7 @@ container start. Reloading the Nginx config from the Docker host is then as easy
 [Last Build][packages]
 
 [Nginx]: http://nginx.org/
+[real_ip_from]: http://nginx.org/en/docs/http/ngx_http_realip_module.html#set_real_ip_from
 [forward-secrecy]: http://en.wikipedia.org/wiki/Forward_secrecy
 [POODLE]: http://en.wikipedia.org/wiki/POODLE
 [HTTP/2]: https://en.wikipedia.org/wiki/HTTP/2
