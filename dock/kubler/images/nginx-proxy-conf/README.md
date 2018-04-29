@@ -31,6 +31,59 @@ services:
       - nginx
 ``` 
 
+##### Let's Encrypt
+
+The image works well with the [letsencryt-companion][] image to provide automatic [Let's Encrypt][] support:
+
+```
+version: '2.3'
+services:
+  nginx:
+    image: kubler/nginx
+    restart: always
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    environment:
+      - "NGINX_RELOAD_ON_CONTAINER_SIGHUP=true"
+    volumes:
+      - /home/data/nginx_proxy/certs:/etc/nginx/certs
+      - /etc/nginx/sites-enabled
+      - /etc/nginx/vhost.d
+      - /etc/nginx/conf.d
+      - /usr/share/nginx/html
+    ports:
+      - "80:80"
+      - "443:443"
+
+  conf:
+    image: kubler/nginx-proxy-conf
+    restart: always
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen"
+    environment:
+      - "CERT_DEFAULT_FALLBACK=true"
+      #- "DEFAULT_HOST=foo.net"
+      #- "HTTP2_DISABLE=true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nginx
+
+  encrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen"
+    volumes:
+      - /home/data/nginx_proxy/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nginx
+```
+
+Check the [letsencryt-companion][] docs for usage. Note that you will most likely need to restart the proxied container
+after the initial Let's Encrypt certificate was generated. 
+
 #### Differences with original nginx-proxy project
 
 This image does not contain Nginx and requires a separate Nginx container to run in tandem with, enforcing security
@@ -62,4 +115,6 @@ container start disables HTTP/2 for all proxied sites.
 [Last Build][packages]
 
 [jwilder-proxy]: https://github.com/jwilder/nginx-proxy
+[letsencryt-companion]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion
+[Let's Encrypt]: https://letsencrypt.org/
 [packages]: PACKAGES.md
