@@ -15,8 +15,8 @@ configure_rootfs_build()
     echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     update_keywords 'dev-lang/ruby' '+~amd64'
     update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
-    update_keywords '=dev-ruby/rake-12.0.0' '+~amd64'
-    update_keywords '=dev-ruby/power_assert-0.4.1' '+~amd64'
+    update_keywords '=dev-ruby/rake-12.3.1' '+~amd64'
+    update_keywords '=dev-ruby/power_assert-1.1.1' '+~amd64'
     update_keywords '=dev-ruby/minitest-5.10.3' '+~amd64'
     update_keywords '=dev-ruby/test-unit-3.2.5' '+~amd64'
     update_keywords '=virtual/rubygems-12' '+~amd64'
