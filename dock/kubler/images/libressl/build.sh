@@ -12,13 +12,18 @@ configure_bob()
     echo "-libressl"               >> /etc/portage/profile/use.stable.mask 
     echo "-curl_ssl_libressl"      >> /etc/portage/profile/use.stable.mask 
     echo "dev-libs/openssl"        >> /etc/portage/package.mask/openssl
-    echo "=dev-libs/libressl-2.5.0" >> /etc/portage/package.accept_keywords/libressl
+
     emerge -C dev-libs/openssl
     emerge -1 dev-libs/libressl net-misc/wget
 
+    # always build from source for these as a binary package linked against an older libressl version forces an
+    # downgrade to that version. possibly a bug in portage?
+    local current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
+    export EMERGE_DEFAULT_OPTS="-b"
     update_use 'dev-vcs/git' '-perl' '+libressl'
     update_use 'net-misc/curl' '+curl_ssl_libressl' '-curl_ssl_openssl'
     emerge -1 net-misc/curl dev-vcs/git
+    export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
 
     emerge @preserved-rebuild
 }
