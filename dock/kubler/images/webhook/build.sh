@@ -2,7 +2,6 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="dev-vcs/git dev-vcs/webhook"
-_webhook_version="2.6.8"
 
 #
 # This hook is called just before starting the build of the root fs
