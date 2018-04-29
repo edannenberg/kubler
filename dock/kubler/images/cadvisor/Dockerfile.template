@@ -5,4 +5,4 @@ ADD rootfs.tar /
 
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/cadvisor"]
+ENTRYPOINT ["/usr/bin/cadvisor"]
