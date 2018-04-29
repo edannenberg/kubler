@@ -4,11 +4,11 @@ LABEL maintainer ${MAINTAINER}
 ADD rootfs.tar /
 
 RUN set -x && \
-    /usr/share/tomcat-8.5/gentoo/tomcat-instance-manager.bash --create --suffix local --user tomcat --group tomcat
+    /usr/share/tomcat-9/gentoo/tomcat-instance-manager.bash --create --suffix local --user tomcat --group tomcat
 
-ENV CATALINA_NAME=tomcat-8.5-local
+ENV CATALINA_NAME=tomcat-9-local
 
-ENV CATALINA_HOME=/usr/share/tomcat-8.5 \
+ENV CATALINA_HOME=/usr/share/tomcat-9 \
     CATALINA_BASE=/var/lib/${CATALINA_NAME} \
     CATALINA_TMPDIR=/var/tmp/${CATALINA_NAME} \
     CATALINA_USER=tomcat \
@@ -16,4 +16,4 @@ ENV CATALINA_HOME=/usr/share/tomcat-8.5 \
 
 EXPOSE 8080 8009
 
-CMD ["/usr/share/tomcat-8.5/bin/catalina.sh", "run"]
+CMD ["/usr/share/tomcat-9/bin/catalina.sh", "run"]
