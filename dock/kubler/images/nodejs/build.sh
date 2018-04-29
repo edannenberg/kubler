@@ -1,7 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_packages="net-libs/http-parser dev-libs/libuv dev-libs/icu net-libs/nodejs sys-apps/yarn"
+_packages="net-libs/nghttp2 net-libs/http-parser dev-libs/libuv dev-libs/icu net-libs/nodejs sys-apps/yarn"
 
 configure_bob()
 {
