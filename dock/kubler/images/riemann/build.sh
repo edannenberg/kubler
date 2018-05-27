@@ -18,11 +18,13 @@ finish_rootfs_build()
 {
     local riemann_version riemann_url riemann_file
     riemann_version="0.3.0"
-    riemann_url=https://github.com/riemann/riemann/releases/download/"${riemann_version}"
-    riemann_file="riemann-${riemann_version}.tar.bz2"
-    wget "${riemann_url}/${riemann_file}"
-    wget "${riemann_url}/${riemann_file}".md5
-    md5sum -c "${riemann_file}".md5 || die "error validating ${riemann_file}"
+    riemann_url="https://github.com/riemann/riemann/releases/download/${riemann_version}/riemann-${riemann_version}.tar.bz2"
+    download_file "${riemann_url}"
+    riemann_file="${__download_file}"
+    download_file "${riemann_url}.md5"
+    pushd /distfiles > /dev/null
+    md5sum -c "${__download_file}" || die "error validating ${riemann_file}"
+    popd
     tar xvjf "${riemann_file}"
     mv /riemann-"${riemann_version}" "${_EMERGE_ROOT}"/riemann
     sed -i 's/host "127.0.0.1"/host "0.0.0.0"/g' "${_EMERGE_ROOT}"/riemann/etc/riemann.config

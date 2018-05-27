@@ -26,12 +26,10 @@ finish_rootfs_build()
     # remove curl again
     uninstall_package net-misc/curl
     # install automysqlbackup
-    local amb_file
-    amb_file="automysqlbackup-v${_autosqlbackup_version}.tar.gz"
+    download_file https://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/automysqlbackup-v"${_autosqlbackup_version}".tar.gz
     mkdir /root/automysqlbackup
     cd /root/automysqlbackup
-    wget -U "" https://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/"${amb_file}"
-    tar xzvf "${amb_file}"
+    tar xzvf "${__download_file}"
     mkdir "${_EMERGE_ROOT}"/etc/automysqlbackup
     cp automysqlbackup "${_EMERGE_ROOT}"/usr/bin/
     cp automysqlbackup.conf "${_EMERGE_ROOT}"/etc/automysqlbackup/

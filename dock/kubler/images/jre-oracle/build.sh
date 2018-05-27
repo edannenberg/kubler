@@ -8,16 +8,10 @@ _packages="dev-java/oracle-jre-bin"
 #
 configure_rootfs_build()
 {
-    local jre_url jce_url jre_tar
-    # download oracle jre bin
-    jre_url=http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jre-8u172-linux-x64.tar.gz
-    #jre_tar=$(emerge -pf oracle-jre-bin 2>&1 >/dev/null | grep -m1 "jre-[0-9a-z]*-linux-x64\.tar\.gz")
-    regex="(jre-[0-9a-z]*-linux-x64\.tar\.gz)"
-    [[ ${jre_url} =~ $regex ]] && jre_tar="${BASH_REMATCH[1]}"
-    [[ -n "${jre_tar}" ]] && [[ ! -f /distfiles/"${jre_tar}" ]] && download_from_oracle "${jre_url}"
-
-    jce_url=http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
-    [[ ! -f /distfiles/jce_policy-8.zip ]] && download_from_oracle "${jce_url}"
+    local java_url
+    java_url='http://download.oracle.com/otn-pub/java'
+    download_from_oracle "${java_url}"/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jre-8u172-linux-x64.tar.gz
+    download_from_oracle "${java_url}"/jce/8/jce_policy-8.zip
 
     update_use 'dev-java/oracle-jre-bin' +headless-awt +jce -fontconfig
     # skip python and iced-tea

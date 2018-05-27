@@ -18,9 +18,9 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     # clojure
-    wget "https://repo1.maven.org/maven2/org/clojure/clojure/${_clojure_version}/clojure-${_clojure_version}.jar"
+    download_file "https://repo1.maven.org/maven2/org/clojure/clojure/${_clojure_version}/clojure-${_clojure_version}.jar"
     mkdir -p "${_EMERGE_ROOT}"/opt/
-    mv "/clojure-${_clojure_version}.jar" "${_EMERGE_ROOT}"/opt/clojure.jar
+    cp "${__download_file}" "${_EMERGE_ROOT}"/opt/clojure.jar
     log_as_installed "manual install" "clojure-${_clojure_version}" "http://clojure.org/"
 
     mkdir -p "${_EMERGE_ROOT}"/usr/local/bin
