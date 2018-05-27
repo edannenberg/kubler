@@ -5,13 +5,14 @@ ADD rootfs.tar /
 
 ADD etc /etc
 
-RUN eselect postgresql set 10 && \
+ENV POSTGRES_SLOT=${BOB_POSTGRES_SLOT} \
+    PGDATA=/var/lib/postgresql/data
+
+RUN eselect postgresql set ${POSTGRES_SLOT} && \
     chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/postgres/finish && \
     ln -s /etc/service/postgres /service && \
     ln -s /etc/service/cron /service
-
-ENV PGDATA /var/lib/postgresql/data
 
 VOLUME /var/lib/postgresql/data /backup
 

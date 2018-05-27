@@ -1,7 +1,7 @@
 #
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
-_php_slot="7.1"
+_php_slot="${BOB_PHP_SLOT}"
 _php_target="php${_php_slot/\./-}"
 _zend_api="20160303"
 _packages="dev-lang/php:${_php_slot} dev-php/xdebug dev-php/pecl-apcu_bc dev-libs/libmemcached media-gfx/imagemagick dev-php/pecl-redis pecl-imagick dev-php/pecl-memcached"
@@ -68,9 +68,9 @@ finish_rootfs_build()
     find /usr/"${_LIB}"/gcc/x86_64-pc-linux-gnu -name libgomp.so.* -exec cp {} "${_EMERGE_ROOT}"/usr/"${_LIB}"/ \;
     # prepare adminer / phpinfo micro sites
     mkdir -p "${_EMERGE_ROOT}"/var/www/{adminer,phpinfo}
-    wget -O "${_EMERGE_ROOT}"/var/www/adminer/adminer.php \
-        https://www.adminer.org/static/download/"${_adminer_version}"/adminer-"${_adminer_version}"-en.php
-    wget -O "${_EMERGE_ROOT}"/var/www/adminer/adminer.css \
-        https://raw.github.com/vrana/adminer/master/designs/bueltge/adminer.css
+    download_file https://www.adminer.org/static/download/"${_adminer_version}"/adminer-"${_adminer_version}"-en.php
+    cp "${__download_file}" "${_EMERGE_ROOT}"/var/www/adminer/adminer.php
+    download_file https://raw.github.com/vrana/adminer/master/designs/bueltge/adminer.css
+    cp "${__download_file}" "${_EMERGE_ROOT}"/var/www/adminer/adminer.css
     echo "<?php phpinfo(); ?>" > "${_EMERGE_ROOT}"/var/www/phpinfo/phpinfo.php
 }

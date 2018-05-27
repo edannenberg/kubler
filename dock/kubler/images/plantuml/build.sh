@@ -13,9 +13,9 @@ configure_bob()
     git clone https://github.com/plantuml/plantuml-server.git
     cd plantuml-server/
     mvn package
-    mkdir -p "${_EMERGE_ROOT}"/var/lib/tomcat-9-local/webapps/
-    cp target/plantuml.war "${_EMERGE_ROOT}"/var/lib/tomcat-9-local/webapps/
-    chown tomcat:tomcat "${_EMERGE_ROOT}"/var/lib/tomcat-9-local/webapps/plantuml.war
+    mkdir -p "${_EMERGE_ROOT}"/var/lib/"${TOMCAT_SLOT}"-local/webapps/
+    cp target/plantuml.war "${_EMERGE_ROOT}"/var/lib/"${TOMCAT_SLOT}"-local/webapps/
+    chown tomcat:tomcat "${_EMERGE_ROOT}"/var/lib/"${TOMCAT_SLOT}"-local/webapps/plantuml.war
 }
 
 #
