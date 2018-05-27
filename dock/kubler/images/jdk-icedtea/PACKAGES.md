@@ -1,12 +1,12 @@
-### kubler/jdk-icedtea:20180428
+### kubler/jdk-icedtea:20180527
 
-Built: Sat Apr 28 22:48:36 CEST 2018
+Built: Sun May 27 16:34:55 CEST 2018
 Image Size: 317MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.4.0 | ``
 dev-java/icedtea-bin-3.7.0 | `headless-awt -alsa (-big-endian) -cups -doc -examples -gtk (-multilib) -nsplugin -pulseaudio (-selinux) -source -webstart`
@@ -18,7 +18,7 @@ dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -j
 dev-libs/libxml2-2.9.8 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r3 | `-`
 media-libs/fontconfig-2.12.6 | `-doc -static-libs`
-media-libs/freetype-2.8 | `adobe-cff bindist bzip2 cleartype`
+media-libs/freetype-2.9.1-r3 | `adobe-cff bindist bzip2 cleartype`
 media-libs/lcms-2.9 | `threads -doc -jpeg -static-libs {-test} -tiff`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
@@ -42,7 +42,7 @@ app-admin/eselect-1.4.12 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.4_p12 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`

@@ -1,12 +1,12 @@
-### kubler/nginx:20180428
+### kubler/nginx:20180527
 
-Built: Sun Apr 29 00:47:45 CEST 2018
+Built: Sun May 27 16:58:56 CEST 2018
 Image Size: 18.4MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
 www-servers/nginx-1.14.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 #### Inherited

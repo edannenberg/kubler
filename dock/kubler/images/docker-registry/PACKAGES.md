@@ -1,6 +1,6 @@
-### kubler/docker-registry:20180428
+### kubler/docker-registry:20180527
 
-Built: Sat Apr 28 21:11:32 CEST 2018
+Built: Sun May 27 16:26:56 CEST 2018
 Image Size: 48.9MB
 
 #### Installed

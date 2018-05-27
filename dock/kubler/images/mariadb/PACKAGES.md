@@ -1,17 +1,17 @@
-### kubler/mariadb:20180428
+### kubler/mariadb:20180527
 
-Built: Sun Apr 29 00:43:34 CEST 2018
+Built: Sun May 27 16:54:56 CEST 2018
 Image Size: 257MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/perl-cleaner-2.25 | ``
-app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 app-arch/libarchive-3.3.1 | `acl bzip2 e2fsprogs iconv lzma threads xattr zlib -expat -libressl -lz4 -lzo -nettle -static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
 app-arch/xz-utils-5.2.3 | `extra-filters nls threads -static-libs`
-dev-db/mariadb-10.1.31-r1 | `backup bindist openssl perl server -cracklib -debug -embedded -extraengine -galera -innodb-lz4 -innodb-lzo -innodb-snappy -jdbc -jemalloc -kerberos -latin1 -libressl (-mroonga) -numa -odbc -oqgraph -pam -profiling (-selinux) -sphinx -sst-mariabackup -sst-rsync -sst-xtrabackup -static -static-libs -systemd -systemtap -tcmalloc {-test} -tokudb -xml -yassl`
+dev-db/mariadb-10.1.31-r1 | `backup bindist openssl perl server -cracklib -debug (-embedded) -extraengine -galera -innodb-lz4 -innodb-lzo -innodb-snappy -jdbc -jemalloc -kerberos -latin1 -libressl (-mroonga) -numa -odbc -oqgraph -pam -profiling (-selinux) -sphinx -sst-mariabackup -sst-rsync -sst-xtrabackup -static -static-libs -systemd -systemtap -tcmalloc {-test} -tokudb -xml -yassl`
 dev-db/mysql-init-scripts-2.2-r3 | ``
 dev-lang/perl-5.24.3-r1 | `-berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs {-test}`
@@ -28,7 +28,7 @@ dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
 sys-apps/texinfo-6.3 | `nls -static`
-sys-process/procps-3.3.12-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
+sys-process/procps-3.3.15-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/
 #### Inherited
 Package | USE Flags
@@ -38,7 +38,7 @@ app-admin/eselect-1.4.12 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.4_p12 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`

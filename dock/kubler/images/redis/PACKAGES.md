@@ -1,6 +1,6 @@
-### kubler/redis:20180428
+### kubler/redis:20180527
 
-Built: Sun Apr 29 03:23:13 CEST 2018
+Built: Sun May 27 17:27:41 CEST 2018
 Image Size: 16.3MB
 
 #### Installed

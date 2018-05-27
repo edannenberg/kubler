@@ -1,6 +1,6 @@
-### kubler/gulp-sass:20180428
+### kubler/gulp-sass:20180527
 
-Built: Sat Apr 28 22:43:17 CEST 2018
+Built: Sun May 27 16:32:16 CEST 2018
 Image Size: 106MB
 
 #### Installed
@@ -17,7 +17,7 @@ dev-libs/libuv-1.20.0 | `-static-libs`
 net-libs/http-parser-2.8.1 | `-static-libs`
 net-libs/nghttp2-1.31.1 | `cxx threads -debug -hpack-tools -jemalloc -libressl -static-libs {-test} -utils -xml`
 net-libs/nodejs-8.11.1 | `icu npm snapshot ssl -debug -doc -inspector -systemtap {-test}`
-sys-apps/yarn-1.5.1 | ``
+sys-apps/yarn-1.6.0 | ``
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``

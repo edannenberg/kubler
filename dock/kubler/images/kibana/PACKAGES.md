@@ -1,12 +1,12 @@
-### kubler/kibana:20180428
+### kubler/kibana:20180527
 
-Built: Sat Apr 28 22:53:12 CEST 2018
-Image Size: 269MB
+Built: Sun May 27 16:37:31 CEST 2018
+Image Size: 279MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-www-apps/kibana-bin-6.2.2 | ``
+www-apps/kibana-bin-6.2.4 | ``
 #### Inherited
 Package | USE Flags
 --------|----------

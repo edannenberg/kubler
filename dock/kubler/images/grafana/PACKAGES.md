@@ -1,12 +1,12 @@
-### kubler/grafana:20180428
+### kubler/grafana:20180527
 
-Built: Sat Apr 28 22:10:29 CEST 2018
+Built: Sun May 27 16:29:30 CEST 2018
 Image Size: 111MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-www-apps/grafana-5.1.0 | `minimal`
+www-apps/grafana-5.1.3 | `minimal`
 #### Inherited
 Package | USE Flags
 --------|----------

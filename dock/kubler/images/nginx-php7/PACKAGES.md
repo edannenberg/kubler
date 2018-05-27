@@ -1,6 +1,6 @@
-### kubler/nginx-php7:20180428
+### kubler/nginx-php7:20180527
 
-Built: Sun Apr 29 01:25:47 CEST 2018
+Built: Sun May 27 17:14:04 CEST 2018
 Image Size: 111MB
 
 #### Installed
@@ -44,41 +44,36 @@ media-libs/openjpeg-2.3.0 | `-doc -static-libs {-test}`
 media-libs/tiff-4.0.9-r3 | `cxx jpeg zlib -jbig -lzma -static-libs {-test}`
 net-dns/libidn2-2.0.4 | `-static-libs`
 net-libs/gnutls-3.5.18 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
-net-libs/libnsl-0 | ``
-net-misc/curl-7.59.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-libs/libnsl-0-r1 | ``
+net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 net-misc/memcached-1.5.2 | `-debug -sasl (-selinux) -slabs-reassign {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
 sys-apps/file-5.32 | `zlib -python -static-libs`
 sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
-sys-apps/shadow-4.5 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
+sys-apps/shadow-4.6 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
 x11-base/xorg-proto-2018.4 | ``
-x11-libs/libICE-1.0.9-r1 | `-doc -ipv6 -static-libs`
-x11-libs/libSM-1.2.2-r1 | `uuid -doc -ipv6 -static-libs`
-x11-libs/libX11-1.6.5 | `-doc -ipv6 -static-libs {-test}`
-x11-libs/libXau-1.0.8 | `-static-libs`
-x11-libs/libxcb-1.12-r2 | `-doc (-selinux) -static-libs {-test} -xkb`
-x11-libs/libXdmcp-1.1.2-r1 | `-doc -static-libs`
-x11-libs/libXext-1.3.3 | `-doc -static-libs`
-x11-libs/libXpm-3.5.12 | `-static-libs`
-x11-libs/libXt-1.1.5 | `-static-libs {-test}`
+x11-libs/libICE-1.0.9-r2 | `-doc -ipv6 -static-libs`
+x11-libs/libSM-1.2.2-r2 | `uuid -doc -ipv6 -static-libs`
+x11-libs/libX11-1.6.5-r1 | `-doc -ipv6 -static-libs {-test}`
+x11-libs/libXau-1.0.8-r1 | `-static-libs`
+x11-libs/libxcb-1.13 | `-doc (-selinux) -static-libs {-test} -xkb`
+x11-libs/libXdmcp-1.1.2-r2 | `-doc -static-libs`
+x11-libs/libXext-1.3.3-r1 | `-doc -static-libs`
+x11-libs/libXpm-3.5.12-r1 | `-static-libs`
+x11-libs/libXt-1.1.5-r1 | `-static-libs {-test}`
 x11-libs/xtrans-1.3.5 | `-doc`
-x11-proto/inputproto-2.3.2-r1 | ``
-x11-proto/kbproto-1.0.7-r1 | ``
-x11-proto/xextproto-7.3.0-r1 | ``
-x11-proto/xf86bigfontproto-1.2.0-r2 | ``
-x11-proto/xproto-7.0.31-r1 | ``
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM kubler/nginx** |
-app-arch/bzip2-1.0.6-r8 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
 www-servers/nginx-1.14.0 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |

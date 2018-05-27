@@ -1,6 +1,6 @@
-### kubler/influxdb:20180428
+### kubler/influxdb:20180527
 
-Built: Sat Apr 28 22:45:34 CEST 2018
+Built: Sun May 27 16:32:37 CEST 2018
 Image Size: 72.5MB
 
 #### Installed
