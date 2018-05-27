@@ -54,6 +54,14 @@ finish_rootfs_build()
 {
     # Useful helpers
 
+    # Download file at url to /distfiles if it doesn't exist yet, file name is derived from last url fragment
+    #download_file "$url"
+    #echo "${__download_file}"
+    # Same as above but set a custom file name
+    #download_file "$url" my_file_v1.tar.gz
+    # Same as above but pass arbitrary additional args to curl
+    #download_file "$url" my_file_v1.tar.gz '-v' '--cookie' 'foo'
+
     # install su-exec at ${_EMERGE_ROOT}
     #install_suexec
     # Copy c++ libs, may be needed if you see errors regarding missing libstdc++

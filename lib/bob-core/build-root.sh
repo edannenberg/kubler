@@ -40,6 +40,16 @@ readonly _DOC_FOOTER_INCLUDES="${_ROOTFS_BACKUP}/doc.footer.includes"
 _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
+# Arguments:
+# 1: exit_message as string
+# 2: exit_code as int, optional, default: 1
+function die() {
+    local exit_code
+    exit_code="${2:-1}"
+    echo -e 'fatal:' "$1" >&2
+    exit "${exit_code}"
+}
+
 # Copy libgcc/libstdc++ libs
 function copy_gcc_libs() {
     local lib_gcc lib_stdc lib
@@ -277,7 +287,7 @@ function update_use() {
     flaggie --strict --destructive-cleanup ${@}
 }
 
-# Just for better readabilty of build.sh
+# Just for better readability of build.sh
 function update_keywords() {
     # shellcheck disable=SC2068
     update_use ${@}
@@ -413,13 +423,59 @@ function install_oci_deps() {
     cp ./dist/acserver-v0-linux-amd64/acserver /usr/bin
 }
 
+# Download file at given url to /distfiles as given file_name if it doesn't exist yet. If no file_name is given the last
+# fragment of given url is used. Any further args are passed to curl as is. Curl execution is trapped and partially
+# downloaded files are removed on abort.
+# Returns used file_name including absolute path.
+#
+# Arguments:
+#
+# 1: url
+# 2: file_name,- optional, default: use last fragment of url, you may also pass an empty string for default behaviour
+# n: curl_args - optional, all further args are passed to curl
+# Return value: absolute path of downloaded file_name
+function download_file() {
+    __download_file=
+    local url file_name file_abs curl_args
+    url="$1"
+    shift
+    file_name=
+    [[ -n "$1" ]] && { file_name="$1"; shift; }
+    curl_args=("$@")
+
+    [[ -z "${file_name}" ]] && file_name="${url##*/}"
+
+    file_abs="/distfiles/${file_name}"
+    if [[ ! -f "${file_abs}" ]]; then
+        trap 'handle_download_error "${file_abs}"' EXIT
+        curl -L "${url}" "${curl_args[@]}" > "${file_abs}" || exit $?
+        trap - EXIT
+    fi
+    __download_file="${file_abs}"
+}
+
+# Arguments:
+# 1: file - full path of downloaded file
+# 2: error_message - optional
+function handle_download_error() {
+    local file msg
+    file="$1"
+    msg="${2:-Aborted download of ${file}}, removed partial file on disk."
+    [[ -f "${file}" ]] && rm "${file}"
+    die "${msg}"
+}
+
 # Arguments:
 # 1: url
 function download_from_oracle() {
-    wget --no-cookies --no-check-certificate \
-         --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
-         -P /distfiles \
-         "$1"
+    __download_from_oracle=
+    local url
+    url="$1"
+    download_file "${url}" \
+                  '' \
+                  '--cookie' 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+    # shellcheck disable=SC2034
+    __download_from_oracle="${__download_file}"
 }
 
 # Return unix timestamp of modification date for given file_path
