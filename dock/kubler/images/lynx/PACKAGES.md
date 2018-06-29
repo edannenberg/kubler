@@ -1,7 +1,7 @@
-### kubler/lynx:20180527
+### kubler/lynx:20180628
 
-Built: Sun May 27 16:51:41 CEST 2018
-Image Size: 14MB
+Built: Thu Jun 28 18:34:36 CEST 2018
+Image Size: 13.9MB
 
 #### Installed
 Package | USE Flags
@@ -16,7 +16,7 @@ Package | USE Flags
 **FROM kubler/libressl-musl** |
 app-misc/c_rehash-1.7-r1 | ``
 app-misc/ca-certificates-20180409.3.37 | `-cacert`
-dev-libs/libressl-2.6.4 | `asm -static-libs {-test}`
+dev-libs/libressl-2.6.5 | `asm -static-libs {-test}`
 sys-apps/debianutils-4.8.3 | `-static`
 **FROM kubler/musl** |
 sys-libs/musl-1.1.19 | `-headers-only`

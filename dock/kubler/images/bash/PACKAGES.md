@@ -1,7 +1,7 @@
-### kubler/bash:20180527
+### kubler/bash:20180628
 
-Built: Sun May 27 16:25:24 CEST 2018
-Image Size: 33.5MB
+Built: Thu Jun 28 16:11:59 CEST 2018
+Image Size: 34.6MB
 
 #### Installed
 Package | USE Flags
@@ -14,8 +14,8 @@ net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -l
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
-sys-apps/file-5.32 | `zlib -python -static-libs`
-sys-apps/sed-4.2.2 | `acl nls (-selinux) -static`
+sys-apps/file-5.33-r2 | `zlib -python -static-libs`
+sys-apps/sed-4.5 | `acl nls -forced-sandbox (-selinux) -static`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
 #### Inherited
@@ -24,18 +24,18 @@ Package | USE Flags
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2o | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2o-r3 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
 **FROM kubler/s6** |
-app-admin/entr-4.0 | `{-test}`
+app-admin/entr-4.1 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`
-dev-libs/skalibs-2.6.3.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.7.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r11 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2017c | `nls -leaps`
+sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/timezone-data-2018d | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

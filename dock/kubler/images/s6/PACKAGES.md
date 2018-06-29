@@ -1,22 +1,22 @@
-### kubler/s6:20180527
+### kubler/s6:20180628
 
-Built: Sun May 27 16:23:29 CEST 2018
-Image Size: 12.2MB
+Built: Thu Jun 28 16:09:26 CEST 2018
+Image Size: 12.1MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-admin/entr-4.0 | `{-test}`
+app-admin/entr-4.1 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`
-dev-libs/skalibs-2.6.3.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.7.0.0 | `-static -static-libs`
+dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.1.1 | `-static -static-libs`
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.25-r11 | `hardened rpc -audit -caps -debug -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2017c | `nls -leaps`
+sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/timezone-data-2018d | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
