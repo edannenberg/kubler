@@ -1,6 +1,6 @@
-### kubler/lynx:20180628
+### kubler/lynx:20180729
 
-Built: Thu Jun 28 18:34:36 CEST 2018
+Built: Sun Jul 29 21:42:05 CEST 2018
 Image Size: 13.9MB
 
 #### Installed
@@ -8,7 +8,7 @@ Package | USE Flags
 --------|----------
 app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
-sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 www-client/lynx-2.8.9_pre16 | `bzip2 libressl ssl unicode -cjk -gnutls -idn -ipv6 -nls`
 #### Inherited
 Package | USE Flags

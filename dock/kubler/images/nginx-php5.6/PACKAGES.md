@@ -1,7 +1,7 @@
-### kubler/nginx-php5.6:20180628
+### kubler/nginx-php5.6:20180729
 
-Built: Fri Jun 29 01:35:47 CEST 2018
-Image Size: 106MB
+Built: Sun Jul 29 21:54:38 CEST 2018
+Image Size: 105MB
 
 #### Installed
 Package | USE Flags
@@ -32,19 +32,19 @@ dev-php/pecl-redis-3.1.6-r1 | `session -igbinary`
 dev-php/xdebug-2.5.3 | ` `
 dev-php/xdebug-client-2.5.3 | `-libedit`
 mail-mta/nullmailer-2.0-r1 | `ssl`
-media-gfx/imagemagick-7.0.7.28 | `bzip2 cxx zlib -`
+media-gfx/imagemagick-7.0.8.5 | `bzip2 cxx zlib -`
 media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
 media-libs/libpng-1.6.34 | `-apng (-neon) -static-libs`
 net-dns/libidn2-2.0.4 | `-static-libs`
 net-libs/gnutls-3.5.18 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
-net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.61.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
-sys-apps/file-5.33-r2 | `zlib -python -static-libs`
+sys-apps/coreutils-8.29-r1 | `acl nls split-usr (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
+sys-apps/file-5.33-r4 | `zlib -python -static-libs`
 sys-apps/sed-4.5 | `acl nls -forced-sandbox (-selinux) -static`
 sys-apps/shadow-4.6 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
-sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
+sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 sys-devel/gettext-0.19.8.1 | `acl cxx nls openmp -cvs -doc -emacs -git -java -ncurses -static-libs`
 sys-libs/cracklib-2.9.6-r1 | `nls zlib -python -static-libs`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
@@ -66,13 +66,13 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.15.0-r2 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.15.2 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2o-r3 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
-sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`

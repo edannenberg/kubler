@@ -1,6 +1,6 @@
-### kubler/nodejs:20180628
+### kubler/nodejs:20180729
 
-Built: Thu Jun 28 17:37:30 CEST 2018
+Built: Sun Jul 29 21:22:25 CEST 2018
 Image Size: 91.4MB
 
 #### Installed
@@ -20,7 +20,7 @@ app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2o-r3 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
-sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`

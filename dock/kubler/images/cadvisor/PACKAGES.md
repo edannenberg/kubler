@@ -1,6 +1,6 @@
-### kubler/cadvisor:20180628
+### kubler/cadvisor:20180729
 
-Built: Thu Jun 28 16:12:13 CEST 2018
+Built: Sun Jul 29 21:16:43 CEST 2018
 Image Size: 31.9MB
 
 #### Installed

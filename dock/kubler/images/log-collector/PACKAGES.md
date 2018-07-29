@@ -1,6 +1,6 @@
-### kubler/log-collector:20180628
+### kubler/log-collector:20180729
 
-Built: Thu Jun 28 18:34:10 CEST 2018
+Built: Sun Jul 29 21:41:37 CEST 2018
 Image Size: 257MB
 
 #### Installed
@@ -15,7 +15,7 @@ Package | USE Flags
 **FROM kubler/ruby-gcc** |
 app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
 app-eselect/eselect-ruby-20170723 | ``
-dev-lang/ruby-2.4.4 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.4-r1 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/glib-2.52.3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap {-test} -utils`
 dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
@@ -29,11 +29,11 @@ dev-ruby/pkg-config-1.2.8 | `{-test}`
 dev-ruby/power_assert-1.1.1 | `-doc {-test}`
 dev-ruby/rake-12.3.1 | `-doc {-test}`
 dev-ruby/rdoc-5.1.0 | `-doc {-test}`
-dev-ruby/rubygems-2.7.6 | `-server {-test}`
+dev-ruby/rubygems-2.7.6-r1 | `-server {-test}`
 dev-ruby/test-unit-3.2.8 | `-doc {-test}`
 dev-ruby/xmlrpc-0.2.1 | `-doc {-test}`
 dev-util/pkgconfig-0.29.2 | `hardened -internal-glib`
-sys-apps/util-linux-2.30.2-r1 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
+sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 x11-misc/shared-mime-info-1.9 | `{-test}`
 **FROM kubler/gcc** |
 dev-libs/gmp-6.1.2 | `asm cxx -doc -pgo -static-libs`
@@ -50,11 +50,11 @@ app-admin/eselect-1.4.12 | `-doc -emacs -vim-syntax`
 app-portage/portage-utils-0.64 | `nls -static`
 app-shells/bash-4.4_p12 | `net nls (readline) -afs -bashlogger -examples -mem-scramble -plugins`
 dev-libs/iniparser-3.1-r1 | `-doc -examples -static-libs`
-net-misc/curl-7.60.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
+net-misc/curl-7.61.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
-sys-apps/coreutils-8.28-r1 | `acl nls (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
-sys-apps/file-5.33-r2 | `zlib -python -static-libs`
+sys-apps/coreutils-8.29-r1 | `acl nls split-usr (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static {-test} -vanilla`
+sys-apps/file-5.33-r4 | `zlib -python -static-libs`
 sys-apps/sed-4.5 | `acl nls -forced-sandbox (-selinux) -static`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
@@ -63,7 +63,7 @@ app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
 dev-libs/openssl-1.0.2o-r3 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
-sys-libs/zlib-1.2.11-r1 | `-minizip -static-libs`
+sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `{-test}`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`
