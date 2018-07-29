@@ -187,7 +187,7 @@ function source_image_conf() {
         unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
         source_namespace_conf "${image_path}"
     fi
-    unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILD_PRIVILEGED
+    unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILDER_CAPS_SYS_PTRACE BUILDER_DOCKER_ARGS
     [[ -z "${_use_parent_builder_mounts}" ]] && unset BUILDER_MOUNTS
 
     get_abs_ns_path "${image_path}"
@@ -424,6 +424,8 @@ function expand_requested_target_ids() {
         local is_processed
         for target in "${target_ids[@]}"; do
             is_processed=
+            # strip trailing slash possibly added by namespace bash completion
+            [[ "${target}" == */ ]] && target="${target: : -1}"
             # is target a fully qualified image id?
             if [[ "${target}" == *"/"* ]]; then
                 expand_image_id "${target}" "${_IMAGE_PATH}"
@@ -505,7 +507,7 @@ function detect_namespace() {
         # allow missing namespace dir for new command, the user might want to create a new namespace
         if [[ -z "${real_ns_dir}" ]]; then
             # shellcheck disable=SC2154
-            if [[ "${_arg_command}" == 'new' ]]; then
+            if [[ "${_arg_command}" == 'new' || "${_arg_help}" == 'on' ]]; then
                 real_ns_dir="${working_dir}"
                 readonly _NAMESPACE_TYPE='none'
             else

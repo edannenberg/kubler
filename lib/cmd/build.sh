@@ -163,6 +163,7 @@ function main() {
             "${__get_absolute_path}:/config"
         )
         [[ ${#BUILDER_MOUNTS[@]} -gt 0 ]] && _container_mounts+=("${BUILDER_MOUNTS[@]}")
+        [[ ${#BUILDER_DOCKER_ARGS[@]} -gt 0 ]] && _container_args+=("${BUILDER_DOCKER_ARGS[@]}")
         _container_mount_portage='true'
         _container_cmd=('/bin/bash')
 

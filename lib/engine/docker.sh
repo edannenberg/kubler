@@ -319,9 +319,11 @@ function run_image() {
     # general docker args
     docker_args=("-it" "--hostname" "${container_host_name//\//-}")
     [[ "${auto_rm}" == "true" ]] && docker_args+=("--rm")
-    [[ ! -z "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
-    [[ "${BUILD_PRIVILEGED}" == "true" ]] && docker_args+=("--privileged")
+    [[ -n "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
+    [[ "${BUILDER_CAPS_SYS_PTRACE}" == "true" ]] && docker_args+=('--cap-add' 'SYS_PTRACE')
     [[ "${_container_mount_portage}" == "true" ]] && docker_args+=("--volumes-from" "${_PORTAGE_IMAGE//\//-}")
+    # shellcheck disable=SC2154
+    [[ ${#_container_args[@]} -gt 0 ]] && docker_args+=("${_container_args[@]}")
     # shellcheck disable=SC2064
     trap "handle_container_run ${container_name}" EXIT
     "${DOCKER}" run "${docker_args[@]}" "${docker_mounts[@]}" "${docker_env[@]}" "${image_id}" "${_container_cmd[@]}" \
