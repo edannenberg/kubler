@@ -7,7 +7,8 @@ ADD etc /etc
 
 ENV ES_CLASSPATH /usr/share/elasticsearch/lib/*
 
-RUN chmod +x $(find /etc/service -name run) && \
+RUN chown -R elasticsearch:elasticsearch /etc/elasticsearch && \
+    chmod +x $(find /etc/service -name run) && \
     ln -s /etc/s6_finish_default /etc/service/elasticsearch/finish && \
     ln -s /etc/service/elasticsearch /service
 
