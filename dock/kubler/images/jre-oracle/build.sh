@@ -13,7 +13,7 @@ configure_rootfs_build()
     download_from_oracle "${java_url}"/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jre-8u172-linux-x64.tar.gz
     download_from_oracle "${java_url}"/jce/8/jce_policy-8.zip
 
-    update_use 'dev-java/oracle-jre-bin' +headless-awt +jce -fontconfig
+    update_use 'dev-java/oracle-jre-bin' +headless-awt +jce +fontconfig
     # skip python and iced-tea
     provide_package dev-lang/python dev-java/icedtea-bin
 
@@ -28,6 +28,8 @@ configure_rootfs_build()
 #
 finish_rootfs_build()
 {
+    # required by fontconfig
+    copy_gcc_libs
     # gentoo's run-java-tool.bash wrapper expects which at /usr/bin
     ln -rs "${_EMERGE_ROOT}"/bin/which "${_EMERGE_ROOT}"/usr/bin/which
 }
