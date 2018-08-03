@@ -4,6 +4,11 @@
 _packages="dev-lang/python:3.6 dev-python/pip"
 #_keep_headers=true
 
+configure_bob()
+{
+    emerge dev-python/pip
+}
+
 #
 # This hook is called just before starting the build of the root fs
 #

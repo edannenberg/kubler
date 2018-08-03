@@ -4,6 +4,13 @@
 _packages="dev-lang/python dev-python/pip"
 #_keep_headers=true
 
+configure_bob()
+{
+    # switch to python2_7
+    eselect python set 2
+    emerge dev-python/pip
+}
+
 #
 # This hook is called just before starting the build of the root fs
 #
