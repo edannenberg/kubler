@@ -30,6 +30,12 @@ To enable backups set `BACKUP_CRON_SCHEDULE` to a standard cron expression, i.e.
         -v /host_backups/db-0:/backup \
         kubler/postgres
 
+The default backup command can be overridden with `BACKUP_CRON_EXEC`.
+
+To run a custom command as part of the default container startup you may use `EXEC_ON_START`, i.e.
+
+    -e EXEC_ON_START='echo hi'
+
 [Last Build][packages]
 
 [PostgreSQL]: http://www.postgresql.org/
