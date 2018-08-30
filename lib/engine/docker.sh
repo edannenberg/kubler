@@ -159,7 +159,7 @@ function build_image() {
         # determine build container commit id
         builder_commit_id=""
         current_image=${image_id##*/}
-        if [[ ! -z "${BUILDER}" ]]; then
+        if [[ -n "${BUILDER}" ]]; then
             builder_commit_id="${BUILDER##*/}-${current_image}"
         elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
             local builder_image_id image_parent_id
@@ -433,7 +433,7 @@ function build_builder() {
     local builder_id
     builder_id="$1"
     # bootstrap a stage3 image if defined in build.conf
-    [[ ! -z "${STAGE3_BASE}" ]] && build_core "${builder_id}"
+    [[ -n "${STAGE3_BASE}" ]] && build_core "${builder_id}"
     build_image "${builder_id}" "${_BUILDER_PATH}"
 }
 
@@ -469,7 +469,7 @@ function get_build_container() {
     # get parent image basename
     parent_image="${IMAGE_PARENT##*/}"
     parent_ns="${IMAGE_PARENT%%/*}"
-    if [[ ! -z "${BUILDER}" ]]; then
+    if [[ -n "${BUILDER}" ]]; then
         # BUILDER was set for this image, override default and start with given base builder from this image on
         build_container="${BUILDER}"
     elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
@@ -516,7 +516,7 @@ function push_image() {
     image_id="$1"
     repository_url="$2"
     push_id="${image_id}"
-    if [[ ! -z "${repository_url}" ]]; then
+    if [[ -n "${repository_url}" ]]; then
         docker_image_id="$("${DOCKER}" images "${image_id}:${image_tag}" --format '{{.ID}}')"
         # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${image_tag}: ${docker_image_id}"

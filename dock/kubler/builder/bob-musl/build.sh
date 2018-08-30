@@ -6,11 +6,6 @@
 # This hook can be used to configure the build container itself, install packages, run any command, etc
 #
 configure_bob() {
-    # current bash version prevents emerge installs on musl, disable the failing checks until we reverted to prev. bash
-    cp /usr/lib/portage/python3.5/misc-functions.sh ~/
-    sed -i 's/^install_qa_check() {/install_qa_check() { return 0/g' /usr/lib/portage/python3.5/misc-functions.sh
-    sed -i 's/^postinst_qa_check() {/postinst_qa_check() { return 0/g' /usr/lib/portage/python3.5/misc-functions.sh
-
     fix_portage_profile_symlink
     # migrate from files to directories at /etc/portage/package.*
     for i in /etc/portage/package.{accept_keywords,unmask,mask,use}; do
@@ -18,12 +13,6 @@ configure_bob() {
         mkdir -p "${i}"
         [[ -f "${i}".old ]] &&  mv "${i}".old "${i}"/default
     done
-
-    # back to 4.3 until 4.4_p12-r2 has landed
-    mask_package '=app-shells/bash-4.4_p12'
-    emerge bash
-    # misc-functions.sh should work again now..
-    mv ~/misc-functions.sh /usr/lib/portage/python3.5/
 
     # install basics used by helper functions
     emerge app-portage/flaggie app-portage/eix app-portage/gentoolkit
