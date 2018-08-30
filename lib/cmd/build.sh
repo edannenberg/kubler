@@ -63,14 +63,14 @@ function check_image_dependencies() {
         ! string_has_word "${_required_engines}" "${BUILD_ENGINE}" && _required_engines+=" ${BUILD_ENGINE}"
 
         # collect required build containers
-        if [[ ! -z "${BUILDER}" ]];then
+        if [[ -n "${BUILDER}" ]];then
              ! string_has_word "${_required_builder}" "${BUILDER}" && _required_builder+=" ${BUILDER}"
         else
             # add default build container of current namespace
             ! string_has_word "${_required_builder}" "${DEFAULT_BUILDER}" && _required_builder+=" ${DEFAULT_BUILDER}"
         fi
 
-        if [[ ! -z "${IMAGE_PARENT}" ]]; then
+        if [[ -n "${IMAGE_PARENT}" ]]; then
             # skip further checking if already processed
             if ! string_has_word "${_build_order}" "${image_id}"; then
                 # check parent image dependencies
@@ -95,14 +95,14 @@ function check_builder_dependencies() {
     expand_image_id "${builder_id}" "${_BUILDER_PATH}"
     source_image_conf "${__expand_image_id}"
     # is a stage3 defined for this builder?
-    [[ ! -z "${STAGE3_BASE}" ]] && ! string_has_word "${_required_cores}" "${STAGE3_BASE}" \
+    [[ -n "${STAGE3_BASE}" ]] && ! string_has_word "${_required_cores}" "${STAGE3_BASE}" \
         && _required_cores+=" ${STAGE3_BASE}"
     # skip further checking if already processed
     if ! string_has_word "${_build_order_builder}" "${builder_id}"; then
         # check parent if this is not a stage3 builder
         [[ -z "${STAGE3_BASE}" ]] && check_builder_dependencies "${BUILDER}" "${builder_id}"
         # finally add the builder
-        [[ ! -z "${previous_builder_id}" ]] && _build_order_builder+=" ${builder_id}"
+        [[ -n "${previous_builder_id}" ]] && _build_order_builder+=" ${builder_id}"
     fi
 }
 

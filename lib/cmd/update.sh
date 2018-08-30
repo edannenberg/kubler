@@ -35,14 +35,14 @@ function update_builders() {
             update_status=
             cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
             source_image_conf "${current_ns}/${_BUILDER_PATH}/${current_builder}"
-            if [[ ! -z "${STAGE3_BASE}" ]]; then
+            if [[ -n "${STAGE3_BASE}" ]]; then
                 fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
                 get_stage3_archive_regex "${STAGE3_BASE}"
                 # shellcheck disable=SC2154
                 if [[ "${__fetch_stage3_archive_name}" =~ ${__get_stage3_archive_regex} ]]; then
                     s3date_remote="${BASH_REMATCH[1]}"
                     # add time string if captured
-                    [[ ! -z "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
+                    [[ -n "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
                     if is_newer_stage3_date "${STAGE3_DATE}" "${s3date_remote}"; then
                         sed -r -i s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
                             "${builder_path}${current_builder}build.conf"
