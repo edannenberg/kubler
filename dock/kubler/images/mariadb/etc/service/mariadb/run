@@ -4,7 +4,10 @@ if [ ! "$(ls /var/lib/mysql)" ]; then
     MYSQL_ROOT_PW="${MYSQL_ROOT_PW:-root}"
     MYSQL_ADMIN_USER="${MYSQL_ADMIN_USER:-root}"
     MYSQL_ADMIN_PW="${MYSQL_ADMIN_PW:-root}"
-    /usr/share/mysql/scripts/mysql_install_db --basedir=/usr --log-bin=mysqld-bin && (/usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --log-bin=mysqld-bin &) ; sleep 5 && /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PW}" && \
+    chown -R mysql:mysql /var/lib/mysql
+    /usr/share/mariadb/scripts/mysql_install_db --basedir=/usr --ldata=/var/lib/mysql/ --log-bin=mysqld-bin --user=mysql && \
+        (/usr/sbin/mysqld --defaults-file=/etc/mysql/my.cnf --log-bin=mysqld-bin &) ; sleep 5 && \
+        /usr/bin/mysqladmin -u root password "${MYSQL_ROOT_PW}" && \
     mysql -u root --password="${MYSQL_ROOT_PW}" << EOF
 DELETE FROM mysql.user WHERE User='';
 DROP DATABASE test;
