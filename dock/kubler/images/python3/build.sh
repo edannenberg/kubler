@@ -18,6 +18,11 @@ configure_rootfs_build()
     echo 'PYTHON_SINGLE_TARGET="python3_6"' >> /etc/portage/make.conf
     echo 'USE_PYTHON="3.6"' >> /etc/portage/make.conf
     update_use '+sqlite'
+
+    # add user/group for unprivileged container usage
+    groupadd -g 404 python
+    useradd -u 4004 -g python -d /home/python python
+    mkdir -p "${_EMERGE_ROOT}"/home/python
 }
 
 #

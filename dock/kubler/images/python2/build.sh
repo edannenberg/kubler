@@ -21,6 +21,11 @@ configure_rootfs_build()
     echo 'USE_PYTHON="2.7"' >> /etc/portage/make.conf
     mask_package '>=dev-lang/python-3.2.5-r6'
     update_use '+sqlite'
+
+    # add user/group for unprivileged container usage
+    groupadd -g 404 python
+    useradd -u 4004 -g python -d /home/python python
+    mkdir -p "${_EMERGE_ROOT}"/home/python
 }
 
 #
