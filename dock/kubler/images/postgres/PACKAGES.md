@@ -1,16 +1,16 @@
-### kubler/postgres:20180729
+### kubler/postgres:20180831
 
-Built: Sun Jul 29 22:11:04 CEST 2018
+Built: Fri Aug 31 18:50:21 CEST 2018
 Image Size: 53.8MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/su-exec-0.2 | `-static`
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-eselect/eselect-postgresql-2.3 | ``
 app-misc/editor-wrapper-4 | ``
-dev-db/postgresql-10.3 | `nls readline server ssl threads zlib -doc -kerberos -ldap -libressl -pam -perl -python (-selinux) -static-libs -systemd -tcl -uuid -xml`
+dev-db/postgresql-10.5 | `nls readline server ssl threads zlib -doc -kerberos -ldap -libressl -pam -perl -python (-selinux) -static-libs -systemd -tcl -uuid -xml`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 sys-apps/less-529 | `pcre unicode`
 #### Inherited
@@ -43,9 +43,9 @@ sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018d | `nls -leaps`
+sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

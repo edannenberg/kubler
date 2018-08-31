@@ -1,21 +1,22 @@
-### kubler/jdk-oracle:20180729
+### kubler/jdk-oracle:20180831
 
-Built: Sun Jul 29 21:26:31 CEST 2018
-Image Size: 219MB
+Built: Fri Aug 31 18:13:08 CEST 2018
+Image Size: 225MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.4.0 | ``
 dev-java/java-config-2.2.0-r4 | `{-test}`
-dev-java/oracle-jdk-bin-1.8.0.172 | `fontconfig headless-awt jce -alsa -commercial -cups -derby -doc -examples -javafx -nsplugin (-selinux) -source -visualvm`
+dev-java/oracle-jdk-bin-1.8.0.181 | `fontconfig headless-awt jce -alsa -commercial -cups -doc -examples -javafx -nsplugin (-selinux) -source -visualvm`
 dev-libs/expat-2.2.5 | `unicode -examples -static-libs`
 media-fonts/liberation-fonts-2.00.1-r3 | `-`
-media-libs/fontconfig-2.12.6 | `-doc -static-libs`
+media-libs/fontconfig-2.13.0-r4 | `-doc -static-libs`
 media-libs/freetype-2.9.1-r3 | `adobe-cff bindist bzip2 cleartype`
 sys-apps/baselayout-java-0.1.0 | ``
+sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 #### Inherited
 Package | USE Flags
 --------|----------
@@ -46,9 +47,9 @@ sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018d | `nls -leaps`
+sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

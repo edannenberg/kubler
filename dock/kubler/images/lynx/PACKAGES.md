@@ -1,12 +1,12 @@
-### kubler/lynx:20180729
+### kubler/lynx:20180831
 
-Built: Sun Jul 29 21:42:05 CEST 2018
+Built: Fri Aug 31 18:25:54 CEST 2018
 Image Size: 13.9MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs {-test} -tinfo -trace`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 www-client/lynx-2.8.9_pre16 | `bzip2 libressl ssl unicode -cjk -gnutls -idn -ipv6 -nls`
@@ -21,7 +21,7 @@ sys-apps/debianutils-4.8.3 | `-static`
 **FROM kubler/musl** |
 sys-libs/musl-1.1.19 | `-headers-only`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

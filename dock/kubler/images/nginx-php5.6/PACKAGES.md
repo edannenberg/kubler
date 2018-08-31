@@ -1,6 +1,6 @@
-### kubler/nginx-php5.6:20180729
+### kubler/nginx-php5.6:20180831
 
-Built: Sun Jul 29 21:54:38 CEST 2018
+Built: Fri Aug 31 18:36:41 CEST 2018
 Image Size: 105MB
 
 #### Installed
@@ -17,7 +17,7 @@ dev-libs/libgcrypt-1.8.3 | `-doc -o-flag-munging -static-libs`
 dev-libs/libgpg-error-1.29 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
-dev-libs/libpthread-stubs-0.4 | ``
+dev-libs/libpthread-stubs-0.4-r1 | ``
 dev-libs/libtasn1-4.13 | `-doc -static-libs -valgrind`
 dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/libxml2-2.9.8 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
@@ -32,11 +32,11 @@ dev-php/pecl-redis-3.1.6-r1 | `session -igbinary`
 dev-php/xdebug-2.5.3 | ` `
 dev-php/xdebug-client-2.5.3 | `-libedit`
 mail-mta/nullmailer-2.0-r1 | `ssl`
-media-gfx/imagemagick-7.0.8.5 | `bzip2 cxx zlib -`
-media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
+media-gfx/imagemagick-7.0.8.10-r2 | `bzip2 cxx zlib -`
+media-libs/libjpeg-turbo-1.5.3-r2 | `-java -static-libs`
 media-libs/libpng-1.6.34 | `-apng (-neon) -static-libs`
 net-dns/libidn2-2.0.4 | `-static-libs`
-net-libs/gnutls-3.5.18 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
+net-libs/gnutls-3.5.19 | `cxx idn nls openssl seccomp tls-heartbeat zlib -dane -doc -examples -guile -openpgp -pkcs11 -sslv2 -sslv3 -static-libs {-test} (-test-full) -tools -valgrind`
 net-misc/curl-7.61.0 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -ldap -metalink -rtmp -samba -ssh -static-libs {-test}`
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
@@ -52,7 +52,7 @@ sys-libs/readline-7.0_p3 | `-static-libs -utils`
 x11-base/xorg-proto-2018.4 | ``
 x11-libs/libICE-1.0.9-r2 | `-doc -ipv6 -static-libs`
 x11-libs/libSM-1.2.2-r2 | `uuid -doc -ipv6 -static-libs`
-x11-libs/libX11-1.6.5-r1 | `-doc -ipv6 -static-libs {-test}`
+x11-libs/libX11-1.6.6 | `-doc -ipv6 -static-libs {-test}`
 x11-libs/libXau-1.0.8-r1 | `-static-libs`
 x11-libs/libxcb-1.13 | `-doc (-selinux) -static-libs {-test} -xkb`
 x11-libs/libXdmcp-1.1.2-r2 | `-doc -static-libs`
@@ -64,9 +64,9 @@ x11-libs/xtrans-1.3.5 | `-doc`
 Package | USE Flags
 --------|----------
 **FROM kubler/nginx** |
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.15.2 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.15.3 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
@@ -81,9 +81,9 @@ sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018d | `nls -leaps`
+sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

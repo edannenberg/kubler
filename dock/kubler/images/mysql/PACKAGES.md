@@ -1,13 +1,13 @@
-### kubler/mysql:20180729
+### kubler/mysql:20180831
 
-Built: Sun Jul 29 21:48:13 CEST 2018
+Built: Fri Aug 31 18:31:20 CEST 2018
 Image Size: 203MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-admin/perl-cleaner-2.25 | ``
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
 dev-db/mysql-5.6.40 | `openssl perl server -debug (-embedded) -extraengine -jemalloc -latin1 -libressl -numa -profiling (-selinux) -static -static-libs -systemtap -tcmalloc {-test} -yassl`
 dev-db/mysql-init-scripts-2.2-r3 | ``
@@ -18,10 +18,11 @@ dev-perl/DBI-1.637.0 | `-examples {-test}`
 dev-perl/libintl-perl-1.280.0 | ``
 dev-perl/Net-Daemon-0.480.0-r2 | ``
 dev-perl/PlRPC-0.202.0-r3 | ``
-dev-perl/Text-Unidecode-1.270.0 | ``
+dev-perl/Text-Unidecode-1.300.0 | ``
 dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
+sys-apps/opentmpfiles-0.1.3 | `(-selinux)`
 sys-apps/texinfo-6.3 | `nls -static`
 sys-process/procps-3.3.15-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd {-test}`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/
@@ -55,9 +56,9 @@ sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018d | `nls -leaps`
+sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs

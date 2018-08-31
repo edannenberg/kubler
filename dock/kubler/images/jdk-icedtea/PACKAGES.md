@@ -1,12 +1,12 @@
-### kubler/jdk-icedtea:20180729
+### kubler/jdk-icedtea:20180831
 
-Built: Sun Jul 29 21:25:15 CEST 2018
+Built: Fri Aug 31 18:11:57 CEST 2018
 Image Size: 320MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-arch/bzip2-1.0.6-r9 | `-static -static-libs`
+app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-eselect/eselect-fontconfig-1.1 | ``
 app-eselect/eselect-java-0.4.0 | ``
 dev-java/icedtea-bin-3.8.0 | `headless-awt -alsa (-big-endian) -cups -doc -examples -gtk (-multilib) -nsplugin -pulseaudio (-selinux) -source -webstart`
@@ -17,10 +17,10 @@ dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
 dev-libs/libxml2-2.9.8 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs {-test}`
 media-fonts/liberation-fonts-2.00.1-r3 | `-`
-media-libs/fontconfig-2.12.6 | `-doc -static-libs`
+media-libs/fontconfig-2.13.0-r4 | `-doc -static-libs`
 media-libs/freetype-2.9.1-r3 | `adobe-cff bindist bzip2 cleartype`
 media-libs/lcms-2.9 | `threads -doc -jpeg -static-libs {-test} -tiff`
-media-libs/libjpeg-turbo-1.5.1 | `-java -static-libs`
+media-libs/libjpeg-turbo-1.5.3-r2 | `-java -static-libs`
 sys-apps/baselayout-java-0.1.0 | ``
 sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd {-test} -tty-helpers -udev`
 x11-misc/shared-mime-info-1.9 | `{-test}`
@@ -35,7 +35,7 @@ sys-devel/binutils-2.30-r2 | `cxx nls -doc -multitarget -static-libs {-test}`
 sys-devel/binutils-config-5-r4 | ``
 sys-devel/gcc-7.3.0-r3 | `cxx hardened nls nptl openmp (pie) (ssp) vtv (-altivec) -cilk -debug -doc (-fixed-point) -fortran -go -graphite (-jit) (-libssp) -mpx (-multilib) -objc -objc`
 sys-devel/gcc-config-1.8-r1 | ``
-sys-devel/make-4.2.1 | `nls -guile -static`
+sys-devel/make-4.2.1-r3 | `nls -guile -static`
 sys-kernel/linux-headers-4.13 | `-headers-only`
 **FROM kubler/bash** |
 app-admin/eselect-1.4.12 | `-doc -emacs -vim-syntax`
@@ -64,9 +64,9 @@ sys-apps/s6-2.7.1.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018d | `nls -leaps`
+sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
-sys-apps/busybox-1.28.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
+sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
 - [x] Headers
 - [x] Static Libs
