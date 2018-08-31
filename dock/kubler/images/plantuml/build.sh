@@ -2,6 +2,7 @@
 # Kubler phase 1 config, pick installed packages and/or customize the build
 #
 _packages="media-gfx/graphviz"
+_plantuml_version='v1.2018.10'
 
 configure_bob()
 {
@@ -12,6 +13,7 @@ configure_bob()
     # build plantuml
     git clone https://github.com/plantuml/plantuml-server.git
     cd plantuml-server/
+    git checkout "${_plantuml_version}"
     mvn package
     mkdir -p "${_EMERGE_ROOT}"/var/lib/"${TOMCAT_SLOT}"-local/webapps/
     cp target/plantuml.war "${_EMERGE_ROOT}"/var/lib/"${TOMCAT_SLOT}"-local/webapps/
@@ -32,4 +34,5 @@ configure_rootfs_build()
 finish_rootfs_build()
 {
     find /usr/"${_LIB}"/gcc -name libgcc_s.so.1 -exec cp {} "${_EMERGE_ROOT}"/usr/"${_LIB}"/ \;
+    log_as_installed "manual install" plantuml-server-"${_plantuml_version}" https://github.com/plantuml/plantuml-server
 }
