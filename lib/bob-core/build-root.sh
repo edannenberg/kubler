@@ -440,15 +440,18 @@ function download_file() {
     url="$1"
     shift
     file_name=
-    [[ -n "$1" ]] && { file_name="$1"; shift; }
-    curl_args=("$@")
+    if [[ "$#" -gt 0 ]]; then
+        [[ -n "$1" ]] && file_name="$1"
+        shift
+        [[ "$#" -gt 0 ]] && curl_args=("$@")
+    fi
 
     [[ -z "${file_name}" ]] && file_name="${url##*/}"
 
     file_abs="/distfiles/${file_name}"
     if [[ ! -f "${file_abs}" ]]; then
         trap 'handle_download_error "${file_abs}"' EXIT
-        curl -L "${url}" "${curl_args[@]}" > "${file_abs}" || exit $?
+        curl -L "${url}" "${curl_args[@]}" --output "${file_abs}" || exit $?
         trap - EXIT
     fi
     __download_file="${file_abs}"
