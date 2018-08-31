@@ -30,6 +30,9 @@ To enable backups set `BACKUP_CRON_SCHEDULE` to a standard cron expression, i.e.
         -v /host_backups/db-0:/backup \
         kubler/postgres
 
+You can specify a custom backup script via `BACKUP_CRON_EXEC` and a script that will run before setting
+the cron via `INIT_EXEC`.
+
 [Last Build][packages]
 
 [PostgreSQL]: http://www.postgresql.org/
