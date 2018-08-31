@@ -48,6 +48,10 @@ EOSQL
 
 fi
 
+if [ "${SETUP_EXEC}" ]; then
+    ${SETUP_EXEC}
+fi
+
 BACKUP_CRON_EXEC="${BACKUP_CRON_EXEC:-/etc/pg_backup_rotated.sh}"
 
 [ -n "${BACKUP_CRON_SCHEDULE}" ] && [ ! -f /var/spool/cron/crontabs/postgres ] &&
