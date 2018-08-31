@@ -12,7 +12,7 @@ configure_bob() {
 #
 configure_rootfs_build()
 {
-    update_keywords '=dev-libs/libsass-3.4.3' '+~amd64'
+    :
 }
 
 #
