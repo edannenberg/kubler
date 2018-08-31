@@ -48,9 +48,7 @@ EOSQL
 
 fi
 
-if [ "${SETUP_EXEC}" ]; then
-    ${SETUP_EXEC}
-fi
+[[ "${INIT_EXEC}" ]] && "${INIT_EXEC[@]}"
 
 BACKUP_CRON_EXEC="${BACKUP_CRON_EXEC:-/etc/pg_backup_rotated.sh}"
 
