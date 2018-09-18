@@ -3,6 +3,8 @@ LABEL maintainer ${MAINTAINER}
 
 ADD rootfs.tar /
 
+ENV SHELL=/bin/sh
+
 RUN ldconfig && chmod +x $(find /etc/service -name run) && \
     chmod +x /etc/s6_finish_default && \
     ln -s /etc/s6_finish_default /etc/service/cron/finish && \
