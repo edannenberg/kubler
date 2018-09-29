@@ -22,6 +22,33 @@ configure_bob() {
     echo 'LANG="en_US.UTF-8"' > /etc/env.d/02locale
     env-update
     source /etc/profile
+    # regression in musl-1.1.20 - https://github.com/yarnpkg/yarn/issues/6384#issuecomment-422830091
+    mkdir -p /etc/portage/patches/sys-libs/musl-1.1.20/
+    tee /etc/portage/patches/sys-libs/musl-1.1.20/getaddrinfo.patch >/dev/null <<END
+diff --git a/src/network/getaddrinfo.c b/src/network/getaddrinfo.c
+index ba26847a..e33bfa28 100644
+--- a/src/network/getaddrinfo.c
++++ b/src/network/getaddrinfo.c
+@@ -76,7 +76,16 @@ int getaddrinfo(const char *restrict host, const char *restrict serv, const stru
+ 				close(s);
+ 				if (!r) continue;
+ 			}
+-			if (errno != EAFNOSUPPORT) return EAI_SYSTEM;
++			switch (errno) {
++			case EADDRNOTAVAIL:
++			case EAFNOSUPPORT:
++			case EHOSTUNREACH:
++			case ENETDOWN:
++			case ENETUNREACH:
++				break;
++			default:
++				return EAI_SYSTEM;
++			}
+ 			if (family == tf[i]) return EAI_NONAME;
+ 			family = tf[1-i];
+ 		}
+END
+    emerge sys-libs/musl
     # install default packages
     # when using overlay1 docker storage the created hard link will trigger an error during openssh uninstall
     [[ -f /usr/"${_LIB}"/misc/ssh-keysign ]] && rm /usr/"${_LIB}"/misc/ssh-keysign
