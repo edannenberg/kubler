@@ -1,7 +1,7 @@
-### kubler/libressl-musl:20180831
+### kubler/libressl-musl:20180928
 
-Built: Fri Aug 31 18:23:13 CEST 2018
-Image Size: 5.46MB
+Built: Fri Sep 28 18:37:08 CEST 2018
+Image Size: 5.43MB
 
 #### Installed
 Package | USE Flags
@@ -14,7 +14,7 @@ sys-apps/debianutils-4.8.3 | `-static`
 Package | USE Flags
 --------|----------
 **FROM kubler/musl** |
-sys-libs/musl-1.1.19 | `-headers-only`
+sys-libs/musl-1.1.20 | `-headers-only`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged

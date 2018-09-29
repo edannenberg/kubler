@@ -1,7 +1,7 @@
-### kubler/pure-ftpd:20180831
+### kubler/pure-ftpd:20180928
 
-Built: Fri Aug 31 18:50:45 CEST 2018
-Image Size: 19.2MB
+Built: Fri Sep 28 20:25:46 CEST 2018
+Image Size: 19.1MB
 
 #### Installed
 Package | USE Flags
@@ -9,18 +9,18 @@ Package | USE Flags
 app-emulation/syslog-stdout-1.1.1 | ``
 dev-libs/libsodium-1.0.15 | `asm urandom -minimal -static-libs`
 net-ftp/ftpbase-0.01-r2 | `-pam`
-net-ftp/pure-ftpd-1.0.45-r2 | `ssl vchroot -anondel -anonperm -anonren -anonres -caps -charconv -implicittls -ldap -libressl -mysql -noiplog -pam -paranoidmsg -postgres -resolveids (-selinux) -sysquota -xinetd`
+net-ftp/pure-ftpd-1.0.45-r3 | `ssl vchroot -anondel -anonperm -anonren -anonres -caps -charconv -implicittls -ldap -libressl -mysql -noiplog -pam -paranoidmsg -postgres -resolveids (-selinux) -sysquota -xinetd`
 #### Inherited
 Package | USE Flags
 --------|----------
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2o-r3 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs {-test} -vanilla`
+dev-libs/openssl-1.0.2p | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs -test -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
-app-admin/entr-4.1 | `{-test}`
+app-admin/entr-4.1 | `-test`
 dev-lang/execline-2.3.0.4 | `-static -static-libs`
 dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
 sys-apps/s6-2.7.1.1 | `-static -static-libs`

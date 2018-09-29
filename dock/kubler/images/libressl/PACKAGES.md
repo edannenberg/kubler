@@ -1,6 +1,6 @@
-### kubler/libressl:20180831
+### kubler/libressl:20180928
 
-Built: Fri Aug 31 18:18:42 CEST 2018
+Built: Fri Sep 28 18:27:15 CEST 2018
 Image Size: 14.1MB
 
 #### Installed
@@ -8,7 +8,7 @@ Package | USE Flags
 --------|----------
 app-misc/ca-certificates-20180409.3.37 | `-cacert`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/libressl-2.6.5 | `asm -static-libs {-test}`
+dev-libs/libressl-2.6.5 | `asm -static-libs -test`
 sys-apps/debianutils-4.8.3 | `-static`
 #### Inherited
 Package | USE Flags

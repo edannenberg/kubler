@@ -1,12 +1,12 @@
-### kubler/influxdb:20180831
+### kubler/influxdb:20180928
 
-Built: Fri Aug 31 18:10:17 CEST 2018
-Image Size: 74MB
+Built: Fri Sep 28 18:12:06 CEST 2018
+Image Size: 74.1MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-dev-db/influxdb-1.6.2 | `minimal`
+dev-db/influxdb-1.6.3 | `minimal`
 #### Inherited
 Package | USE Flags
 --------|----------

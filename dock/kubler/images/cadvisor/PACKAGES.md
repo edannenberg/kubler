@@ -1,12 +1,12 @@
-### kubler/cadvisor:20180831
+### kubler/cadvisor:20180928
 
-Built: Fri Aug 31 18:03:59 CEST 2018
-Image Size: 31.7MB
+Built: Fri Sep 28 17:15:38 CEST 2018
+Image Size: 39MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-app-emulation/cadvisor-0.30.2 | ``
+app-emulation/cadvisor-0.31.0 | ``
 #### Inherited
 Package | USE Flags
 --------|----------

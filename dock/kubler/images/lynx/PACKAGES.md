@@ -1,6 +1,6 @@
-### kubler/lynx:20180831
+### kubler/lynx:20180928
 
-Built: Fri Aug 31 18:25:54 CEST 2018
+Built: Fri Sep 28 18:53:08 CEST 2018
 Image Size: 13.9MB
 
 #### Installed
@@ -19,7 +19,7 @@ app-misc/ca-certificates-20180409.3.37 | `-cacert`
 dev-libs/libressl-2.6.5 | `asm -static-libs {-test}`
 sys-apps/debianutils-4.8.3 | `-static`
 **FROM kubler/musl** |
-sys-libs/musl-1.1.19 | `-headers-only`
+sys-libs/musl-1.1.20 | `-headers-only`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
