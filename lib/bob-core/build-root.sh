@@ -88,6 +88,9 @@ function install_git_postsync_hooks() {
 # Setup eix  and init db
 function configure_eix() {
     # init eix portage db
+    local eix_db
+    eix_db=/var/cache/eix/portage.eix
+    [[ ! -f "${eix_db}" ]] && touch "${eix_db}" && chown portage:portage "${eix_db}"
     eix-update
     # configure post-sync
     cp /etc/portage/repo.postsync.d/example /etc/portage/repo.postsync.d/egencache
