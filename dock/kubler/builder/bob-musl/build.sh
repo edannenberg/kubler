@@ -41,7 +41,5 @@ configure_bob() {
     add_overlay kubler https://github.com/edannenberg/kubler-overlay.git
     # go binary bootstrap fails on musl so we need to bootstrap from source
     update_use 'dev-lang/go' +srcgo
-    # install aci/oci requirements
     emerge dev-lang/go::kubler
-    install_oci_deps
 }

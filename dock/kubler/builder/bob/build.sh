@@ -33,7 +33,5 @@ configure_bob() {
     install_git_postsync_hooks
     configure_layman
     add_overlay kubler https://github.com/edannenberg/kubler-overlay.git
-    # install aci/oci requirements
     emerge dev-lang/go
-    install_oci_deps
 }

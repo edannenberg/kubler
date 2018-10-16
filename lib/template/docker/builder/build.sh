@@ -34,7 +34,5 @@ configure_bob() {
     emerge dev-vcs/git app-portage/layman sys-devel/distcc app-misc/jq app-shells/bash-completion
     install_git_postsync_hooks
     configure_layman
-    # install aci/oci requirements
-    emerge dev-lang/go app-crypt/gnupg
-    install_oci_deps
+    emerge dev-lang/go
 }
