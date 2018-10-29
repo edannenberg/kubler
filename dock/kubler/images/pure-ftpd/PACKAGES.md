@@ -1,13 +1,13 @@
-### kubler/pure-ftpd:20180928
+### kubler/pure-ftpd:20181029
 
-Built: Fri Sep 28 20:25:46 CEST 2018
-Image Size: 19.1MB
+Built: Mon Oct 29 17:18:40 CET 2018
+Image Size: 19.2MB
 
 #### Installed
 Package | USE Flags
 --------|----------
 app-emulation/syslog-stdout-1.1.1 | ``
-dev-libs/libsodium-1.0.15 | `asm urandom -minimal -static-libs`
+dev-libs/libsodium-1.0.16-r2 | `asm urandom -minimal -static-libs`
 net-ftp/ftpbase-0.01-r2 | `-pam`
 net-ftp/pure-ftpd-1.0.45-r3 | `ssl vchroot -anondel -anonperm -anonren -anonres -caps -charconv -implicittls -ldap -libressl -mysql -noiplog -pam -paranoidmsg -postgres -resolveids (-selinux) -sysquota -xinetd`
 #### Inherited
@@ -21,12 +21,12 @@ sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `-test`
-dev-lang/execline-2.3.0.4 | `-static -static-libs`
-dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.7.1.1 | `-static -static-libs`
+dev-lang/execline-2.5.0.1 | `-static -static-libs`
+dev-libs/skalibs-2.7.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.2.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.27-r6 | `hardened multiarch -audit -caps (-compile-locales) -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

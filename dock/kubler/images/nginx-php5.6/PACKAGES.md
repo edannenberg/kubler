@@ -1,6 +1,6 @@
-### kubler/nginx-php5.6:20180928
+### kubler/nginx-php5.6:20181029
 
-Built: Fri Sep 28 19:38:37 CEST 2018
+Built: Mon Oct 29 16:48:10 CET 2018
 Image Size: 105MB
 
 #### Installed
@@ -18,14 +18,14 @@ dev-libs/libgpg-error-1.29 | `nls -common-lisp -static-libs`
 dev-libs/libltdl-2.4.6 | `-static-libs`
 dev-libs/libmcrypt-2.5.8-r4 | ``
 dev-libs/libpthread-stubs-0.4-r1 | ``
-dev-libs/libtasn1-4.13 | `-doc -static-libs -valgrind`
+dev-libs/libtasn1-4.13 | `-doc -static-libs -test -valgrind`
 dev-libs/libunistring-0.9.7 | `-doc -static-libs`
 dev-libs/libxml2-2.9.8 | `readline -debug -examples -icu -ipv6 -lzma -python -static-libs -test`
 dev-libs/libxslt-1.1.32 | `crypt -debug -examples -python -static-libs`
 dev-libs/nettle-3.4 | `gmp -doc (-neon) -static-libs -test`
 dev-libs/oniguruma-6.8.2 | `-crnl-as-line-terminator -static-libs`
 dev-php/pecl-apcu-4.0.11 | `lock`
-dev-php/pecl-apcu-5.1.8 | `lock`
+dev-php/pecl-apcu-5.1.12 | `lock`
 dev-php/pecl-imagick-3.4.3 | `-examples -test`
 dev-php/pecl-memcache-3.0.8-r2 | `session`
 dev-php/pecl-redis-3.1.6-r1 | `session -igbinary`
@@ -41,7 +41,7 @@ net-misc/curl-7.61.1 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -l
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.29-r1 | `acl nls split-usr (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -test -vanilla`
-sys-apps/file-5.33-r4 | `zlib -python -static-libs`
+sys-apps/file-5.34 | `zlib -python -static-libs`
 sys-apps/sed-4.5 | `acl nls -forced-sandbox (-selinux) -static`
 sys-apps/shadow-4.6 | `acl cracklib nls xattr -audit -pam (-selinux) -skey`
 sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd -test -tty-helpers -udev`
@@ -66,7 +66,7 @@ Package | USE Flags
 **FROM kubler/nginx** |
 app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -readline -static-libs`
-www-servers/nginx-1.15.4 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
+www-servers/nginx-1.15.5 | `http http-cache http2 pcre ssl threads -aio -debug -ipv6 -libatomic -libressl -luajit -pcre-jit -rtmp (-selinux) -vim-syntax`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
@@ -75,12 +75,12 @@ sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `-test`
-dev-lang/execline-2.3.0.4 | `-static -static-libs`
-dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.7.1.1 | `-static -static-libs`
+dev-lang/execline-2.5.0.1 | `-static -static-libs`
+dev-libs/skalibs-2.7.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.2.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.27-r6 | `hardened multiarch -audit -caps (-compile-locales) -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

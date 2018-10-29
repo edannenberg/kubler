@@ -1,7 +1,7 @@
-### kubler/log-collector:20180928
+### kubler/log-collector:20181029
 
-Built: Fri Sep 28 18:52:42 CEST 2018
-Image Size: 257MB
+Built: Mon Oct 29 16:10:46 CET 2018
+Image Size: 261MB
 
 #### Installed
 Package | USE Flags
@@ -15,7 +15,7 @@ Package | USE Flags
 **FROM kubler/ruby-gcc** |
 app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-eselect/eselect-ruby-20170723 | ``
-dev-lang/ruby-2.4.4-r1 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
+dev-lang/ruby-2.4.5 | `rdoc ssl -berkdb -debug -doc -examples -gdbm -ipv6 -jemalloc -libressl -rubytests -socks5 -static-libs -tk -xemacs`
 dev-libs/glib-2.52.3 | `mime xattr -dbus -debug (-fam) (-selinux) -static-libs -systemtap -test -utils`
 dev-libs/libffi-3.2.1 | `-debug -pax`
 dev-libs/libpcre-8.41-r1 | `bzip2 cxx readline recursion-limit (unicode) zlib -jit -libedit -pcre16 -pcre32 -static-libs`
@@ -34,12 +34,12 @@ dev-ruby/test-unit-3.2.8 | `-doc -test`
 dev-ruby/xmlrpc-0.3.0 | `-doc -test`
 dev-util/pkgconfig-0.29.2 | `hardened -internal-glib`
 sys-apps/util-linux-2.32-r4 | `cramfs nls readline suid unicode -build -caps -fdformat -kill -ncurses -pam -python (-selinux) -slang -static-libs -systemd -test -tty-helpers -udev`
-x11-misc/shared-mime-info-1.9 | `-test`
+x11-misc/shared-mime-info-1.10 | `-test`
 **FROM kubler/gcc** |
 dev-libs/gmp-6.1.2 | `asm cxx -doc -pgo -static-libs`
 dev-libs/mpc-1.0.3 | `-static-libs`
 dev-libs/mpfr-3.1.6 | `-static-libs`
-sys-devel/binutils-2.30-r2 | `cxx nls -doc -multitarget -static-libs -test`
+sys-devel/binutils-2.30-r4 | `cxx nls -doc -multitarget -static-libs -test`
 sys-devel/binutils-config-5-r4 | ``
 sys-devel/gcc-7.3.0-r3 | `cxx hardened nls nptl openmp (pie) (ssp) vtv (-altivec) -cilk -debug -doc (-fixed-point) -fortran -go -graphite (-jit) (-libssp) -mpx (-multilib) -objc -objc`
 sys-devel/gcc-config-1.8-r1 | ``
@@ -54,7 +54,7 @@ net-misc/curl-7.61.1 | `ssl threads -adns -brotli -http2 -idn -ipv6 -kerberos -l
 sys-apps/acl-2.2.52-r1 | `nls -static-libs`
 sys-apps/attr-2.4.47-r2 | `nls -static-libs`
 sys-apps/coreutils-8.29-r1 | `acl nls split-usr (xattr) -caps -gmp -hostname -kill -multicall (-selinux) -static -test -vanilla`
-sys-apps/file-5.33-r4 | `zlib -python -static-libs`
+sys-apps/file-5.34 | `zlib -python -static-libs`
 sys-apps/sed-4.5 | `acl nls -forced-sandbox (-selinux) -static`
 sys-libs/ncurses-6.1-r2 | `cxx minimal threads unicode -ada -debug -doc -gpm (-profile) -static-libs -test -tinfo -trace`
 sys-libs/readline-7.0_p3 | `-static-libs -utils`
@@ -66,12 +66,12 @@ sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
 app-admin/entr-4.1 | `-test`
-dev-lang/execline-2.3.0.4 | `-static -static-libs`
-dev-libs/skalibs-2.6.4.0 | `-doc -ipv6 -static-libs`
-sys-apps/s6-2.7.1.1 | `-static -static-libs`
+dev-lang/execline-2.5.0.1 | `-static -static-libs`
+dev-libs/skalibs-2.7.0.0 | `-doc -ipv6 -static-libs`
+sys-apps/s6-2.7.2.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
-sys-libs/glibc-2.26-r7 | `hardened -audit -caps -debug -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
+sys-libs/glibc-2.27-r6 | `hardened multiarch -audit -caps (-compile-locales) -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
 sys-libs/timezone-data-2018e | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`

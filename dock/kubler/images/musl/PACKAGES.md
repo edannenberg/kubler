@@ -1,12 +1,12 @@
-### kubler/musl:20180928
+### kubler/musl:20181029
 
-Built: Fri Sep 28 18:27:46 CEST 2018
+Built: Mon Oct 29 15:55:29 CET 2018
 Image Size: 1.94MB
 
 #### Installed
 Package | USE Flags
 --------|----------
-sys-libs/musl-1.1.20 | `-headers-only`
+sys-libs/musl-1.1.20-r1 | `-headers-only`
 #### Inherited
 Package | USE Flags
 --------|----------
