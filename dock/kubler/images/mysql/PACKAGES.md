@@ -1,6 +1,6 @@
-### kubler/mysql:20181029
+### kubler/mysql:20181130
 
-Built: Mon Oct 29 16:40:27 CET 2018
+Built: Fri Nov 30 20:35:03 CET 2018
 Image Size: 239MB
 
 #### Installed
@@ -10,8 +10,8 @@ app-admin/perl-cleaner-2.25 | ``
 app-arch/bzip2-1.0.6-r10 | `-static -static-libs`
 app-arch/lz4-1.8.2 | `-static-libs`
 app-arch/pbzip2-1.1.12 | `-static -symlink`
-dev-db/mysql-5.7.23-r2 | `perl server -cjk (-client-libs) -cracklib -debug -experimental -jemalloc -latin1 -libressl -numa -profiling (-selinux) -static -static-libs -systemtap -tcmalloc -test -yassl`
-dev-db/mysql-connector-c-6.1.11-r1 | `ssl -libressl -static-libs`
+dev-db/mysql-5.7.24 | `perl server -cjk (-client-libs) -cracklib -debug -experimental -jemalloc -latin1 -libressl -numa -profiling (-selinux) -static -static-libs -systemtap -tcmalloc -test -yassl`
+dev-db/mysql-connector-c-6.1.11-r1 | `-libressl -static-libs`
 dev-db/mysql-init-scripts-2.2-r3 | ``
 dev-lang/perl-5.24.3-r1 | `-berkdb -debug -doc -gdbm -ithreads`
 dev-libs/libaio-0.3.110 | `-static-libs -test`
@@ -24,7 +24,7 @@ dev-perl/Text-Unidecode-1.300.0 | ``
 dev-perl/Unicode-EastAsianWidth-1.330.0-r1 | ``
 perl-core/File-Path-2.130.0 | ``
 perl-core/File-Temp-0.230.400-r1 | ``
-sys-apps/opentmpfiles-0.1.3 | `(-selinux)`
+sys-apps/opentmpfiles-0.2 | `(-selinux)`
 sys-apps/texinfo-6.3 | `nls -static`
 sys-process/procps-3.3.15-r1 | `kill nls unicode -elogind -modern-top -ncurses (-selinux) -static-libs -systemd -test`
 *manual install*: automysqlbackup-3.0_rc6 | https://sourceforge.net/projects/automysqlbackup/
@@ -47,7 +47,7 @@ sys-libs/readline-7.0_p3 | `-static-libs -utils`
 **FROM kubler/openssl** |
 app-misc/ca-certificates-20170717.3.36.1 | `-cacert -insecure`
 app-misc/c_rehash-1.7-r1 | ``
-dev-libs/openssl-1.0.2p | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs -test -vanilla`
+dev-libs/openssl-1.0.2p-r1 | `asm sslv3 tls-heartbeat zlib -bindist -gmp -kerberos -rfc3779 -sctp -sslv2 -static-libs -test -vanilla`
 sys-apps/debianutils-4.8.3 | `-static`
 sys-libs/zlib-1.2.11-r2 | `-minizip -static-libs`
 **FROM kubler/s6** |
@@ -58,7 +58,7 @@ sys-apps/s6-2.7.2.1 | `-static -static-libs`
 **FROM kubler/glibc** |
 sys-apps/gentoo-functions-0.12 | ``
 sys-libs/glibc-2.27-r6 | `hardened multiarch -audit -caps (-compile-locales) -doc -gd -headers-only (-multilib) -nscd (-profile) (-selinux) -suid -systemtap (-vanilla)`
-sys-libs/timezone-data-2018e | `nls -leaps`
+sys-libs/timezone-data-2018g | `nls -leaps`
 **FROM kubler/busybox** |
 sys-apps/busybox-1.29.0 | `make-symlinks static -debug -ipv6 -livecd -math -mdev -pam -savedconfig (-selinux) -sep-usr -syslog -systemd`
 #### Purged
