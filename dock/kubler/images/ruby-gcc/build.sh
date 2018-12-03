@@ -14,14 +14,7 @@ configure_rootfs_build()
     mkdir "${_EMERGE_ROOT}"/etc
     echo "-ruby_targets_ruby24" >> /etc/portage/profile/use.mask
     update_keywords 'dev-lang/ruby' '+~amd64'
-    update_keywords '=dev-ruby/rdoc-5.1.0' '+~amd64'
-    update_keywords '=dev-ruby/rake-12.3.1' '+~amd64'
     update_keywords '=dev-ruby/test-unit-3.2.8' '+~amd64'
-    update_keywords '=virtual/rubygems-12' '+~amd64'
-    update_keywords '=dev-ruby/json-2.1.0' '+~amd64'
-    update_keywords '=dev-ruby/did_you_mean-1.1.2' '+~amd64'
-    update_keywords '=dev-ruby/xmlrpc-0.3.0' '+~amd64'
-    update_keywords '=dev-ruby/kpeg-1.1.0-r1' '+~amd64'
 }
 
 #
