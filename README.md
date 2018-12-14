@@ -206,7 +206,7 @@ First check for new releases by running:
 If a new stage3 release was found simply rebuild the stack by running:
 
     $ ./kubler.sh clean
-    $ ./kubler.sh -C build mynamespace
+    $ ./kubler.sh build -C mynamespace
 
 * Minor things might (read will) break, Oracle downloads, for example, may not work.
 
