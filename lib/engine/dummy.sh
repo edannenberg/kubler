@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
+
+# A bare bone implementation of the kubler build "interface" that can be used as a template for new engines.
+# You can also extend an existing engine and just override a few functions as needed, i.e.:
+#source "${_LIB_DIR}/engine/docker.sh"
 
 ###
 ### REQUIRED FUNCTIONS
@@ -37,7 +41,7 @@ function build_image() {
     image_type="${2:-${_IMAGE_PATH}}"
     msg "building dummy image: ${image_id}"
     # finish PACKAGES.md when using build-root.sh once the build is done:
-    #add_documentation_header "${image_id}" "${_IMAGE_PATH}" || die "failed to generate PACKAGES.md for ${image_id}"
+    #add_documentation_header "${image_id}" "${_IMAGE_PATH}" || die "Failed to generate PACKAGES.md for ${image_id}"
 }
 
 # Exits with signal 0 if given image_id has a built and ready to run image or signal 3 if not.

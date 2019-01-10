@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -10,7 +10,7 @@
 #    disclaimer.
 #
 # 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-# following disclaimer in the documentation and/or other materials provided with the distribution.
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 # INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,7 +25,8 @@ DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS:-}"
 
-_container_mount_portage="false"
+_container_mount_portage='false'
+_portage_image_processed='false'
 
 # Is this engine functional? Called once per engine in current image dependency graph.
 function validate_engine() {
@@ -39,32 +40,29 @@ function validate_engine() {
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
-# 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
+# 2: image_path
 function validate_image() {
-    local image_id image_type
+    local image_id image_path
     image_id="$1"
-    image_type="$2"
-    expand_image_id "${image_id}" "${image_type}"
+    image_path="$2"
     # shellcheck disable=SC2154
-    get_abs_ns_path "${__expand_image_id}"
-    # shellcheck disable=SC2154
-    file_exists_or_die "${__get_abs_ns_path}/Dockerfile.template"
+    file_exists_or_die "${image_path}/Dockerfile.template"
 }
 
-# Generate Dockerfile from Dockerfile.template
+# Generate Dockerfile from Dockerfile.template for given absolute image_path.
 #
 # Arguments:
-# 1: image_path (i.e. kubler/images/busybox)
+# 1: image_path
 function generate_dockerfile() {
     local image_path sed_param bob_var
     image_path="$1"
     sed_param=()
-    # also make variables starting with BOB_ available in Dockerfile.template
+    [[ ! -f "${image_path}"/Dockerfile.template ]] && die "Couldn't read ${image_path}/Dockerfile.template"
+    # make variables starting with BOB_ available in Dockerfile.template
     for bob_var in ${!BOB_*}; do
         sed_param+=(-e "s|\${${bob_var}}|${!bob_var}|")
     done
-    get_abs_ns_path "${image_path}"
-    image_path="${__get_abs_ns_path}"
+
     # shellcheck disable=SC2016,SC2153,SC2154
     sed "${sed_param[@]}" \
         -e 's|${IMAGE_PARENT}|'"${IMAGE_PARENT}"'|g' \
@@ -73,7 +71,7 @@ function generate_dockerfile() {
         -e 's/${TAG}/'"${IMAGE_TAG}"'/g' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/g' \
         "${image_path}/Dockerfile.template" > "${image_path}/Dockerfile" \
-            || die "error while generating ${image_path}/Dockerfile"
+            || die "Error while generating ${image_path}/Dockerfile"
 }
 
 # Returns given tag value from dockerfile or exit signal 3 if tag was not found.
@@ -81,20 +79,18 @@ function generate_dockerfile() {
 #
 # Arguments:
 # 1: tag (i.e. FROM)
-# 2: image_path (i.e. kubler/images/busybox)
+# 2: image_path
 function get_dockerfile_tag() {
     __get_dockerfile_tag=
     local tag image_path dockerfile grep_out regex
     tag="$1"
     image_path="$2"
-    get_abs_ns_path "${image_path}"
-    image_path="${__get_abs_ns_path}"
     dockerfile="${image_path}/Dockerfile"
     file_exists_or_die "${dockerfile}"
     grep_out="$(grep ^"${tag}" "${dockerfile}")"
     regex="^${tag} ?(.*)?"
     if [[ "${grep_out}" =~ $regex ]]; then
-        if [[ "${BASH_REMATCH[1]}" ]]; then
+        if [[ -n "${BASH_REMATCH[1]}" ]]; then
             # shellcheck disable=SC2034
             __get_dockerfile_tag="${BASH_REMATCH[1]}"
         else
@@ -106,59 +102,50 @@ function get_dockerfile_tag() {
 # Remove image from local image store
 #
 # Arguments:
-#
 # 1: image_id
 # 2: image_tag
+# 3: remove_by_id - optional, rm the image via Docker image id which might also remove other tags that ref the same id
 function remove_image() {
-    local image_id image_tag
+    local image_id image_tag remove_by_id
     image_id="$1"
     image_tag="${2:-${IMAGE_TAG}}"
-    "${DOCKER}" rmi -f "${image_id}:${image_tag}" || die "failed to remove image ${image_id}:${image_tag}"
+    remove_by_id="${3:-false}"
+
+    image_id="${image_id}:${image_tag}"
+
+    if [[ "${remove_by_id}" == 'true' ]]; then
+        image_id="$("${DOCKER}" images "${image_id}" -q)"
+    fi
+
+    "${DOCKER}" rmi -f "${image_id}" 1> /dev/null || die "Failed to remove image ${image_id}"
 }
 
 # Build the image for given image_id
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
-# 2: image_type - $_IMAGE_PATH or $_BUILDER_PATH, defaults to $_IMAGE_PATH
+# 2: image_path
+# 3: image_type - $_IMAGE_PATH or $_BUILDER_PATH, defaults to $_IMAGE_PATH
+# 4: skip_rootfs - optional, default: false
 function build_image() {
-    local image_id image_type image_expanded image_path builder_id builder_commit_id current_image bob_var run_id
-    image_id="${1}"
-    image_type="${2:-${_IMAGE_PATH}}"
-    expand_image_id "${image_id}" "${image_type}"
-    image_expanded="${__expand_image_id}"
-    get_abs_ns_path "${image_expanded}"
-    image_path="${__get_abs_ns_path}"
+    local image_id image_type image_path skip_rootfs builder_id builder_commit_id current_image bob_var run_id exit_sig
+    image_id="$1"
+    image_path="$2"
+    image_type="${3:-${_IMAGE_PATH}}"
+    skip_rootfs="$4"
 
-    msg "--> build image ${image_id}"
-    image_exists_or_rm "${image_id}" "${image_type}"
-    local exists_return=$?
-    [[ ${exists_return} -eq 0 ]] && return 0
-    # if the builder image does not exist we need to ensure there is no pre-existing rootfs.tar
-    if [[ ${exists_return} -eq 3 && "${image_type}" == "${_BUILDER_PATH}" ]]; then
-        [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
-    fi
+    # add current image id to output logging
+    add_status_value "${image_id}"
 
-    generate_dockerfile "${image_expanded}"
-
-    # build rootfs?
-    # shellcheck disable=SC2154
-    if [[ ! -f "${image_path}/rootfs.tar" || "${_arg_force_full_image_build}" == 'on' ]] && \
-       [[ "${image_type}" == "${_IMAGE_PATH}" || "${image_id}" != "${_current_namespace}"/*-core ]]; then
-
-        msg "--> phase 1: building root fs"
-
-        # save value of target image's PARENT_BUILDER_MOUNTS config as get_build_container() may override the ENV
-        unset _use_parent_builder_mounts
-        # shellcheck disable=SC2034
-        [[ "${PARENT_BUILDER_MOUNTS}" == 'true' ]] && _use_parent_builder_mounts='true'
-
+    local missing_builder
+    missing_builder=
+    if [[ "${skip_rootfs}" != 'true' ]]; then
         get_build_container "${image_id}" "${image_type}"
         builder_id="${__get_build_container}"
 
         # determine build container commit id
         builder_commit_id=""
-        current_image=${image_id##*/}
+        current_image="${image_id##*/}"
         if [[ -n "${BUILDER}" ]]; then
             builder_commit_id="${BUILDER##*/}-${current_image}"
         elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
@@ -173,10 +160,41 @@ function build_image() {
                 builder_id="${image_id}-core"
             builder_commit_id="${image_id##*/}"
         fi
+        # always rebuild if builder image doesn't exist
+        if ! image_exists "${_current_namespace}/${builder_commit_id}"; then
+            [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
+            missing_builder='true'
+        fi
+    fi
+
+    image_exists_or_rm "${image_id}" "${image_type}"
+    exit_sig=$?
+    [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]] \
+        && msg_ok "skipped, already built." && return 0
+
+    # if the builder image does not exist we need to ensure there is no pre-existing rootfs.tar
+    if [[ ${exit_sig} -eq 3 && "${image_type}" == "${_BUILDER_PATH}" ]]; then
+        [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
+    fi
+
+    generate_dockerfile "${image_path}"
+
+    # build rootfs?
+    # shellcheck disable=SC2154
+    if [[ ! -f "${image_path}/rootfs.tar" || "${_arg_force_full_image_build}" == 'on' ]] && \
+       [[ "${skip_rootfs}" != 'true' ]]; then
+
+        # save value of target image's PARENT_BUILDER_MOUNTS config as get_build_container() may override the ENV
+        unset _use_parent_builder_mounts
+        # shellcheck disable=SC2034
+        [[ "${PARENT_BUILDER_MOUNTS}" == 'true' ]] && _use_parent_builder_mounts='true'
+
+        [[ ! -d "${KUBLER_DISTFILES_DIR}" ]] && mkdir -p "${KUBLER_DISTFILES_DIR}"
+        [[ ! -d "${KUBLER_PACKAGES_DIR}" ]] && mkdir -p "${KUBLER_PACKAGES_DIR}"
 
         _container_mounts=("${image_path}:/config"
-                           "${_KUBLER_DIR}/tmp/distfiles:/distfiles"
-                           "${_KUBLER_DIR}/tmp/packages:/packages"
+                           "${KUBLER_DISTFILES_DIR}:/distfiles"
+                           "${KUBLER_PACKAGES_DIR}:/packages"
                           )
         [[ ${#BUILDER_MOUNTS[@]} -gt 0 ]] && _container_mounts+=("${BUILDER_MOUNTS[@]}")
 
@@ -191,33 +209,162 @@ function build_image() {
         _container_cmd=("kubler-build-root")
         _container_mount_portage="true"
 
-        msg "using ${builder_id}:${IMAGE_TAG}"
+        run_id="rootfs-builder-${image_id//\//-}-${$}-${RANDOM}"
+        if [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
+            _status_msg="build root-fs using ${builder_id}:${IMAGE_TAG}"
+        else
+            _status_msg="bootstrap builder environment"
+        fi
+        pwrap run_image "${builder_id}:${IMAGE_TAG}" "${image_id}" "false" "${run_id}" \
+            || die "${_status_msg}"
 
-        run_id="${image_id//\//-}-${$}-${RANDOM}"
-        run_image "${builder_id}:${IMAGE_TAG}" "${image_id}" "false" "${run_id}" \
-            || die "failed to build rootfs for ${image_expanded}"
+        _container_mount_portage='false'
 
-        _container_mount_portage="false"
+        _status_msg="commit ${run_id} as image ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
+        pwrap 'nolog' "${DOCKER}" commit "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
+            || die "${_status_msg}"
 
-        msg "commit ${run_id} as ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
-        "${DOCKER}" commit "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" ||
-            die "failed to commit ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
+        _status_msg="remove container ${run_id}"
+        pwrap 'nolog' "${DOCKER}" rm "${run_id}" || die "${_status_msg}"
 
-        "${DOCKER}" rm "${run_id}" || die "failed to remove container ${run_id}"
-
-        msg "tag ${_current_namespace}/${builder_commit_id}:latest"
-        "${DOCKER}" tag "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" "${_current_namespace}/${builder_commit_id}:latest" \
-            || die "failed to tag ${builder_commit_id}"
+        _status_msg="tag image ${_current_namespace}/${builder_commit_id}:latest"
+        pwrap 'nolog' "${DOCKER}" tag "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
+            "${_current_namespace}/${builder_commit_id}:latest" \
+            || { msg_error "${_status_msg}"; die; }
     fi
 
-    msg "--> phase 2: build ${image_id}:${IMAGE_TAG}"
+    _status_msg="exec docker build -t ${image_id}:${IMAGE_TAG}"
     # shellcheck disable=SC2086
-    "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_path}" || die "failed to build ${image_expanded}"
+    pwrap "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_path}" || die "${_status_msg}"
 
-    msg "tag ${image_id}:latest"
-    "${DOCKER}" tag "${image_id}:${IMAGE_TAG}" "${image_id}:latest" || die "failed to tag ${image_expanded}"
+    _status_msg="tag image ${image_id}:latest"
+    pwrap 'nolog' "${DOCKER}" tag "${image_id}:${IMAGE_TAG}" "${image_id}:latest" || die "${_status_msg}"
 
-    add_documentation_header "${image_id}" "${image_type}" || die "failed to generate PACKAGES.md for ${image_expanded}"
+    add_documentation_header "${image_id}" "${image_type}" || die "Failed to generate PACKAGES.md for ${image_id}"
+    local has_tests done_text
+    [[ -n "${POST_BUILD_HC}" || -f "${image_path}/build-test.sh" ]] && has_tests='true'
+
+    # shellcheck disable=SC2154
+    msg "${_term_cup}"
+    if [[ -n "${has_tests}" ]]; then
+        test_image "${image_id}:${IMAGE_TAG}" "${image_path}"
+    else
+        done_text='done.'
+        [[ -z "${has_tests}" && "${image_type}" != "${_BUILDER_PATH}" ]] \
+            && done_text="${done_text} no tests. ;("
+        msg_ok "${done_text}"
+    fi
+}
+
+#
+# Arguments:
+# 1: image_id
+# 2: image_path
+test_image() {
+    local image_id image_path exit_sig container_name
+    image_id="${1}"
+    image_path="${2}"
+
+    # run build-test.sh in a test container
+    if [[ -f "${image_path}"/build-test.sh ]]; then
+        container_name="build-test-${image_id//[\:\/]/-}"
+        _container_mounts=( "${image_path}:/kubler-test/" )
+        _container_cmd=( '/kubler-test/build-test.sh' )
+        _status_msg="exec build-test.sh in container ${container_name}"
+        pwrap run_image "${image_id}" "${image_id}" 'true' "${container_name}" 'false'
+        exit_sig=$?
+        [[ ${exit_sig} -gt 0 ]] \
+            && die "build-test.sh for image ${image_id} failed with exit signal: ${exit_sig}"
+    fi
+
+    # run a detached container and monitor Docker's health-check status
+    if [[ -n "${POST_BUILD_HC}" ]]; then
+        local hc_current_duration hc_healthy_streak hc_failed_streak hc_itr hc_status hc_log status_tmpl hc_streak_bar
+        POST_BUILD_HC_MAX_DURATION="${POST_BUILD_HC_MAX_DURATION:-30}"
+        POST_BUILD_HC_INTERVAL="${POST_BUILD_HC_INTERVAL:-5}"
+        POST_BUILD_HC_TIMEOUT="${POST_BUILD_HC_TIMEOUT:-5}"
+        POST_BUILD_HC_START_PERIOD="${POST_BUILD_HC_START_PERIOD:-3}"
+        POST_BUILD_HC_RETRIES="${POST_BUILD_HC_RETRIES:-3}"
+        POST_BUILD_HC_MIN_HEALTHY_STREAK="${POST_BUILD_HC_MIN_HEALTHY_STREAK:-5}"
+
+        container_name="health-check-${image_id//[\:\/]/-}"
+        _container_mounts=()
+        _container_cmd=()
+        _container_args=( '-d'
+            '--health-interval' "${POST_BUILD_HC_INTERVAL}s"
+            '--health-retries' "${POST_BUILD_HC_RETRIES}"
+            '--health-start-period' "${POST_BUILD_HC_START_PERIOD}s"
+            '--health-timeout' "${POST_BUILD_HC_TIMEOUT}s" )
+
+        # shellcheck disable=SC2064
+        _handle_hc_container_run_args="${container_name}"
+        add_trap_fn 'handle_hc_container_run'
+        _status_msg="monitor health-check of container ${container_name}"
+        pwrap run_image "${image_id}" "${image_id}" 'true' "${container_name}"
+        _status_msg="health-check startup time is ${POST_BUILD_HC_START_PERIOD}s"
+        pwrap 'nolog' sleep "${POST_BUILD_HC_START_PERIOD}"
+        hc_current_duration=0
+        hc_healthy_streak=0
+        hc_failed_streak=0
+        hc_itr=0
+        repeat_str '-' "${POST_BUILD_HC_MIN_HEALTHY_STREAK}"
+        # shellcheck disable=SC2154
+        hc_streak_bar="${__repeat_str}"
+        hc_status='n/a'
+        msg -e ""
+        # shellcheck disable=SC2154
+        [[ "${_is_terminal}" == 'false' ]] && msg_info "monitor docker health-check\n"
+
+        while [[ ${POST_BUILD_HC_MAX_DURATION} -gt ${hc_current_duration} ]]; do
+            if [[ ${hc_itr} -ge ${POST_BUILD_HC_INTERVAL} ]]; then
+                hc_status="$("${DOCKER}" inspect "${container_name}" | jq '.[] | .State.Health.Status')"
+                hc_log="$("${DOCKER}" inspect "${container_name}" | jq '.[] | .State.Health.Log[4].Output')"
+                [[ "${hc_status}" == '"healthy"' ]] && hc_healthy_streak=$((hc_healthy_streak + 1))
+                [[ "${hc_status}" == '"unhealthy"' ]] && hc_failed_streak=$((hc_failed_streak + 1))
+                repeat_str '*' "${hc_healthy_streak}"
+                # shellcheck disable=SC2154
+                hc_streak_bar="${_term_green}${__repeat_str}${_term_reset}"
+                repeat_str '-' $(( POST_BUILD_HC_MIN_HEALTHY_STREAK - hc_healthy_streak ))
+                hc_streak_bar="${hc_streak_bar}${__repeat_str}"
+                hc_itr=0
+            fi
+            status_tmpl="health-check status: "
+            # shellcheck disable=SC2154
+            status_tmpl="${status_tmpl}${_term_yellow}[${_term_reset}up: %ss${_term_yellow}]-${_term_reset}"
+            status_tmpl="${status_tmpl}${_term_yellow}[${_term_reset}next: %ss${_term_yellow}]-${_term_reset}"
+            status_tmpl="${status_tmpl}${_term_yellow}[${_term_reset}%s${_term_yellow}]-${_term_reset}"
+            status_tmpl="${status_tmpl}${_term_yellow}[${_term_reset}%s${_term_yellow}]${_term_reset}"
+            # shellcheck disable=SC2059
+            printf -v _status_msg "${status_tmpl}" \
+                "${hc_current_duration}" \
+                $(( POST_BUILD_HC_INTERVAL - hc_itr )) \
+                "${hc_status}" \
+                "${hc_streak_bar}"
+            [[ "${_is_terminal}" == 'true' ]] && status_with_spinner "${_status_msg}"
+            [[ ${hc_healthy_streak} -ge ${POST_BUILD_HC_MIN_HEALTHY_STREAK} ]] && break
+            hc_itr=$(( hc_itr + 1 ))
+            hc_current_duration=$(( hc_current_duration + 1 ))
+            sleep 1
+        done
+        rm_trap_fn 'handle_hc_container_run'
+
+        stop_container "${container_name}" 'false'
+        # shellcheck disable=SC2154
+        msg "${_term_cup}${_term_ceol}${_term_cup}"
+        [[ ${hc_healthy_streak} -lt ${POST_BUILD_HC_MIN_HEALTHY_STREAK} ]] && \
+            die "health-check failed: timeout after ${POST_BUILD_HC_MAX_DURATION}s. docker inspect log:\n${hc_log}"
+    fi
+    # shellcheck disable=SC2154
+    msg "${_term_cup}"
+    msg_ok "done."
+}
+
+function handle_hc_container_run() {
+    local container_id
+    container_id="${_handle_hc_container_run_args}"
+    echo -e ""
+    msg_error "aborting.. stopping health-check test container ${container_id}"
+    container_exists "${container_id}" && stop_container "${container_id}" 'false'
 }
 
 # Check if container exists for given container_name, exit with signal 3 if it does not
@@ -231,22 +378,25 @@ function container_exists() {
     return 0
 }
 
-# Check if image exists, remove existing image depending on passed rebuild args. (-f, -F, -c, -C)
-# Returns signal 0 if image exists, or signal 3 if not/image was removed due to rebuild args.
+# Check if image exists, remove existing image depending on passed build args. (-f, -F, -c, -C)
+# Returns signal 0 if image exists, or signal 3 if not or image was removed due to build args.
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
 # 2: image_type - $_IMAGE_PATH or $_BUILDER_PATH, optional, default: $_IMAGE_PATH
 # 3: image_tag - optional, default: $IMAGE_TAG
-function image_exists_or_rm {
+function image_exists_or_rm() {
     local image_id image_type
     image_id="${1}"
     image_type="${2:-${_IMAGE_PATH}}"
     image_tag="${3:-${IMAGE_TAG}}"
     image_exists "${image_id}" "${image_tag}" || return $?
     # shellcheck disable=SC2154
-    if [[ "${_arg_clear_everything}" == 'on' && "${image_id}" != "${_STAGE3_NAMESPACE}/portage" ]]; then
-        # -C => nuke everything except portage
+    if [[ "${_arg_clear_everything}" == 'on' ]] \
+        && [[ "${image_id}" != "${_PORTAGE_IMAGE}" || "${KUBLER_PORTAGE_GIT}" != 'true' ]]
+    then
+        [[ "${image_id}" == "${_PORTAGE_IMAGE}" ]] && stop_container "${_PORTAGE_CONTAINER}"
+        # -C
         remove_image "${image_id}" "${image_tag}"
         return 3
     elif [[ "${_arg_clear_build_container}" == 'on' && "${image_type}" == "${_BUILDER_PATH}" ]]; then
@@ -256,8 +406,9 @@ function image_exists_or_rm {
             return 3
         fi
     elif [[ "${_arg_force_image_build}" == 'on' || "${_arg_force_full_image_build}" == 'on' ]]; then
-        # -f, -F => rebuild image if not a builder
-        [[ "${image_type}" != "${_BUILDER_PATH}" ]] && remove_image "${image_id}" "${image_tag}" && return 3
+        # -f, -F => rebuild image if not a builder or portage
+        [[ "${image_type}" != "${_BUILDER_PATH}" && "${image_id}" != "${_PORTAGE_IMAGE}" ]] \
+            && remove_image "${image_id}" "${image_tag}" && return 3
     fi
     return 0
 }
@@ -300,12 +451,15 @@ function get_image_size() {
 # 2: container_host_name
 # 3: remove container after it exists, optional, default: true
 # 4: container_name, optional, keep in mind that this needs to be unique for all existing containers on the host
+# 5: exit_on_error, optional, if false will just return the exit signal instead of aborting, default: true
 function run_image() {
-    local image_id container_host_name auto_rm container_name docker_env denv docker_mounts dmnt
+    local image_id container_host_name auto_rm container_name exit_on_error docker_env denv docker_mounts dmnt
     image_id="$1"
     container_host_name="$2"
     auto_rm="${3:-true}"
-    container_name="${4:-${image_id//\//-}-${$}-${RANDOM}}"
+    container_name="${4:-${IMAGE_TAG}}"
+    container_name="${container_name//[\:\/]/-}"
+    exit_on_error="${5:-true}"
     # docker env options
     docker_env=()
     for denv in "${_container_env[@]}"; do
@@ -324,21 +478,38 @@ function run_image() {
     [[ "${_container_mount_portage}" == "true" ]] && docker_args+=("--volumes-from" "${_PORTAGE_IMAGE//\//-}")
     # shellcheck disable=SC2154
     [[ ${#_container_args[@]} -gt 0 ]] && docker_args+=("${_container_args[@]}")
+    local exit_sig
     # shellcheck disable=SC2064
-    trap "handle_container_run ${container_name}" EXIT
-    "${DOCKER}" run "${docker_args[@]}" "${docker_mounts[@]}" "${docker_env[@]}" "${image_id}" "${_container_cmd[@]}" \
-        || die "Failed to run image ${image_id}"
-    trap - EXIT
+    _handle_container_run_args="${container_name}"
+    add_trap_fn 'handle_container_run'
+    "${DOCKER}" run "${docker_args[@]}" "${docker_mounts[@]}" "${docker_env[@]}" "${image_id}" "${_container_cmd[@]}"
+    exit_sig=$?
+    [[ ${exit_sig} -ne 0 && "${exit_on_error}" == 'true' ]] && die "Failed to run image ${image_id}"
+    rm_trap_fn 'handle_container_run'
+    return ${exit_sig}
 }
 
-# 1: container_id
+# Trap handler for run_image fn.
 function handle_container_run() {
     local container_id
-    container_id="$1"
+    container_id="${_handle_container_run_args}"
     if [[ -z "${NO_CLEANUP}" ]] && container_exists "${container_id}"; then
-        msg "--> remove ${container_id}, NO_CLEANUP env prevents this"
+        msg_error "removing ${container_id}, NO_CLEANUP env prevents this"
         "${DOCKER}" rm "${container_id}" 1> /dev/null
     fi
+}
+
+# Arguments:
+# 1: container_name - the container to stop
+# 2: remove_container - optional, if true also removes the container, default: true
+function stop_container() {
+    local container_name remove_container exit_sig
+    container_name="$1"
+    remove_container="${2:-true}"
+    "${DOCKER}" stop "${container_name}" 1> /dev/null
+    exit_sig=$?
+    [[ "${remove_container}" == 'true' ]] && { "${DOCKER}" rm "${container_name}" 1> /dev/null; exit_sig=$?; }
+    return "${exit_sig}"
 }
 
 # Docker import a portage snapshot as given portage_image_id
@@ -347,45 +518,90 @@ function handle_container_run() {
 # 1: portage_image_id (i.e. bob/portage)
 # 2: image_tag (a.k.a. version)
 function import_portage_tree() {
-    local image_id image_tag portage_tmp_file
+    local image_id image_tag image_path portage_file portage_tmp_file
     image_id="$1"
     image_tag="$2"
-    image_exists "${image_id}" "${image_tag}" && return 0
+    image_exists_or_rm "${image_id}" "${image_tag}" && return 0
 
-    download_portage_snapshot || die "Failed to download portage snapshot"
+    # add current image id to output logging
+    add_status_value 'portage'
 
-    msg "--> bootstrap ${image_id}"
+    _status_msg="download portage snapshot"
+    PORTAGE_DATE="${PORTAGE_DATE:-latest}"
+    portage_file="portage-${PORTAGE_DATE}.tar.xz"
+    _pwrap_callback=( 'cb_add_filesize_to_status' "${KUBLER_DOWNLOAD_DIR}/${portage_file//latest/${_TODAY}}" )
+    pwrap download_portage_snapshot "${portage_file}" || die "Failed to download portage snapshot ${portage_file}"
+
+    portage_file="${portage_file//latest/${_TODAY}}"
+
+    image_path="${KUBLER_DATA_DIR}"/tmp/kubler-portage
+    [[ ! -d "${image_path}" ]] && mkdir -p "${image_path}"
+    cp "${_KUBLER_DIR}"/lib/bob-portage/Dockerfile.template "${image_path}"/
+
+    add_trap_fn 'handle_import_portage_tree_error'
     # shellcheck disable=SC2154
-    portage_tmp_file="${_KUBLER_DIR}/lib/bob-portage/${_portage_file}"
-    cp "${DOWNLOAD_PATH}/${_portage_file}" "${_KUBLER_DIR}/lib/bob-portage/"
-    export BOB_CURRENT_PORTAGE_FILE=${_portage_file}
+    portage_tmp_file="${image_path}/${portage_file}"
+    cp "${KUBLER_DOWNLOAD_DIR}/${portage_file}" "${portage_tmp_file}"
+    export BOB_CURRENT_PORTAGE_FILE="${portage_file}"
 
-    generate_dockerfile "${_KUBLER_DIR}/lib/bob-portage/"
-    "${DOCKER}" build -t "${image_id}:${PORTAGE_DATE}" "${_KUBLER_DIR}/lib/bob-portage/" || die "failed to tag"
-    rm "${_KUBLER_DIR}"/lib/bob-portage/Dockerfile "${portage_tmp_file}"
-    "${DOCKER}" tag "${image_id}:${PORTAGE_DATE}" "${image_id}:latest" || die "failed to tag"
+    _status_msg="bootstrap ${image_id} image"
+    generate_dockerfile "${image_path}"
+    pwrap "${DOCKER}" build -t "${image_id}:${image_tag}" "${image_path}" \
+        || die "Failed to build ${image_id}:${image_tag}"
+    rm_trap_fn 'handle_import_portage_tree_error'
+    rm -r "${image_path}"
+    unset PORTAGE_DATE
+    _status_msg="tag image ${image_id}:latest"
+    pwrap "${DOCKER}" tag "${image_id}:${image_tag}" "${image_id}:latest" \
+        || die "Failed to tag ${image_id}:${image_tag}"
+    _portage_image_processed='true'
 }
 
+function handle_import_portage_tree_error() {
+    [[ -d "${KUBLER_DATA_DIR}"/tmp/kubler-portage ]] && rm -r "${KUBLER_DATA_DIR}"/tmp/kubler-portage
+}
 
 # Docker import a stage3 tar ball for given stage3_image_id
 #
 # Arguments:
 # 1: stage3_image_id (i.e. bob/${STAGE3_BASE})
 function import_stage3() {
-    local image_id cat_bin
+    local image_id cat_bin stage3_file
     image_id="${1//+/-}"
+
+    fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
+    # shellcheck disable=SC2154
+    stage3_file="${__fetch_stage3_archive_name}"
+
     image_exists_or_rm "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
 
-    download_stage3 || die "failed to download stage3 files"
-    # shellcheck disable=SC2154
-    msg "--> import ${image_id}:${STAGE3_DATE} using ${_stage3_file}"
-    cat_bin='bzcat'
-    [[ "${_stage3_file##*.}" == 'xz' ]] && cat_bin='xzcat'
-    "${cat_bin}" < "${DOWNLOAD_PATH}/${_stage3_file}" | bzip2 | "${DOCKER}" import - "${image_id}:${STAGE3_DATE}" \
-        || die "failed to import ${_stage3_file}"
+    _status_msg="download ${stage3_file}"
+    # shellcheck disable=SC2034
+    _pwrap_callback=( 'cb_add_filesize_to_status' "${KUBLER_DOWNLOAD_DIR}/${stage3_file}" )
+    pwrap download_stage3 "${stage3_file}" || die "Failed to download stage3 file"
 
-    msg "tag ${image_id}:latest"
-    "${DOCKER}" tag "${image_id}:${STAGE3_DATE}" "${image_id}:latest" || die "failed to tag"
+    _status_msg="import ${stage3_file}"
+    pwrap import_tarball "${KUBLER_DOWNLOAD_DIR}/${stage3_file}" "${image_id}:${STAGE3_DATE}" \
+        || die "Failed to import ${stage3_file}"
+
+    _status_msg="tag ${image_id}:latest"
+    pwrap "${DOCKER}" tag "${image_id}:${STAGE3_DATE}" "${image_id}:latest" || die "Failed to tag ${image_id}:latest"
+}
+
+# Create a new Docker image from a file archive.
+#
+# Arguments:
+#
+# 1: tarball_path - file to import, xz and bz only
+# 2: image_id - docker image id for the new image
+function import_tarball() {
+    local tarball_path image_id cat_bin
+    tarball_path="$1"
+    image_id="$2"
+    cat_bin='bzcat'
+    [[ "${tarball_path##*.}" == 'xz' ]] && cat_bin='xzcat'
+    "${cat_bin}" < "${tarball_path}" | bzip2 | "${DOCKER}" import - "${image_id}" \
+        || return 1
 }
 
 # This function is called once per stage3 build container and should
@@ -396,32 +612,48 @@ function import_stage3() {
 function build_core() {
     local builder_id core_id image_path
     builder_id="$1"
-    import_portage_tree "${_PORTAGE_IMAGE}" "${PORTAGE_DATE}"
+    core_id="${builder_id}-core"
+
+    # when -C is active this might get called multiple times for a build
+    [[ "${_portage_image_processed}" == 'false' ]] && import_portage_tree "${_PORTAGE_IMAGE}" "${PORTAGE_DATE}"
 
     # ensure the portage container is created
     container_exists "${_PORTAGE_CONTAINER}"
     [[ $? -eq 3 ]] &&
-        msg "--> create portage container, this may take a few moments.. " && \
-        "${DOCKER}" run '--name' "${_PORTAGE_CONTAINER}" "${_PORTAGE_IMAGE}" true
+        _status_msg="create the portage container" && \
+        pwrap "${DOCKER}" run '--name' "${_PORTAGE_CONTAINER}" "${_PORTAGE_IMAGE}" true
+
+    # add current image id to output logging
+    add_status_value "${core_id}"
 
     BOB_CURRENT_STAGE3_ID="${_STAGE3_NAMESPACE}/${STAGE3_BASE//+/-}"
     import_stage3 "${BOB_CURRENT_STAGE3_ID}"
 
-    core_id="${builder_id}-core"
     image_exists_or_rm "${core_id}" "${_BUILDER_PATH}" && return 0
     expand_image_id "${core_id}" "${_BUILDER_PATH}"
-    get_abs_ns_path "${__expand_image_id}"
-    image_path="${__get_abs_ns_path}"
-    mkdir -p "${image_path}"
+    # shellcheck disable=SC2154
+    image_path="${__expand_image_id}"
+    [[ ! -d "${image_path}" ]] && { mkdir -p "${image_path}" || die; }
 
+    _handle_build_core_error_args="${image_path}"
+    add_trap_fn 'handle_build_core_error'
     # copy build-root.sh and emerge defaults so we can access it via dockerfile context
-    cp -r "${_KUBLER_DIR}"/lib/bob-core/{*.sh,etc,Dockerfile.template} "${image_path}/"
+    cp -r "${_KUBLER_DIR}"/lib/bob-core/{*.sh,etc,Dockerfile.template} "${image_path}/" \
+        || die "Could not create temporary image at ${image_path}"
 
-    generate_dockerfile "${__expand_image_id}"
-    build_image "${builder_id}-core" "${_BUILDER_PATH}"
+    generate_dockerfile "${image_path}"
+    build_image "${core_id}" "${image_path}" "${_BUILDER_PATH}" 'true'
 
+    rm_trap_fn 'handle_build_core_error'
     # clean up
     rm -r "${image_path}"
+
+}
+
+function handle_build_core_error() {
+    local image_path
+    image_path="${_handle_build_core_error_args}"
+    [[ -d "${image_path}" ]] && rm -r "${image_path}"
 }
 
 # Produces a build container image for given builder_id
@@ -429,22 +661,26 @@ function build_core() {
 #
 # Arguments:
 # 1: builder_id (i.e. kubler/bob)
+# 2: image_path
 function build_builder() {
-    local builder_id
+    local builder_id image_path
     builder_id="$1"
+    image_path="$2"
     # bootstrap a stage3 image if defined in build.conf
     [[ -n "${STAGE3_BASE}" ]] && build_core "${builder_id}"
-    build_image "${builder_id}" "${_BUILDER_PATH}"
+    build_image "${builder_id}" "${image_path}" "${_BUILDER_PATH}"
 }
 
 # Called when using --no-deps, in most cases a thin wrapper to build_image()
 #
 # Arguments:
 # 1: image_id (i.e. kubler/busybox)
+# 2: image_path
 function build_image_no_deps() {
-    local image_id
+    local image_id image_path
     image_id="$1"
-    build_image "${image_id}"
+    image_path="$2"
+    build_image "${image_id}" "${image_path}"
 }
 
 # Sets __get_build_container to the builder_id required for building given image_id or signal 3 if not found/implemented.
@@ -466,13 +702,14 @@ function get_build_container() {
         # shellcheck disable=SC2154
         source_image_conf "${__expand_image_id}"
     fi
-    # get parent image basename
-    parent_image="${IMAGE_PARENT##*/}"
-    parent_ns="${IMAGE_PARENT%%/*}"
+
     if [[ -n "${BUILDER}" ]]; then
         # BUILDER was set for this image, override default and start with given base builder from this image on
         build_container="${BUILDER}"
     elif [[ "${image_type}" == "${_IMAGE_PATH}" ]]; then
+        # get parent image basename
+        parent_image="${IMAGE_PARENT##*/}"
+        parent_ns="${IMAGE_PARENT%%/*}"
         builder_image="${build_container##*/}"
         [[ "${parent_image}" != "scratch" ]] && image_exists "${parent_ns}/${builder_image}-${parent_image}" \
             && build_container="${parent_ns}/${builder_image}-${parent_image}"
@@ -492,9 +729,10 @@ function push_auth() {
     local namespace repository_url login_args
     namespace="$1"
     repository_url="$2"
+    add_status_value 'auth'
     if [[ -z "${repository_url}" ]]; then
         DOCKER_LOGIN="${DOCKER_LOGIN:-${namespace}}"
-        msg "--> using docker.io/u/${DOCKER_LOGIN}"
+        msg_info "using docker.io/u/${DOCKER_LOGIN}"
         login_args=('-u' "${DOCKER_LOGIN}")
         # shellcheck disable=SC2153
         if [[ -n "${DOCKER_PW}" ]]; then
@@ -502,7 +740,7 @@ function push_auth() {
         fi
         "${DOCKER}" login "${login_args[@]}" || exit 1
     else
-        msg "--> using ${repository_url}"
+        msg_info "using ${repository_url}"
     fi
 }
 
@@ -521,9 +759,11 @@ function push_image() {
         # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${image_tag}: ${docker_image_id}"
         push_id="${repository_url}/${image_id}"
-        msg "${DOCKER}" tag "${docker_image_id}" "${push_id}"
-        "${DOCKER}" tag "${docker_image_id}" "${push_id}" || exit 1
+        _status_msg="${DOCKER}" tag "${docker_image_id}" "${push_id}"
+        pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}" || die
     fi
-    msg "--> pushing ${push_id}"
-    "${DOCKER}" push "${push_id}" || exit 1
+    add_status_value "${push_id}"
+    _status_msg="upload image"
+    pwrap "${DOCKER}" push "${push_id}" || die
+    msg_ok "done."
 }

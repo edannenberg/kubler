@@ -9,5 +9,5 @@ before_install:
   - docker pull koalaman/shellcheck
 
 script:
- - docker run -w /scripts -v $(pwd):/scripts koalaman/shellcheck -x
-   kubler.sh lib/*.sh lib/engine/docker.sh lib/cmd/*.sh lib/bob-core/*.sh lib/argbash/argbash-refresh.sh
+ - docker run --rm -w /scripts -v $(pwd):/scripts koalaman/shellcheck -x
+   kubler.sh lib/*.sh lib/engine/docker.sh lib/cmd/*.sh lib/bob-core/*.sh lib/cmd/argbash/argbash-refresh.sh

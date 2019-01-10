@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -10,7 +10,7 @@
 #    disclaimer.
 #
 # 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-# following disclaimer in the documentation and/or other materials provided with the distribution.
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 # INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -21,7 +21,16 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-readonly _KUBLER_NAMESPACE_DIR="${_KUBLER_DIR}"/dock
+KUBLER_DISABLE_KUBLER_NS="${KUBLER_DISABLE_KUBLER_NS:-false}"
+
+KUBLER_DOWNLOAD_DIR="${KUBLER_DOWNLOAD_DIR:-${KUBLER_DATA_DIR}/downloads}"
+KUBLER_DISTFILES_DIR="${KUBLER_DISTFILES_DIR:-${KUBLER_DATA_DIR}/distfiles}"
+KUBLER_PACKAGES_DIR="${KUBLER_PACKAGES_DIR:-${KUBLER_DATA_DIR}/packages}"
+KUBLER_DEPGRAPH_IMAGE="${KUBLER_DEPGRAPH_IMAGE:-kubler/graph-easy}"
+
+readonly _KUBLER_NAMESPACE_DIR="${KUBLER_DATA_DIR}"/namespaces
+readonly _KUBLER_LOG_DIR="${KUBLER_DATA_DIR}"/log
+readonly _KUBLER_NS_GIT_URL='https://github.com/edannenberg/kubler-images.git'
 readonly _KUBLER_CONF='kubler.conf'
 readonly _IMAGE_PATH="images/"
 readonly _BUILDER_PATH="builder/"
@@ -38,56 +47,93 @@ BOB_HOST_GID=$(id -g)
 # stage3 defaults, override via build container .conf
 STAGE3_BASE="stage3-amd64-hardened+nomultilib"
 
+_kubler_trap_functions=()
+_kubler_internal_abort=
+
 # used as primitive caching mechanism
 _last_sourced_engine=
 _last_sourced_image=
 _last_sourced_push_conf=
 
-# Arguments
-# n: message
-function msg() {
-    echo -e "$@"
+# shellcheck source=lib/util.sh
+source "${_LIB_DIR}"/util.sh || die
+
+# Helper function that provides parsable data for Kubler's bash completion script.
+function bc_helper() {
+    [[ -z "${KUBLER_BC_HELP}" ]] && return
+    local available_cmds cmd
+    available_cmds=()
+    for cmd in "${_LIB_DIR}"/cmd/*.sh "${KUBLER_DATA_DIR}"/cmd/*.sh; do
+        available_cmds+=("$(basename -- "${cmd%.*}")")
+    done
+
+    echo "${KUBLER_DATA_DIR}"
+    echo "${_NAMESPACE_DIR}"
+    echo "${_NAMESPACE_TYPE}"
+    echo "${_NAMESPACE_DEFAULT}"
+    echo "${available_cmds[*]}"
+    exit 0
 }
 
-# printf version of msg(), 20 char padding between prefix and suffix
+# The main trap handler for any command script, do not call this function manually! Instead add your own trap handlers
+# like so:
+#
+# add_trap_fn myhandler_fn
+# do stuff..
+# rm_trap_fn myhandler_fn
+#
+# If your handler requires arguments use a global var named _myhandler_fn_args. The rm_trap_fn function will unset this
+# var should it be set.
+#
+# Note that your trap handler should not exit the script, it might prevent other handlers from executing.
+function kubler_abort_handler() {
+    local trap_fn
+    [[ "${_kubler_internal_abort}" != 'true' ]] && { echo -e ""; msg_error "caught interrupt, aborting.."; }
+    for trap_fn in "${_kubler_trap_functions[@]}"; do
+        [[ -z "${trap_fn}" ]] && continue
+        "${trap_fn}"
+    done
+    die
+}
+
+# Arguments:
+# 1: fn_name - function name that should be called on abort
+function add_trap_fn() {
+    local fn_name
+    fn_name="$1";
+    _kubler_trap_functions+=( "${fn_name}" )
+}
+
+# Arguments:
+# 1: fn_name - function name that should be removed from global trap handler
+function rm_trap_fn() {
+    local fn_name trap_fn tmp_array
+    fn_name="$1";
+    tmp_array=()
+    for trap_fn in "${_kubler_trap_functions[@]}"; do
+        [[ "${trap_fn}" != "${fn_name}" ]] && tmp_array+=("${trap_fn}")
+    done
+    unset _"${fn_name}"_args
+    _kubler_trap_functions=( "${tmp_array[@]}" )
+}
+
+# Sets __get_include_path to absolute path for given relative file_sub_path. The function will check both
+# KUBLER_DATA_DIR and _LIB_DIR, in that order. First hit wins, returns exit signal 3 if the path doesn't exist.
 #
 # Arguments:
-# 1: msg_prefix
-# n: msg_suffix
-function msgf() {
-    local msg_prefix
-    msg_prefix="$1"
-    shift
-    printf '%s %-20s %s\n' '-->' "${msg_prefix}" "$@"
-}
-
-# Read user input displaying given question
-#
-# Arguments:
-# 1: question
-# 2: default_value
-# Return value: user input or passed default_value
-function ask() {
-    __ask=
-    local question default_value
-    question="$1"
-    default_value="$2"
-    read -r -p "${question} (${default_value}): " __ask
-    [[ -z "${__ask}" ]] && __ask="${default_value}"
-}
-
-# Arguments:
-# 1: file_path as string
-# 2: error_msg, optional
-function file_exists_or_die() {
-    local file error_msg
-    file="$1"
-    [[ -z "$2" ]] && error_msg="Couldn't read: ${file}"
-    [[ -f "${file}" ]] || die "${error_msg}"
-}
-
-function sha_sum() {
-    [[ $(command -v sha512sum) ]] && echo 'sha512sum' || echo 'shasum -a512'
+# 1: file_sub_path as string
+function get_include_path() {
+    __get_include_path=
+    local file_sub_path base_path
+    file_sub_path="$1"
+    if [[ -f "${KUBLER_DATA_DIR}/${file_sub_path}" ]]; then
+        base_path="${KUBLER_DATA_DIR}"
+    elif [[ -f "${_LIB_DIR}/${file_sub_path}" ]]; then
+        base_path="${_LIB_DIR}"
+    else
+        return 3
+    fi
+    __get_include_path="${base_path}/${file_sub_path}"
 }
 
 # Make sure required binaries are in PATH
@@ -100,108 +146,113 @@ function has_required_binaries() {
     done
 }
 
-# Returns 0 if given string contains given word or 3 if not. Does *not* match substrings.
+# Source build engine script depending on passed engine_id or BUILD_ENGINE value
 #
 # Arguments:
-# 1: string
-# 2: word
-function string_has_word() {
-    local regex
-    regex="(^| )${2}($| )"
-    if [[ "${1}" =~ $regex ]];then
-        return 0
+# 1: engine_id - optional, default: value of BUILD_ENGINE
+# shellcheck disable=SC2120
+function source_build_engine() {
+    local engine_id
+    engine_id="${1:-${BUILD_ENGINE}}"
+    if [[ "${_last_sourced_engine}" != "${engine_id}" ]]; then
+        get_include_path "engine/${engine_id}.sh" || die "Couldn't find build engine: ${engine_id}"
+        # shellcheck source=lib/engine/docker.sh
+        source "${__get_include_path}"
+        _last_sourced_engine="${engine_id}"
+    fi
+}
+
+# Return namespace dir of given absolute image_path.
+#
+# Arguments:
+# 1: image_path
+function get_ns_dir_by_image_path() {
+    __get_ns_dir_by_image_path=
+    local image_path
+    image_path="$1"
+    if [[ "${image_path}" == /*/"${_IMAGE_PATH}"* ]]; then
+        image_path="${image_path%%/${_IMAGE_PATH}*}"
+    elif [[ "${image_path}" == /*/"${_BUILDER_PATH}"* ]]; then
+        image_path="${image_path%%/${_BUILDER_PATH}*}"
     else
         return 3
     fi
+    __get_ns_dir_by_image_path="${image_path}"
 }
 
-# Run sed over given $file with given $sed_args array
+# Read namespace kubler.conf for given absolute ns_dir
 #
 # Arguments:
-# 1: full file path as string
-# 2: sed_args as array
-function replace_in_file() {
-    local file_path sed_arg
-    file_path="${1}"
-    declare -a sed_arg=("${!2}")
-    sed "${sed_arg[@]}" "${file_path}" > "${file_path}.tmp" || die
-    mv "${file_path}.tmp" "${file_path}" || die
-}
-
-# Source build engine script depending on BUILD_ENGINE value
-function source_build_engine() {
-    local engine
-    engine="${_LIB_DIR}/engine/${BUILD_ENGINE}.sh"
-    if [[ "${_last_sourced_engine}" != "${BUILD_ENGINE}" ]]; then
-        file_exists_or_die "${engine}"
-        # shellcheck source=lib/engine/docker.sh
-        source "${engine}"
-        _last_sourced_engine="${BUILD_ENGINE}"
-    fi
-}
-
-# Read namespace build.conf for given image_id
-#
-# Arguments:
-# 1: image_id (i.e. kubler/busybox)
+# 1: ns_dir
 function source_namespace_conf() {
-    local image_id current_ns conf_file
-    image_id="$1"
+    local ns_dir conf_file final_tag
+    ns_dir="$1"
 
-    [[ "${_NAMESPACE_TYPE}" == 'single' ]] && return 0
+    # reset to system config at /etc/kubler.conf or _KUBLER_DIR/kubler.conf first..
+    # shellcheck source=kubler.conf disable=SC1090
+    source "${_kubler_system_conf}"
 
-    # reset to possible user conf first..
-    # shellcheck disable=SC1090
-    [[ -f "${_ns_conf}" ]] && source "${_ns_conf}"
-
-    # ..then read project conf to initialize any missing defaults if necessary
+    # ..then read user config at KUBLER_DATA_DIR/kubler.conf..
     # shellcheck source=kubler.conf
-    [[ "${_ns_conf}" != "${_global_conf}" ]] && source "${_global_conf}"
+    [[ -f "${_kubler_user_conf}" ]] && source "${_kubler_user_conf}"
 
-    [[ "${image_id}" != *"/"* ]] && return 0
+    # ..then current multi namespace conf..
+    # shellcheck source=kubler.conf
+    [[ "${_kubler_ns_conf}" != "${_kubler_user_conf}" && -f "${_kubler_ns_conf}" ]] && source "${_kubler_ns_conf}"
+    [[ -n "${IMAGE_TAG}" ]] && final_tag="${IMAGE_TAG}"
 
-    current_ns="${image_id%%/*}"
-    get_abs_ns_path "${current_ns}"
-    conf_file="${__get_abs_ns_path}"/"${_KUBLER_CONF}"
+    conf_file="${ns_dir}"/"${_KUBLER_CONF}"
 
-    # ..then read current namespace conf
-    # shellcheck source=dock/kubler/kubler.conf
-    file_exists_or_die "${conf_file}" && source "${conf_file}"
-    _current_namespace="${current_ns}"
-    # just for BC and to make build.conf/templates a bit more consistent to use. not used otherwise
-    NAMESPACE="${current_ns}"
+    # ..finally read current namespace conf
+    # shellcheck source=kubler.conf
+    file_exists_or_die "${conf_file}" "Couldn't read namespace conf ${conf_file}" && source "${conf_file}"
 
-    source_build_engine
+    [[ -z "${IMAGE_TAG}" ]] && die 'No IMAGE_TAG defined in any kubler.conf file.'
+    # silently ignore IMAGE_TAG if it was already defined in a parent kubler.conf
+    [[ -n "${IMAGE_TAG}" && -n "${final_tag}" && "${IMAGE_TAG}" != "${final_tag}" ]] \
+        && IMAGE_TAG="${final_tag}"
+
+    _current_namespace="$(basename -- "${ns_dir}")"
+    # just for BC and to make build.conf/templates a bit more consistent to use. not used otherwise internally
+    NAMESPACE="${_current_namespace}"
+
+    source_build_engine "${BUILD_ENGINE}"
 }
 
 # Read image build.conf for given image_path
 #
 # Arguments:
-# 1: image_path (i.e. kubler/images/busybox)
+# 1: image_path - can be either relative to a namespace dir or an absolute path
 function source_image_conf() {
     local image_path build_conf
     image_path="$1"
+
     # exit if we just sourced the given build.conf
     [[ "${_last_sourced_image}" == "${image_path}" ]] && return 0
-    if [[ "${_NAMESPACE_TYPE}" != 'single' ]]; then
-        unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
-        source_namespace_conf "${image_path}"
+    unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
+    unset POST_BUILD_HC POST_BUILD_HC_MAX_DURATION POST_BUILD_HC_INTERVAL POST_BUILD_HC_START_PERIOD POST_BUILD_HC_RETRY
+
+    if [[ "${image_path}" != '/'* ]]; then
+        get_ns_include_path "${image_path}"
+        image_path="${__get_ns_include_path}"
     fi
+
+    get_ns_dir_by_image_path "${image_path}"
+    source_namespace_conf "${__get_ns_dir_by_image_path}"
+
     unset STAGE3_BASE STAGE3_DATE IMAGE_PARENT BUILDER BUILDER_CAPS_SYS_PTRACE BUILDER_DOCKER_ARGS
-    [[ -z "${_use_parent_builder_mounts}" ]] && unset BUILDER_MOUNTS
+    [[ "${_use_parent_builder_mounts}" != 'true' ]] && unset BUILDER_MOUNTS
 
-    get_abs_ns_path "${image_path}"
-    build_conf="${__get_abs_ns_path}/"build.conf
-
-    # shellcheck source=dock/kubler/images/busybox/build.conf
-    file_exists_or_die "${build_conf}" && source "${build_conf}"
+    build_conf="${image_path}/"build.conf
+    file_exists_or_die "${build_conf}" "Couldn't read image config ${build_conf}"
+    # shellcheck source=lib/template/docker/image/build.conf
+    source "${build_conf}"
 
     # assume scratch if IMAGE_PARENT is not set
     [[ -z "${IMAGE_PARENT}" ]] && IMAGE_PARENT='scratch'
 
     # stage3 overrides BUILDER, unset if defined
     [[ -n "${STAGE3_BASE}" ]] && unset BUILDER
-
     _last_sourced_image="${image_path}"
 }
 
@@ -211,7 +262,7 @@ function source_image_conf() {
 # 1: image_id (i.e. kubler/busybox)
 function source_push_conf() {
     local namespace
-    namespace=${1%%/*}
+    namespace="${1%%/*}"
     # exit if we just sourced for this NS
     [[ "${_last_sourced_push_conf}" == "${namespace}" ]] && return 0
     # shellcheck disable=SC1090
@@ -219,7 +270,7 @@ function source_push_conf() {
     _last_sourced_push_conf="${namespace}"
 }
 
-# Check image dependencies and return base build container for given image_id. Recursive.
+# Check image dependencies and return base build container id for given image_id. Recursive.
 #
 # Arguments:
 #
@@ -229,8 +280,8 @@ function get_image_builder_id() {
     local image_id
     image_id="$1"
     [[ "${image_id}" == 'scratch' ]] && __get_image_builder_id="${DEFAULT_BUILDER}" && return 0
-    expand_image_id "${image_id}" "${_IMAGE_PATH}"
-    if [[ -n "${image_id}" && "${image_id}" != "scratch" ]]; then
+    if [[ -n "${image_id}" && "${image_id}" != 'scratch' ]]; then
+        expand_image_id "${image_id}" "${_IMAGE_PATH}"
         # shellcheck disable=SC2154
         source_image_conf "${__expand_image_id}"
         if [[ -n "${BUILDER}" ]];then
@@ -269,36 +320,44 @@ function fetch_stage3_archive_name() {
 }
 
 # Download and verify stage3 tar ball
+#
+# Arguments:
+# 1: stage3_file
 function download_stage3() {
-    [[ -d "${DOWNLOAD_PATH}" ]] || mkdir -p "${DOWNLOAD_PATH}"
-    local is_autobuild stage3_contents stage3_digests sha512_hashes sha512_check sha512_failed wget_exit
+    [[ -d "${KUBLER_DOWNLOAD_DIR}" ]] || mkdir -p "${KUBLER_DOWNLOAD_DIR}"
+    local is_autobuild stage3_file stage3_contents stage3_digests sha512_hashes sha512_check sha512_failed \
+          wget_exit wget_args
     is_autobuild=false
-    fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
-    _stage3_file="${__fetch_stage3_archive_name}"
-    stage3_contents="${_stage3_file}.CONTENTS"
-    stage3_digests="${_stage3_file}.DIGESTS"
+    stage3_file="$1"
+    stage3_contents="${stage3_file}.CONTENTS"
+    stage3_digests="${stage3_file}.DIGESTS"
     if [[ "${ARCH_URL}" == *autobuilds*  ]]; then
-        stage3_digests="${_stage3_file}.DIGESTS.asc"
+        stage3_digests="${stage3_file}.DIGESTS.asc"
         is_autobuild=true
     fi
 
-    for file in "${_stage3_file}" "${stage3_contents}" "${stage3_digests}"; do
-        [ -f "${DOWNLOAD_PATH}/${file}" ] && continue
-        trap 'handle_download_error ${DOWNLOAD_PATH}/${file}' EXIT
-        wget -O "${DOWNLOAD_PATH}/${file}" "${ARCH_URL}${file}"
+    wget_args=()
+    [[ "${_arg_verbose}" == 'off' ]] && wget_args+=( '-q' '-nv' )
+
+    for file in "${stage3_file}" "${stage3_contents}" "${stage3_digests}"; do
+        [ -f "${KUBLER_DOWNLOAD_DIR}/${file}" ] && continue
+
+        _handle_download_error_args="${KUBLER_DOWNLOAD_DIR}/${file}"
+        add_trap_fn 'handle_download_error'
+        wget "${wget_args[@]}" -O "${KUBLER_DOWNLOAD_DIR}/${file}" "${ARCH_URL}${file}"
         wget_exit=$?
-        [[ "${wget_exit}" -eq 8 ]] && msg "*** Got a 404 for ${file}, try running the update command to resolve this."
+        [[ "${wget_exit}" -eq 8 ]] && msg_error "HTTP 404 for ${file}, try running the update command to resolve this."
         [[ "${wget_exit}" -ne 0 ]] && exit $?
-        trap - EXIT
+        rm_trap_fn 'handle_download_error'
     done
     # shellcheck disable=SC2154
     if [ "${_arg_skip_gpg_check}" = false ] && [ "${is_autobuild}" = true ]; then
-        gpg --verify "${DOWNLOAD_PATH}/${stage3_digests}" || die "insecure digests"
+        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" || die "Insecure digests"
     elif [ "${is_autobuild}" = false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     fi
-    sha512_hashes="$(grep -A1 SHA512 "${DOWNLOAD_PATH}/${stage3_digests}" | grep -v '^--')"
-    sha512_check="$(cd "${DOWNLOAD_PATH}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))"
+    sha512_hashes="$(grep -A1 SHA512 "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" | grep -v '^--')"
+    sha512_check="$(cd "${KUBLER_DOWNLOAD_DIR}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))"
     sha512_failed="$(echo "${sha512_check}" | grep FAILED)"
     if [ -n "${sha512_failed}" ]; then
         die "${sha512_failed}"
@@ -306,96 +365,102 @@ function download_stage3() {
 }
 
 # Download and verify portage snapshot, when using latest it will download at most once per day
+#
+# Arguments:
+# 1: portage_file
 function download_portage_snapshot() {
     PORTAGE_DATE="${PORTAGE_DATE:-latest}"
     PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
-    [[ -d "${DOWNLOAD_PATH}" ]] || mkdir -p "${DOWNLOAD_PATH}"
-    local portage_sig portage_md5 file dl_name
-    _portage_file="portage-${PORTAGE_DATE}.tar.xz"
-    portage_sig="${_portage_file}.gpgsig"
-    portage_md5="${_portage_file}.md5sum"
+    [[ -d "${KUBLER_DOWNLOAD_DIR}" ]] || mkdir -p "${KUBLER_DOWNLOAD_DIR}"
+    local portage_file portage_sig portage_md5 file dl_name wget_args
+    portage_file="$1"
+    portage_sig="${portage_file}.gpgsig"
+    portage_md5="${portage_file}.md5sum"
 
-    for file in "${_portage_file}" "${portage_sig}" "${portage_md5}"; do
+    for file in "${portage_file}" "${portage_sig}" "${portage_md5}"; do
         dl_name="${file}"
         if [[ "${PORTAGE_DATE}" == 'latest' ]]; then
-            dl_name="${_portage_file//latest/${_TODAY}}"
+            dl_name="${portage_file//latest/${_TODAY}}"
         fi
-        if [ ! -f "${DOWNLOAD_PATH}/${dl_name}" ]; then
-            trap 'handle_download_error ${DOWNLOAD_PATH}/${dl_name}' EXIT
-            wget -O "${DOWNLOAD_PATH}/${dl_name}" "${MIRROR}snapshots/${file}" || exit $?
-            trap - EXIT
+        if [[ ! -f "${KUBLER_DOWNLOAD_DIR}/${dl_name}" ]]; then
+            wget_args=()
+            [[ "${_arg_verbose}" == 'off' ]] && wget_args+=( '-q' '-nv' )
+            _handle_download_error_args="${KUBLER_DOWNLOAD_DIR}/${dl_name}"
+            add_trap_fn 'handle_download_error'
+            wget "${wget_args[@]}" -O "${KUBLER_DOWNLOAD_DIR}/${dl_name}" "${MIRROR}snapshots/${file}" || exit $?
+            rm_trap_fn 'handle_download_error'
         fi
     done
 
     # use current date instead of latest from here on
     if [[ "${PORTAGE_DATE}" == 'latest' ]]; then
-        portage_sig="${_portage_file//latest/${_TODAY}}.gpgsig"
-        portage_md5="${_portage_file//latest/${_TODAY}}.md5sum"
-        _portage_file="${_portage_file//latest/${_TODAY}}"
+        portage_sig="${portage_file//latest/${_TODAY}}.gpgsig"
+        portage_md5="${portage_file//latest/${_TODAY}}.md5sum"
+        portage_file="${portage_file//latest/${_TODAY}}"
         PORTAGE_DATE="${_TODAY}"
     fi
 
-    if [[ "${_arg_skip_gpg_check}" != 'on' ]] && [[ -f "${DOWNLOAD_PATH}/${portage_sig}" ]]; then
-        gpg --verify "${DOWNLOAD_PATH}/${portage_sig}" "${DOWNLOAD_PATH}/${_portage_file}" || die "Insecure digests."
+    if [[ "${_arg_skip_gpg_check}" != 'on' ]] && [[ -f "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" ]]; then
+        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" "${KUBLER_DOWNLOAD_DIR}/${portage_file}" || die "Insecure digests."
     fi
 }
 
-# Arguments:
-# 1: file - full path of downloaded file
-# 2: error_message - optional
 function handle_download_error() {
     local file msg
-    file="$1"
+    file="${_handle_download_error_args}"
     msg="${2:-Aborted download of ${file}}"
     [[ -f "${file}" ]] && rm "${file}"
     die "${msg}"
 }
 
-# Return the correct absolute path for given relative_image_path:
-#
-# 1. returns input if path is actually absolute
-# 2. the path starts with kubler -> return abs path for internal kubler namespace
-# 3. else -> return abs path for current namespace dir
+# Returns the absolute path for given relative_image_path.
 #
 # Arguments:
 # 1: relative_image_path
-function get_abs_ns_path() {
-    __get_abs_ns_path=
+function get_ns_include_path() {
+    __get_ns_include_path=
     local relative_image_path abs_path
     relative_image_path="$1"
     # return input if it's actually an absolute path
-    [[ "${relative_image_path}" == "/"* ]] && __get_abs_ns_path="${relative_image_path}" && return 0
+    [[ "${relative_image_path}" == "/"* ]] && __get_ns_include_path="${relative_image_path}" && return 0
 
-    if [[  "${relative_image_path}" == "kubler" || "${relative_image_path}" == "kubler/"* ]]; then
-        abs_path="${_KUBLER_NAMESPACE_DIR}"/"${relative_image_path}"
+    if [[ "${_NAMESPACE_TYPE}" == 'single' ]] && \
+        [[ "${relative_image_path}" == "${_NAMESPACE_DEFAULT}"/* || "${relative_image_path}" == "${_NAMESPACE_DEFAULT}" ]]
+        then
+        relative_image_path="${relative_image_path//${_NAMESPACE_DEFAULT}//}"
+        abs_path="${_NAMESPACE_DIR}/${relative_image_path}"
     else
-        abs_path="${_NAMESPACE_DIR}"/"${relative_image_path}"
+        if [[ -d "${_NAMESPACE_DIR}/${relative_image_path}" ]]; then
+            abs_path="${_NAMESPACE_DIR}/${relative_image_path}"
+        elif [[ -d "${_KUBLER_NAMESPACE_DIR}/${relative_image_path}" || "${relative_image_path}" == *"-core" ]]; then
+            abs_path="${_KUBLER_NAMESPACE_DIR}/${relative_image_path}"
+        else
+            return 3
+        fi
     fi
-    __get_abs_ns_path="${abs_path}"
+    __get_ns_include_path="${abs_path}"
 }
 
-# Sets __expand_image_id to image sub-path for given image_id
+# Sets __expand_image_id to absolute image path for given image_id and image_type
 #
 # 1: image_id (i.e. kubler/busybox)
-# 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH)
+# 2: image_type ($_IMAGE_PATH or $_BUILDER_PATH), optional, default: $_IMAGE_PATH
 function expand_image_id() {
     __expand_image_id=
-    local image_id image_type msg_type
+    local image_id image_type image_ns expand_id
     image_id="$1"
-    image_type="$2"
-    msg_type='image'
-    [[ "${image_type}" == "${_BUILDER_PATH}" ]] && msg_type="builder"
-    if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
+    image_type="${2:-${_IMAGE_PATH}}"
+    image_ns="${image_id%%/*}"
+    if [[ "${_NAMESPACE_TYPE}" == 'single' && "${image_ns}" == "${_NAMESPACE_DEFAULT}" ]]; then
         if [[ "${image_id}" == *"/"* ]]; then
-            image_ns="${image_id%%/*}"
-            [[ "${image_ns}" != "${_current_namespace}" ]] \
-                && die "Unknown namespace \"${image_ns}\" for ${msg_type} ${image_id}, expected \"${_current_namespace}\""
             image_id="${image_id##*/}"
         fi
-        __expand_image_id="${image_type}${image_id}"
+        expand_id="${image_type}${image_id}"
     else
-        __expand_image_id="${image_id/\//\/${image_type}}"
+        expand_id="${image_id/\//\/${image_type}}"
     fi
+    get_ns_include_path "${expand_id}" || return $?
+    __expand_image_id="${__get_ns_include_path}"
 }
 
 # Expand requested namespace and image mix of passed target_ids to fully qualified image ids
@@ -405,56 +470,45 @@ function expand_image_id() {
 # n: target_id (i.e. namespace or namespace/image)
 function expand_requested_target_ids() {
     __expand_requested_target_ids=
-    local target_ids expanded target image current_ns
+    local target_ids expanded target image is_processed
     target_ids=( "$@" )
-    expanded=""
-    if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
-        current_ns="$(basename -- "${_NAMESPACE_DIR}")"
-        for target in "${target_ids[@]}"; do
-            # strip namespace if this is a fully qualified image id, redundant in single namespace mode
-            if [[ "${target}" == *"/"* ]]; then
-                [[ "${target%%/*}" != "${current_ns}" ]] && die "Invalid namespace for ${target}, expected: ${current_ns}"
-                target="${target##*/}"
+    expanded=()
+    for target in "${target_ids[@]}"; do
+        is_processed=
+        # strip trailing slash possibly added by bash completion
+        [[ "${target}" == */ ]] && target="${target: : -1}"
+        # is target a fully qualified image id?
+        if [[ "${target}" == *"/"* ]]; then
+            expand_image_id "${target}" "${_IMAGE_PATH}" || die "Couldn't find a image dir for ${target}"
+            expanded+=( "${target}" )
+        else
+            # is target an image id with omitted namespace?
+            if [[ -n "${_NAMESPACE_DEFAULT}" ]]; then
+                expand_image_id "${_NAMESPACE_DEFAULT}/${target}" "${_IMAGE_PATH}" \
+                    && expanded+=( "${_NAMESPACE_DEFAULT}/${target}" ) && is_processed=1
             fi
-            expand_image_id "${target}" "${_IMAGE_PATH}"
-            [[ ! -d "${__expand_image_id}" ]] && die "Couldn't find image ${target} in ${_NAMESPACE_DIR}"
-            expanded+=" ${current_ns}/${target}"
-        done
-    else
-        local is_processed
-        for target in "${target_ids[@]}"; do
-            is_processed=
-            # strip trailing slash possibly added by namespace bash completion
-            [[ "${target}" == */ ]] && target="${target: : -1}"
-            # is target a fully qualified image id?
-            if [[ "${target}" == *"/"* ]]; then
-                expand_image_id "${target}" "${_IMAGE_PATH}"
-                [[ ! -d "${__expand_image_id}" ]] && die "Couldn't find image ${target} in ${_NAMESPACE_DIR}"
-                expanded+=" ${target}"
-            else
-                # is target an image id with omitted namespace?
-                if [[ -n "${_NAMESPACE_DEFAULT}" ]]; then
-                    expand_image_id "${_NAMESPACE_DEFAULT}/${target}" "${_IMAGE_PATH}"
-                    if [[ -d "${__expand_image_id}" ]]; then
-                        expanded+=" ${_NAMESPACE_DEFAULT}/${target}"
-                        is_processed=1
-                    fi
-                fi
-                # ..if not it should be a namespace, expand to image ids
-                if [[ -z "${is_processed}" ]]; then
-                    [[ ! -d "${_NAMESPACE_DIR}/${target}/${_IMAGE_PATH}" ]] \
-                        && die "Couldn't find namespace ${target} in ${_NAMESPACE_DIR}"
-                    pushd "${_NAMESPACE_DIR}" > /dev/null || die "pushd error on directory ${_NAMESPACE_DIR}"
-                    for image in "${target}/${_IMAGE_PATH}"*; do
-                       expanded+=" ${image/${_IMAGE_PATH}/}"
-                    done
+            # ..if not it should be a namespace, expand to image ids
+            if [[ -z "${is_processed}" ]]; then
+                get_ns_include_path "${target}" \
+                    || die "Couldn't find namespace dir ${target} in ${_NAMESPACE_DIR}"
+                pushd "${__get_ns_include_path}" > /dev/null || die "pushd error on directory ${_NAMESPACE_DIR}"
+                if ! dir_has_subdirs "${__get_ns_include_path}/${_IMAGE_PATH}"; then
+                    msg_error "Namespace ${target} has no images yet. To create an image run:"
+                    msg_info_sub
+                    msg_info_sub "$ kubler new image ${target}/<imagename>"
+                    msg_info_sub
                     popd > /dev/null || die "popd failed in function expand_requested_target_ids"
+                    die
                 fi
+                for image in "${_IMAGE_PATH}"*; do
+                   expanded+=( "${target}/${image/${_IMAGE_PATH}/}" )
+                done
+                popd > /dev/null || die "popd failed in function expand_requested_target_ids"
             fi
-        done
-    fi
+        fi
+    done
     # shellcheck disable=SC2034
-    __expand_requested_target_ids=${expanded}
+    __expand_requested_target_ids=( "${expanded[@]}" )
 }
 
 # Sets __find_in_parents to path where given search_path exists, or empty string if it doesn't.
@@ -475,33 +529,44 @@ function find_in_parents() {
 
 # Set the _NAMESPACE_DIR and _NAMESPACE_TYPE variables for given working_dir
 # Types:
-# local  - path is inside kubler project root
-# multi  - directory with multiple namespaces outside of project root
-# single - only a single namespace dir outside of project root
+# local  - working_dir is inside KUBLER_DATA_DIR
+# multi  - working_dir has multiple namespaces
+# single - working_dir has only a single namespace
 # none   - only allowed when creating a new namespace
 #
 # 1: working_dir
 function detect_namespace() {
     local working_dir real_ns_dir parent_dir parent_conf
     working_dir="$1"
-    _global_conf="${_KUBLER_DIR}/${_KUBLER_CONF}"
-    _ns_conf="${_global_conf}"
+    # deny executing kubler inside it's main script folder
+    if [[ "${working_dir}" == "${_KUBLER_DIR}" || "${working_dir}" == "${_KUBLER_DIR}"/* ]]; then
+        if [[ "${_is_terminal}" == 'true' ]]; then
+            die "Kubler execution forbidden in --working-dir ${working_dir}"
+        else
+            # silent exit if not in a terminal to handle possible bash-completion invocation, etc
+            exit 1
+        fi
+    fi
+    _kubler_system_conf=/etc/"${_KUBLER_CONF}"
+    [[ ! -f /etc/"${_kubler_system_conf}" ]] && _kubler_system_conf="${_KUBLER_DIR}/${_KUBLER_CONF}"
+    _kubler_user_conf="${KUBLER_DATA_DIR}/${_KUBLER_CONF}"
+    _kubler_ns_conf="${_kubler_user_conf}"
 
     get_absolute_path "${working_dir}"
     # shellcheck disable=SC2154
-    [[ -d "${__get_absolute_path}" ]] || die "Couldn't find namespace location: ${working_dir}"
+    [[ -d "${__get_absolute_path}" ]] || die "fatal: Couldn't find namespace location: ${working_dir}"
 
     # find next namespace dir, respect symlink paths, as in don't resolve
     find_in_parents "${working_dir}" "${_KUBLER_CONF}"
     real_ns_dir="${__find_in_parents}"
 
-    # working dir inside kubler project root?
-    if [[ "${working_dir}" == "${_KUBLER_DIR}" || "${working_dir}" == "${_KUBLER_DIR}/"* ]]; then
+    # working dir inside kubler data dir?
+    if [[ "${working_dir}" == "${KUBLER_DATA_DIR}" || "${working_dir}" == "${KUBLER_DATA_DIR}"/* ]]; then
         # ..and inside a namespace dir?
         if [[ -d "${real_ns_dir}/${_IMAGE_PATH}" ]]; then
             readonly _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
         fi
-        real_ns_dir="${_KUBLER_DIR}"/dock
+        real_ns_dir="${_KUBLER_NAMESPACE_DIR}"
         readonly _NAMESPACE_TYPE='local'
     else
         # allow missing namespace dir for new command, the user might want to create a new namespace
@@ -511,11 +576,10 @@ function detect_namespace() {
                 real_ns_dir="${working_dir}"
                 readonly _NAMESPACE_TYPE='none'
             else
-                die "Couldn't find ${_KUBLER_CONF} in current or parent directories starting from ${working_dir}
-               Either cd to Kubler's project root or cd-into/create an external namespace dir."
+                die "Current --working-dir is not a Kubler namespace: ${working_dir}"
             fi
         fi
-        _ns_conf="${real_ns_dir}/${_KUBLER_CONF}"
+        _kubler_ns_conf="${real_ns_dir}/${_KUBLER_CONF}"
 
         parent_dir="$(dirname -- "${real_ns_dir}")"
         parent_conf="${parent_dir}/${_KUBLER_CONF}"
@@ -525,11 +589,11 @@ function detect_namespace() {
             if [[ ! -f "${parent_conf}" ]]; then
                 readonly _NAMESPACE_TYPE='single'
                 _current_namespace="${_NAMESPACE_DEFAULT}"
-                # just for BC and to make build.conf/templates a bit more consistent to use. not used otherwise
-                NAMESPACE="${_current_namespace}"
+                # just for BC and to make build.conf/templates a bit more consistent to use. unused otherwise internally
+                export NAMESPACE="${_current_namespace}"
             else
                 real_ns_dir="${parent_dir}"
-                _ns_conf="${parent_conf}"
+                _kubler_ns_conf="${parent_conf}"
             fi
         fi
 
@@ -537,15 +601,17 @@ function detect_namespace() {
     # else assume multi mode
     [[ -z "${_NAMESPACE_TYPE}" ]] && readonly _NAMESPACE_TYPE='multi'
 
-    # read namespace config first..
-    # shellcheck disable=SC1090
-    [[ -f "${_ns_conf}" ]] && source "${_ns_conf}"
-
-    # ..then project conf to initialize any missing defaults
+    # Read system config at /etc/kubler.conf or _KUBLER_DIR/kubler.conf first..
     # shellcheck source=kubler.conf
-    [[ "${_ns_conf}" != "${_global_conf}" ]] && source "${_global_conf}"
+    file_exists_or_die "${_kubler_system_conf}" && source "${_kubler_system_conf}"
 
-    [[ "${_NAMESPACE_TYPE}" == 'single' ]] && source_build_engine
+    # ..then possible user config at KUBLER_DATA_DIR/kubler.conf
+    # shellcheck source=kubler.conf
+    [[ -f "${_kubler_user_conf}" ]] && source "${_kubler_user_conf}"
+
+    # ..then current namespace config
+    # shellcheck source=kubler.conf
+    [[  "${_kubler_ns_conf}" != "${_kubler_user_conf}" && -f "${_kubler_ns_conf}" ]] && source "${_kubler_ns_conf}"
 
     # just for well formatted output
     get_absolute_path "${real_ns_dir}"
@@ -561,9 +627,8 @@ function add_documentation_header() {
     local image image_type image_path doc_file header
     image="$1"
     image_type="$2"
-    expand_image_id "${image}" "${image_type}"
-    get_abs_ns_path "${__expand_image_id}"
-    image_path="${__get_abs_ns_path}"
+    expand_image_id "${image}" "${image_type}" || die "Couldn't find image ${image}"
+    image_path="${__expand_image_id}"
     doc_file="${image_path}/PACKAGES.md"
     header="### ${image}:${IMAGE_TAG}"
     get_image_size "${image}" "${IMAGE_TAG}"

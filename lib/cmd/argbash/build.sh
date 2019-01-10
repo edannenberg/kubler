@@ -26,6 +26,7 @@ _positionals=()
 _arg_target_id=('' )
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_interactive=off
+_arg_interactive_no_deps=off
 _arg_no_deps=off
 _arg_force_image_build=off
 _arg_force_full_image_build=off
@@ -39,9 +40,10 @@ _arg_debug=off
 
 print_help ()
 {
-    printf 'Usage: %s build [--interactive] [--no-deps] [--force-image-build] [--force-full-image-build] [--clear-build-container] [--clear-everything] [--skip-gpg-check] [-e|--exclude <arg>] [-w|--working-dir <arg>] [--debug] <target-id-1> [<target-id-2>] ... [<target-id-n>] ...\n' "${_KUBLER_BIN}"
+    printf 'Usage: %s build [--interactive] [--interactive-no-deps] [--no-deps] [--force-image-build] [--force-full-image-build] [--clear-build-container] [--clear-everything] [--skip-gpg-check] [-e|--exclude <arg>] [-w|--working-dir <arg>] [--debug] <target-id-1> [<target-id-2>] ... [<target-id-n>] ...\n' "${_KUBLER_BIN}"
     printf "\t%s\n" "<target-id>: Namespace or image to build, i.e. myns or myns/myimage"
-    printf "\t%s\n" "-i,--interactive: Starts an interactive phase 1 build container. Note: It's parent image/builder has to be built already"
+    printf "\t%s\n" "-i,--interactive: Starts an interactive phase 1 build container."
+    printf "\t%s\n" "-I,--interactive-no-deps: Same as -i but skip any parents. Note: The parent image/builder has to be built already"
     printf "\t%s\n" "-n,--no-deps: Ignore all parent images and only build passed target-id(s), needs fully qualified target_ids"
     printf "\t%s\n" "-f,--force-image-build: Rebuild any existing images of current dependency graph"
     printf "\t%s\n" "-F,--force-full-image-build: Same as -f but also repeat the first build phase if a cached rootfs.tar exists"
@@ -64,6 +66,12 @@ do
             _next="${_key##-i}"
             test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-i" "-${_next}" "$@"
             test "${1:0:5}" = "--no-" && _arg_interactive="off"
+            ;;
+        -I*|--no-interactive-no-deps|--interactive-no-deps)
+            _arg_interactive_no_deps="on"
+            _next="${_key##-I}"
+            test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-I" "-${_next}" "$@"
+            test "${1:0:5}" = "--no-" && _arg_interactive_no_deps="off"
             ;;
         -n*|--no-no-deps|--no-deps)
             _arg_no_deps="on"
@@ -101,10 +109,10 @@ do
             test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-s" "-${_next}" "$@"
             test "${1:0:5}" = "--no-" && _arg_skip_gpg_check="off"
             ;;
-        -v*|--no-verbose-build|--verbose-build)
+        -V*|--no-verbose-build|--verbose-build)
             _arg_verbose_build="on"
-            _next="${_key##-v}"
-            test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-v" "-${_next}" "$@"
+            _next="${_key##-V}"
+            test -n "$_next" && test "$_next" != "$_key" && shift && set -- "-V" "-${_next}" "$@"
             test "${1:0:5}" = "--no-" && _arg_verbose_build="off"
             ;;
         -e*|--exclude|--exclude=*)

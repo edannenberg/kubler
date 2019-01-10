@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
 # Adds given var_name and it's replacement to global assoc. array _template_values
@@ -67,49 +67,56 @@ function add_namespace() {
     [[ "${AUTHOR}" =~ $regex ]] && def_author="${BASH_REMATCH[1]}" && def_mail="${BASH_REMATCH[2]}"
     [[ -n "${BUILD_ENGINE}" ]] && def_engine="${BUILD_ENGINE}"
 
-    msg '\n<enter> to accept default value\n'
+    msg_info_sub
+    msg_info_sub '<enter> to accept default value'
+    msg_info_sub
 
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
-        msg "--> What type of namespace? To allow multiple namespaces choose 'multi', else 'single'.
-    The only upshot of 'single' mode is saving one directory level, the downside is loss of cross-namespace access."
+        msg_info_sub "Namespace type? Either 'multi' or 'single' if you don't plan on adding further namespaces in the future."
         ask 'Type' 'multi'
         # shellcheck disable=SC2154
         ns_type="${__ask}"
         add_template_filter_var '_tmpl_ns_type' "${ns_type}"
 
-        [[ "${ns_type}" != 'single' && "${ns_type}" != 'multi' ]] && die "\\nUnknown type: \"${ns_type}\""
+        [[ "${ns_type}" != 'single' && "${ns_type}" != 'multi' ]] && die "Unknown type: \"${ns_type}\""
 
         if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]]; then
-            msg '\n--> What dir name should be used for the top level dir holding the new namespace(s)?'
+            msg_info_sub
+            msg_info_sub "Top level directory name for new namespace '${ns_name}'? The directory is created at ${_NAMESPACE_DIR}/"
             ask 'Namespaces Dir' 'kubler-images'
             ns_dir="${_NAMESPACE_DIR}/${__ask}"
-            [[ -e "${ns_dir}" ]] && die "${ns_dir} already exists, aborting. If you intended to create the new namespace at this location use: \\n
+            [[ -e "${ns_dir}" ]] && die "Directory ${ns_dir} already exists, aborting. If you intended to create the new namespace at this location use: \\n
     ${_KUBLER_BIN} --working-dir=${ns_dir} new namespace ${ns_name}"
             real_ns_dir="${ns_dir}/${ns_name}"
         fi
 
-        msg "--> Initial image tag, a.k.a. version?"
+        msg_info_sub
+        msg_info "Initial image tag, a.k.a. version?"
         ask 'Image Tag' "${_TODAY}"
         add_template_filter_var '_tmpl_image_tag' "${__ask}"
+        msg_info_sub
     else
-        msg "Namespace Type:          ${_NAMESPACE_TYPE}"
+        msg_info_sub
+        msg_warn "Namespace Type:          ${_NAMESPACE_TYPE}"
     fi
 
-    msg "\\nNew namespace location:  ${real_ns_dir}"
+    msg_warn "New namespace location:  ${real_ns_dir}"
+    msg_info_sub
 
-    msg '\n--> Who maintains the new namespace?'
+    msg_info 'Who maintains the new namespace?'
     ask 'Name' "${def_author}"
     add_template_filter_var '_tmpl_author' "${__ask}"
 
     ask 'EMail' "${def_mail}"
     add_template_filter_var '_tmpl_author_email' "${__ask}"
+    msg_info_sub
 
-    msg '--> What type of images would you like to build?'
+    msg_info 'Used build engine?'
     ask 'Engine' "${def_engine}"
     ns_engine="${__ask}"
     add_template_filter_var '_tmpl_engine' "${ns_engine}"
 
-    [[ ! -f "${_LIB_DIR}/engine/${ns_engine}.sh" ]] && die "\\nUnknown engine: ${ns_engine}"
+    [[ ! -f "${_LIB_DIR}/engine/${ns_engine}.sh" ]] && die "Unknown engine: ${ns_engine}"
 
     [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]] && mkdir "${ns_dir}"
 
@@ -125,7 +132,7 @@ function add_namespace() {
         # default multi conf file can also be used for new single namespaces..
         default_conf='multi'
         if [[ -z "${_KUBLER_BIN_HINT}" ]];then
-            kubler_bin_hint="cd ${ns_dir}\\n    ${kubler_bin_hint}"
+            kubler_bin_hint="cd ${ns_dir}\\n    $ ${kubler_bin_hint}"
         else
             kubler_bin_hint="${_KUBLER_BIN} --working-dir ${ns_dir}"
         fi
@@ -141,38 +148,18 @@ function add_namespace() {
     [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]] && \
         replace_template_placeholders "${real_ns_dir}"
 
-     msg "*** Successfully created \"${ns_name}\" namespace at ${ns_dir}
-
-Configuration file: ${real_ns_dir}/${_KUBLER_CONF}
-
-To manage the new namespace with GIT you may want to run:
-
-    git init ${real_ns_dir}"
-
-    msg "\\nTo create images in the new namespace run:
-
-    ${kubler_bin_hint} new image ${ns_name}/<image_name>
-"
-}
-
-# Arguments
-# 1: namespace
-# Return value: absolute path of kubler.conf for given namespace
-function get_ns_conf() {
-    __get_ns_conf=
-    local namespace ns_conf_file
-    namespace="$1"
-
-    ns_conf_file="${_NAMESPACE_DIR}/"
-    [[ "${_NAMESPACE_TYPE}" != 'single' ]] && ns_conf_file+="${namespace}/"
-    ns_conf_file+="${_KUBLER_CONF}"
-    [ -f "${ns_conf_file}" ] || die "Couldn't find ${ns_conf_file}
-
-Check spelling of \"${namespace}\" or create a new namespace by running:
-
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} new namespace ${namespace}
-"
-    __get_ns_conf="${ns_conf_file}"
+    msg_info_sub
+    msg_ok "Successfully created \"${ns_name}\" namespace at ${ns_dir}"
+    msg_info_sub
+    msg_warn "Configuration file: ${real_ns_dir}/${_KUBLER_CONF}"
+    msg_info_sub
+    msg_warn "To manage the new namespace with GIT you may want to run:"
+    msg_info_sub
+    msg_info_sub "$ git init ${real_ns_dir}"
+    msg_info_sub
+    msg_warn "To create images in the new namespace run:"
+    msg_info_sub
+    msg_info_sub "$ ${kubler_bin_hint} new image ${ns_name}/<image_name>"
 }
 
 # Create empty dir for given image and return the absolute path
@@ -208,15 +195,28 @@ function init_image_base_dir() {
 # 1: namespace
 # 2: image_name
 function add_image() {
-    local namespace image_name image_parent image_path
+    local namespace image_name image_parent image_builder image_path
     namespace="$1"
     image_name="$2"
 
-    msg '\n<enter> to accept default value\n'
-
-    msg '--> Extend an existing image? Fully qualified image id (i.e. kubler/busybox) if yes or scratch'
+    msg_info_sub
+    msg_info_sub '<enter> to accept default value'
+    msg_info_sub
+    msg_info_sub 'Extend an existing Kubler managed image? Fully qualified image id (i.e. kubler/busybox) or scratch'
     ask 'Parent Image' 'scratch'
     image_parent="${__ask}"
+
+    image_builder="${DEFAULT_BUILDER}"
+    if [[ "${image_parent}" == 'scratch' ]]; then
+        msg_info_sub
+        msg_info_sub "Which builder should be used? Press <enter> to use the default builder of namespace ${namespace}"
+        ask 'Builder Id' "${DEFAULT_BUILDER}"
+        image_builder="${__ask}"
+        [[ "${target_id}" != *"/"* ]] && die "${target_id} should have format <namespace>/<builder_name>"
+        [[ "${image_builder}" != "${DEFAULT_BUILDER}" ]] && add_template_sed_replace '^#BUILDER=' 'BUILDER='
+    elif [[ "${image_parent}" != *"/"* || "${image_parent}" == *"/" ]]; then
+        die "\"${image_parent}\" should have format <namespace>/<image_name>"
+    fi
 
     init_image_base_dir "${namespace}" "${image_name}" "${_IMAGE_PATH}"
     image_path="${__init_image_base_dir}"
@@ -224,23 +224,27 @@ function add_image() {
     cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
 
     add_template_filter_var '_tmpl_image_parent' "${image_parent}"
+    add_template_filter_var '_tmpl_image_builder' "${image_builder}"
 
     replace_template_placeholders "${image_path}"
 
-    msg "*** Successfully created image \"${image_name}\" in namespace \"${namespace}\" at ${image_path}\\n"
+    msg_info_sub
+    msg_ok "Successfully created new image at ${image_path}"
+    msg_info_sub
 }
 
 # Arguments
 # 1: namespace
 # 2: builder_name
 function add_builder() {
-    local namespace builder_name builder_parent builder_path update_hint
+    local namespace builder_name builder_parent builder_path is_stage3_builder
     namespace="$1"
     builder_name="$2"
 
-    msg '\n<enter> to accept default value\n'
-
-    msg '--> Extend an existing builder? Fully qualified image id (i.e. kubler/bob) if yes or else stage3'
+    msg_info_sub
+    msg_info_sub '<enter> to accept default value'
+    msg_info_sub
+    msg_info_sub 'Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3'
     ask 'Parent Image' 'stage3'
     builder_parent="${__ask}"
 
@@ -248,10 +252,10 @@ function add_builder() {
     if [[ "${builder_parent}" == "stage3" ]]; then
         builder_parent='\${NAMESPACE}/bob'
         add_template_sed_replace '^BUILDER' '#BUILDER'
-        update_hint="You should check for latest stage3 files by running:\\n
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} update --no-sync
-        "
+        is_stage3_builder='true'
     else
+        [[ "${builder_parent}" != *"/"* || "${builder_parent}" == *"/" ]] \
+            && die "\"${builder_parent}\" should have format <namespace>/<image_name>"
         add_template_sed_replace '^STAGE3' '#STAGE3'
     fi
 
@@ -260,10 +264,28 @@ function add_builder() {
 
     cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/builder" "${builder_path}" || die
 
+    local build_sh_use build_sh_rm
+    build_sh_use='build_ext.sh'
+    build_sh_rm='build_stage3.sh'
+    if [[ "${is_stage3_builder}" == 'true' ]]; then
+        build_sh_use='build_stage3.sh'
+        build_sh_rm='build_ext.sh'
+    fi
+    [[ -f "${builder_path}"/"${build_sh_use}" ]] && mv "${builder_path}"/"${build_sh_use}" "${builder_path}"/build.sh
+    [[ -f "${builder_path}"/"${build_sh_rm}" ]] && rm "${builder_path}"/"${build_sh_rm}"
+
     add_template_filter_var '_tmpl_builder' "${builder_parent}"
     replace_template_placeholders "${builder_path}"
 
-    msg "*** Successfully created \"${builder_name}\" builder at ${builder_path}\\n${update_hint}"
+    msg_info_sub
+    msg_ok "Successfully created new builder at ${builder_path}"
+    msg_info_sub
+    if [[ -n "${is_stage3_builder}" ]]; then
+        msg_warn "Configure the STAGE3_BASE in ${builder_path}/build.conf then run:"
+        msg_info_sub
+        msg_info_sub "$ ${_KUBLER_BIN}${_KUBLER_BIN_HINT} update"
+        msg_info_sub
+    fi
 }
 
 function main() {
@@ -284,7 +306,8 @@ function main() {
             && die "Invalid ${_arg_template_type} name '${target_id}', should be lower case only."
 
     if [[ "${_arg_template_type}" != 'namespace' ]]; then
-        [[ "${target_id}" != *"/"* ]] && die "\"${target_id}\" should have format <namespace>/<image_name>"
+        [[ "${target_id}" != *"/"* || "${target_id}" == *"/" ]] \
+            && die "\"${target_id}\" should have format <namespace>/<image_name>"
         [[ "${_NAMESPACE_TYPE}" == 'none' ]] \
             && die "${_NAMESPACE_DIR} is not a valid Kubler namespace dir"
     fi
@@ -292,9 +315,9 @@ function main() {
     add_template_filter_var '_tmpl_namespace' "${target_namespace}"
 
     if [[ "${_arg_template_type}" == 'image' || "${_arg_template_type}" == 'builder' ]]; then
-        get_ns_conf "${target_namespace}"
-        # shellcheck source=dock/kubler/kubler.conf
-        source "${__get_ns_conf}"
+        get_ns_include_path "${target_namespace}"
+        # shellcheck disable=SC2154
+        source_namespace_conf "${__get_ns_include_path}"
         add_template_filter_var '_tmpl_image_name' "${target_image_name}"
     fi
 

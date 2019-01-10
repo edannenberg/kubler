@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
 # Compare given local and remote stage3 date, returns 0 if remote is newer or 1 if not
@@ -29,12 +29,16 @@ function update_builders() {
     current_ns="$1"
     builder_path="$2"
     update_count=0
-    if [[ -d "${builder_path}" ]]; then
+    add_status_value 'stage3'
+    add_status_value "${current_ns}" 'true'
+    if [[ -d "${builder_path}" ]] && ! dir_is_empty "${builder_path}"; then
         cd "${builder_path}" || die "Failed to change dir to ${builder_path}"
         for current_builder in */; do
             update_status=
-            cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
-            source_image_conf "${current_ns}/${_BUILDER_PATH}/${current_builder}"
+            add_status_value 'stage3'
+            add_status_value "${current_ns}" 'true'
+            add_status_value "${current_builder::-1}" 'true'
+            source_image_conf "${current_ns}/${_BUILDER_PATH}${current_builder}"
             if [[ -n "${STAGE3_BASE}" ]]; then
                 fetch_stage3_archive_name || die "Couldn't find a stage3 file for ${ARCH_URL}"
                 get_stage3_archive_regex "${STAGE3_BASE}"
@@ -52,51 +56,58 @@ function update_builders() {
                         update_status="up-to-date ${STAGE3_DATE} - ${STAGE3_BASE}"
                     fi
                 else
-                    update_status="error: couldn't parse remote STAGE3 DATE from ${ARCH_URL}"
+                    die "Failed to parse remote STAGE3 DATE from ${ARCH_URL}"
                 fi
             else
                 update_status="n/a - extends ${BUILDER}"
             fi
-            msgf "${current_builder}" "${update_status}"
+            msg_info "${update_status}"
         done
     else
-        msg "--> no build containers"
+        msg_info "no build containers"
     fi
     __update_builders=${update_count}
 }
 
 # Update STAGE3_DATE in build.conf for all builders in all namespaces
 function update_stage3_date() {
-    local current_ns builder_path
+    local ns_paths current_ns_dir builder_path
+    ns_paths=( "${_KUBLER_NAMESPACE_DIR}" )
+    [[ "${_NAMESPACE_DIR}" != "${_KUBLER_NAMESPACE_DIR}" && "${_NAMESPACE_TYPE}" != 'single' ]] \
+        && ns_paths+=( "${_NAMESPACE_DIR}" )
     update_count=0
-    cd "${_NAMESPACE_DIR}" || die "Failed to change dir to ${_NAMESPACE_DIR}"
-    if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
-        update_builders "${current_ns}" "${_NAMESPACE_DIR}/${_BUILDER_PATH}"
-    else
-        for current_ns in */; do
-            msg "${current_ns}"
-            builder_path="${_NAMESPACE_DIR}/${current_ns}${_BUILDER_PATH}"
-            update_count=$((update_count+=__update_builders))
+    for current_ns_dir in "${ns_paths[@]}"; do
+        pushd "${current_ns_dir}" 1> /dev/null || die
+        local ns
+        for ns in "${current_ns_dir}"/*/; do
+            current_ns="$(basename -- "${ns}")"
+            add_status_value 'stage3'
+            add_status_value "${current_ns}" 'true'
+            builder_path="${ns}/${_BUILDER_PATH}"
             update_builders "${current_ns}" "${builder_path}"
+            update_count=$((update_count + __update_builders))
         done
+        popd 1> /dev/null || die
+    done
+
+    if [[ "${_NAMESPACE_TYPE}" == 'single' ]]; then
+        current_ns="$(basename -- "${_NAMESPACE_DIR}")"
+        add_status_value 'stage3'
+        add_status_value "${current_ns}" 'true'
+        update_builders "${current_ns}" "${_NAMESPACE_DIR}/${_BUILDER_PATH}"
     fi
-    if [[ "${_NAMESPACE_TYPE}" != 'local' ]]; then
-        msg "kubler"
-        update_builders 'kubler' "${_KUBLER_NAMESPACE_DIR}/kubler/${_BUILDER_PATH}"
-        update_count=$((update_count+=__update_builders))
-    fi
+    add_status_value "stage3"
     if [[ ${update_count} -eq 0 ]]; then
-        msg '\nAll stage3 dates are up to date.'
+        msg_ok 'all stage3 dates are up to date.'
     else
-        msg "\\nFound updates for ${update_count} stage3 file(s), to rebuild run:\\n
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} clean
-    ${_KUBLER_BIN}${_KUBLER_BIN_HINT} build -C some_namespace\\n"
+        msg_warn "Found updates for ${update_count} stage3 file(s), to rebuild run:\\n
+    $ ${_KUBLER_BIN}${_KUBLER_BIN_HINT} clean
+    $ ${_KUBLER_BIN}${_KUBLER_BIN_HINT} build -C some_namespace\\n"
     fi
 }
 
 # Arguments:
-#
-# 1: builder_id - optional, default "kubler/bob-musl"
+# 1: builder_id - optional, default "kubler/bob"
 function update_portage() {
     local builder_id
     builder_id="${1:-${DEFAULT_BUILDER}}"
@@ -114,18 +125,26 @@ function update_portage() {
     _container_mount_portage='true'
     # shellcheck disable=SC2034
     _container_cmd=("portage-git-sync")
-    msg "--> run emerge --sync using ${builder_id}"
+    msg_info "run emerge --sync using ${builder_id}"
     run_image "${builder_id}" "portage-sync-worker"
 }
 
 function main() {
+    # clone kubler-images repo if non-existing and enabled
+    if [[ "${KUBLER_DISABLE_KUBLER_NS}" != 'true' ]]; then
+        add_status_value 'kubler-images'
+        clone_or_update_git_repo "${_KUBLER_NS_GIT_URL}" "${_KUBLER_NAMESPACE_DIR}" 'kubler'
+    fi
+
     # shellcheck disable=SC2154
-    if [[ "${_arg_no_sync}" == 'off' ]]; then
-        msg "*** sync portage container"
+    if [[ "${KUBLER_PORTAGE_GIT}" == 'true' ]]; then
+        add_status_value 'portage'
+        msg_info "sync container"
         # shellcheck disable=SC2154
         update_portage "${_arg_builder_image}"
     fi
-    msg "*** check for stage3 updates"
+    add_status_value 'stage3'
+    msg_info "check all namespaces for new releases"
     update_stage3_date
 }
 

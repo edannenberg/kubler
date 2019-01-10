@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) 2014-2017, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+# Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -10,7 +10,7 @@
 #    disclaimer.
 #
 # 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-# following disclaimer in the documentation and/or other materials provided with the distribution.
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 # INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -547,8 +547,13 @@ function build_rootfs() {
     # shellcheck disable=SC1091
     source /etc/profile
 
-    # call configure bob hook if declared in build.sh
-    declare -F configure_bob &>/dev/null && configure_bob
+    # call configure_builder hook if declared in build.sh
+    if declare -F configure_builder &>/dev/null; then
+        configure_builder
+    elif declare -F configure_bob &>/dev/null; then
+        # deprecated, but still supported for a while
+        configure_bob
+    fi
 
     # switch back to BOB_{CHOST,CFLAGS,CXXFLAGS}
     unset USE_BUILDER_FLAGS
@@ -653,13 +658,16 @@ function build_rootfs() {
 
     local lib_dir
     for lib_dir in "${_EMERGE_ROOT}"/{"${_LIB}",usr/"${_LIB}"}; do
-        if [[ -z "${_keep_static_libs}" ]] && [[ -d "${lib_dir}" ]] && [[ "$(ls -A "${lib_dir}")" ]]; then
+        if [[ -z "${_keep_static_libs}" ]] && [[ -d "${lib_dir}" ]] && [[ -n "$(ls -A "${lib_dir}")" ]]; then
             find "${lib_dir}"/* -type f -name "*.a" -delete
         fi
     done
 
+    # just for less noise in the build output
+    eselect news read new 1> /dev/null
+
     # if this is not an interactive build create the tar ball and clean up
-    if [[ -z "${BOB_IS_INTERACTIVE}" && "$(ls -A "${_EMERGE_ROOT}")" ]]; then
+    if [[ -z "${BOB_IS_INTERACTIVE}" && -n "$(ls -A "${_EMERGE_ROOT}")" ]]; then
         # make rootfs tar ball and copy to host
         tar -cpf "${_CONFIG}/rootfs.tar" -C "${_EMERGE_ROOT}" .
         chown "${BOB_HOST_UID}":"${BOB_HOST_GID}" "${_CONFIG}/rootfs.tar"

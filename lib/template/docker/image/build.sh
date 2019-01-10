@@ -18,7 +18,7 @@ _packages=""
 #
 # This hook can be used to configure the build container itself, install packages, run any command, etc
 #
-configure_bob()
+configure_builder()
 {
     # Packages installed in this hook don't end up in the final image but are available for depending image builds
     #emerge dev-lang/go app-misc/foo

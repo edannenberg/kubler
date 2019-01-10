@@ -20,6 +20,7 @@ _arg_leftovers=()
 _arg_help=off
 _arg_working_dir=
 _arg_debug=off
+_arg_verbose=off
 
 print_help ()
 {
@@ -28,6 +29,7 @@ print_help ()
     printf "\t%s\n" "... : command-options"
     printf "\t%s\n" "-h,--help: Prints help"
     printf "\t%s\n" "-w,--working-dir: Where to look for namespaces or images, default: current directory"
+    printf "\t%s\n" "-v,--verbose: More insight at the cost of noisier output, default: off"
 }
 
 # THE PARSING ITSELF
@@ -56,10 +58,15 @@ do
             _arg_working_dir="$_val"
             _args_opt_global_opt+=("${_key%%=*}" "$_arg_working_dir")
             ;;
-        --no-debug|--debug)
+        -d*|--no-debug|--debug)
             _arg_debug="on"
             _args_opt_global_opt+=("${_key%%=*}")
             test "${1:0:5}" = "--no-" && _arg_debug="off"
+            ;;
+        -v*|--no-verbose|--verbose)
+            _arg_verbose="on"
+            _args_opt_global_opt+=("${_key%%=*}")
+            test "${1:0:5}" = "--no-" && _arg_verbose="off"
             ;;
         *)
             _positionals+=("$1")
