@@ -1,9 +1,2 @@
 .project
-tmp/
-Dockerfile
-rootfs.tar
-push.conf
-dock/*/builder/PACKAGES.md
-dock/*
-!dock/kubler
-!dock/dummy
+.idea

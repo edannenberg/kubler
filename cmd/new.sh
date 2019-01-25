@@ -116,11 +116,11 @@ function add_namespace() {
     ns_engine="${__ask}"
     add_template_filter_var '_tmpl_engine' "${ns_engine}"
 
-    [[ ! -f "${_LIB_DIR}/engine/${ns_engine}.sh" ]] && die "Unknown engine: ${ns_engine}"
+    [[ ! -f "${_KUBLER_DIR}/engine/${ns_engine}.sh" ]] && die "Unknown engine: ${ns_engine}"
 
     [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]] && mkdir "${ns_dir}"
 
-    cp -r "${_LIB_DIR}/template/${ns_engine}/namespace" "${real_ns_dir}" || die
+    cp -r "${_KUBLER_DIR}/template/${ns_engine}/namespace" "${real_ns_dir}" || die
 
     kubler_bin_hint="${_KUBLER_BIN}${_KUBLER_BIN_HINT}"
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
@@ -221,7 +221,7 @@ function add_image() {
     init_image_base_dir "${namespace}" "${image_name}" "${_IMAGE_PATH}"
     image_path="${__init_image_base_dir}"
 
-    cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
+    cp -r "${_KUBLER_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
 
     add_template_filter_var '_tmpl_image_parent' "${image_parent}"
     add_template_filter_var '_tmpl_image_builder' "${image_builder}"
@@ -262,7 +262,7 @@ function add_builder() {
     init_image_base_dir "${namespace}" "${builder_name}" "${_BUILDER_PATH}"
     builder_path="${__init_image_base_dir}"
 
-    cp -r "${_LIB_DIR}/template/${BUILD_ENGINE}/builder" "${builder_path}" || die
+    cp -r "${_KUBLER_DIR}/template/${BUILD_ENGINE}/builder" "${builder_path}" || die
 
     local build_sh_use build_sh_rm
     build_sh_use='build_ext.sh'

@@ -61,9 +61,12 @@ source "${_LIB_DIR}"/util.sh || die
 # Helper function that provides parsable data for Kubler's bash completion script.
 function bc_helper() {
     [[ -z "${KUBLER_BC_HELP}" ]] && return
-    local available_cmds cmd
+    local available_cmds cmd_dirs cmd
     available_cmds=()
-    for cmd in "${_LIB_DIR}"/cmd/*.sh "${KUBLER_DATA_DIR}"/cmd/*.sh; do
+    cmd_dirs=( "${_KUBLER_DIR}"/cmd/*.sh )
+    [[ -d "${KUBLER_DATA_DIR}"/cmd ]] && ! dir_is_empty "${KUBLER_DATA_DIR}"/cmd \
+        && cmd_dirs+=( "${KUBLER_DATA_DIR}"/cmd/*.sh )
+    for cmd in "${cmd_dirs[@]}"; do
         available_cmds+=("$(basename -- "${cmd%.*}")")
     done
 
@@ -118,7 +121,7 @@ function rm_trap_fn() {
 }
 
 # Sets __get_include_path to absolute path for given relative file_sub_path. The function will check both
-# KUBLER_DATA_DIR and _LIB_DIR, in that order. First hit wins, returns exit signal 3 if the path doesn't exist.
+# KUBLER_DATA_DIR and _KUBLER_DIR, in that order. First hit wins, returns exit signal 3 if the path doesn't exist.
 #
 # Arguments:
 # 1: file_sub_path as string
@@ -128,8 +131,8 @@ function get_include_path() {
     file_sub_path="$1"
     if [[ -f "${KUBLER_DATA_DIR}/${file_sub_path}" ]]; then
         base_path="${KUBLER_DATA_DIR}"
-    elif [[ -f "${_LIB_DIR}/${file_sub_path}" ]]; then
-        base_path="${_LIB_DIR}"
+    elif [[ -f "${_KUBLER_DIR}/${file_sub_path}" ]]; then
+        base_path="${_KUBLER_DIR}"
     else
         return 3
     fi
@@ -156,7 +159,7 @@ function source_build_engine() {
     engine_id="${1:-${BUILD_ENGINE}}"
     if [[ "${_last_sourced_engine}" != "${engine_id}" ]]; then
         get_include_path "engine/${engine_id}.sh" || die "Couldn't find build engine: ${engine_id}"
-        # shellcheck source=lib/engine/docker.sh
+        # shellcheck source=engine/docker.sh
         source "${__get_include_path}"
         _last_sourced_engine="${engine_id}"
     fi
@@ -245,7 +248,7 @@ function source_image_conf() {
 
     build_conf="${image_path}/"build.conf
     file_exists_or_die "${build_conf}" "Couldn't read image config ${build_conf}"
-    # shellcheck source=lib/template/docker/image/build.conf
+    # shellcheck source=template/docker/image/build.conf
     source "${build_conf}"
 
     # assume scratch if IMAGE_PARENT is not set

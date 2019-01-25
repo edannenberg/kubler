@@ -536,7 +536,7 @@ function import_portage_tree() {
 
     image_path="${KUBLER_DATA_DIR}"/tmp/kubler-portage
     [[ ! -d "${image_path}" ]] && mkdir -p "${image_path}"
-    cp "${_KUBLER_DIR}"/lib/bob-portage/Dockerfile.template "${image_path}"/
+    cp "${_KUBLER_DIR}"/engine/docker/bob-portage/Dockerfile.template "${image_path}"/
 
     add_trap_fn 'handle_import_portage_tree_error'
     # shellcheck disable=SC2154
@@ -638,7 +638,7 @@ function build_core() {
     _handle_build_core_error_args="${image_path}"
     add_trap_fn 'handle_build_core_error'
     # copy build-root.sh and emerge defaults so we can access it via dockerfile context
-    cp -r "${_KUBLER_DIR}"/lib/bob-core/{*.sh,etc,Dockerfile.template} "${image_path}/" \
+    cp -r "${_KUBLER_DIR}"/engine/docker/bob-core/{*.sh,etc,Dockerfile.template} "${image_path}/" \
         || die "Could not create temporary image at ${image_path}"
 
     generate_dockerfile "${image_path}"

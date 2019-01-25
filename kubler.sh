@@ -52,8 +52,8 @@ push      - Push image(s) or namespace(s) to a registry
 update    - Check for new stage3 releases and kubler namespace updates
 
 ${_KUBLER_BIN} <command> --help for more information on specific commands\\n"
-    # shellcheck disable=SC2154
     header_current_cmd="${_KUBLER_VERSION}"
+    # shellcheck disable=SC2154
     [[ "${_is_valid_cmd}" == 'true' ]] && header_current_cmd=" ${_arg_command}"
     echo -e "${_help_header}${header_current_cmd}\\n"
     [[ -n "${_help_command_description}" ]] && echo -e "${_help_command_description}\\n"
@@ -165,7 +165,7 @@ function main() {
     readonly _LIB_DIR="${lib_dir}"
 
     KUBLER_DATA_DIR="${KUBLER_DATA_DIR:-${HOME}/.kubler}"
-    [[ ! -d "${KUBLER_DATA_DIR}" ]] && mkdir -p "${KUBLER_DATA_DIR}/{cmd/argbash,engine,log,ns,tmp}"
+    [[ ! -d "${KUBLER_DATA_DIR}" ]] && mkdir -p "${KUBLER_DATA_DIR}"/{cmd/argbash,engine,log,namespaces,tmp}
     [[ ! -d "${KUBLER_DATA_DIR}" ]] && "Couldn't create KUBLER_DATA_DIR at ${KUBLER_DATA_DIR}"
 
     core="${_LIB_DIR}"/core.sh
@@ -174,8 +174,9 @@ function main() {
     source "${core}"
 
     # parse main args
-    parser="${_LIB_DIR}"/cmd/argbash/opt-main.sh
-    # shellcheck source=lib/cmd/argbash/opt-main.sh
+    get_include_path "cmd/argbash/opt-main.sh"
+    parser="${__get_include_path}"
+    # shellcheck source=cmd/argbash/opt-main.sh
     file_exists_or_die "${parser}" && source "${parser}"
 
     if [[ "${_arg_debug}" == 'on' ]]; then
@@ -207,7 +208,7 @@ function main() {
     # parse command args if a matching parser exists
     get_include_path "cmd/argbash/${_arg_command}.sh"
     parser="${__get_include_path}"
-    # shellcheck source=lib/cmd/argbash/build.sh
+    # shellcheck source=cmd/argbash/build.sh
     [[ -f "${parser}" ]] && source "${parser}" "${_arg_leftovers[@]}"
 
     # for this setting env overrides args
@@ -220,7 +221,7 @@ function main() {
 
     # run the selected command
     trap "{ kubler_abort_handler; }" EXIT
-    # shellcheck source=lib/cmd/build.sh
+    # shellcheck source=cmd/build.sh
     source "${cmd_script}" "${_arg_leftovers[@]}"
     trap ' ' EXIT
 }

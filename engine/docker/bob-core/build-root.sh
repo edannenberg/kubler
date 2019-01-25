@@ -539,7 +539,7 @@ function build_rootfs() {
     get_file_mod_stamp '/etc/group' && group_date="${__get_file_mod_stamp}"
 
     # read mounted config
-    # shellcheck source=dock/kubler/images/busybox/build.sh disable=SC2015
+    # shellcheck source=template/docker/image/build.sh disable=SC2015
     [[ -f "${_CONFIG}/build.sh" ]] && source "${_CONFIG}/build.sh"
 
     # use BOB_BUILDER_{CHOST,CFLAGS,CXXFLAGS} as they may differ when using crossdev
