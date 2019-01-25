@@ -1,6 +1,0 @@
-FROM ${IMAGE_PARENT}
-LABEL maintainer ${MAINTAINER}
-
-ADD rootfs.tar /
-
-RUN eselect ruby set ruby24 2> /dev/null

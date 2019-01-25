@@ -1,8 +1,0 @@
-FROM ${IMAGE_PARENT}
-LABEL maintainer  ${MAINTAINER}
-
-ADD rootfs.tar /
-
-RUN dot -c && \
-    rm -rf ${CATALINA_BASE}/webapps/ROOT/* && \
-    echo '<% response.sendRedirect("/plantuml"); %>' > ${CATALINA_BASE}/webapps/ROOT/index.jsp

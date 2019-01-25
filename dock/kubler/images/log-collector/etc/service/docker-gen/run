@@ -1,2 +1,0 @@
-#!/bin/sh
-exec docker-gen -watch -notify "s6-svc -h /service/fluentd" /config/template/fluentd.conf.tmpl /etc/fluent.conf

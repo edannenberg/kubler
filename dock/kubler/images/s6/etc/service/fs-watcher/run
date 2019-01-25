@@ -1,8 +1,0 @@
-#!/bin/sh
-if [ -n "$WATCHER_FS_CMD" ] && [ -n "$WATCHER_ONCHANGE" ]; then
-    # entr will block the loop until it get's notified about a file change in $WATCHER_FS_CMD
-    # the sleep loop allows checking for new files in a given directory by including -d in $WATCHER_OPT
-    while sleep 1; do
-        exec $WATCHER_FS_CMD | entr $WATCHER_OPT $WATCHER_ONCHANGE
-    done
-fi

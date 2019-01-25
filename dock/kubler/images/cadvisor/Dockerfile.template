@@ -1,8 +1,0 @@
-FROM ${IMAGE_PARENT}
-LABEL maintainer ${MAINTAINER}
-
-ADD rootfs.tar /
-
-EXPOSE 8080
-
-ENTRYPOINT ["/usr/bin/cadvisor"]

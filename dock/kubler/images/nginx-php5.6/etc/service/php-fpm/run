@@ -1,9 +1,0 @@
-#!/bin/sh
-
-echo "php-fpm: waiting for nginx to start.."
-until ps -a | grep -q '[n]ginx: master'; do
-    sleep 1
-done
-
-exec 2>&1
-exec /usr/bin/php-fpm5.6 -y /etc/php/fpm-php5.6/php-fpm.conf -F

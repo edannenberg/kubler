@@ -1,4 +1,0 @@
-FROM ${NAMESPACE}/bob-uclibc
-LABEL maintainer ${MAINTAINER}
-
-CMD ["/bin/bash"]

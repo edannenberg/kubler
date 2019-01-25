@@ -1,8 +1,0 @@
-FROM ${IMAGE_PARENT}
-LABEL maintainer ${MAINTAINER}
-
-ADD rootfs.tar /
-
-EXPOSE 9000
-
-ENTRYPOINT ["/usr/bin/webhook"]

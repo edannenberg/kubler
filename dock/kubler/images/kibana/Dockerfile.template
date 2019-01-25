@@ -1,8 +1,0 @@
-FROM ${IMAGE_PARENT}
-LABEL maintainer ${MAINTAINER}
-
-ADD rootfs.tar /
-
-EXPOSE 5601
-
-CMD sed -i "s|http://localhost:9200|${ELASTICSEARCH_URL:-http://es:9200}|" /opt/kibana/config/kibana.yml && /opt/kibana/bin/kibana
