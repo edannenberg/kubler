@@ -400,7 +400,7 @@ function dir_is_empty() {
     return 1
 }
 
-# Returns with exit signla 0 if given dir_path has sub directories, or 3 if not
+# Returns with exit signal 0 if given dir_path has sub directories, or 3 if not
 #
 # Arguments:
 # 1: dir_path
@@ -408,6 +408,19 @@ function dir_has_subdirs() {
     local dir_path exit_sig
     dir_path="$1"
     ls "${dir_path}"/*/ &> /dev/null
+    exit_sig=$?
+    [[ ${exit_sig} -eq 0 ]] && return 0
+    return 3
+}
+
+# Returns with exit signal 0 if given dir_path has *.sh files, or 3 if not
+#
+# Arguments:
+# 1: dir_path
+function dir_has_scripts() {
+    local dir_path exit_sig
+    dir_path="$1"
+    ls "${dir_path}"/*.sh &> /dev/null
     exit_sig=$?
     [[ ${exit_sig} -eq 0 ]] && return 0
     return 3

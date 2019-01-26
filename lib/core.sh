@@ -64,10 +64,10 @@ function bc_helper() {
     local available_cmds cmd_dirs cmd
     available_cmds=()
     cmd_dirs=( "${_KUBLER_DIR}"/cmd/*.sh )
-    [[ -d "${KUBLER_DATA_DIR}"/cmd ]] && ! dir_is_empty "${KUBLER_DATA_DIR}"/cmd \
+    [[ -d "${KUBLER_DATA_DIR}"/cmd ]] && dir_has_scripts "${KUBLER_DATA_DIR}"/cmd \
         && cmd_dirs+=( "${KUBLER_DATA_DIR}"/cmd/*.sh )
     for cmd in "${cmd_dirs[@]}"; do
-        available_cmds+=("$(basename -- "${cmd%.*}")")
+        available_cmds+=( "$(basename -- "${cmd%.*}")" )
     done
 
     echo "${KUBLER_DATA_DIR}"
