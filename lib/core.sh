@@ -169,7 +169,7 @@ function validate_or_init_data_dir() {
             '-e' "s|\${_tmpl_image_tag}|${_TODAY}|g"
             '-e' "s|\${_tmpl_engine}|${BUILD_ENGINE}|g"
         )
-        replace_in_file "${target_path}/${_KUBLER_CONF}" sed_args[@] || die
+        replace_in_file "${target_path}/${_KUBLER_CONF}" conf_sed_args[@] || die
         cp "${_KUBLER_DIR}"/template/gitignore-data-dir "${target_path}"/.gitignore || die
     else
         [[ ! -f  "${target_path}/${_KUBLER_CONF}" ]] \
