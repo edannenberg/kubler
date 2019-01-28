@@ -1,5 +1,5 @@
 AUTHOR="${_tmpl_author} <${_tmpl_author_email}>"
-# Global tag (a.k.a version) for all images
+# Image version, ideally set via user config so it's shared by all --working-dirs of current user
 IMAGE_TAG="${_tmpl_image_tag}"
 
 # Ouput related config

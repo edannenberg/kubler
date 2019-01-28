@@ -534,7 +534,11 @@ function import_portage_tree() {
 
     portage_file="${portage_file//latest/${_TODAY}}"
 
-    image_path="${KUBLER_DATA_DIR}"/tmp/kubler-portage
+    if [[ "${KUBLER_DISABLE_KUBLER_NS}" != 'true' ]]; then
+        image_path="${KUBLER_DATA_DIR}"/namespaces/kubler/builder/bob-portage
+    else
+        image_path="${KUBLER_DATA_DIR}"/tmp/kubler-portage
+    fi
     [[ ! -d "${image_path}" ]] && mkdir -p "${image_path}"
     cp "${_KUBLER_DIR}"/engine/docker/bob-portage/Dockerfile.template "${image_path}"/
 
@@ -558,7 +562,10 @@ function import_portage_tree() {
 }
 
 function handle_import_portage_tree_error() {
+    [[ -d "${KUBLER_DATA_DIR}"/namespaces/kubler/builder/bob-portage ]] \
+        && rm -r "${KUBLER_DATA_DIR}"/namespaces/kubler/builder/bob-portage
     [[ -d "${KUBLER_DATA_DIR}"/tmp/kubler-portage ]] && rm -r "${KUBLER_DATA_DIR}"/tmp/kubler-portage
+    dir_is_empty "${KUBLER_DATA_DIR}"/tmp && rm -r "${KUBLER_DATA_DIR}"/tmp
 }
 
 # Docker import a stage3 tar ball for given stage3_image_id

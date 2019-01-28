@@ -220,13 +220,6 @@ function main() {
     # shellcheck disable=SC2034
     [[ "${_arg_clear_build_container}" == 'on' ]] && _arg_force_full_image_build='on'
 
-    # clone kubler-images repo if non-existing
-    if [[ "${KUBLER_DISABLE_KUBLER_NS}" != 'true' ]] && ! is_git_dir "${_KUBLER_NAMESPACE_DIR}"/kubler; then
-        add_status_value 'kubler-images'
-        clone_or_update_git_repo "${_KUBLER_NS_GIT_URL}" "${_KUBLER_NAMESPACE_DIR}" 'kubler'
-        add_status_value
-    fi
-
     # prepare a --interactive build
     # shellcheck disable=SC2154
     [[ "${_arg_interactive_no_deps}" == 'on' ]] && _arg_interactive='on'

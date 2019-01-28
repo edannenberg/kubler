@@ -235,7 +235,8 @@ function pwrap() {
 
     redirect_target='/dev/null'
     # shellcheck disable=SC2154
-    [[ "${KUBLER_CMD_LOG}" == 'true' ]] && redirect_target="${_KUBLER_LOG_DIR}/${_arg_command}.log"
+    [[ "${KUBLER_CMD_LOG}" == 'true' && -n "${_is_valid_cmd}" ]] \
+        && redirect_target="${_KUBLER_LOG_DIR}/${_arg_command}.log"
 
     # launch spinner in bg
     # shellcheck disable=SC2154

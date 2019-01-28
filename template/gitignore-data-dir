@@ -1,0 +1,8 @@
+.project
+.idea
+distfiles/
+downloads/
+log/
+namespaces/kubler/
+packages/
+tmp/

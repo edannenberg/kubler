@@ -28,7 +28,7 @@ print_help ()
 {
     printf 'Usage: %s dep-graph  [-d|--as-raw-dot] [-a|--as-ascii] [-b|--as-boxart] [-o|--output-file] [-w|--working-dir <arg>] [--debug] <target-id-1> [<target-id-2>] ... [<target-id-n>] ...\n' "${_KUBLER_BIN}"
     printf "\t%s\n" "<target-id>: Namespace or image for the graph, i.e. myns or myns/myimage"
-    printf "\t%s\n" "-d,--as-dot: Output dot markup only"
+    printf "\t%s\n" "-r,--as-raw-dot: Output dot markup only"
     printf "\t%s\n" "-a,--as-ascii: ASCII output via kubler/graph-easy image"
     printf "\t%s\n" "-b,--as-boxart: Unicode ASCII output kubler/graph-easy image"
     printf "\t%s\n" "-o,--output-file: Specify an output file, if omitted stdout is used for ascii/boxart"

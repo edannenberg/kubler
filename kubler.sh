@@ -31,6 +31,7 @@
 
 readonly _KUBLER_VERSION=0.9.0-beta
 readonly _KUBLER_BASH_MIN=4.2
+readonly _KUBLER_CONF=kubler.conf
 
 # shellcheck disable=SC1004
 _help_header=' __        ___.   .__
@@ -125,6 +126,25 @@ function compare_versions() {
     return 2
 }
 
+# Read config from /etc/kubler.conf or $_KUBLER_DIR/kubler.conf as fallback, then $KUBLER_DATA_DIR config if it exists
+#
+# Arguments:
+# 1: kubler_dir
+function source_base_conf() {
+    local kubler_dir conf_path
+    kubler_dir="$1"
+    conf_path=/etc/"${_KUBLER_CONF}"
+    if [[ ! -f "${conf_path}" ]]; then
+        conf_path="${kubler_dir}/${_KUBLER_CONF}"
+        [[ ! -f "${conf_path}" ]] && die "Couldn't find config at /etc/${_KUBLER_CONF} or ${conf_path}"
+    fi
+    # shellcheck source=kubler.conf
+    source "${conf_path}"
+    conf_path="${KUBLER_DATA_DIR}/${_KUBLER_CONF}"
+    # shellcheck source=template/docker/namespace/kubler.conf.multi
+    [[ -n "${KUBLER_DATA_DIR}" && -f "${conf_path}" ]] && source "${conf_path}"
+}
+
 # Arguments:
 # 1: exit_message as string
 # 2: exit_code as int, optional, default: 1
@@ -164,9 +184,7 @@ function main() {
     [[ -d "${lib_dir}" ]] || die "Couldn't find ${lib_dir}" 2
     readonly _LIB_DIR="${lib_dir}"
 
-    KUBLER_DATA_DIR="${KUBLER_DATA_DIR:-${HOME}/.kubler}"
-    [[ ! -d "${KUBLER_DATA_DIR}" ]] && mkdir -p "${KUBLER_DATA_DIR}"/{cmd/argbash,engine,log,namespaces,tmp}
-    [[ ! -d "${KUBLER_DATA_DIR}" ]] && "Couldn't create KUBLER_DATA_DIR at ${KUBLER_DATA_DIR}"
+    source_base_conf "${_KUBLER_DIR}"
 
     core="${_LIB_DIR}"/core.sh
     [[ -f "${core}" ]] || die "Couldn't read ${core}" 2
@@ -191,6 +209,8 @@ function main() {
     working_dir="${__get_absolute_path}"
     [[ -z "${working_dir}" ]] && working_dir="${PWD}"
     detect_namespace "${working_dir}"
+
+    validate_or_init_data_dir "${KUBLER_DATA_DIR}"
 
     # handle --help for main script
     [[ -z "${_arg_command}" && "${_arg_help}" == 'on' ]] && { bc_helper; show_help; exit 0; }
@@ -217,6 +237,9 @@ function main() {
     # handle --help for command script
     [[ "${_arg_help}" == 'on' ]] && { show_help; exit 0; }
 
+    if [[ "${KUBLER_CMD_LOG}" == 'true' && "${_arg_verbose}" == 'off' && ! -d "${_KUBLER_LOG_DIR}" ]];then
+        mkdir -p "${_KUBLER_LOG_DIR}" || die
+    fi
     [[ "${_arg_verbose}" == 'off' ]] && file_exists_and_truncate "${_KUBLER_LOG_DIR}/${_arg_command}.log"
 
     # run the selected command

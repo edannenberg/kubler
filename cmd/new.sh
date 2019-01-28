@@ -94,6 +94,7 @@ function add_namespace() {
         msg_info "Initial image tag, a.k.a. version?"
         ask 'Image Tag' "${_TODAY}"
         add_template_filter_var '_tmpl_image_tag' "${__ask}"
+        add_template_sed_replace '^IMAGE_TAG' '#IMAGE_TAG'
         msg_info_sub
     else
         msg_info_sub

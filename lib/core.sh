@@ -23,15 +23,17 @@
 
 KUBLER_DISABLE_KUBLER_NS="${KUBLER_DISABLE_KUBLER_NS:-false}"
 
+KUBLER_DATA_DIR="${KUBLER_DATA_DIR:-${HOME}/.kubler}"
 KUBLER_DOWNLOAD_DIR="${KUBLER_DOWNLOAD_DIR:-${KUBLER_DATA_DIR}/downloads}"
 KUBLER_DISTFILES_DIR="${KUBLER_DISTFILES_DIR:-${KUBLER_DATA_DIR}/distfiles}"
 KUBLER_PACKAGES_DIR="${KUBLER_PACKAGES_DIR:-${KUBLER_DATA_DIR}/packages}"
 KUBLER_DEPGRAPH_IMAGE="${KUBLER_DEPGRAPH_IMAGE:-kubler/graph-easy}"
 
+AUTHOR="${AUTHOR:-Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>}"
+
 readonly _KUBLER_NAMESPACE_DIR="${KUBLER_DATA_DIR}"/namespaces
 readonly _KUBLER_LOG_DIR="${KUBLER_DATA_DIR}"/log
 readonly _KUBLER_NS_GIT_URL='https://github.com/edannenberg/kubler-images.git'
-readonly _KUBLER_CONF='kubler.conf'
 readonly _IMAGE_PATH="images/"
 readonly _BUILDER_PATH="builder/"
 readonly _STAGE3_NAMESPACE="kubler-gentoo"
@@ -147,6 +149,40 @@ function has_required_binaries() {
             die "${binary} is required for this script to run. Please install and try again"
         fi
     done
+}
+
+# Check if passed target_path is a valid KUBLER_DATA_DIR, if not create and/or initialize the dir.
+#
+# Arguments:
+# 1: target_path
+function validate_or_init_data_dir() {
+    local target_path conf_sed_args kubler_ns_path
+    target_path="$1"
+    if [[ ! -d "${target_path}" ]]; then
+        mkdir -p "${target_path}" || die
+    elif dir_is_empty "${target_path}"; then
+        cp "${_KUBLER_DIR}"/template/docker/namespace/kubler.conf.multi "${target_path}/${_KUBLER_CONF}" || die
+        # shellcheck disable=SC2034
+        conf_sed_args=(
+            '-e' "s|\${_tmpl_author}|Your Name|g"
+            '-e' "s|\${_tmpl_author_email}|your@mail.org|g"
+            '-e' "s|\${_tmpl_image_tag}|${_TODAY}|g"
+            '-e' "s|\${_tmpl_engine}|${BUILD_ENGINE}|g"
+        )
+        replace_in_file "${target_path}/${_KUBLER_CONF}" sed_args[@] || die
+        cp "${_KUBLER_DIR}"/template/gitignore-data-dir "${target_path}"/.gitignore || die
+    else
+        [[ ! -f  "${target_path}/${_KUBLER_CONF}" ]] \
+            && die "Configured KUBLER_DATA_DIR ${target_path} is not empty but has no ${_KUBLER_CONF} file, aborting."
+    fi
+    # clone kubler-images repo if non-existing
+    [[ ! -d  "${target_path}"/namespaces ]] && mkdir "${target_path}"/namespaces
+    kubler_ns_path="${target_path}"/namespaces/kubler
+    if [[ -z "${KUBLER_BC_HELP}" && "${KUBLER_DISABLE_KUBLER_NS}" != 'true' ]] && ! is_git_dir "${kubler_ns_path}"; then
+        add_status_value 'kubler-images'
+        clone_or_update_git_repo "${_KUBLER_NS_GIT_URL}" "${target_path}"/namespaces 'kubler'
+        add_status_value
+    fi
 }
 
 # Source build engine script depending on passed engine_id or BUILD_ENGINE value
@@ -557,7 +593,11 @@ function detect_namespace() {
 
     get_absolute_path "${working_dir}"
     # shellcheck disable=SC2154
-    [[ -d "${__get_absolute_path}" ]] || die "fatal: Couldn't find namespace location: ${working_dir}"
+    if [[ ! -d "${__get_absolute_path}" ]]; then
+        # silent exit if called by bash completion
+        [[ "${KUBLER_BC_HELP}" != 'true' ]] && msg_error "fatal: Couldn't find namespace location: ${working_dir}"
+        die
+    fi
 
     # find next namespace dir, respect symlink paths, as in don't resolve
     find_in_parents "${working_dir}" "${_KUBLER_CONF}"
@@ -614,7 +654,7 @@ function detect_namespace() {
 
     # ..then current namespace config
     # shellcheck source=kubler.conf
-    [[  "${_kubler_ns_conf}" != "${_kubler_user_conf}" && -f "${_kubler_ns_conf}" ]] && source "${_kubler_ns_conf}"
+    [[  "${_NAMESPACE_TYPE}" != 'local' && -f "${_kubler_ns_conf}" ]] && source "${_kubler_ns_conf}"
 
     # just for well formatted output
     get_absolute_path "${real_ns_dir}"
