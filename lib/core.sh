@@ -411,12 +411,15 @@ function download_stage3() {
 # 1: portage_file
 function download_portage_snapshot() {
     PORTAGE_DATE="${PORTAGE_DATE:-latest}"
-    PORTAGE_URL="${PORTAGE_URL:-${MIRROR}snapshots/}"
-    [[ -d "${KUBLER_DOWNLOAD_DIR}" ]] || mkdir -p "${KUBLER_DOWNLOAD_DIR}"
-    local portage_file portage_sig portage_md5 file dl_name wget_args
+    local portage_file portage_sig portage_md5 file dl_name wget_args portage_url parsed_mirrors
     portage_file="$1"
     portage_sig="${portage_file}.gpgsig"
     portage_md5="${portage_file}.md5sum"
+    IFS=', ' read -r -a parsed_mirrors <<< "${PORTAGE_URL:-${MIRROR}}"
+    portage_url="${parsed_mirrors[0]}"
+    [[ "${portage_url}" != *'/$' ]] && portage_url+='/'
+    portage_url+='snapshots'
+    [[ -d "${KUBLER_DOWNLOAD_DIR}" ]] || mkdir -p "${KUBLER_DOWNLOAD_DIR}"
 
     for file in "${portage_file}" "${portage_sig}" "${portage_md5}"; do
         dl_name="${file}"
@@ -428,7 +431,7 @@ function download_portage_snapshot() {
             [[ "${_arg_verbose}" == 'off' ]] && wget_args+=( '-q' '-nv' )
             _handle_download_error_args="${KUBLER_DOWNLOAD_DIR}/${dl_name}"
             add_trap_fn 'handle_download_error'
-            wget "${wget_args[@]}" -O "${KUBLER_DOWNLOAD_DIR}/${dl_name}" "${MIRROR}snapshots/${file}" || exit $?
+            wget "${wget_args[@]}" -O "${KUBLER_DOWNLOAD_DIR}/${dl_name}" "${portage_url}/${file}" || exit $?
             rm_trap_fn 'handle_download_error'
         fi
     done
