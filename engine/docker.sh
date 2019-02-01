@@ -169,8 +169,14 @@ function build_image() {
 
     image_exists_or_rm "${image_id}" "${image_type}"
     exit_sig=$?
-    [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]] \
-        && msg_ok "skipped, already built." && return 0
+    if [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]]; then
+        if [[ ! -f "${image_path}/${_BUILD_TEST_FAILED_FILE}" && \
+              ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" ]]
+        then
+            msg_ok "skipped, already built."
+            return 0
+        fi
+    fi
 
     # if the builder image does not exist we need to ensure there is no pre-existing rootfs.tar
     if [[ ${exit_sig} -eq 3 && "${image_type}" == "${_BUILDER_PATH}" ]]; then
@@ -261,12 +267,13 @@ function build_image() {
 # 1: image_id
 # 2: image_path
 test_image() {
-    local image_id image_path exit_sig container_name
+    local image_id image_path exit_sig container_name failed_test_file
     image_id="${1}"
     image_path="${2}"
 
     # run build-test.sh in a test container
     if [[ -f "${image_path}"/build-test.sh ]]; then
+        failed_test_file="${image_path}/${_BUILD_TEST_FAILED_FILE}"
         container_name="build-test-${image_id//[\:\/]/-}"
         _container_mounts=( "${image_path}:/kubler-test/" )
         _container_cmd=( '/kubler-test/build-test.sh' )
@@ -274,7 +281,9 @@ test_image() {
         pwrap run_image "${image_id}" "${image_id}" 'true' "${container_name}" 'false'
         exit_sig=$?
         [[ ${exit_sig} -gt 0 ]] \
+            && date > "${failed_test_file}" \
             && die "build-test.sh for image ${image_id} failed with exit signal: ${exit_sig}"
+        [[ -f "${failed_test_file}" ]] && rm "${failed_test_file}"
     fi
 
     # run a detached container and monitor Docker's health-check status
@@ -351,8 +360,11 @@ test_image() {
         stop_container "${container_name}" 'false'
         # shellcheck disable=SC2154
         msg "${_term_cup}${_term_ceol}${_term_cup}"
-        [[ ${hc_healthy_streak} -lt ${POST_BUILD_HC_MIN_HEALTHY_STREAK} ]] && \
-            die "health-check failed: timeout after ${POST_BUILD_HC_MAX_DURATION}s. docker inspect log:\n${hc_log}"
+        failed_test_file="${image_path}/${_HEALTHCHECK_FAILED_FILE}"
+        [[ ${hc_healthy_streak} -lt ${POST_BUILD_HC_MIN_HEALTHY_STREAK} ]] \
+            && date > "${failed_test_file}" \
+            && die "health-check failed: timeout after ${POST_BUILD_HC_MAX_DURATION}s. docker inspect log:\n${hc_log}"
+        [[ -f "${failed_test_file}" ]] && rm "${failed_test_file}"
     fi
     # shellcheck disable=SC2154
     msg "${_term_cup}"
