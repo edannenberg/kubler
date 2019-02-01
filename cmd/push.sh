@@ -12,7 +12,9 @@ function main() {
         expand_image_id "${image_id}" "${_IMAGE_PATH}"
         # shellcheck disable=SC2154
         source_image_conf "${__expand_image_id}"
-        source_push_conf "${image_id}"
+        get_ns_dir_by_image_path "${__expand_image_id}"
+        # shellcheck disable=SC2154
+        source_push_conf "${__get_ns_dir_by_image_path}"
 
         if ! image_exists "${image_id}"; then
             add_status_value "${image_id}"

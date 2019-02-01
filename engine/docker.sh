@@ -743,9 +743,11 @@ function push_auth() {
         login_args=('-u' "${DOCKER_LOGIN}")
         # shellcheck disable=SC2153
         if [[ -n "${DOCKER_PW}" ]]; then
-            login_args+=('-p' "${DOCKER_PW}")
+            login_args+=( '--password-stdin' )
+            echo "${DOCKER_PW}" | "${DOCKER}" login "${login_args[@]}" || exit 1
+        else
+            "${DOCKER}" login "${login_args[@]}" || exit 1
         fi
-        "${DOCKER}" login "${login_args[@]}" || exit 1
     else
         msg_info "using ${repository_url}"
     fi

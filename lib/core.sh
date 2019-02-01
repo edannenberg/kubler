@@ -298,15 +298,15 @@ function source_image_conf() {
 # Read namespace push.conf for given image_id
 #
 # Arguments:
-# 1: image_id (i.e. kubler/busybox)
+# 1: namespace_path - absolute
 function source_push_conf() {
-    local namespace
-    namespace="${1%%/*}"
+    local namespace_path
+    namespace_path="$1"
     # exit if we just sourced for this NS
-    [[ "${_last_sourced_push_conf}" == "${namespace}" ]] && return 0
+    [[ "${_last_sourced_push_conf}" == "${namespace_path}" ]] && return 0
     # shellcheck disable=SC1090
-    [[ -f "${namespace}/push.conf" ]] && source "${namespace}/push.conf"
-    _last_sourced_push_conf="${namespace}"
+    [[ -f "${namespace_path}/push.conf" ]] && source "${namespace_path}/push.conf"
+    _last_sourced_push_conf="${namespace_path}"
 }
 
 # Check image dependencies and return base build container id for given image_id. Recursive.
