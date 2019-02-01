@@ -1,4 +1,6 @@
 .project
+.kubler-build-test.error
+.kubler-healthcheck.error
 Dockerfile
 rootfs.tar
 push.conf

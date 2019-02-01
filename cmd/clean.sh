@@ -7,7 +7,9 @@
 function rm_build_artifacts() {
     local namespace_dirs
     namespace_dirs=( "$@" )
-    find -L "${namespace_dirs[@]}" \( -name rootfs.tar -o -name Dockerfile -o -name PACKAGES.md \) -delete
+    find -L "${namespace_dirs[@]}" \
+        \( -name rootfs.tar -o -name Dockerfile -o -name PACKAGES.md \
+           -o -name "${_BUILD_TEST_FAILED_FILE}" -o -name "${_HEALTHCHECK_FAILED_FILE}" \) -delete
     return $?
 }
 

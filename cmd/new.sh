@@ -72,8 +72,10 @@ function add_namespace() {
     msg_info_sub
 
     if [[ "${_NAMESPACE_TYPE}" == 'none' ]]; then
-        msg_info_sub "Namespace type? Either 'multi' or 'single' if you don't plan on adding further namespaces in the future."
-        ask 'Type' 'multi'
+        msg_info_sub "Working dir type? Choices:"
+        msg_info_sub "  single - You can't add further namespaces to the created working dir, it only holds images"
+        msg_info_sub "  multi  - Creates a working dir that can hold multiple namespaces"
+        ask 'Type' 'single'
         # shellcheck disable=SC2154
         ns_type="${__ask}"
         add_template_filter_var '_tmpl_ns_type' "${ns_type}"
@@ -196,7 +198,7 @@ function init_image_base_dir() {
 # 1: namespace
 # 2: image_name
 function add_image() {
-    local namespace image_name image_parent image_builder image_path
+    local namespace image_name image_parent image_builder image_path test_type
     namespace="$1"
     image_name="$2"
 
@@ -219,6 +221,23 @@ function add_image() {
         die "\"${image_parent}\" should have format <namespace>/<image_name>"
     fi
 
+    if [[ "${BUILD_ENGINE}" == 'docker' ]]; then
+        msg_info_sub
+        msg_info_sub 'Add templates for tests? Possible choices:'
+        msg_info_sub "  hc  - Add a stub for Docker's HEALTH-CHECK, recommended for images that run daemons"
+        msg_info_sub '  bt  - Add a stub for a custom build-test.sh script, a good choice if HEALTH-CHECK is not suitable'
+        msg_info_sub '  yes - Add stubs for both test types'
+        msg_info_sub '  no  - :('
+        ask 'Tests' 'hc'
+        test_type="${__ask}"
+        [[ "${test_type}" != 'hc' && "${test_type}" != 'bt' && "${test_type}" != 'yes' && "${test_type}" != 'no' ]] \
+            && die "'${test_type}' is not a valid choice."
+        if [[ "${test_type}" == 'bt' || "${test_type}" == 'no' ]]; then
+            add_template_sed_replace '^HEALTHCHECK ' '#HEALTHCHECK '
+            add_template_sed_replace '^POST_BUILD_HC=' '#POST_BUILD_HC='
+        fi
+    fi
+
     init_image_base_dir "${namespace}" "${image_name}" "${_IMAGE_PATH}"
     image_path="${__init_image_base_dir}"
 
@@ -228,6 +247,26 @@ function add_image() {
     add_template_filter_var '_tmpl_image_builder' "${image_builder}"
 
     replace_template_placeholders "${image_path}"
+
+    local hc_test_file bt_test_file
+    hc_test_file="${image_path}"/docker-healthcheck.sh
+    bt_test_file="${image_path}"/build-test.sh
+    case "${test_type}" in
+        hc)
+            rm "${bt_test_file}"
+            chmod +x "${hc_test_file}"
+            ;;
+        bt)
+            rm "${hc_test_file}"
+            chmod +x "${bt_test_file}"
+            ;;
+        no)
+            rm "${hc_test_file}" "${bt_test_file}"
+            ;;
+        yes)
+            chmod +x "${hc_test_file}" "${bt_test_file}"
+            ;;
+    esac
 
     msg_info_sub
     msg_ok "Successfully created new image at ${image_path}"
