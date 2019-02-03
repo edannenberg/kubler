@@ -317,6 +317,7 @@ function provide_package() {
     export EMERGE_DEFAULT_OPTS=""
     # shellcheck disable=SC2068
     for package in ${@}; do
+        ! grep -q "${package}" /etc/portage/profile/package.provided || continue
         "${_emerge_bin}" --binpkg-respect-use=y -p "${package}" | \
             eix '-|*' --format '<markedversions:NAMEVERSION>' | \
             grep "${package}" >> /etc/portage/profile/package.provided
