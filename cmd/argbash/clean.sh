@@ -24,7 +24,7 @@ print_help ()
 {
     printf 'Usage: %s clean [-b|--build-artifacts] [-p|--prune-dangling-images] [-i|--image-ns <arg>] [-I|--all-images]  [-N|--nuke-from-orbit] [-w|--working-dir <arg>]\n' "${_KUBLER_BIN}"
     printf "\t%s\n" "-b,--build-artifacts: Delete rootfs.tar, Dockerfile and PACKAGES.md files, this is the default and can be omitted"
-    printf "\t%s\n" "-p,--prune-dangling-images: Run docker image prune"
+    printf "\t%s\n" "-p,--prune-dangling-images: Run docker image/volume prune"
     printf "\t%s\n" "-i,--image-ns: Delete all Docker images for given namespace (repeatable)"
     printf "\t%s\n" "-I,--all-images: Delete all Kubler related images for all namespaces, except stage3 base images and portage"
     printf "\t%s\n" "-N,--nuke-from-orbit: Same as activating all of the above options, also deletes stage3 base images and portage"

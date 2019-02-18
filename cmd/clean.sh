@@ -53,6 +53,8 @@ function main() {
         source_build_engine 'docker'
         _status_msg="exec docker image prune"
         pwrap "${DOCKER}" image prune -f || die
+        _status_msg="exec docker volume prune"
+        pwrap "${DOCKER}" volume prune -f || die
         msg_ok 'done.'
     fi
 
