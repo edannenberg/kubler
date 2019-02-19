@@ -347,19 +347,23 @@ function get_stage3_archive_regex() {
     __get_stage3_archive_regex="${stage3_base//+/\\+}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.(bz2|xz)"
 }
 
-# Fetch current stage3 archive name/type, returns exit signal 3 if no archive could be found
+# Fetch latest stage3 archive name/type, returns exit signal 3 if no archive could be found
 function fetch_stage3_archive_name() {
     __fetch_stage3_archive_name=
     ARCH="${ARCH:-amd64}"
     ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
-    local remote_files
-    remote_files="$(wget -qO- "${ARCH_URL}")"
+    local remote_files remote_line remote_date remote_file_type
+    readarray -t remote_files <<< "$(wget -qO- "${ARCH_URL}")"
+    remote_date=0
     get_stage3_archive_regex "${STAGE3_BASE}"
-    if [[ "${remote_files}" =~ ${__get_stage3_archive_regex} ]]; then
-        __fetch_stage3_archive_name="${BASH_REMATCH[0]}"
-        return 0
-    fi
-    return 3
+    for remote_line in "${remote_files[@]}"; do
+        if [[ "${remote_line}" =~ ${__get_stage3_archive_regex}\< ]]; then
+            [[ "${BASH_REMATCH[1]}" -gt "${remote_date}" ]] \
+                && { remote_date="${BASH_REMATCH[1]}"; remote_file_type="${BASH_REMATCH[3]}"; }
+        fi
+    done
+    [[ "${remote_date}" -eq 0 ]] && return 3
+    __fetch_stage3_archive_name="${STAGE3_BASE}-${remote_date}.tar.${remote_file_type}"
 }
 
 # Download and verify stage3 tar ball
@@ -399,6 +403,9 @@ function download_stage3() {
     elif [ "${is_autobuild}" = false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     fi
+    # some experimental stage3 builds don't update the file names in the digest file, replace so sha512 check won't fail
+    grep -q "${STAGE3_BASE}-2008\.0\.tar\.bz2" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" \
+        && sed -i "s/${STAGE3_BASE}-2008\.0\.tar\.bz2/${stage3_file}/g" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}"
     sha512_hashes="$(grep -A1 SHA512 "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" | grep -v '^--')"
     sha512_check="$(cd "${KUBLER_DOWNLOAD_DIR}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))"
     sha512_failed="$(echo "${sha512_check}" | grep FAILED)"

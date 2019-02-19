@@ -598,6 +598,13 @@ function import_stage3() {
     # shellcheck disable=SC2154
     stage3_file="${__fetch_stage3_archive_name}"
 
+    # if fetched stage3 archive name doesn't have a matching STAGE3_DATE force the configured one
+    get_stage3_archive_regex "${STAGE3_BASE}"
+    # shellcheck disable=SC2154
+    if [[ "${stage3_file}" =~ ${__get_stage3_archive_regex} && "${stage3_file}" != *"${STAGE3_DATE}"* ]]; then
+        stage3_file="${STAGE3_BASE}-${STAGE3_DATE}.tar.${BASH_REMATCH[3]}"
+    fi
+
     image_exists_or_rm "${image_id}" "${_BUILDER_PATH}" "${STAGE3_DATE}" && return 0
 
     _status_msg="download ${stage3_file}"
