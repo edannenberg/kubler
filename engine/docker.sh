@@ -212,6 +212,7 @@ function build_image() {
             _container_env+=("${bob_var}=${!bob_var}")
         done
 
+        _container_args=()
         _container_cmd=("kubler-build-root")
         _container_mount_portage="true"
 
@@ -282,6 +283,7 @@ test_image() {
         failed_test_file="${image_path}/${_BUILD_TEST_FAILED_FILE}"
         container_name="build-test-${image_id//[\:\/]/-}"
         _container_mounts=( "${image_path}:/kubler-test/" )
+        _container_args=()
         _container_cmd=( '/kubler-test/build-test.sh' )
         _status_msg="exec build-test.sh in container ${container_name}"
         pwrap run_image "${image_id}" "${image_id}" 'true' "${container_name}" 'false'
