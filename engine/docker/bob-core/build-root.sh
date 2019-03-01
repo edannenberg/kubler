@@ -315,6 +315,7 @@ function provide_package() {
     local current_emerge_opts package
     current_emerge_opts="${EMERGE_DEFAULT_OPTS}"
     export EMERGE_DEFAULT_OPTS=""
+    [[ ! -f /etc/portage/profile/package.provided ]] && touch /etc/portage/profile/package.provided
     # shellcheck disable=SC2068
     for package in ${@}; do
         ! grep -q "${package}" /etc/portage/profile/package.provided || continue

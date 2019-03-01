@@ -114,7 +114,7 @@ function add_namespace() {
     add_template_filter_var '_tmpl_author_email' "${__ask}"
     msg_info_sub
 
-    msg_info 'Used build engine?'
+    msg_info 'Default build engine?'
     ask 'Engine' "${def_engine}"
     ns_engine="${__ask}"
     add_template_filter_var '_tmpl_engine' "${ns_engine}"
@@ -223,11 +223,11 @@ function add_image() {
 
     if [[ "${BUILD_ENGINE}" == 'docker' ]]; then
         msg_info_sub
-        msg_info_sub 'Add templates for tests? Possible choices:'
+        msg_info_sub 'Add test template(s)? Possible choices:'
         msg_info_sub "  hc  - Add a stub for Docker's HEALTH-CHECK, recommended for images that run daemons"
         msg_info_sub '  bt  - Add a stub for a custom build-test.sh script, a good choice if HEALTH-CHECK is not suitable'
         msg_info_sub '  yes - Add stubs for both test types'
-        msg_info_sub '  no  - :('
+        msg_info_sub "  no  - Fck it, we'll do it live!"
         ask 'Tests' 'hc'
         test_type="${__ask}"
         [[ "${test_type}" != 'hc' && "${test_type}" != 'bt' && "${test_type}" != 'yes' && "${test_type}" != 'no' ]] \

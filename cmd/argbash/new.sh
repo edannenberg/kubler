@@ -23,7 +23,7 @@ print_help ()
 {
     printf 'Usage: %s new [-w|--working-dir <arg>] [--debug] <template_type> <name>\n' "${_KUBLER_BIN}"
     printf "\t%s\n" "<template_type>: One of namespace, image or builder"
-    printf "\t%s\n" "<name>: name i.e. myns or myns/myimage"
+    printf "\t%s\n" "<name>: i.e. 'foo' for a namespace or 'foo/bar' for an image"
     printf "\t%s\n" "-h,--help: Prints help"
     printf "\t%s\n" "-w,--working-dir: Where to look for namespaces or images, default: current directory"
 }
