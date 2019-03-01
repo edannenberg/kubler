@@ -164,7 +164,8 @@ function validate_or_init_data_dir() {
     target_path="$1"
     if [[ ! -d "${target_path}" ]]; then
         mkdir -p "${target_path}" || die
-    elif dir_is_empty "${target_path}"; then
+    fi
+    if dir_is_empty "${target_path}"; then
         cp "${_KUBLER_DIR}"/template/docker/namespace/kubler.conf.multi "${target_path}/${_KUBLER_CONF}" || die
         # shellcheck disable=SC2034
         conf_sed_args=(
@@ -337,6 +338,24 @@ function get_image_builder_id() {
     fi
 }
 
+# Compare given local and remote stage3 date, returns 0 if remote is newer or 1 if not
+#
+# Arguments:
+# 1: stage3_date_local
+# 2: stage3_date_remote
+function is_newer_stage3_date {
+    local stage3_date_local stage3_date_remote
+    # parsing ISO8601 with the date command is a bit tricky due to differences on macOS
+    # as a workaround we just remove any possible non-numeric chars and compare as integers
+    stage3_date_local="${1//[!0-9]/}"
+    stage3_date_remote="${2//[!0-9]/}"
+    if [[ "${stage3_date_local}" -lt "${stage3_date_remote}" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Return a Bash regex that should match for any given stage3_base
 # Arguments:
 # 1: stage3_base (i.e. stage3-amd64-hardened+nomultilib)
@@ -358,11 +377,11 @@ function fetch_stage3_archive_name() {
     get_stage3_archive_regex "${STAGE3_BASE}"
     for remote_line in "${remote_files[@]}"; do
         if [[ "${remote_line}" =~ ${__get_stage3_archive_regex}\< ]]; then
-            [[ "${BASH_REMATCH[1]}" -gt "${remote_date}" ]] \
-                && { remote_date="${BASH_REMATCH[1]}"; remote_file_type="${BASH_REMATCH[3]}"; }
+            is_newer_stage3_date "${remote_date}" "${BASH_REMATCH[1]}${BASH_REMATCH[2]}" \
+                && { remote_date="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"; remote_file_type="${BASH_REMATCH[3]}"; }
         fi
     done
-    [[ "${remote_date}" -eq 0 ]] && return 3
+    [[ "${remote_date//[!0-9]/}" -eq 0 ]] && return 3
     __fetch_stage3_archive_name="${STAGE3_BASE}-${remote_date}.tar.${remote_file_type}"
 }
 

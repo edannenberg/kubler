@@ -2,24 +2,6 @@
 # Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
-# Compare given local and remote stage3 date, returns 0 if remote is newer or 1 if not
-#
-# Arguments:
-# 1: stage3_date_local
-# 2: stage3_date_remote
-function is_newer_stage3_date {
-    local stage3_date_local stage3_date_remote
-    # parsing ISO8601 with the date command is a bit tricky due to differences on macOS
-    # as a workaround we just remove any possible non-numeric chars and compare as integers
-    stage3_date_local="${1//[!0-9]/}"
-    stage3_date_remote="${2//[!0-9]/}"
-    if [[ "${stage3_date_local}" -lt "${stage3_date_remote}" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 # Arguments:
 # 1: namespace_id
 # 2: builder_path
