@@ -234,6 +234,7 @@ function add_image() {
             && die "'${test_type}' is not a valid choice."
         if [[ "${test_type}" == 'bt' || "${test_type}" == 'no' ]]; then
             add_template_sed_replace '^HEALTHCHECK ' '#HEALTHCHECK '
+            add_template_sed_replace '^COPY docker-health' '#COPY docker-health'
             add_template_sed_replace '^POST_BUILD_HC=' '#POST_BUILD_HC='
         fi
     fi
