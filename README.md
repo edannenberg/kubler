@@ -1,8 +1,3 @@
-Kubler
-======
-
-### A container image meta builder
-
 > [Wikipedia](https://en.wikipedia.org/wiki/Cooper_%28profession%29#.22Cooper.22_as_a_name) said:
 In much the same way as the trade or vocation of smithing produced the common English surname Smith
 and the German name Schmidt, the cooper trade is also the origin of German names like Kübler.
@@ -10,41 +5,30 @@ and the German name Schmidt, the cooper trade is also the origin of German names
 > There is still demand for high-quality ~~wooden barrels~~ containers, and it is thought that the
 highest-quality ~~barrels~~ containers are those hand-made by professional ~~coopers~~ kublers.
 
+Kubler
+======
+
+A generic, extendable build orchestrator, in Bash. The default batteries focus on creating and maintaining 
+Docker base images.
+
 ## Why Should You Care?
 
 Perhaps:
 
 1. You love Docker but are annoyed by some of the restrictions of it's `build` command that keep
-   getting into your way. Wouldn't it be nice if you could `build` your images with all `docker run`
-   args, like `-v`, at your disposal?
-2. You are a SysAdmin or DevOps engineer who seeks complete governance for the contents of their
-   Docker images, with full control of the update cycle and the ability to track software version
-   changes across the board from a centralized vcs repository.
+   getting into your way. Wouldn't it be nice if you could `docker build` your images with all
+   `docker run` args, like `-v`, at your disposal? Or if your `Dockerfile` was fully parameterizable?
+2. You are a SysAdmin or DevOps engineer who seeks complete governance over the contents of their
+   container images, with full control of the update cycle and the ability to track *all* software
+   version changes from a centralized vcs repository.
 3. You need to manage a **lot** of Docker base/service images in a sane way and want peace of mind
    with automated post-build tests.
-4. You are a Gentoo user that wants to build slim Gentoo based images without having to wrestle
-   with CrossDev.
-5. You are looking for an interactive OS host agnostic Gentoo playground or a portable ebuild
+4. You are a Gentoo user and want to build slim Docker images with a toolset you are familiar with. Not having
+   to wrestle with CrossDev would also be a plus.
+5. You are looking for an interactive OS host agnostic Gentoo playground or portable ebuild
    development environment.
-6. You want to create custom root file systems, possibly for different cpu architectures, in a safe
-   and repeatable manner.
-
-## Cool. So What Exactly Is A Container Image Meta Builder?
-
-While Kubler was designed primarily for building and managing container images it doesn't
-particularly care about the way those images are built. At the core it's just a glorified directory
-crawler, with a simple dependency mechanism, that fires a command on a selected image or namespace
-dependency graph.
-
-The actual build logic is abstracted away into pluggable engines that may orchestrate other tools,
-like Docker, to create the final image, or whatever the selected namespace's configured engine
-produces.
-
-Kubler is extendable, users may provide their own commands and/or build engines in a maintainable
-way. As both are just plain old Bash scripts this is usually a simple* and straight forward process
-with almost no limitations.
-
-`{ font-size: 2px; }` * Additional rates of blood, sweat and tears may apply when implementing a new engine
+6. You want to create custom root file systems, possibly for different cpu architectures
+   and/or libc implementations (i.e. musl, uclibc, etc) in an isolated and repeatable manner.
 
 ## Requirements
 
@@ -59,7 +43,7 @@ Optional:
 #### Docker Build Engine
 
 * Working Docker setup
-* GIT
+* Git
 * jq to parse Docker json output
 
 ## Installation
@@ -68,7 +52,7 @@ Optional:
 
 An ebuild can be found at https://github.com/edannenberg/kubler-overlay/
 
-Add the overlay and install as usual:
+Add the overlay (see link for instructions) and install as usual:
 
     emerge -av kubler
 
@@ -78,13 +62,15 @@ Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux d
 
 1. Clone the repo or download/extract the release archive to a location of your choice, i.e.
 
+```
     $ cd ~/tools/
     $ curl -L https://github.com/edannenberg/kubler/archive/master.tar.gz | tar xz
+```
 
-2. Add `kubler.sh` to your path
+2. Optional, add `kubler.sh` to your path
 
-If you are unsure add the following at the end of your `~/.bashrc` file, don't forget to adjust the
-path for each line accordingly:
+The recommended way is to add the following at the end of your `~/.bashrc` file, don't forget to adjust the
+Kubler path for each line accordingly:
 
     export PATH="${PATH}:/path/to/kubler/bin"
     # optional but highly recommended, adds bash completion support for all kubler commands
@@ -93,56 +79,195 @@ path for each line accordingly:
 Note: You will need to open a new shell for this to take effect, if this fails on a Linux SystemD
 host re-logging might be required instead.
 
+#### Initial Configuration
+
+Kubler doesn't require any further configuration but you may want to review the main config file
+located at `/etc/kubler.conf`. If the file doesn't exist the `kubler.conf` file in Kubler's root folder is
+used as a fallback.
+
+All of Kubler's runtime data, like user config overrides, downloads or custom scripts, are kept at a path defined
+via `KUBLER_DATA_DIR`. This defaults to `~/.kubler/`, which is suitable if user accounts have Docker access on the host.
+If you plan to use Docker/Kubler only with `sudo`, like on a server, you may want to use `/var/lib/kubler`, or some other location, as data dir instead.
+
+Managing your `KUBLER_DATA_DIR` with a VCS tool like Git is supported, a proper `.gitignore` is added on initialization.
+
 #### Uninstall
 
 1. Remove any build artifacts and Docker images created by Kubler:
 
+```
     $ kubler clean -N
+```
 
-2. Delete the two entries from `~/.bashrc` you possibly added during manual installation
+2. Remove Kubler itself:
+
+    * On Gentoo and ebuild install: `emerge -C kubler` then remove the kubler overlay
+    * Manual install: reverse the steps you did during manual installation
 
 3. Delete any namespace dirs and configured `KUBLER_DATA_DIR` (default is `~/.kubler/`) you had in
    use, this may require su permissions.
 
-## Quick Start
+## Tour De Kubler
 
-#### The Basics
+### The Basics
 
-To get a quick overview/reminder of available commands/options run:
+To get a quick overview of available commands/options:
 
     $ kubler --help
 
-To view details for specific command:
+Or to view details for a specific command:
 
     $ kubler build -h
 
-Almost all of Kubler's commands will need to be run from a `--working-dir`, if the option is
-omitted the current working dir of the executing shell is used. It functions much like Git in that
+Per default almost all of Kubler's commands will need to be run from a `--working-dir`, if the option is
+omitted the current working dir of the executing shell is used. It behaves much like Git in that
 regard, executing any Kubler command from a sub directory of a valid working dir will also work as
 expected.
 
-A `--working-dir` is considered valid if it has a `kubler.conf` file and either an `images/` dir or
+A `--working-dir` is considered valid if it has a `kubler.conf` file and either an `images/` dir, or
 one ore more namespace dirs, which are just a collection of images.
 
-#### Setup A New Namespace
+As Kubler currently only ships with a Docker build engine the rest of this tour will focus on building Docker images,
+it's worth noting that the build process may be completely different, i.e. it may not involve Gentoo or Docker at all,
+for other build engines.
+
+If you are not familiar with Gentoo some of it's terms you will encounter may be confusing, a short 101 glossary:
+
+| | |
+|-|-|
+| stage3          | A tar ball provided by Gentoo which on extraction provides an almost-complete root file system for a Gentoo installation |
+| Portage         | Gentoo's default package manager, this is where all the magic happens |
+| emerge          | Portage's main executable |
+| ebuild          | text file which identifies a specific software package and how Portage should handle it |
+| Portage Tree    | Categorized collection of ebuilds, Gentoo ships with ~20k ebuilds |
+| Portage Overlay | Additional ebuild repository maintained by the community/yourself |
+
+### Every Image needs A Home - Working Dirs And Namespaces
+
+To accommodate different use cases there are three types of working dirs:
+
+| | |
+|-|-|
+| multi  | The working dir is a collection of one or more namespace dirs |
+| single | The working dir doubles as namespace dir, you can't create a new namespace in it, but you save a directory level |
+| local  | Same as multi but `--working-dir` is equal to `KUBLER_DATA_DIR` |
 
 First switch to a directory where you would like to store your Kubler managed images or namespaces:
 
-    $ cd ~/workspace
+    $ cd ~/projects
 
-Then use the `new` command to take care of the boiler plate for you, choose `single` as namespace
-type when asked:
+Then use the `new` command to take care of the boiler plate for you:
 
+```
     $ kubler new namespace mytest
-    $ cd mytest
+    $ cd mytest/
+```
+
+Although not strictly required it's recommended to install Kubler's example images by running:
+
+    $ kubler update
 
 ### Hello Image
 
-To create a new image in the current working dir:
+Let's start with a simple task and dockerize [Figlet][], a nifty tool that produces ascii fonts. First create a new
+image stub by running:
 
     $ kubler new image mytest/figlet
 
-#TODO: finish docs
+When asked for the image parent, enter `kubler/bash` and `bt` when asked for tests:
+
+```
+»»» Extend an existing Kubler managed image? Fully qualified image id (i.e. kubler/busybox) or scratch
+»[?]» Parent Image (scratch): kubler/bash
+»»»
+»»» Add test template(s)? Possible choices:
+»»»   hc  - Add a stub for Docker's HEALTH-CHECK, recommended for images that run daemons
+»»»   bt  - Add a stub for a custom build-test.sh script, a good choice if HEALTH-CHECK is not suitable
+»»»   yes - Add stubs for both test types
+»»»   no  - Fck it, we'll do it live!
+»[?]» Tests (hc): bt
+»»»
+»[✔]» Successfully created new image at projects/mytest/images/figlet
+```
+
+A handy feature when working on a Kubler managed image is the `--interactive` build arg. As the name suggests it
+allows us to poke around in a running build container and plan/debug the image build. Let's give it a try:
+
+    $ kubler build mytest/figlet -i
+
+This will also build any missing parent images/builders, so the first run may take quite a bit of time. Don't
+worry, once your local binary package cache and build containers are seeded future runs will be much faster.
+When everything is ready you are dropped into a new shell:
+
+```
+»[✔]»[kubler/bash]» done.
+»»»»»[mytest/figlet]» using: docker / builder: kubler/bob-bash
+kubler-bob-bash / #
+```
+
+To search Portage's package db you may use `eix`, or whatever your preferred method is:
+
+```
+kubler-bob-bash / # eix figlet
+* app-misc/figlet
+     Available versions:  2.2.5 ~2.2.5-r1
+     Homepage:            http://www.figlet.org/
+     Description:         program for making large letters out of ordinary text
+
+* dev-php/PEAR-Text_Figlet
+```
+
+As with most package managers, software in Portage is grouped by categories. The category and package name combined
+form a unique package atom, in our case we want to install `app-misc/figlet`.
+
+Now manifest the new found knowledge by editing the image's build script located at `mytest/images/figlet/build.sh`. Add the package atom to the
+`_packages` variable:
+
+```
+_packages="app-misc/figlet"
+```
+
+Hit save and switch back to the interactive build container. As the image folder is mounted at `/config` in the build container we
+can do a test run of the build:
+
+```
+kubler-bob-bash / # kubler-build-root
+```
+
+Once this finishes exit the interactive builder by hitting `crtl+d` or typing `exit`. Then build the actual image:
+
+    $ kubler build mytest/figlet -nF
+
+The args are short hand for `--no-deps` and `--force-full-image-build`, if you pass only `-F` parent images
+are also rebuild, which can be handy but it's just a waste of time in this case.
+
+```
+    »[✘]»[mytest/figlet]» fatal: build-test.sh for image mytest/figlet:20190228 failed with exit signal: 1
+```
+
+Ooops, looks like we forgot the image test. Let's fix that by editing the mentioned `build-test.sh` file:
+
+```
+    #!/usr/bin/env sh
+    set -eo pipefail
+
+    figlet -v | grep -A 2 'FIGlet Copyright' || exit 1
+```
+
+Rebuild the image again but this time only pass `-f` instead of `-F`, this will also force a rebuild but skips
+the first build phase:
+
+```
+$ kubler build mytest/figlet -nf
+»[✔]»[mytest/figlet]» done.
+$ docker run -it --rm mytest/figlet figlet foooo
+```
+
+---
+
+## TBC
+
+---
 
 Some useful options for while working on an image:
 
@@ -166,14 +291,14 @@ Only rebuild myimage1 and myimage2, ignore images they depend on:
 
 First check for new releases by running:
 
-    $ ./kubler.sh update
+    $ kubler update
 
 If a new stage3 release was found simply rebuild the stack by running:
 
-    $ ./kubler.sh clean
-    $ ./kubler.sh build -C mynamespace
+    $ kubler clean
+    $ kubler build -C mynamespace
 
-* Minor things might (read will) break, Oracle downloads, for example, may not work.
+* Minor things might (read will) break, Oracle download urls, for example, may become outdated.
 
 ## How does it work?
 
@@ -222,29 +347,13 @@ https://discord.gg/rH9R7bc
 
 You just need a username, email verification with Discord is not required.
 
-## Thanks
-
-[@wking][] for his [gentoo-docker][] repo which served as an excellent starting point
-
-[@jbergstroem][], one of the earliest contributers that helped shape the project probably more then he knows <3
-
-[@azimut][], Mr. ARMv7a :P
-
-[@berney][], Ricer in chief
-
-[@soredake][], for his contributions and feedback
-
-[@mischief][] for contributing the theme of the project name 
-
-[Argbash][] for making my life a bit easier, if you bash script yourself you should definitely check it out!
-
 [LXC]: https://en.wikipedia.org/wiki/LXC
 [gentoo-docker]: https://github.com/wking/dockerfile
-[bob-core]: https://github.com/edannenberg/kubler/tree/master/lib/bob-core
+[bob-core]: https://github.com/edannenberg/kubler/tree/master/engine/docker/bob-core
+[Figlet]: http://www.figlet.org/
 [s6]: https://skarnet.org/software/s6/
 [OpenRC]: https://wiki.gentoo.org/wiki/OpenRC
 [Docker]: https://www.docker.com/
-[acbuild]: https://github.com/containers/build
 [kubler-docker]: https://hub.docker.com/u/kubler/
 [nginx-packages]: https://github.com/edannenberg/kubler/blob/master/dock/kubler/images/nginx/PACKAGES.md
 [Gentoo]: https://www.gentoo.org/

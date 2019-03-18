@@ -86,5 +86,9 @@ finish_rootfs_build()
 
     # After installing packages manually you might want to add an entry to PACKAGES.md
     #log_as_installed "manual install" "${_tmpl_image_name}-${_${_tmpl_image_name}_version}" "https://${_tmpl_image_name}.org/"
+
+    # To uninstall software packages in the builder unset ROOT env first
+    #unset ROOT
+    #emerge -C foo/bar
     :
 }
