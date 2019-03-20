@@ -74,7 +74,7 @@ function _bc_kubler_init()
     _bc_kubler_init_ns_vars
     regex_cmds=',(--[a-z0-9-]*):'
     for command in ${_bc_kubler_cmds[@]}; do
-        help_output="$(kubler "${command}" --help)"
+        help_output="$(KUBLER_BC_HELP=false kubler "${command}" --help)"
         _bc_kubler_match_all "${regex_cmds}" "${help_output}"
         cmd_opts="${___bc_kubler_match_all[@]}"
         declare -g _bc_kubler_cmd_"${command//-/_}"_opts="${cmd_opts}"
