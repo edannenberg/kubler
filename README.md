@@ -11,6 +11,34 @@ Kubler
 A generic, extendable build orchestrator, in Bash. The default batteries focus on creating and maintaining 
 Docker base images.
 
+#### Table Of Contents
+
+- [Why Should You Care?](#why-should-you-care)
+- [Requirements](#requirements)
+  - [Kubler](#kubler)
+  - [Docker](#docker)
+- [Installation](#installation)
+  - [On Gentoo](#on-gentoo)
+  - [Manual Installation](#manual-installation)
+  - [Initial Configuration](#initial-configuration)
+  - [Uninstall](#uninstall)
+- [Tour de Kubler](#tour-de-kubler)
+  - [The Basics](#the-basics)
+  - [Every Image needs a Home - Working Dirs and Namespaces](#every-image-needs-a-home---working-dirs-and-namespaces)
+  - [Hello Image](#hello-image)
+  - [Anatomy of an Image](#anatomy-of-an-image)
+  - [Understanding the Build Process](#understanding-the-build-process)
+  - [But Does it Work? - Image Tests](#but-does-it-work---image-tests)
+  - [Common Build Pitfalls](#common-build-pitfalls)
+  - [Custom Build Containers](#custom-build-containers)
+    - [Extend Existing Builder](#extend-existing-builder)
+    - [New Builder from Scratch](#new-builder-from-scratch)
+  - [Updating Build Containers](#updating-build-containers)
+  - [Pushing Images to a Docker Repository](#pushing-images-to-a-docker-repository)
+  - [Handling Software that doesn't have an Ebuild (yet ;)](#handling-software-that-doesnt-have-an-ebuild-yet-)
+- [Other Resources](#other-resources)
+- [Discord](#discord)
+
 ## Why Should You Care?
 
 Perhaps:
@@ -40,7 +68,7 @@ Optional:
 
 * GPG for download verification
 
-#### Docker Build Engine
+#### Docker
 
 * Working Docker setup
 * Git
@@ -58,7 +86,8 @@ Add the overlay (see link for instructions) and install as usual:
 
 #### Manual Installation
 
-Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux distributions.
+Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux distributions. 
+Feel free to open an issue or ask on Discord if you run into problems.
 
 1. Clone the repo or download/extract the release archive to a location of your choice, i.e.
 
@@ -85,7 +114,7 @@ Kubler doesn't require any further configuration but you may want to review the 
 located at `/etc/kubler.conf`. If the file doesn't exist the `kubler.conf` file in Kubler's root folder is
 used as a fallback.
 
-All of Kubler's runtime data, like user config overrides, downloads or custom scripts, are kept at a path defined
+All of Kubler's runtime data, like user config overrides, downloads or custom scripts, is kept at a path defined
 via `KUBLER_DATA_DIR`. This defaults to `~/.kubler/`, which is suitable if user accounts have Docker access on the host.
 If you plan to use Docker/Kubler only with `sudo`, like on a server, you may want to use `/var/lib/kubler`, or some other location, as data dir instead.
 
@@ -107,7 +136,7 @@ Managing your `KUBLER_DATA_DIR` with a VCS tool like Git is supported, a proper 
 3. Delete any namespace dirs and configured `KUBLER_DATA_DIR` (default is `~/.kubler/`) you had in
    use, this may require su permissions.
 
-## Tour De Kubler
+## Tour de Kubler
 
 ### The Basics
 
@@ -142,7 +171,7 @@ If you are not familiar with Gentoo some of it's terms you will encounter may be
 | Portage Tree    | Categorized collection of ebuilds, Gentoo ships with ~20k ebuilds |
 | Portage Overlay | Additional ebuild repository maintained by the community/yourself |
 
-### Every Image needs A Home - Working Dirs And Namespaces
+### Every Image needs a Home - Working Dirs and Namespaces
 
 To accommodate different use cases there are three types of working dirs:
 
@@ -156,7 +185,7 @@ First switch to a directory where you would like to store your Kubler managed im
 
     $ cd ~/projects
 
-Then use the `new` command to take care of the boiler plate for you:
+Then use the `new` command to take care of the boiler plate, choose 'single' when asked for the namespace type:
 
 ```
     $ kubler new namespace mytest
@@ -170,7 +199,7 @@ Although not strictly required it's recommended to install Kubler's example imag
 ### Hello Image
 
 Let's start with a simple task and dockerize [Figlet][], a nifty tool that produces ascii fonts. First create a new
-image stub by running:
+image stub:
 
     $ kubler new image mytest/figlet
 
@@ -196,7 +225,7 @@ allows us to poke around in a running build container and plan/debug the image b
     $ kubler build mytest/figlet -i
 
 This will also build any missing parent images/builders, so the first run may take quite a bit of time. Don't
-worry, once your local binary package cache and build containers are seeded future runs will be much faster.
+worry, once the local binary package cache and build containers are seeded future runs will be much faster.
 When everything is ready you are dropped into a new shell:
 
 ```
@@ -220,15 +249,15 @@ kubler-bob-bash / # eix figlet
 As with most package managers, software in Portage is grouped by categories. The category and package name combined
 form a unique package atom, in our case we want to install `app-misc/figlet`.
 
-Now manifest the new found knowledge by editing the image's build script located at `mytest/images/figlet/build.sh`. Add the package atom to the
-`_packages` variable:
+Now manifest the new found knowledge by editing the image's build script located at `mytest/images/figlet/build.sh`.
+Add the package atom to the `_packages` variable:
 
 ```
 _packages="app-misc/figlet"
 ```
 
 Hit save and switch back to the interactive build container. As the image folder is mounted at `/config` in the build container we
-can do a test run of the build:
+can do a test run of the first build phase (more on that later):
 
 ```
 kubler-bob-bash / # kubler-build-root
@@ -254,8 +283,8 @@ Ooops, looks like we forgot the image test. Let's fix that by editing the mentio
     figlet -v | grep -A 2 'FIGlet Copyright' || exit 1
 ```
 
-Rebuild the image again but this time only pass `-f` instead of `-F`, this will also force a rebuild but skips
-the first build phase:
+Not exactly exhausting but it will do for now. :) Rebuild the image again but this time only pass `-f` instead of `-F`,
+this will also force a rebuild but skips the first build phase:
 
 ```
 $ kubler build mytest/figlet -nf
@@ -263,108 +292,279 @@ $ kubler build mytest/figlet -nf
 $ docker run -it --rm mytest/figlet figlet foooo
 ```
 
----
+### Anatomy of an Image
 
-## TBC
+```
+$ tree images/figlet
+images/figlet/
+├── Dockerfile            <- generated, never edit this manually
+├── Dockerfile.template   <- standard Dockerfile, except it's fully parameterizable
+├── PACKAGES.md           <- generated, lists all installed packages with version and use flags
+├── README.md             <- optional, image specific documentation written by you
+├── build-test.sh         <- optional, if the file exists it activates a post-build test
+├── build.conf            <- general image/builder config, sourced on the host
+├── build.sh              <- configures the first build phase, only sourced in build containers
+```
 
----
+The stub files generated with the `new` command are heavily commented with further details.
 
-Some useful options for while working on an image:
+### Understanding the Build Process
 
-Start an interactive build container, same as used in the first phase to create the `rootfs.tar`:
+After executing a build command an image dependency graph is generated for the passed target ids by parsing
+the `IMAGE_PARENT` and `BUILDER` vars in the respective `build.conf` files. You can visualize the graph for any
+given target ids with the `dep-graph` command:
 
-    $ ./kubler.sh build -i mynamespace/myimage
+    $ kubler dep-graph -b kubler/nginx mytest
 
-Force rebuild of myimage and all images it depends on:
+Once all required data is gathered, each missing, as in not already built, image will go through a two phase
+build process:
 
-    $ ./kubler.sh build -f mynamespace/myimage
+1. The configured builder image is passed to `docker run` to produce a `rootfs.tar` file in the image folder
 
-Same as above, but also force a rebuild of any existing `rootfs.tar` files:
+    * mounts current image dir into a fresh build container as `/config`
+    * executes `build-root.sh` (a generic script provided by Kubler) inside build container
+    * `build-root.sh` reads `build.sh` from the mounted `/config` directory
+    * if `configure_builder()` hook is defined in `build.sh`, execute it
+    * `package.installed` file is generated which is used by depending images as [package.provided][]
+    * `ROOT` env is set to custom path
+    * if `configure_rootfs_build()` hook is defined in `build.sh`, execute it
+    * `_packages` defined in `build.sh` are installed via Portage at a custom empty root directory
+    * if `finish_rootfs_build()` hook is defined in `build.sh`, execute it
+    * `ROOT` dir is packaged as `rootfs.tar` and placed in image dir on the host
+    * preserve exact builder state for child images by committing the used build container as a new builder image
 
-    $ ./kubler.sh build -F mynamespace/myimage
+The `build-root.sh` file effectively just uses a feature of Gentoo's package manager that allows us to install any given `_packages`,
+with all it's dependencies, at a custom path by setting the `ROOT` env in the build container. The other piece to the
+puzzle is Portage's [package.provided][] file which is constantly updated and preserved by committing the build
+container as a new builder image after each build. Thanks to Docker's shared layers the overhead of this is fairly minimal.
 
-Only rebuild myimage1 and myimage2, ignore images they depend on:
+Kubler's default build container names generally start with `bob`, when a new build container state is committed the
+current image name gets appended. For example `kubler/bob-openssl` refers to the container used to build the `kubler/openssl` image.
+Any image that has `kubler/openssl` as `IMAGE_PARENT` will use `kubler/bob-openssl` as it's build container.
 
-    $ ./kubler.sh build -n -F mynamespace/{myimage1,myimage2}
+There are no further assumptions or magic, the hooks in `build.sh` are just Bash functions so there are virtually no limits
+on how you may produce the resulting `rootfs.tar`. You have a full Gentoo installation at your disposal, orchestrate away.
 
-## Updating build containers to a newer Gentoo stage3 release
+2. Image dir is passed to `docker build` as build context, the Dockerfile has a `ADD rootfs.tar /` entry
 
-First check for new releases by running:
+    * Dockerfile is generated from Dockerfile.template on each run
+    * vars starting with `BOB_` in your `build.conf` can be used for parameterization, i.e. `BOB_FOO=bar`
+    * produces the final image
+
+### But Does it Work? - Image Tests
+
+A successful image build doesn't always equal a functional image. Kubler supports two types of image tests that can be
+run as part of the post-build process:
+
+1. Docker's `HEALTH-CHECK`
+
+    * set `POST_BUILD_HC=true` in `build.conf` to activate
+    * configure the health-check as usual in `Dockerfile.template`
+    * built image is run in detached mode and container health status is queried until it's `healthy` or timeout is
+      reached
+
+2. `build-test.sh`
+
+    * if the file exists it is executed in the built image and the container exit signal is checked to determine success/error
+    * file should be executable as it is only mounted for the test
+    * good alternative when a Docker health-check doesn't make sense
+
+### Common Build Pitfalls
+
+First of all if you run into errors don't panic and look for a towel.. erm read the output carefully for hints. The log file
+is located at `$KUBLER_DATA_DIR/log/build.log`. Some of the more common errors:
+
+* Build fails due to missing files
+
+Not all ebuilds support a custom `ROOT` properly, in almost all of those cases the problem boils down to the ebuild
+trying to execute files at the actual build container root, when in reality the files it expects just got installed at the
+custom root defined via `ROOT`.
+
+The easiest solution is to install the failing package manually in the `configure_builder()` hook first:
+
+```
+_packages="dev-lang/foo"
+
+configure_builder()
+{
+    # move any use flag/keywords config from configure_rootfs_build() hook to 
+    # reuse the resulting binary package, keeps overhead to a minimum
+    emerge dev-lang/foo
+}
+```
+
+While the above should always work, you may want to get a bit creative instead if the problem is obvious to resolve.
+Example from `kubler/graph-easy`:
+
+```
+configure_rootfs_build()
+{
+    # graphviz ebuild calls 'dot -c || die' as part of post-install. Fake dot and run the setup via Dockerfile instead.
+    ln -s /bin/true /usr/bin/dot
+}
+
+finish_rootfs_build()
+{
+    # remove the fake symlink, the actual dot binary is in ${_EMERGE_ROOT}/usr/bin/dot
+    rm /usr/bin/dot
+}
+```
+
+* Image was successfully built but can't find it's libraries on image run
+
+This usually happens when the libs in question got installed at a new location which is not yet known to the system:
+
+```
+ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+```
+
+The issue here is that the ebuild ran `ldconfig` during install but the change was done in the builder context and not
+the custom root. Adding `RUN ldconfig` to your `Dockerfile.template` resolves the issue. 
+
+* Image build fails with Operation not permitted
+
+```
+strace: test_ptrace_setoptions_for_all: PTRACE_TRACEME doesn't work: Operation not permitted
+```
+
+Some packages like `glibc` require `SYS_PTRACE` permissions for the build container during installation, this can be configured
+via `build.conf`:
+
+```
+    BUILDER_CAPS_SYS_PTRACE='true'
+```
+
+### Custom Build Containers
+
+The default builders provided by Kubler should do just fine for most tasks, however you can customize the default builders
+to your liking or create a new one from scratch.
+
+#### Extend Existing Builder
+
+Note that extending a builder is often overkill as you can also customize a builder in the `configure_builder()` hook of
+any image's `build.sh`. The changes will persist to all depending image builds.
+
+1. Create the new builder and set a parent:
+
+```
+    $ kubler new builder mytest/alice
+    »»» Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3
+    »[?]» Parent Image (stage3): kubler/bob
+    »[✔]» Successfully created new builder at projects/mytest/builder/alice
+``` 
+
+2. Edit `build.sh` and customize away:
+
+```
+configure_builder()
+{
+    emerge app-editors/vim
+    emerge -C app-editors/nano
+    echo "nano is for plebs!" > ~/foo.txt
+}
+```
+
+3. Set your builder as `DEFAULT_BUILDER` in your namespace or user `kubler.conf`
+
+```
+    DEFAULT_BUILDER="mytest/alice"
+```
+
+If you set this via user config your custom builder is also used for all images in the `kubler` namespace. You will need
+to rebuild with '-c' for this to take effect:
+
+    $ kubler build -c mytest/figlet
+
+#### New Builder from Scratch
+
+Pretty much the same process as above except:
+
+1. Create the new builder but don't set a parent:
+
+```
+    $ kubler new builder mytest/s3b
+    »»» Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3
+    »[?]» Parent Image (stage3):
+    »[✔]» Successfully created new builder at projects/mytest/builder/s3b
+``` 
+
+2. Configure used Gentoo stage3 file in `build.conf`:
+
+```
+    STAGE3_BASE='stage3-amd64-musl-hardened'
+    ARCH='amd64'
+    ARCH_URL="${MIRROR}experimental/${ARCH}/musl/"
+```
+
+The `ARCH_URL` should match the base path on Gentoo's distribution mirrors. Then run `kubler update` to fetch the latest stage3 date.
+
+### Updating Build Containers
+
+Gentoo is a rolling distribution, Portage updates happen daily. The provided stage3 files are updated frequently and only kept for a limited
+time. To check for new releases:
 
     $ kubler update
 
-If a new stage3 release was found simply rebuild the stack by running:
+This will also check for updates to the example images provided by Kubler, usually updated at the end of each month. If a new stage3 release
+was found simply rebuild the stack by running:
 
     $ kubler clean
     $ kubler build -C mynamespace
 
-* Minor things might (read will) break, Oracle download urls, for example, may become outdated.
+### Pushing Images to a Docker Repository
 
-## How does it work?
+To push images to Docker Hub:
 
-* `kubler.sh` determines `--working-dir` either by passed arg or by looking in the current dir and it's parents
-* `kubler.sh` reads global defaults from `kubler.conf`
-* iterates over current `--working-dir`
-* reads `kubler.conf` in each `working-dir/<namespace>/` directory and imports defined `BUILD_ENGINE`
-from `lib/engine/`
-* generates build order by iterating over `working-dir/<namespace>/images/` for each required image
-* executes `build_core()` for each required engine to bootstrap the initial build container
-* executes `build_builder()` for any other required build containers in `working-dir/<namespace>/builder/<image>`
-* executes `build_image()` to build each `working-dir/<namespace>/images/<image>` 
+    $ kubler push mytest somenamespace/someimage
 
-Each implementation is allowed to only implement parts of the build process, if no build containers
-are required thats fine too.
+This assumes that the namespace equals the respective Docker Hub account names, i.e. `mytest` and `somenamespace`.
+You may place a `push.conf` file in each namespace dir with the following format:
 
-### Docker specific build details
+```
+#DOCKER_LOGIN=myacc
+DOCKER_PW=mypassword
+#DOCKER_EMAIL=foo@bar.net
+```
 
-* `build_core()` builds a clean stage 3 image with some helper files from `./lib/bob-core/`
-* `build_image()` mounts each `working_dir/<namespace>/images/<image>` directory into a fresh build container
-as `/config`
-* executes `build-root.sh` inside build container
-* `build-root.sh` reads `build.sh` from the mounted `/config` directory
-* if `configure_bob()` hook is defined in `build.sh`, execute it
-* `package.installed` file is generated which is used by depending images as [package.provided][]
-* if `configure_rootfs_build()` hook is defined in `build.sh`, execute it
-* `_packages` defined in `build.sh` are installed at a custom empty root directory
-* if `finish_rootfs_build()` hook is defined in `build.sh`, execute it
-* resulting `rootfs.tar` is placed in `/config`, end of first build phase
-* used build container gets committed as a new builder image which will be used by other builds depending on this image,
-this preserves exact build state
-* `kubler.sh` then starts a normal docker build that uses `rootfs.tar` to create the final image
+### Handling Software that doesn't have an Ebuild (yet ;)
 
-Build container names generally start with `*/bob`, when a new build container state is committed the current image
-name gets appended. For example `kubler/bob-openssl` refers to the container used to build the `kubler/openssl` image.
+While Gentoo's package tree is fairly massive it's doesn't have everything or maybe not as bleeding edge as you would like.
+In such cases you can either do a manual install in the `finish_rootfs_hook()`, as you would via a shell. However the
+recommended way is to maintain your own Portage overlay by writing an ebuild file. Some study materials, sorted by complexity:
+
+* [Quickstart Ebuild Guide](https://devmanual.gentoo.org/quickstart/index.html)
+* [Basic guide to Gentoo Ebuilds](https://wiki.gentoo.org/wiki/Basic_guide_to_write_Gentoo_Ebuilds)
+* [Gentoo Ebuild Writing](https://devmanual.gentoo.org/ebuild-writing/index.html)
+* [Gentoo Ebuild Dev Guide](https://devmanual.gentoo.org/eclass-reference/ebuild/index.html)
+
+It's a fairly straight forward affair, once you wrapped your head around it, that provides benefits over the manual approach.
+For example you won't have to remember to strip the binaries after a manual installation.
+
+The ebuild system is heavily modularized, a good approach is to study/copy existing ebuilds for similar software in the
+Portage tree. You can browse Portage's ebuilds at `/var/sync/portage/` in any interactive build container. Often you
+just need to find a good ebuild source and change a few trivial things to be done with it.
 
 ## Other Resources
 
-* An excellent blog post, written by [@berney][], can be found at https://www.elttam.com.au/blog/kubler/
+* [Building Hardened Docker Images from Scratch with Kubler](https://www.elttam.com.au/blog/kubler/) by [@berney][]
+* [Portage's Emerge Manual](https://wiki.gentoo.org/wiki/Portage#emerge)
 
-## Discord Community
+## Discord
 
 For questions or chatting with other users you may join our Discord server at:
 
 https://discord.gg/rH9R7bc
 
-You just need a username, email verification with Discord is not required.
+Although you'll need to create an account on Discord email verification with Discord is disabled for now.
 
 [LXC]: https://en.wikipedia.org/wiki/LXC
-[gentoo-docker]: https://github.com/wking/dockerfile
 [bob-core]: https://github.com/edannenberg/kubler/tree/master/engine/docker/bob-core
 [Figlet]: http://www.figlet.org/
-[s6]: https://skarnet.org/software/s6/
-[OpenRC]: https://wiki.gentoo.org/wiki/OpenRC
 [Docker]: https://www.docker.com/
 [kubler-docker]: https://hub.docker.com/u/kubler/
-[nginx-packages]: https://github.com/edannenberg/kubler/blob/master/dock/kubler/images/nginx/PACKAGES.md
 [Gentoo]: https://www.gentoo.org/
 [binary package]: https://wiki.gentoo.org/wiki/Binary_package_guide
 [package.provided]: https://wiki.gentoo.org/wiki//etc/portage/profile/package.provided
-[Grafana]: https://grafana.com/
 [CoreOS]: https://coreos.com/
-[@wking]: https://github.com/wking
-[@jbergstroem]: https://github.com/jbergstroem
-[@azimut]: https://github.com/azimut
 [@berney]: https://github.com/berney
-[@soredake]: https://github.com/soredake
-[@mischief]: https://github.com/mischief
 [Argbash]: https://github.com/matejak/argbash
