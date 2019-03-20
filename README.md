@@ -470,10 +470,11 @@ configure_builder()
     DEFAULT_BUILDER="mytest/alice"
 ```
 
-If you set this via user config your custom builder is also used for all images in the `kubler` namespace. You will need
-to rebuild with '-c' for this to take effect:
+If you set this via user config your custom builder is also used for all images in the `kubler` namespace.
 
-    $ kubler build -c mytest/figlet
+Note: You will need to rebuild with the `-c` arg for this to take effect:
+
+    $ kubler build -c mytest
 
 #### New Builder from Scratch
 
@@ -488,7 +489,7 @@ Pretty much the same process as above except:
     »[✔]» Successfully created new builder at projects/mytest/builder/s3b
 ``` 
 
-2. Configure used Gentoo stage3 file in `build.conf`:
+2. Additionally configure the used Gentoo stage3 file in `build.conf`:
 
 ```
     STAGE3_BASE='stage3-amd64-musl-hardened'
@@ -501,12 +502,12 @@ The `ARCH_URL` should match the base path on Gentoo's distribution mirrors. Then
 ### Updating Build Containers
 
 Gentoo is a rolling distribution, Portage updates happen daily. The provided stage3 files are updated frequently and only kept for a limited
-time. To check for new releases:
+time on Gentoo's servers and mirrors. To check for new releases:
 
     $ kubler update
 
-This will also check for updates to the example images provided by Kubler, usually updated at the end of each month. If a new stage3 release
-was found simply rebuild the stack by running:
+This will also check for updates to the example images provided by Kubler, usually updated at the end of each month. If updates were found
+found simply rebuild the stack by running:
 
     $ kubler clean
     $ kubler build -C mynamespace
@@ -521,7 +522,7 @@ This assumes that the namespace equals the respective Docker Hub account names, 
 You may place a `push.conf` file in each namespace dir with the following format:
 
 ```
-#DOCKER_LOGIN=myacc
+DOCKER_LOGIN=myacc
 DOCKER_PW=mypassword
 #DOCKER_EMAIL=foo@bar.net
 ```
@@ -543,6 +544,9 @@ For example you won't have to remember to strip the binaries after a manual inst
 The ebuild system is heavily modularized, a good approach is to study/copy existing ebuilds for similar software in the
 Portage tree. You can browse Portage's ebuilds at `/var/sync/portage/` in any interactive build container. Often you
 just need to find a good ebuild source and change a few trivial things to be done with it.
+
+The [kubler-overlay](https://github.com/edannenberg/kubler-overlay) repo has some pointers on how to setup a ebuild dev
+environment with Kubler.
 
 ## Other Resources
 
