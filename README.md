@@ -249,42 +249,51 @@ kubler-bob-bash / # eix figlet
 As with most package managers, software in Portage is grouped by categories. The category and package name combined
 form a unique package atom, in our case we want to install `app-misc/figlet`.
 
-Now manifest the new found knowledge by editing the image's build script located at `mytest/images/figlet/build.sh`.
-Add the package atom to the `_packages` variable:
+Now manifest the new found knowledge by editing the image's build script:
+
+```
+    kubler-bob-bash / # nano /config/build.sh
+```
+
+Note: The `/config` folder in the build container is the host mounted image directory at `mytest/images/figlet/`.
+Feel free to use your local IDE/editor to edit `build.sh` instead.
+
+Add the `app-misc/figlet` package atom to the `_packages` variable in `build.sh`:
 
 ```
 _packages="app-misc/figlet"
 ```
 
-Hit save and switch back to the interactive build container. As the image folder is mounted at `/config` in the build container we
-can do a test run of the first build phase (more on that later):
+Then start a test run of the first build phase (more on that later), if you are in a hurry you may skip this step:
 
 ```
 kubler-bob-bash / # kubler-build-root
 ```
 
-Once this finishes exit the interactive builder by hitting `crtl+d` or typing `exit`. Then build the actual image:
+Once this finishes exit the interactive builder by hitting `crtl+d` or typing `exit`. All that is left to do is 
+building the actual image:
 
     $ kubler build mytest/figlet -nF
 
-The args are short hand for `--no-deps` and `--force-full-image-build`, if you pass only `-F` parent images
-are also rebuild, which can be handy but it's just a waste of time in this case.
+The args are short hand for `--no-deps` and `--force-full-image-build`, omitting `-n` would also rebuild all 
+parent images, which can be handy but is just a waste of time in this case.
 
 ```
     »[✘]»[mytest/figlet]» fatal: build-test.sh for image mytest/figlet:20190228 failed with exit signal: 1
 ```
 
-Ooops, looks like we forgot the image test. Let's fix that by editing the mentioned `build-test.sh` file:
+Oops, looks like we forgot the image test. Let's fix that by editing the mentioned `build-test.sh` file:
 
 ```
     #!/usr/bin/env sh
     set -eo pipefail
 
+    # check figlet version string
     figlet -v | grep -A 2 'FIGlet Copyright' || exit 1
 ```
 
-Not exactly exhausting but it will do for now. :) Rebuild the image again but this time only pass `-f` instead of `-F`,
-this will also force a rebuild but skips the first build phase:
+Not exactly exhausting but it will do for now. Rebuild the image again but this time only pass `-f` instead of `-F`,
+this too forces an image rebuild but skips the first build phase:
 
 ```
 $ kubler build mytest/figlet -nf
@@ -328,7 +337,7 @@ build process:
     * `package.installed` file is generated which is used by depending images as [package.provided][]
     * `ROOT` env is set to custom path
     * if `configure_rootfs_build()` hook is defined in `build.sh`, execute it
-    * `_packages` defined in `build.sh` are installed via Portage at a custom empty root directory
+    * `_packages` defined in `build.sh` are installed via Portage at custom empty root directory
     * if `finish_rootfs_build()` hook is defined in `build.sh`, execute it
     * `ROOT` dir is packaged as `rootfs.tar` and placed in image dir on the host
     * preserve exact builder state for child images by committing the used build container as a new builder image
@@ -350,6 +359,9 @@ on how you may produce the resulting `rootfs.tar`. You have a full Gentoo instal
     * Dockerfile is generated from Dockerfile.template on each run
     * vars starting with `BOB_` in your `build.conf` can be used for parameterization, i.e. `BOB_FOO=bar`
     * produces the final image
+
+This approach is basically an alternative to Docker's [multi-stage](https://docs.docker.com/develop/develop-images/multistage-build/)
+builds that also allows host mounts and `--privileged` builds in the first phase where all the heavy lifting is done.
 
 ### But Does it Work? - Image Tests
 
@@ -518,8 +530,8 @@ To push images to Docker Hub:
 
     $ kubler push mytest somenamespace/someimage
 
-This assumes that the namespace equals the respective Docker Hub account names, i.e. `mytest` and `somenamespace`.
-You may place a `push.conf` file in each namespace dir with the following format:
+The default assumes that the given namespace equals the respective Docker Hub account names, i.e. `mytest` and `somenamespace`.
+To override this you may place a `push.conf` file in each namespace dir with the following format:
 
 ```
 DOCKER_LOGIN=myacc
@@ -530,8 +542,12 @@ DOCKER_PW=mypassword
 ### Handling Software that doesn't have an Ebuild (yet ;)
 
 While Gentoo's package tree is fairly massive it's doesn't have everything or maybe not as bleeding edge as you would like.
-In such cases you can either do a manual install in the `finish_rootfs_hook()`, as you would via a shell. However the
-recommended way is to maintain your own Portage overlay by writing an ebuild file. Some study materials, sorted by complexity:
+In such cases you may try your luck on http://gpo.zugaina.org/ and search the community overlays that will cover an even
+wider range of ebuilds. Just keep the security implications of downloading random strangers' ebuilds in mind. ;)
+
+If you are still out of luck after trying the above you can do a manual install in the `finish_rootfs_hook()`,
+as you usually would with a shell. However the recommended way is to maintain your own Portage overlay by writing an
+ebuild file. Some study materials, sorted by complexity:
 
 * [Quickstart Ebuild Guide](https://devmanual.gentoo.org/quickstart/index.html)
 * [Basic guide to Gentoo Ebuilds](https://wiki.gentoo.org/wiki/Basic_guide_to_write_Gentoo_Ebuilds)
@@ -551,6 +567,8 @@ environment with Kubler.
 ## Other Resources
 
 * [Building Hardened Docker Images from Scratch with Kubler](https://www.elttam.com.au/blog/kubler/) by [@berney][]
+* [Gentoo as a Docker Build System?] by [@janoszen](https://github.com/janoszen)
+
 * [Portage's Emerge Manual](https://wiki.gentoo.org/wiki/Portage#emerge)
 
 ## Discord
