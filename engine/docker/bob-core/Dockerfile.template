@@ -23,6 +23,8 @@ COPY etc/ /etc/
 
 COPY build-root.sh /usr/local/bin/kubler-build-root
 
+COPY sed-or-die.sh /usr/local/bin/sed-or-die
+
 COPY bashrc.sh /root/.bashrc
 
 COPY portage-git-sync.sh /usr/local/bin/portage-git-sync
