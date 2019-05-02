@@ -567,7 +567,7 @@ environment with Kubler.
 ## Other Resources
 
 * [Building Hardened Docker Images from Scratch with Kubler](https://www.elttam.com.au/blog/kubler/) by [@berney][]
-* [Gentoo as a Docker Build System?] by [@janoszen](https://github.com/janoszen)
+* [Gentoo as a Docker Build System?](https://youtu.be/bbC6HXUUjjg) by [@janoszen](https://github.com/janoszen)
 
 * [Portage's Emerge Manual](https://wiki.gentoo.org/wiki/Portage#emerge)
 
