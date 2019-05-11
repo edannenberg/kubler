@@ -31,9 +31,9 @@ _portage_image_processed='false'
 # Is this engine functional? Called once per engine in current image dependency graph.
 function validate_engine() {
     local docker_version
-    _required_binaries+=" docker"
+    _required_binaries+=" ${DOCKER}"
     has_required_binaries
-    docker_version=$(${DOCKER} "version") || die "Failed to query the docker daemon:\\n${docker_version}"
+    docker_version=$(${DOCKER} "version") || die "Failed to query ${DOCKER}:\\n${docker_version}"
 }
 
 # Has given image_id all requirements to start the build? Called once per image in current image dependency graph.
@@ -240,15 +240,20 @@ function build_image() {
             || { msg_error "${_status_msg}"; die; }
     fi
 
-    _status_msg="exec docker build -t ${image_id}:${IMAGE_TAG}"
+    _status_msg="exec ${DOCKER} build -t ${image_id}:${IMAGE_TAG}"
     # shellcheck disable=SC2086
     pwrap "${DOCKER}" build ${DOCKER_BUILD_OPTS} -t "${image_id}:${IMAGE_TAG}" "${image_path}" || die "${_status_msg}"
 
     _status_msg="tag image ${image_id}:latest"
     pwrap 'nolog' "${DOCKER}" tag "${image_id}:${IMAGE_TAG}" "${image_id}:latest" || die "${_status_msg}"
 
-    [[ "${KUBLER_POSTBUILD_IMAGE_PRUNE}" == 'true' ]] \
-        && _status_msg="remove untagged images" && pwrap "${DOCKER}" image prune -f
+    if [[ "${DOCKER}" == 'docker' ]]; then
+        [[ "${KUBLER_POSTBUILD_IMAGE_PRUNE}" == 'true' ]] \
+            && _status_msg="remove untagged images" && pwrap "${DOCKER}" image prune -f
+    else
+        [[ "${KUBLER_POSTBUILD_IMAGE_PRUNE}" == 'true' ]] \
+            && _status_msg="remove untagged images" && pwrap "${DOCKER}" image prune
+    fi
 
     [[ "${KUBLER_POSTBUILD_VOLUME_PRUNE}" == 'true' ]] \
         && _status_msg="remove unused volumes" && pwrap "${DOCKER}" volume prune -f
