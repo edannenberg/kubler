@@ -2,6 +2,9 @@
 # Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
-source "${_KUBLER_DIR}/engine/docker.sh"
+PODMAN="${PODMAN:-podman}"
+PODMAN_BUILD_OPTS="${PODMAN_BUILD_OPTS:---format docker}"
+DOCKER="${PODMAN}"
+DOCKER_BUILD_OPTS="${PODMAN_BUILD_OPTS}"
 
-DOCKER="podman"
+source "${_KUBLER_DIR}/engine/docker.sh"
