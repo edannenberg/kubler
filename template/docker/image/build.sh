@@ -54,8 +54,8 @@ finish_rootfs_build()
 {
     # Useful helpers
 
-    # Thin wrapper for sed that fails the build if no match was found, default sed separator is %
-    #sed-or-die '^foo' 'replaceval' /etc/foo.conf
+    # Thin wrapper for sed that fails the build if no match was found, default sed delimiter is %
+    #sed-or-die '^foo' 'replaceval' "${_EMERGE_ROOT}"/etc/foo.conf
 
     # Download file at url to /distfiles if it doesn't exist yet, file name is derived from last url fragment
     #download_file "$url"
