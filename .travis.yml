@@ -10,4 +10,4 @@ before_install:
 
 script:
  - docker run --rm -w /scripts -v $(pwd):/scripts koalaman/shellcheck -x
-   kubler.sh lib/*.sh engine/docker.sh engine/docker/bob-core/*.sh cmd/*.sh cmd/argbash/argbash-refresh.sh
+   kubler.sh lib/*.sh engine/{docker,podman}.sh engine/docker/bob-core/*.sh cmd/*.sh cmd/argbash/argbash-refresh.sh
