@@ -24,6 +24,7 @@
 DOCKER_IO=$(command -v docker.io)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS:-}"
+DOCKER_COMMIT_OPTS="${DOCKER_COMMIT_OPTS:-}"
 
 _container_mount_portage='false'
 _portage_image_processed='false'
@@ -228,7 +229,7 @@ function build_image() {
         _container_mount_portage='false'
 
         _status_msg="commit ${run_id} as image ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
-        pwrap 'nolog' "${DOCKER}" commit "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
+        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
             || die "${_status_msg}"
 
         _status_msg="remove container ${run_id}"
