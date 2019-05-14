@@ -229,7 +229,8 @@ function build_image() {
         _container_mount_portage='false'
 
         _status_msg="commit ${run_id} as image ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
-        pwrap 'nolog' "${DOCKER}" commit "${DOCKER_COMMIT_OPTS}" "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
+        # shellcheck disable=SC2086
+        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
             || die "${_status_msg}"
 
         _status_msg="remove container ${run_id}"
