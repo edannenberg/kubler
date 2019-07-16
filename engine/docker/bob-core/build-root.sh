@@ -68,11 +68,16 @@ function copy_gcc_libs() {
 # 1: new_portage_path, optional, default: /var/sync
 function fix_portage_profile_symlink() {
     local new_portage_path old_profile
-    new_portage_path="${1:-/var/sync}"
+    new_portage_path="${1:-/var/sync/portage}"
     old_profile="$(readlink -m /etc/portage/make.profile)"
+    # strip old portage profiles base path
+    old_profile="${old_profile#/usr/portage/}"
+    # strip new base path used since 20190715
+    old_profile="${old_profile#/var/db/repos/gentoo/}"
+    new_portage_path="${new_portage_path}/${old_profile}"
     rm /etc/portage/make.profile
-    echo "switching portage profile to: ${new_portage_path}/${old_profile#/usr/}"
-    ln -sr "${new_portage_path}/${old_profile#/usr/}" /etc/portage/make.profile
+    echo "switching portage profile to: ${new_portage_path}"
+    ln -sr "${new_portage_path}" /etc/portage/make.profile
 }
 
 # Clone a fork of hasufell/portage-gentoo-git-config and copy postsync hooks, part of stage3 builder setup
