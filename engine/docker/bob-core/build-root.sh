@@ -29,7 +29,6 @@ declare _keep_headers _keep_static_libs _headers_from _static_libs_from _iconv_f
 readonly _LIB="$(portageq envvar LIBDIR_$(portageq envvar ARCH))"
 readonly _EMERGE_ROOT="/emerge-root"
 readonly _CONFIG="/config"
-readonly _CONFIG_TMP="${_CONFIG}/tmp"
 readonly _ROOTFS_BACKUP="/backup-rootfs"
 readonly _PACKAGE_INSTALLED="${_ROOTFS_BACKUP}/package.installed"
 readonly _DOC_PACKAGE_INSTALLED="${_ROOTFS_BACKUP}/doc.package.installed"

@@ -201,6 +201,7 @@ function main() {
         readonly BOB_IS_DEBUG='true'
         set -x
     else
+        # shellcheck disable=SC2034
         readonly BOB_IS_DEBUG='false'
     fi
 
