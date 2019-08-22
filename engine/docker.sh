@@ -797,11 +797,11 @@ function push_image() {
     repository_url="$2"
     push_id="${image_id}"
     if [[ -n "${repository_url}" ]]; then
-        docker_image_id="$("${DOCKER}" images "${image_id}:${image_tag}" --format '{{.ID}}')"
+        docker_image_id="$("${DOCKER}" images "${image_id}:${IMAGE_TAG}" --format '{{.ID}}')"
         # shellcheck disable=SC2181
-        [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${image_tag}: ${docker_image_id}"
+        [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${IMAGE_TAG}: ${docker_image_id}"
         push_id="${repository_url}/${image_id}"
-        _status_msg="${DOCKER}" tag "${docker_image_id}" "${push_id}"
+        _status_msg="${DOCKER} tag ${docker_image_id} ${push_id}"
         pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}" || die
     fi
     add_status_value "${push_id}"
