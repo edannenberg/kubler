@@ -792,7 +792,7 @@ function push_auth() {
 # 1: image_id (i.e. kubler/busybox)
 # 2: repository_url
 function push_image() {
-    local image_id repository_url push_id docker_image_id
+    local image_id repository_url push_id docker_image_id pid
     image_id="$1"
     repository_url="$2"
     push_id="${image_id}"
@@ -801,11 +801,15 @@ function push_image() {
         # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${IMAGE_TAG}: ${docker_image_id}"
         push_id="${repository_url}/${image_id}"
-        _status_msg="${DOCKER} tag ${docker_image_id} ${push_id}"
-        pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}" || die
+        for pid in "${push_id}:${IMAGE_TAG}" "${push_id}:latest"; do
+            _status_msg="${DOCKER} tag ${docker_image_id} ${pid}"
+            pwrap "${DOCKER}" tag "${docker_image_id}" "${pid}" || die
+        done
     fi
     add_status_value "${push_id}"
     _status_msg="upload image"
-    pwrap "${DOCKER}" push "${push_id}" || die
+    for pid in "${push_id}:${IMAGE_TAG}" "${push_id}:latest"; do
+      pwrap "${DOCKER}" push "${pid}" || die
+    done
     msg_ok "done."
 }
