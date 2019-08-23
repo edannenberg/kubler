@@ -801,11 +801,14 @@ function push_image() {
         # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${IMAGE_TAG}: ${docker_image_id}"
         push_id="${repository_url}/${image_id}"
-        _status_msg="${DOCKER} tag ${docker_image_id} ${push_id}"
-        pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}" || die
+        _status_msg="${DOCKER} tag ${docker_image_id} ${push_id}:${IMAGE_TAG}"
+        pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}:${IMAGE_TAG}" || die
+        _status_msg="${DOCKER} tag ${docker_image_id} ${push_id}:latest"
+        pwrap "${DOCKER}" tag "${docker_image_id}" "${push_id}:latest" || die
     fi
     add_status_value "${push_id}"
     _status_msg="upload image"
-    pwrap "${DOCKER}" push "${push_id}" || die
+    pwrap "${DOCKER}" push "${push_id}:${IMAGE_TAG}" || die
+    pwrap "${DOCKER}" push "${push_id}:latest" || die
     msg_ok "done."
 }
