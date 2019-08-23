@@ -55,7 +55,7 @@ function validate_image() {
 # Arguments:
 # 1: image_path
 function generate_dockerfile() {
-    local image_path sed_param bob_var
+    local image_path sed_param bob_var build_timestamp
     image_path="$1"
     sed_param=()
     [[ ! -f "${image_path}"/Dockerfile.template ]] && die "Couldn't read ${image_path}/Dockerfile.template"
@@ -63,6 +63,7 @@ function generate_dockerfile() {
     for bob_var in ${!BOB_*}; do
         sed_param+=(-e "s|\${${bob_var}}|${!bob_var}|")
     done
+    build_timestamp=$(date '+%Y%m%d%H%M%S')
 
     # shellcheck disable=SC2016,SC2153,SC2154
     sed "${sed_param[@]}" \
@@ -71,6 +72,7 @@ function generate_dockerfile() {
         -e 's/${NAMESPACE}/'"${_current_namespace}"'/g' \
         -e 's/${TAG}/'"${IMAGE_TAG}"'/g' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/g' \
+        -e '/^FROM .*/a LABEL kubler.build.timestamp '"${build_timestamp}" \
         "${image_path}/Dockerfile.template" > "${image_path}/Dockerfile" \
             || die "Error while generating ${image_path}/Dockerfile"
 }
