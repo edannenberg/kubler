@@ -55,7 +55,7 @@ function validate_image() {
 # Arguments:
 # 1: image_path
 function generate_dockerfile() {
-    local image_path sed_param bob_var
+    local image_path sed_param bob_var build_timestamp
     image_path="$1"
     sed_param=()
     [[ ! -f "${image_path}"/Dockerfile.template ]] && die "Couldn't read ${image_path}/Dockerfile.template"
@@ -63,6 +63,7 @@ function generate_dockerfile() {
     for bob_var in ${!BOB_*}; do
         sed_param+=(-e "s|\${${bob_var}}|${!bob_var}|")
     done
+    build_timestamp=$(date '+%Y%m%d%H%M%S')
 
     # shellcheck disable=SC2016,SC2153,SC2154
     sed "${sed_param[@]}" \
@@ -73,6 +74,9 @@ function generate_dockerfile() {
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/g' \
         "${image_path}/Dockerfile.template" > "${image_path}/Dockerfile" \
             || die "Error while generating ${image_path}/Dockerfile"
+
+    # insert build timestamp last to preserve build cache
+    echo "LABEL kubler.build.timestamp ${build_timestamp}" >> "${image_path}"/Dockerfile
 }
 
 # Returns given tag value from dockerfile or exit signal 3 if tag was not found.
@@ -174,8 +178,20 @@ function build_image() {
         if [[ ! -f "${image_path}/${_BUILD_TEST_FAILED_FILE}" && \
               ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" ]]
         then
-            msg_ok "skipped, already built."
-            return 0
+            local image_timestamp parent_timestamp
+
+            get_image_label "${image_id}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            image_timestamp="${__get_image_label}"
+            get_image_label "${IMAGE_PARENT}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            parent_timestamp="${__get_image_label}"
+
+            if [[ -z "${parent_timestamp}" || "${parent_timestamp}" -lt "${image_timestamp}" ]]; then
+                msg_ok "skipped, already built."
+                return 0
+            fi
+
+            _status_msg="parent more recent than image, rebuilding."
+            pwrap 'nolog' sleep 1
         fi
     fi
 
@@ -468,6 +484,25 @@ function get_image_size() {
     [[ $? -ne 0 ]] && die "Couldn't determine image size for ${image_id}:${image_tag}: ${image_size}"
     # shellcheck disable=SC2034
     __get_image_size="${image_size}"
+}
+
+# Sets __get_image_label for given image_id, image_tag and label_name
+#
+# Arguments:
+# 1: image_id (i.e. kubler/busybox)
+# 2: image_tag (a.k.a. version)
+# 3: label_name (i.e. kubler.build.timestamp)
+function get_image_label() {
+    __get_image_label=
+    local image_id image_tag image_label
+    image_id="$1"
+    image_tag="$2"
+    label_name="$3"
+    if [[ "${image_id}" != "scratch" ]]; then
+        image_label="$(${DOCKER} inspect --format='{{index .Config.Labels "'"${label_name}"'"}}' "${image_id}":"${image_tag}")"
+        # shellcheck disable=SC2034
+        __get_image_label="${image_label}"
+    fi
 }
 
 # Start a container from given image_id.
