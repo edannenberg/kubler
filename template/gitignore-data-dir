@@ -6,3 +6,4 @@ log/
 namespaces/kubler/
 packages/
 tmp/
+.ask_history*

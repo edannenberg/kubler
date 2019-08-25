@@ -2,6 +2,18 @@
 # Copyright (c) 2014-2019, Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
 # All rights reserved.
 
+readonly _KUBLER_HISTORY_NS_TYPE="${KUBLER_DATA_DIR}"/.ask_history_ns_type
+readonly _KUBLER_HISTORY_NS_DIR="${KUBLER_DATA_DIR}"/.ask_history_ns_dir
+readonly _KUBLER_HISTORY_IMAGE_TAG="${KUBLER_DATA_DIR}"/.ask_history_image_tag
+
+readonly _KUBLER_HISTORY_BUILDER_IMAGE="${KUBLER_DATA_DIR}"/.ask_history_builder_image
+readonly _KUBLER_HISTORY_PARENT_IMAGE="${KUBLER_DATA_DIR}"/.ask_history_parent_image
+
+readonly _KUBLER_HISTORY_AUTHOR="${KUBLER_DATA_DIR}"/.ask_history_author
+readonly _KUBLER_HISTORY_EMAIL="${KUBLER_DATA_DIR}"/.ask_history_email
+readonly _KUBLER_HISTORY_ENGINE="${KUBLER_DATA_DIR}"/.ask_history_engine
+readonly _KUBLER_HISTORY_TEST_TEMPLATE="${KUBLER_DATA_DIR}"/.ask_history_test_template
+
 # Adds given var_name and it's replacement to global assoc. array _template_values
 #
 # Arguments:
@@ -75,7 +87,7 @@ function add_namespace() {
         msg_info_sub "Working dir type? Choices:"
         msg_info_sub "  single - You can't add further namespaces to the created working dir, it only holds images"
         msg_info_sub "  multi  - Creates a working dir that can hold multiple namespaces"
-        ask 'Type' 'single'
+        ask 'Type' 'single' "${_KUBLER_HISTORY_NS_TYPE}"
         # shellcheck disable=SC2154
         ns_type="${__ask}"
         add_template_filter_var '_tmpl_ns_type' "${ns_type}"
@@ -85,7 +97,7 @@ function add_namespace() {
         if [[ "${_NAMESPACE_TYPE}" == 'none' && "${ns_type}" == 'multi' ]]; then
             msg_info_sub
             msg_info_sub "Top level directory name for new namespace '${ns_name}'? The directory is created at ${_NAMESPACE_DIR}/"
-            ask 'Namespaces Dir' 'kubler-images'
+            ask 'Namespaces Dir' 'kubler-images' "${_KUBLER_HISTORY_NS_DIR}"
             ns_dir="${_NAMESPACE_DIR}/${__ask}"
             [[ -e "${ns_dir}" ]] && die "Directory ${ns_dir} already exists, aborting. If you intended to create the new namespace at this location use: \\n
     ${_KUBLER_BIN} --working-dir=${ns_dir} new namespace ${ns_name}"
@@ -94,7 +106,7 @@ function add_namespace() {
 
         msg_info_sub
         msg_info "Initial image tag, a.k.a. version?"
-        ask 'Image Tag' "${_TODAY}"
+        ask 'Image Tag' "${_TODAY}" "${_KUBLER_HISTORY_IMAGE_TAG}"
         add_template_filter_var '_tmpl_image_tag' "${__ask}"
         add_template_sed_replace '^IMAGE_TAG' '#IMAGE_TAG'
         msg_info_sub
@@ -107,15 +119,15 @@ function add_namespace() {
     msg_info_sub
 
     msg_info 'Who maintains the new namespace?'
-    ask 'Name' "${def_author}"
+    ask 'Name' "${def_author}" "${_KUBLER_HISTORY_AUTHOR}"
     add_template_filter_var '_tmpl_author' "${__ask}"
 
-    ask 'EMail' "${def_mail}"
+    ask 'EMail' "${def_mail}" "${_KUBLER_HISTORY_EMAIL}"
     add_template_filter_var '_tmpl_author_email' "${__ask}"
     msg_info_sub
 
     msg_info 'Default build engine?'
-    ask 'Engine' "${def_engine}"
+    ask 'Engine' "${def_engine}" "${_KUBLER_HISTORY_ENGINE}"
     ns_engine="${__ask}"
     add_template_filter_var '_tmpl_engine' "${ns_engine}"
 
@@ -206,14 +218,14 @@ function add_image() {
     msg_info_sub '<enter> to accept default value'
     msg_info_sub
     msg_info_sub 'Extend an existing Kubler managed image? Fully qualified image id (i.e. kubler/busybox) or scratch'
-    ask 'Parent Image' 'scratch'
+    ask 'Parent Image' 'scratch' "${_KUBLER_HISTORY_PARENT_IMAGE}"
     image_parent="${__ask}"
 
     image_builder="${DEFAULT_BUILDER}"
     if [[ "${image_parent}" == 'scratch' ]]; then
         msg_info_sub
         msg_info_sub "Which builder should be used? Press <enter> to use the default builder of namespace ${namespace}"
-        ask 'Builder Id' "${DEFAULT_BUILDER}"
+        ask 'Builder Id' "${DEFAULT_BUILDER}" "${_KUBLER_HISTORY_BUILDER_IMAGE}"
         image_builder="${__ask}"
         [[ "${target_id}" != *"/"* ]] && die "${target_id} should have format <namespace>/<builder_name>"
         [[ "${image_builder}" != "${DEFAULT_BUILDER}" ]] && add_template_sed_replace '^#BUILDER=' 'BUILDER='
@@ -228,7 +240,7 @@ function add_image() {
         msg_info_sub '  bt  - Add a stub for a custom build-test.sh script, a good choice if HEALTH-CHECK is not suitable'
         msg_info_sub '  yes - Add stubs for both test types'
         msg_info_sub "  no  - Fck it, we'll do it live!"
-        ask 'Tests' 'hc'
+        ask 'Tests' 'hc' "${_KUBLER_HISTORY_TEST_TEMPLATE}"
         test_type="${__ask}"
         [[ "${test_type}" != 'hc' && "${test_type}" != 'bt' && "${test_type}" != 'yes' && "${test_type}" != 'no' ]] \
             && die "'${test_type}' is not a valid choice."
@@ -286,7 +298,7 @@ function add_builder() {
     msg_info_sub '<enter> to accept default value'
     msg_info_sub
     msg_info_sub 'Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3'
-    ask 'Parent Image' 'stage3'
+    ask 'Parent Image' 'stage3' "${_KUBLER_HISTORY_BUILDER_IMAGE}"
     builder_parent="${__ask}"
 
     # shellcheck disable=SC2016,SC2034

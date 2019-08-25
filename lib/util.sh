@@ -274,18 +274,24 @@ function pwrap_handler() {
           unset _pwrap_handler_args _prwap_callback; }
 }
 
-# Read user input displaying given question
+# Read user input displaying given question, supports rlwrap if installed for history and completion
 #
 # Arguments:
 # 1: question
 # 2: default_value
+# 3: history_file - optional, only used for rlwrap, default: "${KUBLER_DATA_DIR}"/.bash_history
 # Return value: user input or passed default_value
 function ask() {
     __ask=
-    local question default_value
+    local question default_value history_file
     question="$1"
     default_value="$2"
-    read -r -p "${_prefix_ask} ${question} (${default_value}): " __ask
+    history_file="${3:-${KUBLER_DATA_DIR}/.ask_history}"
+    if hash rlwrap 2>/dev/null; then
+      __ask="$(rlwrap -D -A -H "${history_file}" "${_LIB_DIR}"/ask.sh "${question}" "${default_value}" "${_prefix_ask}")"
+    else
+      read -r -p "${_prefix_ask} ${question} (${default_value}): " __ask
+    fi
     [[ -z "${__ask}" ]] && __ask="${default_value}"
 }
 
