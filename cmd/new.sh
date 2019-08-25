@@ -369,6 +369,7 @@ function main() {
 
     if [[ "${_arg_template_type}" == 'image' || "${_arg_template_type}" == 'builder' ]]; then
         get_ns_include_path "${target_namespace}"
+        [ $? -eq 3 ] && die "No namespace with id \"${target_namespace}\""
         # shellcheck disable=SC2154
         source_namespace_conf "${__get_ns_include_path}"
         add_template_filter_var '_tmpl_image_name' "${target_image_name}"
