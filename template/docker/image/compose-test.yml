@@ -1,0 +1,6 @@
+version: "3.7"
+
+services:
+  ${_tmpl_image_name}-test:
+    container_name: "${_tmpl_image_name}-test"
+    image: "${_tmpl_namespace}/${_tmpl_image_name}"

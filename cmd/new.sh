@@ -12,7 +12,9 @@ readonly _KUBLER_HISTORY_PARENT_IMAGE="${KUBLER_DATA_DIR}"/.ask_history_parent_i
 readonly _KUBLER_HISTORY_AUTHOR="${KUBLER_DATA_DIR}"/.ask_history_author
 readonly _KUBLER_HISTORY_EMAIL="${KUBLER_DATA_DIR}"/.ask_history_email
 readonly _KUBLER_HISTORY_ENGINE="${KUBLER_DATA_DIR}"/.ask_history_engine
-readonly _KUBLER_HISTORY_TEST_TEMPLATE="${KUBLER_DATA_DIR}"/.ask_history_test_template
+readonly _KUBLER_HISTORY_HC_TEST="${KUBLER_DATA_DIR}"/.ask_history_hc_test
+readonly _KUBLER_HISTORY_BT_TEST="${KUBLER_DATA_DIR}"/.ask_history_bt_test
+readonly _KUBLER_HISTORY_CT_TEST="${KUBLER_DATA_DIR}"/.ask_history_ct_test
 
 # Adds given var_name and it's replacement to global assoc. array _template_values
 #
@@ -210,7 +212,7 @@ function init_image_base_dir() {
 # 1: namespace
 # 2: image_name
 function add_image() {
-    local namespace image_name image_parent image_builder image_path test_type
+    local namespace image_name image_parent image_builder image_path test_hc test_bt test_ct
     namespace="$1"
     image_name="$2"
 
@@ -235,20 +237,16 @@ function add_image() {
 
     if [[ "${BUILD_ENGINE}" == 'docker' ]]; then
         msg_info_sub
-        msg_info_sub 'Add test template(s)? Possible choices:'
-        msg_info_sub "  hc  - Add a stub for Docker's HEALTH-CHECK, recommended for images that run daemons"
-        msg_info_sub '  bt  - Add a stub for a custom build-test.sh script, a good choice if HEALTH-CHECK is not suitable'
-        msg_info_sub '  yes - Add stubs for both test types'
-        msg_info_sub "  no  - Fck it, we'll do it live!"
-        ask 'Tests' 'hc' "${_KUBLER_HISTORY_TEST_TEMPLATE}"
-        test_type="${__ask}"
-        [[ "${test_type}" != 'hc' && "${test_type}" != 'bt' && "${test_type}" != 'yes' && "${test_type}" != 'no' ]] \
-            && die "'${test_type}' is not a valid choice."
-        if [[ "${test_type}" == 'bt' || "${test_type}" == 'no' ]]; then
-            add_template_sed_replace '^HEALTHCHECK ' '#HEALTHCHECK '
-            add_template_sed_replace '^COPY docker-health' '#COPY docker-health'
-            add_template_sed_replace '^POST_BUILD_HC=' '#POST_BUILD_HC='
-        fi
+        msg_info_sub 'Test templates:'
+        msg_info_sub "  Add a stub for Docker's HEALTH-CHECK? Recommended for images that run daemons"
+        ask '[y/n]' 'y' "${_KUBLER_HISTORY_HC_TEST}"
+        test_hc="${__ask}"
+        msg_info_sub '  Add a stub for a custom build-test.sh script? Recommended if HEALTH-CHECK is not suitable'
+        ask '[y/n]' 'y' "${_KUBLER_HISTORY_BT_TEST}"
+        test_bt="${__ask}"
+        msg_info_sub '  Add a stub for a custom compose-test.yml and compose-test.sh script? Recommended if this container needs other containers to be run as part of the test process'
+        ask '[y/n]' 'y' "${_KUBLER_HISTORY_CT_TEST}"
+        test_ct="${__ask}"
     fi
 
     init_image_base_dir "${namespace}" "${image_name}" "${_IMAGE_PATH}"
@@ -256,31 +254,34 @@ function add_image() {
 
     cp -r "${_KUBLER_DIR}/template/${BUILD_ENGINE}/image" "${image_path}" || die
 
+    add_template_filter_var '_tmpl_namespace' "${namespace}"
+    add_template_filter_var '_tmpl_image_name' "${image_name}"
     add_template_filter_var '_tmpl_image_parent' "${image_parent}"
     add_template_filter_var '_tmpl_image_builder' "${image_builder}"
 
+    if [[ "${test_hc}" != 'y' && "${test_hc}" != 'Y' ]]; then
+        add_template_sed_replace '^HEALTHCHECK ' '#HEALTHCHECK '
+        add_template_sed_replace '^COPY docker-health' '#COPY docker-health'
+        add_template_sed_replace '^POST_BUILD_HC=' '#POST_BUILD_HC='
+        rm "${image_path}"/docker-healthcheck.sh
+    else
+        chmod +x "${image_path}"/docker-healthcheck.sh
+    fi
+    
+    if [[ "${test_bt}" != 'y' && "${test_bt}" != 'Y' ]]; then
+        rm "${image_path}"/build-test.sh
+    else
+        chmod +x "${image_path}"/build-test.sh
+    fi
+
+    if [[ "${test_ct}" != 'y' && "${test_ct}" != 'Y' ]]; then
+        rm "${image_path}"/compose-test.yml "${image_path}"/compose-test.sh
+    else
+        chmod +x "${image_path}"/compose-test.sh
+    fi
+
     replace_template_placeholders "${image_path}"
-
-    local hc_test_file bt_test_file
-    hc_test_file="${image_path}"/docker-healthcheck.sh
-    bt_test_file="${image_path}"/build-test.sh
-    case "${test_type}" in
-        hc)
-            rm "${bt_test_file}"
-            chmod +x "${hc_test_file}"
-            ;;
-        bt)
-            rm "${hc_test_file}"
-            chmod +x "${bt_test_file}"
-            ;;
-        no)
-            rm "${hc_test_file}" "${bt_test_file}"
-            ;;
-        yes)
-            chmod +x "${hc_test_file}" "${bt_test_file}"
-            ;;
-    esac
-
+    
     msg_info_sub
     msg_ok "Successfully created new image at ${image_path}"
     msg_info_sub
