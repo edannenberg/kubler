@@ -7,26 +7,36 @@
 # Arguments:
 #
 # 1: image_id
-# 2: previous_image_id
 function check_image_dependencies() {
-    local image_id previous_image
+    local image_id test_deps test_dep
     image_id="$1"
-    previous_image="$2"
-    if [[ "${image_id}" != 'scratch' ]]; then
-        expand_image_id "${image_id}" "${_IMAGE_PATH}"
-        # shellcheck disable=SC2154
-        source_image_conf "${__expand_image_id}"
-
-        if [[ -n "${IMAGE_PARENT}" ]]; then
-            # skip further checking if already processed
-            if ! is_in_array "${image_id}" "${_dep_graph[@]}"; then
-                # check parent image dependencies
-                check_image_dependencies "${IMAGE_PARENT}" "${image_id}"
-                # finally add the image
-                [[ "${previous_image}" != "" ]] && _dep_graph+=( "${image_id}" )
-            fi
-        fi
+    
+    if [[ "${image_id}" == 'scratch' ]]; then
+        return
     fi
+    
+    expand_image_id "${image_id}" "${_IMAGE_PATH}"
+    # shellcheck disable=SC2154
+    source_image_conf "${__expand_image_id}"
+    test_deps=("${POST_BUILD_DC_DEPENDENCIES[@]}")
+
+    # skip further checking if already processed
+    if is_in_array "${image_id}" "${_dep_graph[@]}"; then
+        return
+    fi
+    
+    if [[ -n "${IMAGE_PARENT}" ]]; then
+        # check parent image dependencies
+        check_image_dependencies "${IMAGE_PARENT}"
+        
+        # check test dependencies, if any
+        for test_dep in "${test_deps[@]}"; do
+            check_image_dependencies "${test_dep}"
+        done
+    fi
+    
+    # finally add the image
+    _dep_graph+=( "${image_id}" )
 }
 
 function main() {
@@ -47,7 +57,6 @@ function main() {
     # shellcheck disable=SC2154
     for image_id in "${__expand_requested_target_ids[@]}"; do
         check_image_dependencies "${image_id}"
-        ! is_in_array "${image_id}" "${_dep_graph[@]}" && _dep_graph+=( "${image_id}" )
     done
 
     dotstring="strict digraph imagedeps {\n    rankdir=LR;"
@@ -62,6 +71,9 @@ function main() {
             node_options=" [label=\"${DEFAULT_BUILDER}\"]"
         fi
         dotstring="${dotstring}\n   \"${IMAGE_PARENT}\" -> \"${image_id}\"${node_options};"
+        for test_dep in "${POST_BUILD_DC_DEPENDENCIES[@]}"; do
+            dotstring="${dotstring}\n   \"${test_dep}\" -> \"${image_id}\" [label=\"compose-test\"];"
+        done
     done
 
     [[ "${_arg_as_raw_dot}" != 'on' ]] && ! image_exists "${KUBLER_DEPGRAPH_IMAGE}" && {\

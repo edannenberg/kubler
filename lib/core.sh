@@ -276,6 +276,7 @@ function source_image_conf() {
     [[ "${_last_sourced_image}" == "${image_path}" ]] && return 0
     unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
     unset POST_BUILD_HC POST_BUILD_HC_MAX_DURATION POST_BUILD_HC_INTERVAL POST_BUILD_HC_START_PERIOD POST_BUILD_HC_RETRY
+    unset POST_BUILD_DC_DEPENDENCIES
 
     if [[ "${image_path}" != '/'* ]]; then
         get_ns_include_path "${image_path}"
