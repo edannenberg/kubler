@@ -808,7 +808,6 @@ function push_image() {
     fi
     add_status_value "${push_id}"
     _status_msg="upload image"
-    pwrap "${DOCKER}" push "${push_id}:${IMAGE_TAG}" || die
-    pwrap "${DOCKER}" push "${push_id}:latest" || die
+    pwrap "${DOCKER}" push "${push_id}" || die
     msg_ok "done."
 }
