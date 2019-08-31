@@ -498,7 +498,7 @@ function get_image_label() {
     image_tag="$2"
     label_name="$3"
     if [[ "${image_id}" != "scratch" ]]; then
-        image_label="$(${DOCKER} inspect --format='{{index .Config.Labels "'"${label_name}"'"}}' ${image_id}:${image_tag})"
+        image_label="$(${DOCKER} inspect --format='{{index .Config.Labels "'"${label_name}"'"}}' "${image_id}":"${image_tag}")"
         # shellcheck disable=SC2034
         __get_image_label="${image_label}"
     fi
