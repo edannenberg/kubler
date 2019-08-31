@@ -493,12 +493,12 @@ function get_image_size() {
 # 3: label_name (i.e. kubler.build.timestamp)
 function get_image_label() {
     __get_image_label=
-    local image_id image_tag image_label label_value
+    local image_id image_tag image_label
     image_id="$1"
     image_tag="$2"
     label_name="$3"
     if [[ "${image_id}" != "scratch" ]]; then
-        image_label="$(${DOCKER} inspect --format='{{index .Config.Labels "'${label_name}'"}}' ${image_id}:${image_tag})"
+        image_label="$(${DOCKER} inspect --format='{{index .Config.Labels "'"${label_name}"'"}}' ${image_id}:${image_tag})"
         # shellcheck disable=SC2034
         __get_image_label="${image_label}"
     fi
