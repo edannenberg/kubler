@@ -173,25 +173,24 @@ function build_image() {
     image_exists_or_rm "${image_id}" "${image_type}"
     exit_sig=$?
     if [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]]; then
-    	
         if [[ ! -f "${image_path}/${_BUILD_TEST_FAILED_FILE}" && \
               ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" ]]
         then
-        	local image_timestamp parent_timestamp
-        	
-	    	get_image_label "${image_id}" "${IMAGE_TAG}" "kubler.build.timestamp"
-	    	image_timestamp="${__get_image_label}"
-	    	get_image_label "${IMAGE_PARENT}" "${IMAGE_TAG}" "kubler.build.timestamp"
-	    	parent_timestamp="${__get_image_label}"
-	    	
-        	if [[ -z "${parent_timestamp}" || \
-        		  "${parent_timestamp}" -lt "${image_timestamp}" ]]
-			then
-				msg_ok "skipped, already built."
-	            return 0
-           	else
-           		msg_ok "parent more recent than image, rebuilding."
-        	fi
+            local image_timestamp parent_timestamp
+            
+            get_image_label "${image_id}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            image_timestamp="${__get_image_label}"
+            get_image_label "${IMAGE_PARENT}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            parent_timestamp="${__get_image_label}"
+            
+            if [[ -z "${parent_timestamp}" || \
+                  "${parent_timestamp}" -lt "${image_timestamp}" ]]
+            then
+                msg_ok "skipped, already built."
+                return 0
+            else
+                msg_ok "parent more recent than image, rebuilding."
+            fi
         fi
     fi
 
@@ -493,16 +492,16 @@ function get_image_size() {
 # 2: image_tag (a.k.a. version)
 # 3: label_name (i.e. kubler.build.timestamp)
 function get_image_label() {
-	__get_image_label=
-	local image_id image_tag image_label label_value
+    __get_image_label=
+    local image_id image_tag image_label label_value
     image_id="$1"
     image_tag="$2"
     label_name="$3"
     if [[ "${image_id}" != "scratch" ]]; then
-	    image_label=$(docker inspect --format='{{index .Config.Labels "'${label_name}'"}}' ${image_id}:${image_tag})
-	    # shellcheck disable=SC2034
-	    __get_image_label="${image_label}"
-	fi
+        image_label=$(docker inspect --format='{{index .Config.Labels "'${label_name}'"}}' ${image_id}:${image_tag})
+        # shellcheck disable=SC2034
+        __get_image_label="${image_label}"
+    fi
 }
 
 # Start a container from given image_id.
