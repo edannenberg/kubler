@@ -32,12 +32,6 @@ function generate_build_order() {
     fi
     for image_id in "${target_ids[@]}"; do
         check_image_dependencies "${image_id}"
-#        if [[ -z "${_required_images[$image_id]+_}" ]]; then
-#            expand_image_id "${image_id}" "${_IMAGE_PATH}"
-#            # shellcheck disable=SC2154
-#            _required_images["${image_id}"]="${__expand_image_id}"
-#            _build_order_images+=( "${image_id}" )
-#        fi
     done
     # generate builder build order
     _build_order_builders=()
