@@ -64,57 +64,6 @@ function generate_build_order() {
 #
 # Arguments:
 # 1: image_id
-# 2: previous_image_id
-#function check_image_dependencies() {
-#    local image_id previous_image current_image_path
-#    image_id="$1"
-#    previous_image="$2"
-#    if [[ "${image_id}" != 'scratch' ]]; then
-#        expand_image_id "${image_id}" "${_IMAGE_PATH}"
-#        current_image_path="${__expand_image_id}"
-#        # shellcheck disable=SC2154
-#        source_image_conf "${current_image_path}"
-#
-#        # collect required engines
-#        [[ -z "${_required_engines[${BUILD_ENGINE}]+_}" ]] && _required_engines["${BUILD_ENGINE}"]="${BUILD_ENGINE}"
-#
-#        # collect required build containers
-#        if [[ -n "${BUILDER}" ]];then
-#             if [[ -z "${_required_builders[${BUILDER}]+_}" ]]; then
-#                expand_image_id "${BUILDER}" "${_BUILDER_PATH}"
-#                _required_builders["${BUILDER}"]="${__expand_image_id}"
-#             fi
-#        else
-#            # add default build container of current namespace
-#            if [[ -z "${_required_builders[${DEFAULT_BUILDER}]+_}" ]]; then
-#                expand_image_id "${DEFAULT_BUILDER}" "${_BUILDER_PATH}"
-#                _required_builders["${DEFAULT_BUILDER}"]="${__expand_image_id}"
-#            fi
-#        fi
-#
-#        if [[ -n "${IMAGE_PARENT}" ]]; then
-#            # skip further checking if already processed
-#            if [[ -z "${_required_images[${image_id}]+_}" ]]; then
-#                # check parent image dependencies
-#                check_image_dependencies "${IMAGE_PARENT}" "${image_id}"
-#                # check test dependencies, if any
-#                for test_dep in "${POST_BUILD_DC_DEPENDENCIES[@]}"; do
-#                    check_image_dependencies "${test_dep}" "${image_id}"
-#                done
-#                # finally add the image
-#                if [[ -n "${previous_image}" ]]; then
-#                    _required_images["${image_id}"]="${current_image_path}"
-#                    _build_order_images+=( "${image_id}" )
-#                fi
-#            fi
-#        fi
-#    fi
-#}
-
-# Check image dependencies and populate _required_images, _required_builders and _required_engines. Recursive.
-#
-# Arguments:
-# 1: image_id
 function check_image_dependencies() {
     local image_id current_image_path test_deps test_dep
     image_id="$1"

@@ -194,7 +194,8 @@ function build_image() {
     exit_sig=$?
     if [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]]; then
         if [[ ! -f "${image_path}/${_BUILD_TEST_FAILED_FILE}" && \
-              ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" ]]
+              ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" && \
+              ! -f "${image_path}/${_COMPOSE_TEST_FAILED_FILE}" ]]
         then
             local image_timestamp parent_timestamp
 
