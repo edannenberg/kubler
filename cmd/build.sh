@@ -40,6 +40,7 @@ function generate_build_order() {
         check_builder_dependencies "${builder_id}"
         if ! is_in_array "${builder_id}" "${_build_order_builders[@]}"; then
             expand_image_id "${builder_id}" "${_BUILDER_PATH}"
+            # shellcheck disable=SC2154
             _required_builders["${builder_id}"]="${__expand_image_id}"
             _build_order_builders+=( "${builder_id}" )
         fi
