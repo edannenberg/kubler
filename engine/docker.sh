@@ -190,6 +190,7 @@ function build_image() {
                 return 0
             else
                 msg_ok "parent more recent than image, rebuilding."
+                skip_rootfs='false'
             fi
         fi
     fi
