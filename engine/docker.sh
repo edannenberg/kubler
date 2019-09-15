@@ -170,6 +170,23 @@ function build_image() {
             [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
             missing_builder='true'
         fi
+
+        # shellcheck disable=SC2154
+        if [[ "${_arg_force_full_image_build}" == 'off' && -z "${missing_builder}" ]]; then
+            local builder_timestamp parent_builder_timestamp
+
+            get_image_label "${_current_namespace}/${builder_commit_id}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            builder_timestamp="${__get_image_label}"
+            get_image_label "${builder_id}" "${IMAGE_TAG}" "kubler.build.timestamp"
+            parent_builder_timestamp="${__get_image_label}"
+
+            if [[ -n "${parent_builder_timestamp}" && "${parent_builder_timestamp}" -gt "${builder_timestamp}" ]]; then
+                _status_msg="parent builder more recent, rebuilding."
+                pwrap 'nolog' sleep 1
+                [[ -f "${image_path}/rootfs.tar" ]] && rm "${image_path}/rootfs.tar"
+                missing_builder='true'
+            fi
+        fi
     fi
 
     image_exists_or_rm "${image_id}" "${image_type}"
@@ -246,7 +263,8 @@ function build_image() {
 
         _status_msg="commit ${run_id} as image ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
         # shellcheck disable=SC2086
-        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
+        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} -c "LABEL kubler.build.timestamp $(date '+%Y%m%d%H%M%S')" \
+            "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
             || die "${_status_msg}"
 
         _status_msg="remove container ${run_id}"
