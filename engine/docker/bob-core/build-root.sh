@@ -579,8 +579,10 @@ function build_rootfs() {
 
     if [ -n "${_packages}" ]; then
 
+        # shellcheck disable=SC2086
         generate_package_installed ${_packages}
         init_docs "${target_id}"
+        # shellcheck disable=SC2086
         generate_doc_package_installed ${_packages}
 
         if [ -n "${BOB_INSTALL_BASELAYOUT}" ]; then
