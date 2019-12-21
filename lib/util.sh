@@ -392,7 +392,7 @@ function get_file_size() {
     if [[ -f "${file_path}" ]]; then
         du_args=()
         [[ "${format_output}" == 'true' ]] && du_args+=( '-h' )
-        file_size="$(du "${du_args[@]}" --max-depth=0 "${file_path}" | cut -f1)"
+        file_size="$(du "${du_args[@]}" -d 0 "${file_path}" | cut -f1)"
         __get_file_size="${file_size}"
     fi
 }
