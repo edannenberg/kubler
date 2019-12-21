@@ -280,7 +280,7 @@ function main() {
                     die "--no-deps expects a fully qualified image_id, but only got namespace \"${image_id}\""
                 fi
             fi
-            expand_image_id "${image_id}" "${_IMAGE_PATH}"
+            expand_image_id "${image_id}" "${_IMAGE_PATH}" || die "Couldn't find a image dir for ${image_id}"
             source_image_conf "${__expand_image_id}"
             validate_image "${image_id}" "${__expand_image_id}"
             build_image_no_deps "${image_id}" "${__expand_image_id}"
