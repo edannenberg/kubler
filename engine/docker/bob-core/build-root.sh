@@ -308,6 +308,14 @@ function unmask_package() {
     echo "$1" >> /etc/portage/package.unmask/bob
 }
 
+# Unmask given use flag for given package atom
+#
+# 1: package atom (i.e. app-shells/bash)
+# 2: use flag to be unmasked, ommit the leading dash (i.e. just 'gentoo-vm' instead of '-gentoo-vm')
+function unmask_use () {
+    echo "$1" -"$2" >> /etc/portage/profile/package.use.mask
+}
+
 # Fake package install by adding it to package.provided
 # Usually called from configure_rootfs_build() hook.
 #
