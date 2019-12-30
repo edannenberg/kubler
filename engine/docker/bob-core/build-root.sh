@@ -308,6 +308,14 @@ function unmask_package() {
     echo "$1" >> /etc/portage/package.unmask/bob
 }
 
+# Use this for removing the (-useflag) from a package as specified in the /etc/portage/profile/package.use.stable.mask file.  
+# Don't include the '-' character like you would when editing the file directly
+# Example: bring in libglvnd for media-libs/mesa: enable_keyword 'media-libs/mesa' 'libglvnd'
+# Result: media-libs/mesa -libglvnd line added to /etc/portage/profile/package.use.stable.mask
+function enable_keyword ( ) {
+    echo "$1" -"$2" >> /etc/portage/profile/package.use.stable.mask
+}
+
 # Fake package install by adding it to package.provided
 # Usually called from configure_rootfs_build() hook.
 #
