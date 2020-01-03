@@ -35,6 +35,7 @@ readonly _DOC_PACKAGE_INSTALLED="${_ROOTFS_BACKUP}/doc.package.installed"
 readonly _DOC_PACKAGE_PROVIDED="${_ROOTFS_BACKUP}/doc.package.provided"
 readonly _DOC_FOOTER_PURGED="${_ROOTFS_BACKUP}/doc.footer.purged"
 readonly _DOC_FOOTER_INCLUDES="${_ROOTFS_BACKUP}/doc.footer.includes"
+readonly _EMERGE_LOGS="${_CONFIG}/build_logs"
 
 _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
@@ -597,10 +598,19 @@ function build_rootfs() {
             # shellcheck disable=SC2086
             "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v sys-apps/baselayout
         fi
+
+        if [ -d "${_EMERGE_LOGS}" ]; then
+	    rm -rf "${_EMERGE_LOGS}"
+        fi
+
+        if [ -n "${BOB_EMERGE_LOGS}" ]; then
+           mkdir -p "${_EMERGE_LOGS}"
+	   export PORTAGE_LOGDIR="${_EMERGE_LOGS}"
+        fi
+        
         # install packages defined in image's build.sh
         # shellcheck disable=SC2086
         "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
-
         [[ -f "${_PACKAGE_INSTALLED}" ]] \
             && sed -e '/^virtual/d' < "${_PACKAGE_INSTALLED}" >> /etc/portage/profile/package.provided
 
@@ -637,6 +647,7 @@ function build_rootfs() {
     [[ -z "${BOB_IS_INTERACTIVE}" ]] && generate_documentation_footer
 
     unset ROOT
+    unset PORTAGE_LOGDIR
 
     # /run symlink
     if [[ -n "${BOB_INSTALL_BASELAYOUT}" ]]; then
