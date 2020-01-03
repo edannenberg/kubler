@@ -35,10 +35,12 @@ readonly _DOC_PACKAGE_INSTALLED="${_ROOTFS_BACKUP}/doc.package.installed"
 readonly _DOC_PACKAGE_PROVIDED="${_ROOTFS_BACKUP}/doc.package.provided"
 readonly _DOC_FOOTER_PURGED="${_ROOTFS_BACKUP}/doc.footer.purged"
 readonly _DOC_FOOTER_INCLUDES="${_ROOTFS_BACKUP}/doc.footer.includes"
+readonly _PORTAGE_LOGDIR="${_CONFIG}/log"
 
 _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
+BOB_KEEP_BUILD_LOG="${BOB_KEEP_BUILD_LOG:-false}"
 BOB_PACKAGE_CONFIG_STRICT="${BOB_PACKAGE_CONFIG_STRICT:-true}"
 BOB_UPDATE_WORLD="${BOB_UPDATE_WORLD:-false}"
 
@@ -603,10 +605,19 @@ function build_rootfs() {
             # shellcheck disable=SC2086
             "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v sys-apps/baselayout
         fi
+
+        if [ -d "${_PORTAGE_LOGDIR}" ]; then
+            rm -r "${_PORTAGE_LOGDIR}"
+        fi
+
+        if [ "${BOB_KEEP_BUILD_LOG}" == true ]; then
+            mkdir -p "${_PORTAGE_LOGDIR}"
+            export PORTAGE_LOGDIR="${_PORTAGE_LOGDIR}"
+        fi
+        
         # install packages defined in image's build.sh
         # shellcheck disable=SC2086
         "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
-
         [[ -f "${_PACKAGE_INSTALLED}" ]] \
             && sed -e '/^virtual/d' < "${_PACKAGE_INSTALLED}" >> /etc/portage/profile/package.provided
 
@@ -642,7 +653,7 @@ function build_rootfs() {
 
     [[ -z "${BOB_IS_INTERACTIVE}" ]] && generate_documentation_footer
 
-    unset ROOT
+    unset ROOT PORTAGE_LOGDIR
 
     # /run symlink
     if [[ -n "${BOB_INSTALL_BASELAYOUT}" ]]; then

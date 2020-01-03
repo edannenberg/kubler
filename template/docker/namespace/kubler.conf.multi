@@ -35,6 +35,9 @@ IMAGE_TAG="${_tmpl_image_tag}"
 
 # Variables starting with BOB_ are exported as ENV to all build containers
 
+# When enabled emerge build logs of the last run are kept at <image_dir>/log
+#BOB_KEEP_BUILD_LOG=false
+
 # Timezone for build containers
 #BOB_TIMEZONE='UTC'
 # Options passed on to the make jobs launched from Portage
