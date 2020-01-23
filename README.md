@@ -84,6 +84,17 @@ Add the overlay (see link for instructions) and install as usual:
 
     emerge -av kubler
 
+#### On Mac OS X
+
+Standard install of bash in Mac OS X is too old. Easiest way to upgrade to a later version is to use _homebrew_, see https://brew.sh/.
+When homebrew is installed, update bash:
+```
+    $ brew install bash
+```
+This will install an updated version of bash in ```/usr/local/bin/```. To make it your default shell, you need to edit "Advanced Options..." in _System Preferences_. Just right-click your user icon to find the option.
+
+Mac OS X also don't load ```~.bashrc``` by default, but uses ```~.bash_profile```, so when following the instructions below, make sure to edit the correct file.
+
 #### Manual Installation
 
 Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux distributions.
