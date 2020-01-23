@@ -30,7 +30,7 @@ function update_builders() {
                     # add time string if captured
                     [[ -n "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
                     if is_newer_stage3_date "${STAGE3_DATE}" "${s3date_remote}"; then
-                        sed -r -i s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
+                        sed -E -i'' s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
                             "${builder_path}${current_builder}build.conf"
                         update_status="updated ${STAGE3_DATE} -> ${s3date_remote} - ${STAGE3_BASE}"
                         ((update_count++))

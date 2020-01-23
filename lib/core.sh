@@ -424,7 +424,7 @@ function download_stage3() {
     fi
     # some experimental stage3 builds don't update the file names in the digest file, replace so sha512 check won't fail
     grep -q "${STAGE3_BASE}-2008\.0\.tar\.bz2" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" \
-        && sed -i "s/${STAGE3_BASE}-2008\.0\.tar\.bz2/${stage3_file}/g" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}"
+        && sed -i'' "s/${STAGE3_BASE}-2008\.0\.tar\.bz2/${stage3_file}/g" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}"
     sha512_hashes="$(grep -A1 SHA512 "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" | grep -v '^--')"
     sha512_check="$(cd "${KUBLER_DOWNLOAD_DIR}/" && (echo "${sha512_hashes}" | $(sha_sum) -c))"
     sha512_failed="$(echo "${sha512_check}" | grep FAILED)"
@@ -710,7 +710,7 @@ function add_documentation_header() {
     get_image_size "${image}" "${IMAGE_TAG}"
     # remove existing header
     if [[ -f "${doc_file}" ]]; then
-        grep -q "^${header}" "${doc_file}" && sed -i '1,4d' "${doc_file}"
+        grep -q "^${header}" "${doc_file}" && sed -i'' '1,4d' "${doc_file}"
     else
         echo -e "" > "${doc_file}"
     fi
