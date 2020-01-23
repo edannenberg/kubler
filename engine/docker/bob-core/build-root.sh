@@ -192,19 +192,19 @@ function write_checkbox_line() {
     negate_checked_state="$4"
     if [[ -z "${checked}" || "${checked}" == "false" ]]; then
         state=0
-    else 
+    else
         state=1
     fi
     if [[ -n ${negate_checked_state} ]]; then
         if [[ "${state}" == 1 ]]; then
             state=0
-        else 
+        else
             state=1
         fi
     fi
     if [[ "${state}" == 1 ]]; then
         checkbox="- [x]"
-    else 
+    else
         checkbox="- [ ]"
     fi
     echo "${checkbox} ${label}" >> "${out_file}"
