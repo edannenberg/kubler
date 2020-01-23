@@ -19,6 +19,7 @@ Docker base images.
   - [Docker](#docker)
 - [Installation](#installation)
   - [On Gentoo](#on-gentoo)
+  - [On Mac OS X](#on-mac-os-x)
   - [Manual Installation](#manual-installation)
   - [Initial Configuration](#initial-configuration)
   - [Uninstall](#uninstall)
