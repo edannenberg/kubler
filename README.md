@@ -86,14 +86,14 @@ Add the overlay (see link for instructions) and install as usual:
 
 #### On Mac OS X
 
-Standard install of bash in Mac OS X is too old. Easiest way to upgrade to a later version is to use _homebrew_, see https://brew.sh/.
+Standard version of bash in Mac OS X is too old. Easiest way to upgrade to a later version is to use _homebrew_, see https://brew.sh/.
 When homebrew is installed, update bash:
 ```
     $ brew install bash
 ```
 This will install an updated version of bash in ```/usr/local/bin/```. To make it your default shell, you need to edit "Advanced Options..." in _System Preferences_. Just right-click your user icon to find the option.
 
-Mac OS X also don't load ```~.bashrc``` by default, but uses ```~.bash_profile```, so when following the instructions below, make sure to edit the correct file.
+Also, Mac OS X does not load ```~.bashrc``` by default, but uses ```~.bash_profile```, so when following the instructions below, make sure to edit the correct file.
 
 #### Manual Installation
 
