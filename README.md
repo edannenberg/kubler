@@ -8,7 +8,7 @@ highest-quality ~~barrels~~ containers are those hand-made by professional ~~coo
 Kubler
 ======
 
-A generic, extendable build orchestrator, in Bash. The default batteries focus on creating and maintaining 
+A generic, extendable build orchestrator, in Bash. The default batteries focus on creating and maintaining
 Docker base images.
 
 #### Table Of Contents
@@ -19,6 +19,7 @@ Docker base images.
   - [Docker](#docker)
 - [Installation](#installation)
   - [On Gentoo](#on-gentoo)
+  - [On macOS](#on-macos)
   - [Manual Installation](#manual-installation)
   - [Initial Configuration](#initial-configuration)
   - [Uninstall](#uninstall)
@@ -84,9 +85,24 @@ Add the overlay (see link for instructions) and install as usual:
 
     emerge -av kubler
 
+#### On macOS
+
+The standard version of Bash in macOS is too old. Easiest way to upgrade to a later version is to use
+[Homebrew](https://brew.sh/). Once Homebrew is installed, update Bash:
+
+```
+    $ brew install bash
+```
+
+This will install an updated version of Bash in `/usr/local/bin/`. To make it your default shell, you need to edit
+`Advanced Options...` in _System Preferences_. Just right-click your user icon to find the option.
+
+Also, macOS does not load `~/.bashrc` by default, but uses `~/.bash_profile`, so when following the instructions
+below, make sure to edit the correct file.
+
 #### Manual Installation
 
-Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux distributions. 
+Kubler has been tested on Gentoo, CoreOS and macOS. It should run on all Linux distributions.
 Feel free to open an issue or ask on Discord if you run into problems.
 
 1. Clone the repo or download/extract the release archive to a location of your choice, i.e.
@@ -270,12 +286,12 @@ Then start a test run of the first build phase (more on that later), if you are 
 kubler-bob-bash / # kubler-build-root
 ```
 
-Once this finishes exit the interactive builder by hitting `crtl+d` or typing `exit`. All that is left to do is 
+Once this finishes exit the interactive builder by hitting `crtl+d` or typing `exit`. All that is left to do is
 building the actual image:
 
     $ kubler build mytest/figlet -nF
 
-The args are short hand for `--no-deps` and `--force-full-image-build`, omitting `-n` would also rebuild all 
+The args are short hand for `--no-deps` and `--force-full-image-build`, omitting `-n` would also rebuild all
 parent images, which can be handy but is just a waste of time in this case.
 
 ```
@@ -399,7 +415,7 @@ _packages="dev-lang/foo"
 
 configure_builder()
 {
-    # move any use flag/keywords config from configure_rootfs_build() hook to 
+    # move any use flag/keywords config from configure_rootfs_build() hook to
     # reuse the resulting binary package, keeps overhead to a minimum
     emerge dev-lang/foo
 }
@@ -431,7 +447,7 @@ ImportError: libpq.so.5: cannot open shared object file: No such file or directo
 ```
 
 The issue here is that the ebuild ran `ldconfig` during install but the change was done in the builder context and not
-the custom root. Adding `RUN ldconfig` to your `Dockerfile.template` resolves the issue. 
+the custom root. Adding `RUN ldconfig` to your `Dockerfile.template` resolves the issue.
 
 * Image build fails with Operation not permitted
 
@@ -463,7 +479,7 @@ any image's `build.sh`. The changes will persist to all depending image builds.
     »»» Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3
     »[?]» Parent Image (stage3): kubler/bob
     »[✔]» Successfully created new builder at projects/mytest/builder/alice
-``` 
+```
 
 2. Edit `build.sh` and customize away:
 
@@ -499,7 +515,7 @@ Pretty much the same process as above except:
     »»» Extend existing Kubler builder image? Fully qualified image id (i.e. kubler/bob) or stage3
     »[?]» Parent Image (stage3):
     »[✔]» Successfully created new builder at projects/mytest/builder/s3b
-``` 
+```
 
 2. Additionally configure the used Gentoo stage3 file in `build.conf`:
 
