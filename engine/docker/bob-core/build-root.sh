@@ -351,7 +351,7 @@ function unprovide_package() {
     if [[ -f "${pkg_provided}"  ]]; then
         # shellcheck disable=SC2068
         for package in ${@}; do
-            sed -i /^"${package//\//\\\/}"/d "${pkg_provided}"
+            sed -i '' /^"${package//\//\\\/}"/d "${pkg_provided}"
         done
     fi
 }
@@ -369,13 +369,13 @@ function uninstall_package() {
     # shellcheck disable=SC2068
     for package in ${@}; do
         # reflect uninstall in docs
-        sed -i /^"${package//\//\\\/}"/d "${_DOC_PACKAGE_INSTALLED}"
+        sed -i '' /^"${package//\//\\\/}"/d "${_DOC_PACKAGE_INSTALLED}"
     done
 }
 
 function configure_layman() {
     # no pesky prompts please
-    sed -i 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
+    sed -i '' 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
     layman -L
     # layman might have added config for existing overlays from the shared portage container, reset to be sure
     rm /etc/portage/repos.conf/layman.conf
