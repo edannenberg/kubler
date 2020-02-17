@@ -53,4 +53,4 @@ jobs:
       with:
         auth_token: ${{ secrets.PR_TOKEN }}
         deploy_key: ${{ secrets.DEPLOY_KEY }}
-        overlay_repo: MADhacking/overlay
+        overlay_repo: HackingM/kubler-overlay
