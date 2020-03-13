@@ -27,8 +27,13 @@ RDEPEND="dev-vcs/git
     rlwrap? ( app-misc/rlwrap )"
 DEPEND="test? (
     ${RDEPEND}
+    dev-tcltk/expect
     dev-util/bats-assert
     dev-util/bats-file )"
+
+src_test() {
+    bats --recursive --tap tests || die "Tests failed"
+}
 
 src_install() {
     insinto /usr/share/${PN}
