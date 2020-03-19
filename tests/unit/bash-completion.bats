@@ -53,9 +53,9 @@ function run_kubler() {
 @test "empty_namespace" {
     rm -rf "${TEST_DIR}"
     mkdir -p "${TEST_DIR}"
-    cp -a "tests/fixtures/empty_namespace" "${TEST_DIR}/"
-    cd "${TEST_DIR}/empty_namespace"
-
+    cp -a "tests/fixtures/namespaces/empty" "${TEST_DIR}/"
+    cd "${TEST_DIR}/empty"
+    
     export COMP_WORDS=("kubler")
     export COMP_CWORD=1
         
@@ -73,9 +73,9 @@ function run_kubler() {
 @test "empty_namespace_new" {
     rm -rf "${TEST_DIR}"
     mkdir -p "${TEST_DIR}"
-    cp -a "tests/fixtures/empty_namespace" "${TEST_DIR}/"
-    cd "${TEST_DIR}/empty_namespace"
-
+    cp -a "tests/fixtures/namespaces/empty" "${TEST_DIR}/"
+    cd "${TEST_DIR}/empty"
+    
     export COMP_WORDS=("kubler" "new")
     export COMP_CWORD=2
         
@@ -89,8 +89,8 @@ function run_kubler() {
 @test "build_options" {
 rm -rf "${TEST_DIR}"
     mkdir -p "${TEST_DIR}"
-    cp -a "tests/fixtures/empty_namespace" "${TEST_DIR}/"
-    cd "${TEST_DIR}/empty_namespace"
+    cp -a "tests/fixtures/namespaces/empty" "${TEST_DIR}/"
+    cd "${TEST_DIR}/empty"
 
     export COMP_WORDS=("kubler" "build" "--")
     export COMP_CWORD=2
