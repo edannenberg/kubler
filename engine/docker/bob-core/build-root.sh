@@ -67,7 +67,7 @@ function copy_gcc_libs() {
 # 1: new_portage_path, optional, default: /var/sync
 function fix_portage_profile_symlink() {
     local new_portage_path old_profile
-    new_portage_path="${1:-/var/sync/portage}"
+    new_portage_path="${1:-/var/db/repos/gentoo}"
     old_profile="$(readlink -m /etc/portage/make.profile)"
     # strip old portage profiles base path
     old_profile="${old_profile#/usr/portage/}"

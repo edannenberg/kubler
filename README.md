@@ -574,7 +574,7 @@ It's a fairly straight forward affair, once you wrapped your head around it, tha
 For example you won't have to remember to strip the binaries after a manual installation.
 
 The ebuild system is heavily modularized, a good approach is to study/copy existing ebuilds for similar software in the
-Portage tree. You can browse Portage's ebuilds at `/var/sync/portage/` in any interactive build container. Often you
+Portage tree. You can browse Portage's ebuilds at `/var/db/repos/gentoo/` in any interactive build container. Often you
 just need to find a good ebuild source and change a few trivial things to be done with it.
 
 The [kubler-overlay](https://github.com/edannenberg/kubler-overlay) repo has some pointers on how to setup a ebuild dev

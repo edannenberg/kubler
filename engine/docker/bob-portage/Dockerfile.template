@@ -5,9 +5,10 @@ LABEL maintainer ${MAINTAINER}
 COPY ${BOB_CURRENT_PORTAGE_FILE} /
 
 RUN set -x && \
-    mkdir -p /var/sync && \
-    xzcat /${BOB_CURRENT_PORTAGE_FILE} | tar -xf - -C /var/sync && \
-    mkdir -p /var/sync/portage/metadata && \
+    mkdir -p /var/db/repos/ && \
+    xzcat /${BOB_CURRENT_PORTAGE_FILE} | tar -xf - -C /var/db/repos && \
+    mv /var/db/repos/portage /var/db/repos/gentoo && \
+    mkdir -p /var/db/repos/gentoo/metadata && \
     rm /${BOB_CURRENT_PORTAGE_FILE}
 
-VOLUME /var/sync /var/lib/layman /var/cache/eix
+VOLUME /var/db/repos /var/lib/layman /var/cache/eix
