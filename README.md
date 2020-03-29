@@ -68,6 +68,7 @@ Perhaps:
 Optional:
 
 * GPG for download verification
+* rlwrap for command history
 
 #### Docker
 
