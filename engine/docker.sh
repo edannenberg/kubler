@@ -283,12 +283,8 @@ function build_image() {
     _status_msg="tag image ${image_id}:latest"
     pwrap 'nolog' "${DOCKER}" tag "${image_id}:${IMAGE_TAG}" "${image_id}:latest" || die "${_status_msg}"
 
-    local prune_args
-    prune_args=()
-    [[ "${DOCKER}" == 'docker' ]] && prune_args+=( '-f' )
-
     [[ "${KUBLER_POSTBUILD_IMAGE_PRUNE}" == 'true' ]] \
-        && _status_msg="remove untagged images" && pwrap "${DOCKER}" image prune "${prune_args[@]}"
+        && _status_msg="remove untagged images" && pwrap "${DOCKER}" image prune -f
 
     [[ "${KUBLER_POSTBUILD_VOLUME_PRUNE}" == 'true' ]] \
         && _status_msg="remove unused volumes" && pwrap "${DOCKER}" volume prune -f
