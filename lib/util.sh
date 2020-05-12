@@ -288,7 +288,7 @@ function ask() {
     default_value="$2"
     history_file="${3:-${KUBLER_DATA_DIR}/.ask_history}"
     if hash rlwrap 2>/dev/null; then
-      __ask="$(rlwrap -D -A -H "${history_file}" "${_LIB_DIR}"/ask.sh "${question}" "${default_value}" "${_prefix_ask}")"
+      __ask="$(rlwrap -D 2 -A -H "${history_file}" "${_LIB_DIR}"/ask.sh "${question}" "${default_value}" "${_prefix_ask}")"
     else
       read -r -p "${_prefix_ask} ${question} (${default_value}): " __ask
     fi
