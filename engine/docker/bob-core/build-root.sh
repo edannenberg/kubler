@@ -39,6 +39,8 @@ readonly _DOC_FOOTER_INCLUDES="${_ROOTFS_BACKUP}/doc.footer.includes"
 _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
+BOB_PACKAGE_CONFIG_STRICT="${BOB_PACKAGE_CONFIG_STRICT:-true}"
+
 # Arguments:
 # 1: exit_message as string
 # 2: exit_code as int, optional, default: 1
@@ -290,8 +292,11 @@ function log_as_installed() {
 # reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
 # reset all use flags: update_use app-shells/bash %
 function update_use() {
+    local strict_mode
+    strict_mode='--strict'
+    [[ "${BOB_PACKAGE_CONFIG_STRICT}" != true ]] && strict_mode='--quiet'
     # shellcheck disable=SC2068
-    flaggie --strict --destructive-cleanup ${@}
+    flaggie "${strict_mode}" --destructive-cleanup ${@}
 }
 
 # Just for better readability of build.sh
