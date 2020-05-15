@@ -40,6 +40,7 @@ _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
 BOB_PACKAGE_CONFIG_STRICT="${BOB_PACKAGE_CONFIG_STRICT:-true}"
+BOB_UPDATE_WORLD="${BOB_UPDATE_WORLD:-false}"
 
 # Arguments:
 # 1: exit_message as string
