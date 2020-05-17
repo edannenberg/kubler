@@ -22,6 +22,7 @@
 #
 
 DOCKER_IO=$(command -v docker.io)
+DOCKER_CO=$(command -v docker-compose)
 DOCKER="${DOCKER:-${DOCKER_IO:-docker}}"
 DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS:-}"
 DOCKER_COMMIT_OPTS="${DOCKER_COMMIT_OPTS:-}"
@@ -193,7 +194,8 @@ function build_image() {
     exit_sig=$?
     if [[ -z "${missing_builder}" && ${exit_sig} -eq 0 ]]; then
         if [[ ! -f "${image_path}/${_BUILD_TEST_FAILED_FILE}" && \
-              ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" ]]
+              ! -f "${image_path}/${_HEALTHCHECK_FAILED_FILE}" && \
+              ! -f "${image_path}/${_COMPOSE_TEST_FAILED_FILE}" ]]
         then
             local image_timestamp parent_timestamp
 
@@ -410,6 +412,31 @@ test_image() {
             && die "health-check failed: timeout after ${POST_BUILD_HC_MAX_DURATION}s. docker inspect log:\n${hc_log}"
         [[ -f "${failed_test_file}" ]] && rm "${failed_test_file}"
     fi
+
+    # run "docker-compose -f compose-test.yml up -d" followed by compose-test.sh before bringing the
+    # container(s) down using "docker-compose -f compose-test down"
+    if [[ -n "${DOCKER_CO}" && -f "${image_path}"/compose-test.yml ]]; then
+        POST_BUILD_DC_START_PERIOD="${POST_BUILD_DC_START_PERIOD:-5}"
+        
+        add_trap_fn 'handle_dc_container_run'
+        _status_msg="beginning docker-compose test of image ${image_id}"
+        pwrap "${DOCKER_CO}" -f "${image_path}"/compose-test.yml up --force-recreate \
+            --always-recreate-deps --renew-anon-volumes --detach
+        _status_msg="docker-compose startup time is ${POST_BUILD_DC_START_PERIOD}s"
+        pwrap 'nolog' sleep "${POST_BUILD_DC_START_PERIOD}"
+        _status_msg="running compose-test.sh"
+        pwrap "${image_path}"/compose-test.sh
+        exit_sig=$?
+        failed_test_file="${image_path}/${_COMPOSE_TEST_FAILED_FILE}"
+        [[ ${exit_sig} -gt 0 ]] \
+            && date > "${failed_test_file}" \
+            && die "compose-test.sh for image ${image_id} failed with exit signal: ${exit_sig}"
+        [[ -f "${failed_test_file}" ]] && rm "${failed_test_file}"
+        rm_trap_fn 'handle_dc_container_run'
+        _status_msg="cleaning up docker-compose test of image ${image_id}"
+        pwrap "${DOCKER_CO}" -f "${image_path}"/compose-test.yml down
+    fi
+
     # shellcheck disable=SC2154
     msg "${_term_cup}"
     msg_ok "done."
@@ -421,6 +448,11 @@ function handle_hc_container_run() {
     echo -e ""
     msg_error "aborting.. stopping health-check test container ${container_id}"
     container_exists "${container_id}" && stop_container "${container_id}" 'false'
+}
+
+function handle_dc_container_run {
+    msg_error "aborting.. stopping docker-compose test container(s)"
+    ${DOCKER_CO} -f "${image_path}"/compose-test.yml down
 }
 
 # Check if container exists for given container_name, exit with signal 3 if it does not

@@ -40,6 +40,7 @@ readonly _IMAGE_PATH="images/"
 readonly _BUILDER_PATH="builder/"
 readonly _BUILD_TEST_FAILED_FILE=".kubler-build-test.error"
 readonly _HEALTHCHECK_FAILED_FILE=".kubler-healthcheck.error"
+readonly _COMPOSE_TEST_FAILED_FILE=".kubler-composetest.error"
 readonly _STAGE3_NAMESPACE="kubler-gentoo"
 readonly _PORTAGE_IMAGE="${_STAGE3_NAMESPACE}/portage"
 readonly _PORTAGE_CONTAINER="${_STAGE3_NAMESPACE}-portage"
@@ -275,6 +276,7 @@ function source_image_conf() {
     [[ "${_last_sourced_image}" == "${image_path}" ]] && return 0
     unset BOB_CHOST BOB_CFLAGS BOB_CXXFLAGS BOB_BUILDER_CHOST BOB_BUILDER_CFLAGS BOB_BUILDER_CXXFLAGS ARCH ARCH_URL IMAGE_TAG
     unset POST_BUILD_HC POST_BUILD_HC_MAX_DURATION POST_BUILD_HC_INTERVAL POST_BUILD_HC_START_PERIOD POST_BUILD_HC_RETRY
+    unset POST_BUILD_DC_DEPENDENCIES
 
     if [[ "${image_path}" != '/'* ]]; then
         get_ns_include_path "${image_path}"

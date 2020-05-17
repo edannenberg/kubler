@@ -32,12 +32,6 @@ function generate_build_order() {
     fi
     for image_id in "${target_ids[@]}"; do
         check_image_dependencies "${image_id}"
-        if [[ -z "${_required_images[$image_id]+_}" ]]; then
-            expand_image_id "${image_id}" "${_IMAGE_PATH}"
-            # shellcheck disable=SC2154
-            _required_images["${image_id}"]="${__expand_image_id}"
-            _build_order_images+=( "${image_id}" )
-        fi
     done
     # generate builder build order
     _build_order_builders=()
@@ -46,6 +40,7 @@ function generate_build_order() {
         check_builder_dependencies "${builder_id}"
         if ! is_in_array "${builder_id}" "${_build_order_builders[@]}"; then
             expand_image_id "${builder_id}" "${_BUILDER_PATH}"
+            # shellcheck disable=SC2154
             _required_builders["${builder_id}"]="${__expand_image_id}"
             _build_order_builders+=( "${builder_id}" )
         fi
@@ -64,47 +59,54 @@ function generate_build_order() {
 #
 # Arguments:
 # 1: image_id
-# 2: previous_image_id
 function check_image_dependencies() {
-    local image_id previous_image current_image_path
+    local image_id current_image_path test_deps test_dep
     image_id="$1"
-    previous_image="$2"
-    if [[ "${image_id}" != 'scratch' ]]; then
-        expand_image_id "${image_id}" "${_IMAGE_PATH}"
-        current_image_path="${__expand_image_id}"
-        # shellcheck disable=SC2154
-        source_image_conf "${current_image_path}"
+    
+    if [[ "${image_id}" == 'scratch' ]]; then
+        return
+    fi
+    
+    expand_image_id "${image_id}" "${_IMAGE_PATH}"
+    current_image_path="${__expand_image_id}"
+    # shellcheck disable=SC2154
+    source_image_conf "${current_image_path}"
+    test_deps=("${POST_BUILD_DC_DEPENDENCIES[@]}")
 
-        # collect required engines
-        [[ -z "${_required_engines[${BUILD_ENGINE}]+_}" ]] && _required_engines["${BUILD_ENGINE}"]="${BUILD_ENGINE}"
+    # collect required engines
+    [[ -z "${_required_engines[${BUILD_ENGINE}]+_}" ]] && _required_engines["${BUILD_ENGINE}"]="${BUILD_ENGINE}"
 
-        # collect required build containers
-        if [[ -n "${BUILDER}" ]];then
-             if [[ -z "${_required_builders[${BUILDER}]+_}" ]]; then
-                expand_image_id "${BUILDER}" "${_BUILDER_PATH}"
-                _required_builders["${BUILDER}"]="${__expand_image_id}"
-             fi
-        else
-            # add default build container of current namespace
-            if [[ -z "${_required_builders[${DEFAULT_BUILDER}]+_}" ]]; then
-                expand_image_id "${DEFAULT_BUILDER}" "${_BUILDER_PATH}"
-                _required_builders["${DEFAULT_BUILDER}"]="${__expand_image_id}"
-            fi
-        fi
-
-        if [[ -n "${IMAGE_PARENT}" ]]; then
-            # skip further checking if already processed
-            if [[ -z "${_required_images[${image_id}]+_}" ]]; then
-                # check parent image dependencies
-                check_image_dependencies "${IMAGE_PARENT}" "${image_id}"
-                # finally add the image
-                if [[ -n "${previous_image}" ]]; then
-                    _required_images["${image_id}"]="${current_image_path}"
-                    _build_order_images+=( "${image_id}" )
-                fi
-            fi
+    # collect required build containers
+    if [[ -n "${BUILDER}" ]];then
+         if [[ -z "${_required_builders[${BUILDER}]+_}" ]]; then
+            expand_image_id "${BUILDER}" "${_BUILDER_PATH}"
+            _required_builders["${BUILDER}"]="${__expand_image_id}"
+         fi
+    else
+        # add default build container of current namespace
+        if [[ -z "${_required_builders[${DEFAULT_BUILDER}]+_}" ]]; then
+            expand_image_id "${DEFAULT_BUILDER}" "${_BUILDER_PATH}"
+            _required_builders["${DEFAULT_BUILDER}"]="${__expand_image_id}"
         fi
     fi
+
+    # skip further checking if already processed
+    if is_in_array "${image_id}" "${_build_order_images[@]}"; then
+        return
+    fi
+    
+    if [[ -n "${IMAGE_PARENT}" ]]; then
+        # check parent image dependencies
+        check_image_dependencies "${IMAGE_PARENT}" 
+        # check test dependencies, if any
+        for test_dep in "${test_deps[@]}"; do
+            check_image_dependencies "${test_dep}" 
+        done
+    fi
+
+    # finally add the image
+    _required_images["${image_id}"]="${current_image_path}"
+    _build_order_images+=( "${image_id}" )
 }
 
 # Check builder dependencies and populate _build_order_builder and _required_cores. Recursive.
