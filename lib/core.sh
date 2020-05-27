@@ -396,6 +396,10 @@ function download_stage3() {
     is_autobuild=false
     stage3_file="$1"
     stage3_contents="${stage3_file}.CONTENTS"
+    # some stage3 builds use a compressed contents file now while others still use the plain variant
+    if ! wget -q --method=HEAD "${ARCH_URL}${stage3_contents}"; then
+      stage3_contents="${stage3_contents}.gz"
+    fi
     stage3_digests="${stage3_file}.DIGESTS"
     if [[ "${ARCH_URL}" == *autobuilds*  ]]; then
         stage3_digests="${stage3_file}.DIGESTS.asc"
