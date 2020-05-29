@@ -33,8 +33,8 @@ configure_builder() {
     update_keywords 'app-admin/su-exec' '+~amd64'
     emerge dev-vcs/git app-portage/layman app-misc/jq app-shells/bash-completion
     install_git_postsync_hooks
+    [[ "${BOB_UPDATE_WORLD}" == true ]] && emerge -vuND world
     configure_layman
     add_overlay kubler https://github.com/edannenberg/kubler-overlay.git
     emerge dev-lang/go
-    [[ "${BOB_UPDATE_WORLD}" == true ]] && emerge -vuND world
 }
