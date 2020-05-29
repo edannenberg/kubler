@@ -232,6 +232,8 @@ function source_namespace_conf() {
     local ns_dir conf_file final_tag
     ns_dir="$1"
 
+    # unset in case it was defined for a namespace only
+    unset BUILDER_DOCKER_ARGS_GLOBAL
     # reset to system config at /etc/kubler.conf or _KUBLER_DIR/kubler.conf first..
     # shellcheck source=kubler.conf disable=SC1090
     source "${_kubler_system_conf}"

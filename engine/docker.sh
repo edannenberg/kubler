@@ -247,6 +247,7 @@ function build_image() {
         done
 
         _container_args=()
+        [[ ${#BUILDER_DOCKER_ARGS_GLOBAL[@]} -gt 0 ]] && _container_args+=("${BUILDER_DOCKER_ARGS_GLOBAL[@]}")
         [[ ${#BUILDER_DOCKER_ARGS[@]} -gt 0 ]] && _container_args+=("${BUILDER_DOCKER_ARGS[@]}")
         _container_cmd=("kubler-build-root")
         _container_mount_portage="true"

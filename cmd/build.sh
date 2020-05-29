@@ -177,6 +177,7 @@ function run_interactive_builder() {
             "${image_path}:/config"
         )
         [[ ${#BUILDER_MOUNTS[@]} -gt 0 ]] && _container_mounts+=("${BUILDER_MOUNTS[@]}")
+        [[ ${#BUILDER_DOCKER_ARGS_GLOBAL[@]} -gt 0 ]] && _container_args+=("${BUILDER_DOCKER_ARGS_GLOBAL[@]}")
         [[ ${#BUILDER_DOCKER_ARGS[@]} -gt 0 ]] && _container_args+=("${BUILDER_DOCKER_ARGS[@]}")
         # shellcheck disable=SC2034
         _container_mount_portage='true'

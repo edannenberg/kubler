@@ -30,6 +30,9 @@ IMAGE_TAG="${_tmpl_image_tag}"
 #BUILD_ENGINE='${_tmpl_engine}'
 #DEFAULT_BUILDER='kubler/bob'
 
+# Pass extra docker args to all build containers, can also be defined at namespace level
+#BUILDER_DOCKER_ARGS_GLOBAL=('--tmpfs' '/var/tmp/portage:exec')
+
 # Variables starting with BOB_ are exported as ENV to all build containers
 
 # Timezone for build containers
