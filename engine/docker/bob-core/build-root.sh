@@ -379,6 +379,23 @@ function uninstall_package() {
     done
 }
 
+# Add a given patch for a given package to Portage
+# Usually called from configure_rootfs_build() hook.
+#
+# Arguments:
+# 1: package atom (i.e. app-shells/bash)
+# 2: patch url
+function add_patch() {
+    local patch_dir patch_package patch_url patch_file
+    patch_package=$1
+    patch_url=$2
+    patch_dir="/etc/portage/patches/${patch_package}"
+    patch_file=$(cksum <<< "${patch_url}" | cut -f 1 -d ' ')
+    # create dir if not existing
+    [ ! -d $patch_dir ] && mkdir -p ${patch_dir}
+    curl -L "${patch_url}" --output "${patch_dir}/${patch_file}" || exit $?
+}
+
 function configure_layman() {
     # no pesky prompts please
     sed -i'' 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
