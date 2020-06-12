@@ -392,7 +392,7 @@ function add_patch() {
     patch_dir="/etc/portage/patches/${patch_package}"
     patch_file=$(cksum <<< "${patch_url}" | cut -f 1 -d ' ')
     # create dir if not existing
-    [ ! -d $patch_dir ] && mkdir -p ${patch_dir}
+    [ ! -d ${patch_dir} ] && mkdir -p ${patch_dir}
     curl -L "${patch_url}" --output "${patch_dir}/${patch_file}" || exit $?
 }
 
