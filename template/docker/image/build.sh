@@ -36,6 +36,9 @@ configure_rootfs_build()
     # ..or a Gentoo package keyword
     #update_keywords 'dev-lang/some-package' '+~amd64'
 
+    # Download a file and add it to Portage's patch dir (/etc/portage/patches), 3rd arg is optional
+    #add_patch sys-apps/bash https://foo.net/bar.patch my_custom_name
+
     # Add a package to Portage's package.provided file, effectively skipping it during installation
     #provide_package 'dev-lang/some-package'
 

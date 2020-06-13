@@ -381,6 +381,25 @@ function uninstall_package() {
     done
 }
 
+# Add given patch to Portage's patch dir (/etc/portage/patches)
+#
+# Arguments:
+# 1: package_atom (i.e. app-shells/bash, you may also append the slot or a specific version)
+# 2: patch_url
+# 3: patch_name - optional, default: use last fragment of patch_url
+function add_patch() {
+    local package_atom patch_url patch_name patch_dir
+    package_atom="$1"
+    patch_url="$2"
+    patch_name="$3"
+    patch_dir="/etc/portage/patches/${package_atom}"
+    [ ! -d "${patch_dir}" ] && mkdir -p "${patch_dir}"
+    [ -z "${patch_name}" ] && patch_name="${patch_url##*/}"
+    [[ "${patch_name}" != *.patch && "${patch_name}" != *.diff ]] && patch_name+='.patch'
+    download_file "${patch_url}" "${patch_name}"
+    cp "${__download_file}" "${patch_dir}"
+}
+
 function configure_layman() {
     # no pesky prompts please
     sed -i'' 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
