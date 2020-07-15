@@ -311,7 +311,7 @@ function source_push_conf() {
     namespace_path="$1"
     # exit if we just sourced for this NS
     [[ "${_last_sourced_push_conf}" == "${namespace_path}" ]] && return 0
-    # shellcheck disable=SC1090
+    # shellcheck disable=SC1091
     [[ -f "${namespace_path}/push.conf" ]] && source "${namespace_path}/push.conf"
     _last_sourced_push_conf="${namespace_path}"
 }
