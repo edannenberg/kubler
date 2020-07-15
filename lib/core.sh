@@ -626,7 +626,7 @@ function detect_namespace() {
         fi
     fi
     _kubler_system_conf=/etc/"${_KUBLER_CONF}"
-    [[ ! -f /etc/"${_kubler_system_conf}" ]] && _kubler_system_conf="${_KUBLER_DIR}/${_KUBLER_CONF}"
+    [[ ! -f "${_kubler_system_conf}" ]] && _kubler_system_conf="${_KUBLER_DIR}/${_KUBLER_CONF}"
     _kubler_user_conf="${KUBLER_DATA_DIR}/${_KUBLER_CONF}"
     _kubler_ns_conf="${_kubler_user_conf}"
 
