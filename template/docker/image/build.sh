@@ -12,6 +12,11 @@ _packages=""
 # Install a standard system directory layout at ${_EMERGE_ROOT}, optional, default: false
 #BOB_INSTALL_BASELAYOUT=true
 
+# Remove specified binary cache file(s) *once* for given tag key..
+#_no_cache_20200731="sys-apps/bash foo/bar/bar-0.1.2-r3.xpak"
+# ..or omit the tag to always remove given binary cache file(s).
+#_no_cache="sys-apps/bash"
+
 # Define custom variables to your liking
 #_${_tmpl_image_name}_version=1.0
 

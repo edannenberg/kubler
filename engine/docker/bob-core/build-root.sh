@@ -588,6 +588,28 @@ function build_rootfs() {
     # shellcheck disable=SC1091
     source /etc/profile
 
+    # remove existing binary package cache file(s) if specified
+    local no_cache_var no_cache_package current_tag cache_tag cache_tag_base bin_package_path
+    for no_cache_var in ${!_no_cache*}; do
+        current_tag=
+        [[ "${no_cache_var}" != '_no_cache' ]] && current_tag="${no_cache_var##*_}"
+        for no_cache_package in ${!no_cache_var}; do
+            cache_tag=
+            bin_package_path=
+            [[ -n ${current_tag} ]] && cache_tag="${PKGDIR}/.no-cache-tags/${current_tag}/${no_cache_package%.xpak}"
+            if [[ -n ${current_tag} && ! -e ${cache_tag} || -z ${current_tag} ]]; then
+                bin_package_path="${PKGDIR}/${no_cache_package}"
+                [[ -e "${bin_package_path}" ]] && rm -r "${bin_package_path}"
+                if [[ -n "${current_tag}" ]]; then
+                    cache_tag_base="${cache_tag}"
+                    [[ "${no_cache_package}" == *'.xpak' ]] && cache_tag_base="${cache_tag%/*}"
+                    mkdir -p "${cache_tag_base}"
+                    [[ "${no_cache_package}" == *'.xpak' ]] && touch "${cache_tag}"
+                fi
+            fi
+        done
+    done
+
     # call configure_builder hook if declared in build.sh
     if declare -F configure_builder &>/dev/null; then
         configure_builder
