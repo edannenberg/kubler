@@ -31,10 +31,9 @@ configure_builder() {
     update_use 'app-crypt/pinentry' '+ncurses'
     update_keywords 'dev-python/ssl-fetch' '+~amd64'
     update_keywords 'app-admin/su-exec' '+~amd64'
-    emerge dev-vcs/git app-portage/layman app-misc/jq app-shells/bash-completion
-    install_git_postsync_hooks
+    emerge dev-vcs/git app-eselect/eselect-repository app-misc/jq app-shells/bash-completion
+    #install_git_postsync_hooks
     [[ "${BOB_UPDATE_WORLD}" == true ]] && emerge -vuND world
-    configure_layman
     add_overlay kubler https://github.com/edannenberg/kubler-overlay.git
     emerge dev-lang/go
 }

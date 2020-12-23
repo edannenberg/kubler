@@ -11,4 +11,4 @@ RUN set -x && \
     mkdir -p /var/db/repos/gentoo/metadata && \
     rm /${BOB_CURRENT_PORTAGE_FILE}
 
-VOLUME /var/db/repos /var/lib/layman /var/cache/eix
+VOLUME /var/db/repos /var/cache/eix

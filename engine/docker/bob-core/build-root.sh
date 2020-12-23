@@ -400,52 +400,24 @@ function add_patch() {
     cp "${__download_file}" "${patch_dir}"
 }
 
-function configure_layman() {
-    # no pesky prompts please
-    sed -i'' 's/^check_official : Yes/check_official : No/g' /etc/layman/layman.cfg
-    layman -L
-    # layman might have added config for existing overlays from the shared portage container, reset to be sure
-    rm /etc/portage/repos.conf/layman.conf
-    touch /etc/portage/repos.conf/layman.conf
-}
-
-# Arguments:
-# 1: overlay_id
-# n: more overlay_ids
-function add_layman_overlay() {
-    local overlay_id
-    # shellcheck disable=SC2068
-    for overlay_id in ${@}; do
-        layman -l | grep -q "${overlay_id}" && layman -d "${overlay_id}"
-    done
-    # shellcheck disable=SC2068
-    layman -a ${@}
-}
-
-# Add Gentoo overlay to repos.conf/ and sync it
-# Example usage: add_overlay musl https://anongit.gentoo.org/git/proj/musl.git
+# Add Gentoo overlay to repos.conf/ and sync it, thin wrapper for eselect repository module.
+# Example usage: add_overlay musl
 #
 # Arguments:
 #
 # 1: repo_id - reference used in repos.conf
-# 2: repo_url
+# 2: repo_url - optional, default: assume repo_id is in eselect repository list
 # 3: repo_mode - optional, default: git
-# 4: repo_priority - optional, default: 50
 add_overlay() {
-    local repo_id repo_url repo_mode repo_priority repo_path
+    local repo_id repo_url repo_mode
     repo_id="$1"
     repo_url="$2"
     repo_mode="${3:-git}"
-    repo_priority="${4:-50}"
-    repo_path='/var/lib/repos'
-    [ ! -d "${repo_path}" ] && mkdir -p "${repo_path}"
-    tee /etc/portage/repos.conf/"${repo_id}".conf >/dev/null <<END
-[${repo_id}]
-priority = ${repo_priority}
-location = ${repo_path}/${repo_id}
-sync-type = ${repo_mode}
-sync-uri = ${repo_url}
-END
+    if [[ -z "${repo_url}" ]]; then
+      eselect repository enable "${repo_id}"
+    else
+      eselect repository add "${repo_id}" "${repo_mode}" "${repo_url}"
+    fi
     emaint sync -r "${repo_id}"
 }
 
