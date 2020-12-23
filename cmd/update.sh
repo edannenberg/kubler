@@ -29,6 +29,7 @@ function update_builders() {
                     s3date_remote="${BASH_REMATCH[1]}"
                     # add time string if captured
                     [[ -n "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
+                    # shellcheck disable=SC2153
                     if is_newer_stage3_date "${STAGE3_DATE}" "${s3date_remote}"; then
                         sed -E -i'' s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
                             "${builder_path}${current_builder}build.conf"

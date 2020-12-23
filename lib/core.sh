@@ -43,7 +43,8 @@ readonly _HEALTHCHECK_FAILED_FILE=".kubler-healthcheck.error"
 readonly _STAGE3_NAMESPACE="kubler-gentoo"
 readonly _PORTAGE_IMAGE="${_STAGE3_NAMESPACE}/portage"
 readonly _PORTAGE_CONTAINER="${_STAGE3_NAMESPACE}-portage"
-readonly _TODAY="$(date +%Y%m%d)"
+_TODAY="$(date +%Y%m%d)"
+readonly _TODAY
 
 # shellcheck disable=SC2034
 BOB_HOST_UID=$(id -u)
@@ -646,7 +647,8 @@ function detect_namespace() {
     if [[ "${working_dir}" == "${KUBLER_DATA_DIR}" || "${working_dir}" == "${KUBLER_DATA_DIR}"/* ]]; then
         # ..and inside a namespace dir?
         if [[ -d "${real_ns_dir}/${_IMAGE_PATH}" ]]; then
-            readonly _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
+            _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
+            readonly _NAMESPACE_DEFAULT
         fi
         real_ns_dir="${_KUBLER_NAMESPACE_DIR}"
         readonly _NAMESPACE_TYPE='local'
@@ -667,7 +669,8 @@ function detect_namespace() {
         parent_conf="${parent_dir}/${_KUBLER_CONF}"
         # is it a single namespace dir?
         if [[ -d "${real_ns_dir}/${_IMAGE_PATH}" ]]; then
-            readonly _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
+            _NAMESPACE_DEFAULT="$(basename -- "${real_ns_dir}")"
+            readonly _NAMESPACE_DEFAULT
             if [[ ! -f "${parent_conf}" ]]; then
                 readonly _NAMESPACE_TYPE='single'
                 _current_namespace="${_NAMESPACE_DEFAULT}"

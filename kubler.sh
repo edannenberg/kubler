@@ -171,7 +171,8 @@ function main() {
 
     get_absolute_path "$0"
     [[ -z "${__get_absolute_path}" ]] && die "Couldn't determine the script's real directory, aborting" 2
-    readonly _KUBLER_DIR="$(dirname -- "${__get_absolute_path}")"
+    _KUBLER_DIR="$(dirname -- "${__get_absolute_path}")"
+    readonly _KUBLER_DIR
 
     local kubler_bin lib_dir core parser working_dir cmd_script
     kubler_bin="$(basename "$0")"

@@ -659,7 +659,7 @@ function import_stage3() {
 
     # if fetched stage3 archive name doesn't have a matching STAGE3_DATE force the configured one
     get_stage3_archive_regex "${STAGE3_BASE}"
-    # shellcheck disable=SC2154
+    # shellcheck disable=SC2154,SC2153
     if [[ "${stage3_file}" =~ ${__get_stage3_archive_regex} && "${stage3_file}" != *"${STAGE3_DATE}"* ]]; then
         stage3_file="${STAGE3_BASE}-${STAGE3_DATE}.tar.${BASH_REMATCH[3]}"
     fi
