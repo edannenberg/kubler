@@ -401,6 +401,20 @@ function add_patch() {
     cp "${__download_file}" "${patch_dir}"
 }
 
+# Check if given search_id is an installed portage overlay repo_id.
+# Returns exit code 0 if true or 3 if not.
+#
+# Arguments:
+# 1: search_id
+function is_installed_overlay() {
+    local search_id repo_id
+    search_id="$1"
+    while read -r repo_id; do
+        [[ "${search_id}" == "${repo_id}" ]] && return 0
+    done < <(eselect repository list -i | awk '{if(NR>1)print $2}')
+    return 3
+}
+
 # Add Gentoo overlay to repos.conf/ and sync it, thin wrapper for eselect repository module.
 # Example usage: add_overlay musl
 #
@@ -409,11 +423,13 @@ function add_patch() {
 # 1: repo_id - reference used in repos.conf
 # 2: repo_url - optional, default: assume repo_id is in eselect repository list
 # 3: repo_mode - optional, default: git
-add_overlay() {
+function add_overlay() {
     local repo_id repo_url repo_mode
     repo_id="$1"
     repo_url="$2"
     repo_mode="${3:-git}"
+    # skip if there already is an installed overlay for given repo_id
+    is_installed_overlay "${repo_id}" && return 0
     if [[ -z "${repo_url}" ]]; then
       eselect repository enable "${repo_id}"
     else
