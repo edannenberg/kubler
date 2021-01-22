@@ -1,6 +1,6 @@
 FROM busybox:latest
 
-LABEL maintainer ${MAINTAINER}
+LABEL maintainer="${MAINTAINER}"
 
 COPY ${BOB_CURRENT_PORTAGE_FILE} /
 
