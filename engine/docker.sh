@@ -72,11 +72,9 @@ function generate_dockerfile() {
         -e 's/${NAMESPACE}/'"${_current_namespace}"'/g' \
         -e 's/${TAG}/'"${IMAGE_TAG}"'/g' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/g' \
+	-e 's/${build_timestamp}/'"${build_timestamp}"'/g' \
         "${image_path}/Dockerfile.template" > "${image_path}/Dockerfile" \
             || die "Error while generating ${image_path}/Dockerfile"
-
-    # insert build timestamp last to preserve build cache
-    echo "LABEL kubler.build.timestamp ${build_timestamp}" >> "${image_path}"/Dockerfile
 }
 
 # Returns given tag value from dockerfile or exit signal 3 if tag was not found.
@@ -265,7 +263,7 @@ function build_image() {
 
         _status_msg="commit ${run_id} as image ${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}"
         # shellcheck disable=SC2086
-        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} -c "LABEL kubler.build.timestamp $(date '+%Y%m%d%H%M%S')" \
+        pwrap 'nolog' "${DOCKER}" commit ${DOCKER_COMMIT_OPTS} -c "LABEL kubler.build.timestamp=$(date '+%Y%m%d%H%M%S')" \
             "${run_id}" "${_current_namespace}/${builder_commit_id}:${IMAGE_TAG}" \
             || die "${_status_msg}"
 

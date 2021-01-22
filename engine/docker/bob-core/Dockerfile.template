@@ -1,5 +1,5 @@
 FROM ${BOB_CURRENT_STAGE3_ID}
-LABEL maintainer ${MAINTAINER}
+LABEL maintainer="${MAINTAINER}" kubler.build.timestamp="${build_timestamp}"
 
 RUN set -x && \
     echo 'GENTOO_MIRRORS="http://distfiles.gentoo.org/"' >> /etc/portage/make.conf && \
