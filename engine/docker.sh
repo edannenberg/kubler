@@ -72,9 +72,11 @@ function generate_dockerfile() {
         -e 's/${NAMESPACE}/'"${_current_namespace}"'/g' \
         -e 's/${TAG}/'"${IMAGE_TAG}"'/g' \
         -e 's/${MAINTAINER}/'"${AUTHOR}"'/g' \
-	-e 's/${build_timestamp}/'"${build_timestamp}"'/g' \
         "${image_path}/Dockerfile.template" > "${image_path}/Dockerfile" \
             || die "Error while generating ${image_path}/Dockerfile"
+
+    # insert build timestamp last to preserve build cache
+    echo "LABEL kubler.build.timestamp=${build_timestamp}" >> "${image_path}"/Dockerfile
 }
 
 # Returns given tag value from dockerfile or exit signal 3 if tag was not found.

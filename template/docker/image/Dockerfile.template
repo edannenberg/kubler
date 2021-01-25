@@ -1,5 +1,5 @@
 FROM ${IMAGE_PARENT}
-LABEL maintainer="${MAINTAINER}" kubler.build.timestamp="${build_timstamp}"
+LABEL maintainer="${MAINTAINER}"
 
 ADD rootfs.tar /
 

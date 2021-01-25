@@ -1,4 +1,4 @@
 FROM ${NAMESPACE}/${_tmpl_image_name}
-LABEL maintainer="${MAINTAINER}" kubler.build.timestamp="${build_timestamp}"
+LABEL maintainer="${MAINTAINER}"
 
 CMD ["/bin/bash"]
