@@ -366,7 +366,7 @@ function get_stage3_archive_regex() {
     __get_stage3_archive_regex=
     local stage3_base
     stage3_base="$1"
-    __get_stage3_archive_regex="${stage3_base//+/\\+}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.(bz2|xz)"
+    __get_stage3_archive_regex="${stage3_base//+/(\\+|%2B)?}-([0-9]{8})(T[0-9]{6}Z)?\\.tar\\.(bz2|xz)"
 }
 
 # Fetch latest stage3 archive name/type, returns exit signal 3 if no archive could be found
@@ -374,14 +374,17 @@ function fetch_stage3_archive_name() {
     __fetch_stage3_archive_name=
     ARCH="${ARCH:-amd64}"
     ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
-    local remote_files remote_line remote_date remote_file_type
+    local remote_files remote_line remote_date remote_file_type max_cap
     readarray -t remote_files <<< "$(wget -qO- "${ARCH_URL}")"
     remote_date=0
     get_stage3_archive_regex "${STAGE3_BASE}"
     for remote_line in "${remote_files[@]}"; do
-        if [[ "${remote_line}" =~ ${__get_stage3_archive_regex}\< ]]; then
-            is_newer_stage3_date "${remote_date}" "${BASH_REMATCH[1]}${BASH_REMATCH[2]}" \
-                && { remote_date="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"; remote_file_type="${BASH_REMATCH[3]}"; }
+        if [[ "${remote_line}" =~ href=\"${__get_stage3_archive_regex}\" ]]; then
+            max_cap="${#BASH_REMATCH[@]}"
+            is_newer_stage3_date "${remote_date}" "${BASH_REMATCH[$((max_cap-3))]}${BASH_REMATCH[$((max_cap-2))]}" \
+                && { remote_date="${BASH_REMATCH[$((max_cap-3))]}${BASH_REMATCH[$((max_cap-2))]}";
+                     remote_file_type="${BASH_REMATCH[$((max_cap-1))]}"; }
+	    break
         fi
     done
     [[ "${remote_date//[!0-9]/}" -eq 0 ]] && return 3

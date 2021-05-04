@@ -7,7 +7,7 @@
 # 2: builder_path
 function update_builders() {
     __update_builders=
-    local builder_path current_ns current_builder update_status s3date_remote update_count
+    local builder_path current_ns current_builder update_status s3date_remote update_count max_cap
     current_ns="$1"
     builder_path="$2"
     update_count=0
@@ -26,9 +26,10 @@ function update_builders() {
                 get_stage3_archive_regex "${STAGE3_BASE}"
                 # shellcheck disable=SC2154
                 if [[ "${__fetch_stage3_archive_name}" =~ ${__get_stage3_archive_regex} ]]; then
-                    s3date_remote="${BASH_REMATCH[1]}"
+                    max_cap="${#BASH_REMATCH[@]}"
+                    s3date_remote="${BASH_REMATCH[$((max_cap-3))]}"
                     # add time string if captured
-                    [[ -n "${BASH_REMATCH[2]}" ]] && s3date_remote+="${BASH_REMATCH[2]}"
+                    [[ -n "${BASH_REMATCH[$((max_cap-2))]}" ]] && s3date_remote+="${BASH_REMATCH[$((max_cap-2))]}"
                     # shellcheck disable=SC2153
                     if is_newer_stage3_date "${STAGE3_DATE}" "${s3date_remote}"; then
                         sed -E -i'' s/^STAGE3_DATE=\(\"\|\'\)?[0-9]*\(T[0-9]*Z\)?\(\"\|\'\)?/STAGE3_DATE=\'"${s3date_remote}"\'/g \
