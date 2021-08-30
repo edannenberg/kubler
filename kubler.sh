@@ -110,7 +110,7 @@ function compare_versions() {
     local IFS=.
     # shellcheck disable=SC2206
     local i a=(${1%%[^0-9.]*}) b=(${2%%[^0-9.]*})
-    local arem=${1#${1%%[^0-9.]*}} brem=${2#${2%%[^0-9.]*}}
+    local arem=${1#"${1%%[^0-9.]*}"} brem=${2#"${2%%[^0-9.]*}"}
     for ((i=0; i<${#a[@]} || i<${#b[@]}; i++)); do
         if ((10#${a[i]:-0} < 10#${b[i]:-0})); then
             return 1

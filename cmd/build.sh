@@ -53,7 +53,7 @@ function generate_build_order() {
     # shellcheck disable=SC2154
     for excluded_image in "${_arg_exclude[@]}";do
         if [[ -n "${_required_images[${excluded_image}]+_}" ]]; then
-            unset _required_images["${excluded_image}"]
+            unset '_required_images["${excluded_image}"]'
             rm_array_value "${excluded_image}" "${_build_order_images[@]}"
             _build_order_images=( "${__rm_array_value[@]}" )
         fi

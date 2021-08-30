@@ -216,9 +216,9 @@ function get_ns_dir_by_image_path() {
     local image_path
     image_path="$1"
     if [[ "${image_path}" == /*/"${_IMAGE_PATH}"* ]]; then
-        image_path="${image_path%%/${_IMAGE_PATH}*}"
+        image_path="${image_path%%/"${_IMAGE_PATH}"*}"
     elif [[ "${image_path}" == /*/"${_BUILDER_PATH}"* ]]; then
-        image_path="${image_path%%/${_BUILDER_PATH}*}"
+        image_path="${image_path%%/"${_BUILDER_PATH}"*}"
     else
         return 3
     fi

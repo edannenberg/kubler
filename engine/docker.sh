@@ -157,7 +157,7 @@ function build_image() {
             local builder_image_id image_parent_id
             builder_image_id="${builder_id##*/}"
             image_parent_id="${IMAGE_PARENT##*/}"
-            builder_commit_id="${builder_image_id%-${image_parent_id}}-${current_image}"
+            builder_commit_id="${builder_image_id%-"${image_parent_id}"}-${current_image}"
         fi
 
         if [[ "${image_type}" == "${_BUILDER_PATH}" ]]; then
