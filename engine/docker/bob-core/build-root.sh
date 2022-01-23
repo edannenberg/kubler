@@ -57,12 +57,13 @@ function die() {
 
 # Copy libgcc/libstdc++ libs
 function copy_gcc_libs() {
-    local lib_gcc lib_stdc lib
+    local lib_gcc lib_gomp lib_stdc lib
     mkdir -p "${_EMERGE_ROOT}/${_LIB}"
     lib_gcc="$(find /usr/lib/ -name libgcc_s.so.1)"
+    lib_gomp="$(find /usr/lib/ -name libgomp.so.1)"
     lib_stdc="$(find /usr/lib/ -name libstdc++.so.6)"
 
-    for lib in "${lib_gcc}" "${lib_stdc}"; do
+    for lib in "${lib_gcc}" "${lib_gomp}" "${lib_stdc}"; do
         cp "${lib}" "${_EMERGE_ROOT}/${_LIB}/"
     done
 }
