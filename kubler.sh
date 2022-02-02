@@ -29,7 +29,7 @@
 # global          : _some_var
 # function return : __function_name
 
-readonly _KUBLER_VERSION=0.9.6
+readonly _KUBLER_VERSION=0.9.7
 readonly _KUBLER_BASH_MIN=4.2
 readonly _KUBLER_CONF=kubler.conf
 
