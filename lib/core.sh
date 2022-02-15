@@ -397,25 +397,23 @@ function fetch_stage3_archive_name() {
 # 1: stage3_file
 function download_stage3() {
     [[ -d "${KUBLER_DOWNLOAD_DIR}" ]] || mkdir -p "${KUBLER_DOWNLOAD_DIR}"
-    local is_autobuild stage3_file stage3_contents stage3_digests sha512_hashes sha512_check sha512_failed \
+    local is_autobuild stage3_file stage3_asc stage3_contents stage3_digests sha512_hashes sha512_check sha512_failed \
           wget_exit wget_args
     is_autobuild=false
     stage3_file="$1"
+    stage3_asc="${stage3_file}.asc"
     stage3_contents="${stage3_file}.CONTENTS"
     # some stage3 builds use a compressed contents file now while others still use the plain variant
     if ! wget -q --method=HEAD "${ARCH_URL}${stage3_contents}"; then
       stage3_contents="${stage3_contents}.gz"
     fi
     stage3_digests="${stage3_file}.DIGESTS"
-    if [[ "${ARCH_URL}" == *autobuilds*  ]]; then
-        stage3_digests="${stage3_file}.DIGESTS.asc"
-        is_autobuild=true
-    fi
+    [[ "${ARCH_URL}" == *autobuilds*  ]] && is_autobuild=true
 
     wget_args=()
     [[ "${_arg_verbose}" == 'off' ]] && wget_args+=( '-q' '-nv' )
 
-    for file in "${stage3_file}" "${stage3_contents}" "${stage3_digests}"; do
+    for file in "${stage3_file}" "${stage3_asc}" "${stage3_contents}" "${stage3_digests}"; do
         [ -f "${KUBLER_DOWNLOAD_DIR}/${file}" ] && continue
 
         _handle_download_error_args="${KUBLER_DOWNLOAD_DIR}/${file}"
@@ -428,7 +426,7 @@ function download_stage3() {
     done
     # shellcheck disable=SC2154
     if [ "${_arg_skip_gpg_check}" = false ] && [ "${is_autobuild}" = true ]; then
-        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" || die "Insecure digests"
+        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_asc}" || die "Signature check failed"
     elif [ "${is_autobuild}" = false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     fi
