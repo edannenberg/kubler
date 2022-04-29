@@ -619,6 +619,7 @@ function import_portage_tree() {
     fi
     [[ ! -d "${image_path}" ]] && mkdir -p "${image_path}"
     cp "${_KUBLER_DIR}"/engine/docker/bob-portage/Dockerfile.template "${image_path}"/
+    cp -r "${_KUBLER_DIR}"/engine/docker/bob-portage/patches "${image_path}"/
 
     add_trap_fn 'handle_import_portage_tree_error'
     # shellcheck disable=SC2154
