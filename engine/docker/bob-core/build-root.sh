@@ -68,6 +68,14 @@ function copy_gcc_libs() {
     done
 }
 
+# See https://github.com/edannenberg/kubler/issues/209
+function revert_portage_user_root_patches() {
+  local pfile
+  for pfile in /etc/portage/patches/000*.patch; do
+      patch -t -d /var/db/repos/gentoo -p1 < "${pfile}"
+  done
+}
+
 # Fix profile symlink as we don't use default portage location, part of stage3 builder setup
 #
 # Arguments:

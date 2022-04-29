@@ -1,0 +1,81 @@
+From 3fa0faf09c7fdc5526d19c14495d173072905edc Mon Sep 17 00:00:00 2001
+From: Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+Date: Fri, 29 Apr 2022 20:21:41 +0200
+Subject: [PATCH 2/3] Revert "user-info.eclass: Fixing user/group creation when
+ using different ROOT"
+
+This reverts commit 5fd98f867aeaa30ccc62ff13257aefdffe1f3745.
+---
+ eclass/user-info.eclass | 35 ++++++-----------------------------
+ 1 file changed, 6 insertions(+), 29 deletions(-)
+
+diff --git a/eclass/user-info.eclass b/eclass/user-info.eclass
+index 5550e4f08ee..3838585ab6c 100644
+--- a/eclass/user-info.eclass
++++ b/eclass/user-info.eclass
+@@ -23,7 +23,6 @@ _USER_INFO_ECLASS=1
+ # dscl (Mac OS X 10.5), and pw (FreeBSD) used in enewuser()/enewgroup().
+ #
+ # Supported databases: group passwd
+-# Warning: This function can be used only in pkg_* phases when ROOT is valid.
+ egetent() {
+ 	local db=$1 key=$2
+ 
+@@ -44,31 +43,18 @@ egetent() {
+ 		# lookup by uid/gid
+ 		local opts
+ 		if [[ ${key} == [[:digit:]]* ]] ; then
+-			[[ ${db} == "user" ]] && opts=( -u ) || opts=( -g )
++			[[ ${db} == "user" ]] && opts="-u" || opts="-g"
+ 		fi
+ 
+-		# Handle different ROOT
+-		[[ -n ${ROOT} ]] && opts+=( -R "${ROOT}" )
+-
+ 		pw show ${db} ${opts} "${key}" -q
+ 		;;
+ 	*-openbsd*)
+-		grep "${key}:\*:" "${EROOT}/etc/${db}"
++		grep "${key}:\*:" /etc/${db}
+ 		;;
+ 	*)
+-		# getent does not support -R option, if we are working on a different
+-		# ROOT than /, fallback to grep technique.
+-		if [[ -z ${ROOT} ]]; then
+-			# ignore nscd output if we're not running as root
+-			type -p nscd >/dev/null && nscd -i "${db}" 2>/dev/null
+-			getent "${db}" "${key}"
+-		else
+-			if [[ ${key} =~ ^[[:digit:]]+$ ]]; then
+-				grep -E "^([^:]*:){2}${key}" "${ROOT}/etc/${db}"
+-			else
+-				grep "^${key}:" "${ROOT}/etc/${db}"
+-			fi
+-		fi
++		# ignore nscd output if we're not running as root
++		type -p nscd >/dev/null && nscd -i "${db}" 2>/dev/null
++		getent "${db}" "${key}"
+ 		;;
+ 	esac
+ }
+@@ -165,16 +151,7 @@ egetgroups() {
+ 	[[ $# -eq 1 ]] || die "usage: egetgroups <user>"
+ 
+ 	local egroups_arr
+-	if [[ -n "${ROOT}" ]]; then
+-		local pgroup=$(egetent passwd "$1" | cut -d: -f1)
+-		local sgroups=( $(grep -E ":([^:]*,)?$1(,[^:]*)?$" "${ROOT}/etc/group" | cut -d: -f1) )
+-
+-		# Remove primary group from list
+-		sgroups=${sgroups#${pgroup}}
+-		egroups_arr=( ${pgroup} ${sgroups[@]} )
+-	else
+-		read -r -a egroups_arr < <(id -G -n "$1")
+-	fi
++	read -r -a egroups_arr < <(id -G -n "$1")
+ 
+ 	local g groups=${egroups_arr[0]}
+ 	# sort supplementary groups to make comparison possible
+-- 
+2.34.1
+
