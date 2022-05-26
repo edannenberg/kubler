@@ -96,17 +96,13 @@ function install_git_postsync_hooks() {
     chmod -x /etc/portage/repo.postsync.d/sync_gentoo_cache
 }
 
-# Setup eix  and init db
+# Setup eix and init db
 function configure_eix() {
-    # init eix portage db
-    local eix_db
-    eix_db=/var/cache/eix/portage.eix
-    [[ ! -f "${eix_db}" ]] && touch "${eix_db}" && chown portage:portage "${eix_db}"
     eix-update
     # configure post-sync
-    cp /etc/portage/repo.postsync.d/example /etc/portage/repo.postsync.d/egencache
-    chmod +x /etc/portage/repo.postsync.d/egencache
-    chown -R portage:portage /var/cache/eix
+    mkdir -p /etc/portage/postsync.d/
+    ln -s /usr/bin/eix-postsync /etc/portage/postsync.d/50-eix-postsync
+    ln -s /usr/bin/eix-diff /etc/portage/postsync.d/51-eix-diff
 }
 
 # Extract saved resources, like headers, from a parent image.

@@ -3,12 +3,17 @@ FROM busybox:latest
 LABEL maintainer="${MAINTAINER}"
 
 COPY ${BOB_CURRENT_PORTAGE_FILE} /
+COPY patches/ /patches
 
 RUN set -x && \
     mkdir -p /var/db/repos/ && \
     xzcat /${BOB_CURRENT_PORTAGE_FILE} | tar -xf - -C /var/db/repos && \
     mv /var/db/repos/portage /var/db/repos/gentoo && \
     mkdir -p /var/db/repos/gentoo/metadata && \
-    rm /${BOB_CURRENT_PORTAGE_FILE}
+    rm /${BOB_CURRENT_PORTAGE_FILE} && \
+    cd /var/db/repos/gentoo && \
+    patch -p1 -i /patches/0001* && \
+    patch -p1 -i /patches/0002* && \
+    patch -p1 -i /patches/0003*
 
 VOLUME /var/db/repos /var/cache/eix

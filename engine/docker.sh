@@ -552,6 +552,7 @@ function run_image() {
     [[ "${auto_rm}" == "true" ]] && docker_args+=("--rm")
     [[ -n "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
     [[ "${BUILDER_CAPS_SYS_PTRACE}" == "true" ]] && docker_args+=('--cap-add' 'SYS_PTRACE')
+    [[ -n "${BUILDER_SECCOMP}" ]] && docker_args+=("--security-opt" "seccomp=${BUILDER_SECCOMP}")
     [[ "${_container_mount_portage}" == "true" ]] && docker_args+=("--volumes-from" "${_PORTAGE_IMAGE//\//-}")
     # shellcheck disable=SC2154
     [[ ${#_container_args[@]} -gt 0 ]] && docker_args+=("${_container_args[@]}")
@@ -618,6 +619,7 @@ function import_portage_tree() {
     fi
     [[ ! -d "${image_path}" ]] && mkdir -p "${image_path}"
     cp "${_KUBLER_DIR}"/engine/docker/bob-portage/Dockerfile.template "${image_path}"/
+    cp -r "${_KUBLER_DIR}"/engine/docker/bob-portage/patches "${image_path}"/
 
     add_trap_fn 'handle_import_portage_tree_error'
     # shellcheck disable=SC2154
