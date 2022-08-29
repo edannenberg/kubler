@@ -565,7 +565,7 @@ function run_image() {
     exit_sig=$?
     [[ ${exit_sig} -ne 0 && "${exit_on_error}" == 'true' ]] && die "Failed to run image ${image_id}"
     rm_trap_fn 'handle_container_run'
-    return ${exit_sig}
+    return "${exit_sig}"
 }
 
 # Trap handler for run_image fn.
