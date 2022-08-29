@@ -548,7 +548,8 @@ function run_image() {
         docker_mounts+=('-v' "${dmnt}")
     done
     # general docker args
-    docker_args=("-it" "--hostname" "${container_host_name//\//-}")
+    docker_args=("--hostname" "${container_host_name//\//-}")
+    [[ "${_TTY_ATTACHED}" == "true" ]] && docker_args+=("-it")
     [[ "${auto_rm}" == "true" ]] && docker_args+=("--rm")
     [[ -n "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
     [[ "${BUILDER_CAPS_SYS_PTRACE}" == "true" ]] && docker_args+=('--cap-add' 'SYS_PTRACE')
