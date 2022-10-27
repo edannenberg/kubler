@@ -14,6 +14,7 @@ RUN set -x && \
     cd /var/db/repos/gentoo && \
     patch -p1 -i /patches/0001* && \
     patch -p1 -i /patches/0002* && \
-    patch -p1 -i /patches/0003*
+    patch -p1 -i /patches/0003* && \
+    patch -p1 -i /patches/0004*
 
 VOLUME /var/db/repos /var/cache/eix
