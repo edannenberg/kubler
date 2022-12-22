@@ -264,7 +264,7 @@ function pwrap() {
     rm_trap_fn 'pwrap_handler'
     unset _pwrap_callback _pwrap_handler_args
     echo -n "${_term_cup}${_term_ceol}"
-    return ${exit_sig}
+    return "${exit_sig}"
 }
 
 function pwrap_handler() {

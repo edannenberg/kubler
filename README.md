@@ -68,6 +68,12 @@ Perhaps:
 Optional:
 
 * GPG for download verification
+
+```
+# Assuming a working gpg setup just import the Gentoo ebuild repository signing key:
+gpg --keyserver keys.gentoo.org --recv-keys E1D6ABB63BFCFB4BA02FDF1CEC590EEAC9189250
+```
+
 * rlwrap for command history
 
 #### Docker or Podman

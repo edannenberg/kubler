@@ -1,19 +1,19 @@
-From 944e1ae7412c0e1f3a6dda681de2f724a6a63c7d Mon Sep 17 00:00:00 2001
+From f318b01cd201d0415cf3e842456f37c2cb8e6e6d Mon Sep 17 00:00:00 2001
 From: Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
-Date: Fri, 29 Apr 2022 20:22:05 +0200
-Subject: [PATCH 3/3] Revert "acct-user.eclass: Fixing user/group creation when
+Date: Thu, 27 Oct 2022 14:46:03 +0200
+Subject: [PATCH] Revert "acct-user.eclass: Fixing user/group creation when
  using different ROOT"
 
 This reverts commit 6b1d4e40db188e64fb0731195b87b261d76e060c.
 ---
- eclass/acct-user.eclass | 51 +++++++++--------------------------------
- 1 file changed, 11 insertions(+), 40 deletions(-)
+ eclass/acct-user.eclass | 31 +++----------------------------
+ 1 file changed, 3 insertions(+), 28 deletions(-)
 
 diff --git a/eclass/acct-user.eclass b/eclass/acct-user.eclass
-index c87b27f3cca..e45a3b77f45 100644
+index b15599c5dd6..467e8b8fc52 100644
 --- a/eclass/acct-user.eclass
 +++ b/eclass/acct-user.eclass
-@@ -195,15 +195,8 @@ eislocked() {
+@@ -198,15 +198,8 @@ eislocked() {
  	*)
  		# NB: 'no password' and 'locked' are indistinguishable
  		# but we also expire the account which is more clear
@@ -31,91 +31,54 @@ index c87b27f3cca..e45a3b77f45 100644
  		;;
  	esac
  }
-@@ -230,22 +223,14 @@ elockuser() {
- 	eislocked "$1"
- 	[[ $? -eq 0 ]] && return 0
+@@ -361,10 +354,6 @@ acct-user_pkg_preinst() {
+ 		opts+=( --uid "${_ACCT_USER_ID}" )
+ 	fi
  
--	local opts
--	[[ -n ${ROOT} ]] && opts=( --prefix "${ROOT}" )
+-	if [[ -n ${ROOT} ]]; then
+-		opts+=( --prefix "${ROOT}" )
+-	fi
 -
- 	case ${CHOST} in
- 	*-freebsd*|*-dragonfly*)
--		pw lock "${opts[@]}" "$1" || die "Locking account $1 failed"
--		pw user mod "${opts[@]}" "$1" -e 1 || die "Expiring account $1 failed"
-+		pw lock "$1" || die "Locking account $1 failed"
-+		pw user mod "$1" -e 1 || die "Expiring account $1 failed"
- 		;;
- 
- 	*-netbsd*)
--		if [[ -n "${ROOT}" ]]; then
--			ewarn "NetBSD's usermod does not support --prefix <dir> option."
--			ewarn "Please use: usermod ${opts[@]} -e 1 -C yes \"$1\" in a chroot"
--		else
--			usermod "${opts[@]}" -e 1 -C yes "$1" || die "Locking account $1 failed"
--		fi
-+		usermod -e 1 -C yes "$1" || die "Locking account $1 failed"
- 		;;
- 
- 	*-openbsd*)
-@@ -253,7 +238,7 @@ elockuser() {
- 		;;
- 
- 	*)
--		usermod "${opts[@]}" -e 1 -L "$1" || die "Locking account $1 failed"
-+		usermod -e 1 -L "$1" || die "Locking account $1 failed"
- 		;;
- 	esac
- 
-@@ -281,22 +266,14 @@ eunlockuser() {
- 	eislocked "$1"
- 	[[ $? -eq 1 ]] && return 0
- 
--	local opts
--	[[ -n ${ROOT} ]] && opts=( --prefix "${ROOT}" )
--
- 	case ${CHOST} in
- 	*-freebsd*|*-dragonfly*)
--		pw user mod "${opts[@]}" "$1" -e 0 || die "Unexpiring account $1 failed"
--		pw unlock "${opts[@]}" "$1" || die "Unlocking account $1 failed"
-+		pw user mod "$1" -e 0 || die "Unexpiring account $1 failed"
-+		pw unlock "$1" || die "Unlocking account $1 failed"
- 		;;
- 
- 	*-netbsd*)
--		if [[ -n "${ROOT}" ]]; then
--			ewarn "NetBSD's usermod does not support --prefix <dir> option."
--			ewarn "Please use: \"usermod ${opts[@]} -e 0 -C no $1\" in a chroot"
--		else
--			usermod "${opts[@]}" -e 0 -C no "$1" || die "Unlocking account $1 failed"
--		fi
-+		usermod -e 0 -C no "$1" || die "Unlocking account $1 failed"
- 		;;
- 
- 	*-openbsd*)
-@@ -305,7 +282,7 @@ eunlockuser() {
- 
- 	*)
- 		# silence warning if account does not have a password
--		usermod "${opts[@]}" -e "" -U "$1" 2>/dev/null || die "Unlocking account $1 failed"
-+		usermod -e "" -U "$1" 2>/dev/null || die "Unlocking account $1 failed"
- 		;;
- 	esac
- 
-@@ -441,13 +418,7 @@ acct-user_pkg_preinst() {
+ 	elog "Adding user ${ACCT_USER_NAME}"
+ 	useradd "${opts[@]}" "${ACCT_USER_NAME}" || die
+ 	_ACCT_USER_ADDED=1
+@@ -372,13 +361,7 @@ acct-user_pkg_preinst() {
+ 	if [[ ${_ACCT_USER_HOME} != /dev/null ]]; then
  		# default ownership to user:group
  		if [[ -z ${_ACCT_USER_HOME_OWNER} ]]; then
- 			local group_array=( ${_ACCT_USER_GROUPS} )
--			if [[ -n "${ROOT}" ]]; then
+-			if [[ -n ${ROOT} ]]; then
 -				local euid=$(egetent passwd ${ACCT_USER_NAME} | cut -d: -f3)
 -				local egid=$(egetent passwd ${ACCT_USER_NAME} | cut -d: -f4)
 -				_ACCT_USER_HOME_OWNER=${euid}:${egid}
 -			else
--				_ACCT_USER_HOME_OWNER=${ACCT_USER_NAME}:${group_array[0]}
+-				_ACCT_USER_HOME_OWNER=${ACCT_USER_NAME}:${groups[0]}
 -			fi
-+			_ACCT_USER_HOME_OWNER=${ACCT_USER_NAME}:${group_array[0]}
++			_ACCT_USER_HOME_OWNER=${ACCT_USER_NAME}:${groups[0]}
  		fi
  		# Path might be missing due to INSTALL_MASK, etc.
  		# https://bugs.gentoo.org/691478
+@@ -430,10 +413,6 @@ acct-user_pkg_postinst() {
+ 		opts+=( --expiredate "" --unlock )
+ 	fi
+ 
+-	if [[ -n ${ROOT} ]]; then
+-		opts+=( --prefix "${ROOT}" )
+-	fi
+-
+ 	elog "Updating user ${ACCT_USER_NAME}"
+ 	if ! usermod "${opts[@]}" "${ACCT_USER_NAME}" 2>"${T}/usermod-error.log"; then
+ 		# usermod outputs a warning if unlocking the account would result in an
+@@ -482,10 +461,6 @@ acct-user_pkg_prerm() {
+ 		--shell /sbin/nologin
+ 	)
+ 
+-	if [[ -n ${ROOT} ]]; then
+-		opts+=( --prefix "${ROOT}" )
+-	fi
+-
+ 	elog "Locking user ${ACCT_USER_NAME}"
+ 	usermod "${opts[@]}" "${ACCT_USER_NAME}" || die
+ }
 -- 
-2.34.1
+2.37.4
 

@@ -76,7 +76,7 @@ function generate_dockerfile() {
             || die "Error while generating ${image_path}/Dockerfile"
 
     # insert build timestamp last to preserve build cache
-    echo "LABEL kubler.build.timestamp=${build_timestamp}" >> "${image_path}"/Dockerfile
+    echo -e "\nLABEL kubler.build.timestamp=${build_timestamp}" >> "${image_path}"/Dockerfile
 }
 
 # Returns given tag value from dockerfile or exit signal 3 if tag was not found.
@@ -548,7 +548,8 @@ function run_image() {
         docker_mounts+=('-v' "${dmnt}")
     done
     # general docker args
-    docker_args=("-it" "--hostname" "${container_host_name//\//-}")
+    docker_args=("--hostname" "${container_host_name//\//-}")
+    [[ "${_TTY_ATTACHED}" == "true" ]] && docker_args+=("-it")
     [[ "${auto_rm}" == "true" ]] && docker_args+=("--rm")
     [[ -n "${container_name}" ]] && docker_args+=("--name" "${container_name//\//-}")
     [[ "${BUILDER_CAPS_SYS_PTRACE}" == "true" ]] && docker_args+=('--cap-add' 'SYS_PTRACE')
@@ -564,7 +565,7 @@ function run_image() {
     exit_sig=$?
     [[ ${exit_sig} -ne 0 && "${exit_on_error}" == 'true' ]] && die "Failed to run image ${image_id}"
     rm_trap_fn 'handle_container_run'
-    return ${exit_sig}
+    return "${exit_sig}"
 }
 
 # Trap handler for run_image fn.

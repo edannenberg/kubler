@@ -1,0 +1,28 @@
+From 9971b44253a8d9ded1297db375237a8e0725babe Mon Sep 17 00:00:00 2001
+From: Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
+Date: Thu, 27 Oct 2022 15:11:29 +0200
+Subject: [PATCH] Partially revert: "acct-group.eclass: inline groupadd"
+
+This partially reverts commit eeea28a17aadcbd189e710a4433f94b4f903fd32
+---
+ eclass/acct-group.eclass | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/eclass/acct-group.eclass b/eclass/acct-group.eclass
+index 590a2f20ed8..b7783520f35 100644
+--- a/eclass/acct-group.eclass
++++ b/eclass/acct-group.eclass
+@@ -175,10 +175,6 @@ acct-group_pkg_preinst() {
+ 		opts+=( --gid "${_ACCT_GROUP_ID}" )
+ 	fi
+ 
+-	if [[ -n ${ROOT} ]]; then
+-		opts+=( --prefix "${ROOT}" )
+-	fi
+-
+ 	elog "Adding group ${ACCT_GROUP_NAME}"
+ 	groupadd "${opts[@]}" "${ACCT_GROUP_NAME}" || die
+ }
+-- 
+2.37.4
+

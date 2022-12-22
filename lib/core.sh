@@ -45,6 +45,9 @@ readonly _PORTAGE_IMAGE="${_STAGE3_NAMESPACE}/portage"
 readonly _PORTAGE_CONTAINER="${_STAGE3_NAMESPACE}-portage"
 _TODAY="$(date +%Y%m%d)"
 readonly _TODAY
+_TTY_ATTACHED=false
+tty -s && _TTY_ATTACHED=true
+readonly _TTY_ATTACHED
 
 # shellcheck disable=SC2034
 BOB_HOST_UID=$(id -u)
@@ -460,7 +463,7 @@ function download_portage_snapshot() {
     for file in "${portage_file}" "${portage_sig}" "${portage_md5}"; do
         dl_name="${file}"
         if [[ "${PORTAGE_DATE}" == 'latest' ]]; then
-            dl_name="${portage_file//latest/${_TODAY}}"
+            dl_name="${file//latest/${_TODAY}}"
         fi
         if [[ ! -f "${KUBLER_DOWNLOAD_DIR}/${dl_name}" ]]; then
             wget_args=()
