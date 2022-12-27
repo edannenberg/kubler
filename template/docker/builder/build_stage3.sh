@@ -27,7 +27,7 @@ configure_builder() {
     update_use 'dev-libs/openssl' '-bindist'
     emerge dev-libs/openssl
     update_use 'dev-vcs/git' '-perl'
-    update_use 'app-crypt/pinentry' '+ncurses'
+    update_use 'app-crypt/pinentry' 'ncurses'
     update_keywords 'dev-python/ssl-fetch' '~amd64'
     update_keywords 'app-admin/su-exec' '~amd64'
     emerge dev-vcs/git app-eselect/eselect-repository app-misc/jq app-shells/bash-completion
