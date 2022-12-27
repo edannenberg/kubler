@@ -10,10 +10,9 @@ configure_builder() {
     fix_portage_profile_symlink
     # install basics used by helper functions
     eselect news read new 1> /dev/null
-    emerge app-portage/flaggie app-portage/eix app-portage/gentoolkit
+    emerge app-portage/eix app-portage/gentoolkit
     configure_eix
     mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
-    touch /etc/portage/package.accept_keywords/flaggie
     # set locale of build container
     echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
     locale-gen
@@ -24,13 +23,13 @@ configure_builder() {
     # when using overlay1 docker storage the created hard link will trigger an error during openssh uninstall
     [[ -f /usr/"${_LIB}"/misc/ssh-keysign ]] && rm /usr/"${_LIB}"/misc/ssh-keysign
     emerge -C net-misc/openssh
-    update_use 'net-misc/openssh' -bindist
-    update_use 'dev-libs/openssl' -bindist
+    update_use 'net-misc/openssh' '-bindist'
+    update_use 'dev-libs/openssl' '-bindist'
     emerge dev-libs/openssl
     update_use 'dev-vcs/git' '-perl'
     update_use 'app-crypt/pinentry' '+ncurses'
-    update_keywords 'dev-python/ssl-fetch' '+~amd64'
-    update_keywords 'app-admin/su-exec' '+~amd64'
+    update_keywords 'dev-python/ssl-fetch' '~amd64'
+    update_keywords 'app-admin/su-exec' '~amd64'
     emerge dev-vcs/git app-eselect/eselect-repository app-misc/jq app-shells/bash-completion
     #install_git_postsync_hooks
     [[ "${BOB_UPDATE_WORLD}" == true ]] && emerge -vuND world

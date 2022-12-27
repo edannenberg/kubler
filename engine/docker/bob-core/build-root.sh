@@ -282,28 +282,19 @@ function log_as_installed() {
     echo "*${1}*: ${2} | ${3}" >> "${_DOC_PACKAGE_INSTALLED}"
 }
 
-# Thin wrapper for app-portage/flaggie, a tool for managing portage keywords and use flags
-#
-# Examples:
-#
-# global use flags: update_use -readline +ncurses
-# per package: update_use app-shells/bash +readline -ncurses
-# same syntax for keywords: update_use app-shells/bash +~amd64
-# target package versions as usual, remember to use quotes for < or >: update_use '>=app-text/docbook-sgml-utils-0.6.14-r1' +jadetex
-# reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
-# reset all use flags: update_use app-shells/bash %
+# For manage portage package use flags
+# Syntax for use: update_use 'app-shells/bash' 'readline -ncurses'
 function update_use() {
-    local strict_mode
-    strict_mode='--strict'
-    [[ "${BOB_PACKAGE_CONFIG_STRICT}" != true ]] && strict_mode='--quiet'
     # shellcheck disable=SC2068
-    flaggie "${strict_mode}" --destructive-cleanup ${@}
+    echo ${@} >> /etc/portage/package.use/bob
 }
 
-# Just for better readability of build.sh
+# For manage portage package keywords
+# Syntax for keywords: update_use 'app-shells/bash' '~amd64'
+# target package versions as usual, remember to use quotes for < or >: update_use '>=app-text/docbook-sgml-utils-0.6.14-r1'
 function update_keywords() {
     # shellcheck disable=SC2068
-    update_use ${@}
+    echo ${@} >> /etc/portage/package.accept_keywords/bob
 }
 
 function mask_package() {
