@@ -1,18 +1,6 @@
-From f318b01cd201d0415cf3e842456f37c2cb8e6e6d Mon Sep 17 00:00:00 2001
-From: Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
-Date: Thu, 27 Oct 2022 14:46:03 +0200
-Subject: [PATCH] Revert "acct-user.eclass: Fixing user/group creation when
- using different ROOT"
-
-This reverts commit 6b1d4e40db188e64fb0731195b87b261d76e060c.
----
- eclass/acct-user.eclass | 31 +++----------------------------
- 1 file changed, 3 insertions(+), 28 deletions(-)
-
-diff --git a/eclass/acct-user.eclass b/eclass/acct-user.eclass
-index b15599c5dd6..467e8b8fc52 100644
---- a/eclass/acct-user.eclass
-+++ b/eclass/acct-user.eclass
+diff -rupN gentoo/eclass/acct-user.eclass gentoo-patched/eclass/acct-user.eclass
+--- gentoo/eclass/acct-user.eclass	2023-01-06 13:04:25.871008804 +0100
++++ gentoo-patched/eclass/acct-user.eclass	2023-01-06 13:10:36.408013419 +0100
 @@ -198,15 +198,8 @@ eislocked() {
  	*)
  		# NB: 'no password' and 'locked' are indistinguishable
@@ -31,18 +19,18 @@ index b15599c5dd6..467e8b8fc52 100644
  		;;
  	esac
  }
-@@ -361,10 +354,6 @@ acct-user_pkg_preinst() {
- 		opts+=( --uid "${_ACCT_USER_ID}" )
- 	fi
+@@ -359,10 +352,6 @@ acct-user_pkg_preinst() {
+ 			opts+=( --uid "${_ACCT_USER_ID}" )
+ 		fi
  
--	if [[ -n ${ROOT} ]]; then
--		opts+=( --prefix "${ROOT}" )
--	fi
+-		if [[ -n ${ROOT} ]]; then
+-			opts+=( --prefix "${ROOT}" )
+-		fi
 -
- 	elog "Adding user ${ACCT_USER_NAME}"
- 	useradd "${opts[@]}" "${ACCT_USER_NAME}" || die
- 	_ACCT_USER_ADDED=1
-@@ -372,13 +361,7 @@ acct-user_pkg_preinst() {
+ 		elog "Adding user ${ACCT_USER_NAME}"
+ 		useradd "${opts[@]}" "${ACCT_USER_NAME}" || die
+ 		_ACCT_USER_ADDED=1
+@@ -371,13 +360,7 @@ acct-user_pkg_preinst() {
  	if [[ ${_ACCT_USER_HOME} != /dev/null ]]; then
  		# default ownership to user:group
  		if [[ -z ${_ACCT_USER_HOME_OWNER} ]]; then
@@ -57,7 +45,7 @@ index b15599c5dd6..467e8b8fc52 100644
  		fi
  		# Path might be missing due to INSTALL_MASK, etc.
  		# https://bugs.gentoo.org/691478
-@@ -430,10 +413,6 @@ acct-user_pkg_postinst() {
+@@ -429,10 +412,6 @@ acct-user_pkg_postinst() {
  		opts+=( --expiredate "" --unlock )
  	fi
  
@@ -68,7 +56,7 @@ index b15599c5dd6..467e8b8fc52 100644
  	elog "Updating user ${ACCT_USER_NAME}"
  	if ! usermod "${opts[@]}" "${ACCT_USER_NAME}" 2>"${T}/usermod-error.log"; then
  		# usermod outputs a warning if unlocking the account would result in an
-@@ -482,10 +461,6 @@ acct-user_pkg_prerm() {
+@@ -481,10 +460,6 @@ acct-user_pkg_prerm() {
  		--shell /sbin/nologin
  	)
  
@@ -79,6 +67,3 @@ index b15599c5dd6..467e8b8fc52 100644
  	elog "Locking user ${ACCT_USER_NAME}"
  	usermod "${opts[@]}" "${ACCT_USER_NAME}" || die
  }
--- 
-2.37.4
-
