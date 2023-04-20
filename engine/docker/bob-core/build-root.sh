@@ -42,6 +42,7 @@ _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
 BOB_KEEP_BUILD_LOG="${BOB_KEEP_BUILD_LOG:-false}"
+BOB_PACKAGE_CONFIG_DIFF="${BOB_PACKAGE_CONFIG_DIFF:-false}"
 BOB_PACKAGE_CONFIG_STRICT="${BOB_PACKAGE_CONFIG_STRICT:-true}"
 BOB_UPDATE_WORLD="${BOB_UPDATE_WORLD:-false}"
 
@@ -282,7 +283,7 @@ function log_as_installed() {
     echo "*${1}*: ${2} | ${3}" >> "${_DOC_PACKAGE_INSTALLED}"
 }
 
-# Thin wrapper for app-portage/flaggie, a tool for managing portage keywords and use flags
+# Thin wrapper for modern (2023, 0.99.x) app-portage/flaggie, a tool for managing portage keywords and use flags
 #
 # Examples:
 #
@@ -290,14 +291,14 @@ function log_as_installed() {
 # per package: update_use app-shells/bash +readline -ncurses
 # same syntax for keywords: update_use app-shells/bash +~amd64
 # target package versions as usual, remember to use quotes for < or >: update_use '>=app-text/docbook-sgml-utils-0.6.14-r1' +jadetex
-# reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
-# reset all use flags: update_use app-shells/bash %
+# if flaggie's autodetect fails specify the correct target file: +use::readline -kw::~amd64
 function update_use() {
-    local strict_mode
-    strict_mode='--strict'
-    [[ "${BOB_PACKAGE_CONFIG_STRICT}" != true ]] && strict_mode='--quiet'
+    local flaggie_args
+    flaggie_args=()
+    [[ "${BOB_PACKAGE_CONFIG_DIFF}" == 'false' ]] && flaggie_args+=('--no-diff')
+    [[ "${BOB_PACKAGE_CONFIG_STRICT}" == 'false' ]] && flaggie_args+=('--force')
     # shellcheck disable=SC2068
-    flaggie "${strict_mode}" --destructive-cleanup ${@}
+    flaggie "${flaggie_args[@]}" ${@}
 }
 
 # Just for better readability of build.sh
