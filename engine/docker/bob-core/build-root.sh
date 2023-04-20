@@ -42,7 +42,6 @@ _emerge_bin="${BOB_EMERGE_BIN:-emerge}"
 _emerge_opt="${BOB_EMERGE_OPT:-}"
 
 BOB_KEEP_BUILD_LOG="${BOB_KEEP_BUILD_LOG:-false}"
-BOB_PACKAGE_CONFIG_STRICT="${BOB_PACKAGE_CONFIG_STRICT:-true}"
 BOB_UPDATE_WORLD="${BOB_UPDATE_WORLD:-false}"
 
 # Arguments:
@@ -282,7 +281,7 @@ function log_as_installed() {
     echo "*${1}*: ${2} | ${3}" >> "${_DOC_PACKAGE_INSTALLED}"
 }
 
-# Thin wrapper for app-portage/flaggie, a tool for managing portage keywords and use flags
+# Thin wrapper for modern (2023, 0.99.x) app-portage/flaggie, a tool for managing portage keywords and use flags
 #
 # Examples:
 #
@@ -293,11 +292,8 @@ function log_as_installed() {
 # reset use/keyword to default: update_use app-shells/bash %readline %ncurses %~amd64
 # reset all use flags: update_use app-shells/bash %
 function update_use() {
-    local strict_mode
-    strict_mode='--strict'
-    [[ "${BOB_PACKAGE_CONFIG_STRICT}" != true ]] && strict_mode='--quiet'
     # shellcheck disable=SC2068
-    flaggie "${strict_mode}" --destructive-cleanup ${@}
+    flaggie ${@}
 }
 
 # Just for better readability of build.sh
