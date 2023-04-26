@@ -1,6 +1,4 @@
-FROM busybox:latest
-
-LABEL maintainer="${MAINTAINER}"
+FROM busybox:latest AS builder
 
 COPY ${BOB_CURRENT_PORTAGE_FILE} /
 COPY patches/ /patches
@@ -16,4 +14,8 @@ RUN set -x && \
     patch -p1 -i /patches/0003* && \
     patch -p1 -i /patches/0004*
 
+FROM busybox:latest
+COPY --from=builder /var/db/repos/gentoo /var/db/repos/gentoo
+
+LABEL maintainer="${MAINTAINER}"
 VOLUME /var/db/repos /var/cache/eix
