@@ -293,7 +293,7 @@ function log_as_installed() {
 # reset all use flags: update_use app-shells/bash %
 function update_use() {
     # shellcheck disable=SC2068
-    flaggie ${@}
+    flaggie --no-diff ${@}
 }
 
 # Just for better readability of build.sh
