@@ -55,7 +55,7 @@ BOB_HOST_UID=$(id -u)
 BOB_HOST_GID=$(id -g)
 
 # stage3 defaults, override via build container .conf
-STAGE3_BASE="stage3-amd64-hardened+nomultilib"
+STAGE3_BASE="stage3-amd64-hardened-nomultilib-openrc"
 
 _kubler_trap_functions=()
 _kubler_internal_abort=
@@ -387,7 +387,7 @@ function fetch_stage3_archive_name() {
             is_newer_stage3_date "${remote_date}" "${BASH_REMATCH[$((max_cap-3))]}${BASH_REMATCH[$((max_cap-2))]}" \
                 && { remote_date="${BASH_REMATCH[$((max_cap-3))]}${BASH_REMATCH[$((max_cap-2))]}";
                      remote_file_type="${BASH_REMATCH[$((max_cap-1))]}"; }
-	    break
+            break
         fi
     done
     [[ "${remote_date//[!0-9]/}" -eq 0 ]] && return 3
