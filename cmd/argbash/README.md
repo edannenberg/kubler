@@ -10,5 +10,5 @@ Before changing a parser template in this directory you should:
 After changing a template it is required to regenerate the code by running:
 
 ```
-./lib/argbash/argbash-regen.sh
+./cmd/argbash/argbash-refresh.sh
 ```
