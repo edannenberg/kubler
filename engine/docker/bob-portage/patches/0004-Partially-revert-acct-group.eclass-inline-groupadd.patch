@@ -1,18 +1,17 @@
-From 9971b44253a8d9ded1297db375237a8e0725babe Mon Sep 17 00:00:00 2001
+From c3e9f642680ccd0b8a8ce7c3cf5313e01ab3ac55 Mon Sep 17 00:00:00 2001
 From: Erik Dannenberg <erik.dannenberg@xtrade-gmbh.de>
-Date: Thu, 27 Oct 2022 15:11:29 +0200
-Subject: [PATCH] Partially revert: "acct-group.eclass: inline groupadd"
+Date: Tue, 27 Jun 2023 20:40:12 +0200
+Subject: [PATCH] Partially-revert-acct-group.eclass-inline-groupadd
 
-This partially reverts commit eeea28a17aadcbd189e710a4433f94b4f903fd32
 ---
  eclass/acct-group.eclass | 4 ----
  1 file changed, 4 deletions(-)
 
 diff --git a/eclass/acct-group.eclass b/eclass/acct-group.eclass
-index 590a2f20ed8..b7783520f35 100644
+index a0ad86066309..cae7cd99f2d0 100644
 --- a/eclass/acct-group.eclass
 +++ b/eclass/acct-group.eclass
-@@ -175,10 +175,6 @@ acct-group_pkg_preinst() {
+@@ -174,10 +174,6 @@ acct-group_pkg_preinst() {
  		opts+=( --gid "${_ACCT_GROUP_ID}" )
  	fi
  
@@ -21,8 +20,8 @@ index 590a2f20ed8..b7783520f35 100644
 -	fi
 -
  	elog "Adding group ${ACCT_GROUP_NAME}"
- 	groupadd "${opts[@]}" "${ACCT_GROUP_NAME}" || die
+ 	groupadd "${opts[@]}" "${ACCT_GROUP_NAME}" || die "groupadd failed with status $?"
  }
 -- 
-2.37.4
+2.39.3
 
