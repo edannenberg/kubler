@@ -169,6 +169,8 @@ function run_interactive_builder() {
             _container_env+=("${bob_var}=${!bob_var}")
         done
 
+        populate_proxy_env
+
         generate_dockerfile "${image_path}"
 
         _container_mounts=(
