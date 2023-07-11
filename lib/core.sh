@@ -395,7 +395,7 @@ function fetch_stage3_archive_name() {
     __fetch_stage3_archive_name="${STAGE3_BASE}-${remote_date}.tar.${remote_file_type}"
 }
 
-function is_gpg_check_enabled () {
+function is_gpg_check_enabled() {
     __is_gpg_check_enabled=
     local gpg_enabled
     gpg_enabled='true'
@@ -406,6 +406,20 @@ function is_gpg_check_enabled () {
       gpg_enabled='false'
     fi
     __is_gpg_check_enabled="${gpg_enabled}"
+}
+
+function gpg_help_and_die() {
+  msg_error "Signature check failed"
+  msg_warn "Pick one of the options below to continue:"
+  msg "\n 1. Setup gpg and import the gentoo infrastructure gpg key:\n
+  gpg --keyserver keys.gentoo.org --recv-keys <key-id>
+
+  The key-id can be found in the gpg output a few lines above this, look for: 'gpg: using RSA key XXXXXXXXXXXXXXXXXX'
+
+  Note: The Gentoo infrastructure team occasionally changes the keys, so you may need to repeat this step from time to time."
+  msg "\n 2. Disable gpg checking temporarily by passing the -s arg to the build command"
+  msg "\n 3. Disable gpg checking permanently by setting KUBLER_SKIP_GPG_CHECK='true' in kubler.conf"
+  die
 }
 
 # Download and verify stage3 tar ball
@@ -444,7 +458,7 @@ function download_stage3() {
 
     is_gpg_check_enabled
     if [ "${__is_gpg_check_enabled}" == 'true' ] && [ "${is_autobuild}" == true ]; then
-        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_asc}" || die "Signature check failed"
+        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_asc}" || gpg_help_and_die
     elif [ "${is_autobuild}" == false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     else
@@ -502,7 +516,7 @@ function download_portage_snapshot() {
 
     is_gpg_check_enabled
     if [ "${__is_gpg_check_enabled}" == 'true' ] && [[ -f "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" ]]; then
-        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" "${KUBLER_DOWNLOAD_DIR}/${portage_file}" || die "Insecure digests."
+        gpg --verify "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" "${KUBLER_DOWNLOAD_DIR}/${portage_file}" || gpg_help_and_die
     else
         msg "Skipped Portage GPG signature check"
     fi
