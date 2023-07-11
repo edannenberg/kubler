@@ -47,7 +47,7 @@ index 5550e4f08ee..3838585ab6c 100644
 -			getent "${db}" "${key}"
 -		else
 -			if [[ ${key} =~ ^[[:digit:]]+$ ]]; then
--				grep -E "^([^:]*:){2}${key}" "${ROOT}/etc/${db}"
+-				grep -E "^([^:]*:){2}${key}:" "${ROOT}/etc/${db}"
 -			else
 -				grep "^${key}:" "${ROOT}/etc/${db}"
 -			fi
