@@ -333,7 +333,7 @@ test_image() {
     fi
 
     # run a detached container and monitor Docker's health-check status
-    if [[ -n "${POST_BUILD_HC}" ]]; then
+    if [[ -n "${POST_BUILD_HC}" && "${POST_BUILD_HC}" != false ]]; then
         local hc_current_duration hc_healthy_streak hc_failed_streak hc_itr hc_status hc_log status_tmpl hc_streak_bar
         POST_BUILD_HC_MAX_DURATION="${POST_BUILD_HC_MAX_DURATION:-30}"
         POST_BUILD_HC_INTERVAL="${POST_BUILD_HC_INTERVAL:-5}"
