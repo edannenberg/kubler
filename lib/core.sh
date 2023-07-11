@@ -21,6 +21,7 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+KUBLER_SKIP_GPG_CHECK="${KUBLER_SKIP_GPG_CHECK:-false}"
 KUBLER_DISABLE_KUBLER_NS="${KUBLER_DISABLE_KUBLER_NS:-false}"
 
 KUBLER_DATA_DIR="${KUBLER_DATA_DIR:-${HOME}/.kubler}"
@@ -394,6 +395,19 @@ function fetch_stage3_archive_name() {
     __fetch_stage3_archive_name="${STAGE3_BASE}-${remote_date}.tar.${remote_file_type}"
 }
 
+function is_gpg_check_enabled () {
+    __is_gpg_check_enabled=
+    local gpg_enabled
+    gpg_enabled='true'
+    # shellcheck disable=SC2154
+    if [ "${KUBLER_SKIP_GPG_CHECK}" == 'true' ]; then
+      gpg_enabled='false'
+    elif [ "${_arg_skip_gpg_check}" == 'on' ]; then
+      gpg_enabled='false'
+    fi
+    __is_gpg_check_enabled="${gpg_enabled}"
+}
+
 # Download and verify stage3 tar ball
 #
 # Arguments:
@@ -427,13 +441,14 @@ function download_stage3() {
         [[ "${wget_exit}" -ne 0 ]] && exit $?
         rm_trap_fn 'handle_download_error'
     done
-    # shellcheck disable=SC2154
-    if [ "${_arg_skip_gpg_check}" != 'on' ] && [ "${is_autobuild}" = true ]; then
+
+    is_gpg_check_enabled
+    if [ "${__is_gpg_check_enabled}" == 'true' ] && [ "${is_autobuild}" == true ]; then
         gpg --verify "${KUBLER_DOWNLOAD_DIR}/${stage3_asc}" || die "Signature check failed"
-    elif [ "${is_autobuild}" = false ]; then
+    elif [ "${is_autobuild}" == false ]; then
         msg "GPG verification not supported for experimental stage3 tar balls, only checking SHA512"
     else
-	msg "Skipped stage3 GPG signature check"
+        msg "Skipped stage3 GPG signature check"
     fi
     # some experimental stage3 builds don't update the file names in the digest file, replace so sha512 check won't fail
     grep -q "${STAGE3_BASE}-2008\.0\.tar\.bz2" "${KUBLER_DOWNLOAD_DIR}/${stage3_digests}" \
@@ -485,10 +500,11 @@ function download_portage_snapshot() {
         PORTAGE_DATE="${_TODAY}"
     fi
 
-    if [[ "${_arg_skip_gpg_check}" != 'on' ]] && [[ -f "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" ]]; then
+    is_gpg_check_enabled
+    if [ "${__is_gpg_check_enabled}" == 'true' ] && [[ -f "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" ]]; then
         gpg --verify "${KUBLER_DOWNLOAD_DIR}/${portage_sig}" "${KUBLER_DOWNLOAD_DIR}/${portage_file}" || die "Insecure digests."
     else
-	msg "Skipped Portage GPG signature check"
+        msg "Skipped Portage GPG signature check"
     fi
 }
 
