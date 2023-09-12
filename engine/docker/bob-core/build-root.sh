@@ -69,6 +69,18 @@ function copy_gcc_libs() {
     done
 }
 
+# Copy libgfortran libs
+function copy_gfortran_libs() {
+    local lib_gfortran lib_qm lib
+    mkdir -p "${_EMERGE_ROOT}/${_LIB}"
+    lib_gfortran="$(find /usr/lib/ -name libgfortran.so.5)"
+    lib_qm="$(find /usr/lib/ -name libquadmath.so.0)"
+
+    for lib in "${lib_gfortran}" "${lib_qm}"; do
+        cp "${lib}" "${_EMERGE_ROOT}/${_LIB}/"
+    done
+}
+
 # Fix profile symlink as we don't use default portage location, part of stage3 builder setup
 #
 # Arguments:
