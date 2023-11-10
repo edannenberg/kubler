@@ -32,7 +32,7 @@ _portage_image_processed='false'
 # Is this engine functional? Called once per engine in current image dependency graph.
 function validate_engine() {
     local docker_version
-    _required_binaries+=" ${DOCKER}"
+    _required_binaries+=" ${DOCKER} xzcat"
     has_required_binaries
     docker_version=$(${DOCKER} "version") || die "Failed to query ${DOCKER}:\\n${docker_version}"
 }
