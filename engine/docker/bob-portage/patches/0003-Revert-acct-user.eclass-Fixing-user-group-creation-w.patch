@@ -8,7 +8,7 @@ Subject: [PATCH] Revert-acct-user.eclass-Fixing-user-group-creation-w
  1 file changed, 3 insertions(+), 28 deletions(-)
 
 diff --git a/eclass/acct-user.eclass b/eclass/acct-user.eclass
-index f658aa0eabc3..0b1d1a37d794 100644
+index 66a4d6667888..fc631336859c 100644
 --- a/eclass/acct-user.eclass
 +++ b/eclass/acct-user.eclass
 @@ -198,15 +198,8 @@ eislocked() {
@@ -32,7 +32,7 @@ index f658aa0eabc3..0b1d1a37d794 100644
 @@ -357,10 +350,6 @@ acct-user_pkg_preinst() {
  			opts+=( --uid "${_ACCT_USER_ID}" )
  		fi
- 
+
 -		if [[ -n ${ROOT} ]]; then
 -			opts+=( --prefix "${ROOT}" )
 -		fi
@@ -58,18 +58,18 @@ index f658aa0eabc3..0b1d1a37d794 100644
 @@ -427,10 +410,6 @@ acct-user_pkg_postinst() {
  		opts+=( --expiredate "" --unlock )
  	fi
- 
+
 -	if [[ -n ${ROOT} ]]; then
 -		opts+=( --prefix "${ROOT}" )
 -	fi
 -
- 	elog "Updating user ${ACCT_USER_NAME}"
- 	# usermod outputs a warning if unlocking the account would result in an
- 	# empty password. Hide stderr in a text file and display it if usermod fails.
-@@ -497,10 +476,6 @@ acct-user_pkg_prerm() {
+ 	local g old_groups del_groups=""
+ 	old_groups=$(egetgroups "${ACCT_USER_NAME}")
+ 	for g in ${old_groups//,/ }; do
+@@ -513,10 +492,6 @@ acct-user_pkg_prerm() {
  		--shell /sbin/nologin
  	)
- 
+
 -	if [[ -n ${ROOT} ]]; then
 -		opts+=( --prefix "${ROOT}" )
 -	fi
@@ -77,6 +77,5 @@ index f658aa0eabc3..0b1d1a37d794 100644
  	elog "Locking user ${ACCT_USER_NAME}"
  	usermod "${opts[@]}" "${ACCT_USER_NAME}" || die "usermod failed with status $?"
  }
--- 
-2.39.3
-
+--
+2.41.0
