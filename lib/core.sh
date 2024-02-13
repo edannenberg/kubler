@@ -377,7 +377,20 @@ function get_stage3_archive_regex() {
 function fetch_stage3_archive_name() {
     __fetch_stage3_archive_name=
     ARCH="${ARCH:-amd64}"
-    ARCH_URL="${ARCH_URL:-${MIRROR}releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/}"
+    local mirrors_split mirror stage3_url stage3_path
+    if [ -z "${ARCH_URL}" ]; then
+          stage3_path="/releases/${ARCH}/autobuilds/current-${STAGE3_BASE}/"
+          read -ra mirrors_split <<<"${MIRROR}"
+          for mirror in "${mirrors_split[@]}"; do
+            stage3_url="${mirror}${stage3_path}"
+            if wget --spider "${stage3_url}" 2>/dev/null; then
+              ARCH_URL="${stage3_url}"
+              break;
+            fi
+          done
+    fi
+    [[ -z "${ARCH_URL}" ]] && die "Could not find stage3 location on mirror(s): ${MIRROR} with url path: ${stage3_path}"
+
     local remote_files remote_line remote_date remote_file_type max_cap
     readarray -t remote_files <<< "$(wget -qO- "${ARCH_URL}")"
     remote_date=0
