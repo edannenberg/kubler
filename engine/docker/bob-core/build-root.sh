@@ -309,14 +309,12 @@ function update_use() {
     flaggie_args=()
     [[ "${BOB_PACKAGE_CONFIG_DIFF}" == 'false' ]] && flaggie_args+=('--no-diff')
     [[ "${BOB_PACKAGE_CONFIG_STRICT}" == 'false' ]] && flaggie_args+=('--force')
-    # shellcheck disable=SC2068
-    flaggie "${flaggie_args[@]}" ${@}
+    flaggie "${flaggie_args[@]}" "${@}"
 }
 
 # Just for better readability of build.sh
 function update_keywords() {
-    # shellcheck disable=SC2068
-    update_use ${@}
+    update_use "${@}"
 }
 
 function mask_package() {
