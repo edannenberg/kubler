@@ -11,7 +11,7 @@ configure_builder() {
     # install basics used by helper functions
     eselect news read new 1> /dev/null
     emerge app-portage/flaggie app-portage/eix app-portage/gentoolkit
-    configure_eix
+    eix-update
     mkdir -p /etc/portage/package.{accept_keywords,unmask,mask,use}
     touch /etc/portage/package.accept_keywords/flaggie
     # set locale of build container
