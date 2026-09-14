@@ -643,7 +643,7 @@ function build_rootfs() {
             mkdir -p "${_PORTAGE_LOGDIR}"
             export PORTAGE_LOGDIR="${_PORTAGE_LOGDIR}"
         fi
-        
+
         # install packages defined in image's build.sh
         # shellcheck disable=SC2086
         "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -v ${_packages}
@@ -672,8 +672,9 @@ function build_rootfs() {
 
     fi
 
-    # handle bug in portage when using custom root, any user/groups created during package installs are not created
-    # at the custom root but on the host
+    # with ACCT_IGNORE_ROOT set (see bob-portage eclass patches) any user/groups created during package installs are
+    # not created at the custom root but on the builder, so we copy the account files over if they changed. As the
+    # builder is reused by extending images this also carries over the users/groups of all parent images
     copy_from_builder_if_changed '/etc/passwd' "${passwd_date}"
     copy_from_builder_if_changed '/etc/group' "${group_date}"
 

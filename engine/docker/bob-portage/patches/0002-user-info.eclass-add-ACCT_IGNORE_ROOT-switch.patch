@@ -1,0 +1,71 @@
+From e59aa24e7602bba24cbb563a6ed512575ce31214 Mon Sep 17 00:00:00 2001
+From: Erik Dannenberg <github@reshape.de>
+Date: Tue, 15 Sep 2026 00:41:13 +0200
+Subject: [PATCH] user-info.eclass: add ACCT_IGNORE_ROOT switch
+
+If set, egetent/egetgroups ignore ROOT and query the build host's
+account database, restoring the behaviour before Gentoo commit
+5fd98f867aeaa30ccc62ff13257aefdffe1f3745. Kubler sets this by default
+as it creates users/groups on the builder and copies /etc/passwd and
+/etc/group into ROOT after the build.
+---
+ eclass/user-info.eclass | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/eclass/user-info.eclass b/eclass/user-info.eclass
+index ceef663..fa7b2e5 100644
+--- a/eclass/user-info.eclass
++++ b/eclass/user-info.eclass
+@@ -16,6 +16,31 @@ case ${EAPI} in
+ 	*) die "${ECLASS}: EAPI ${EAPI:-0} not supported" ;;
+ esac
+ 
++# @ECLASS_VARIABLE: ACCT_IGNORE_ROOT
++# @USER_VARIABLE
++# @DEFAULT_UNSET
++# @DESCRIPTION:
++# Kubler addition, not part of upstream Gentoo.
++#
++# If set to a non-null value, user/group lookups in this eclass as well
++# as account creation and modification in acct-user.eclass and
++# acct-group.eclass ignore ROOT and always operate on the account
++# database of the build host (Linux only, the BSD code paths are
++# untouched).
++#
++# This restores the behaviour before Gentoo commit
++# 5fd98f867aeaa30ccc62ff13257aefdffe1f3745, which was a genuine bug
++# that upstream rightly fixed, but which happened to suit kubler's
++# rather special build chain: packages are merged into an empty ROOT
++# without an account database, and each image's builder is reused for
++# the images extending it.  Creating users/groups on the builder and
++# copying /etc/passwd and /etc/group into ROOT afterwards keeps the
++# accounts of parent images intact in every extending image.
++#
++# Unset the variable, e.g. in the configure_rootfs_build hook of an
++# image's build.sh, to get the upstream behaviour back.  Note that this
++# requires an existing account database at ROOT.
++
+ # @FUNCTION: egetent
+ # @USAGE: <database> <key>
+ # @DESCRIPTION:
+@@ -58,7 +83,7 @@ egetent() {
+ 	*)
+ 		# getent does not support -R option, if we are working on a different
+ 		# ROOT than /, fallback to grep technique.
+-		if [[ -z ${ROOT} ]]; then
++		if [[ -z ${ROOT} || -n ${ACCT_IGNORE_ROOT} ]]; then
+ 			# ignore nscd output if we're not running as root
+ 			type -p nscd >/dev/null && nscd -i "${db}" 2>/dev/null
+ 			getent "${db}" "${key}"
+@@ -166,7 +191,7 @@ egetgroups() {
+ 
+ 	local egroups_arr
+ 
+-	if [[ -n "${ROOT}" ]]; then
++	if [[ -n "${ROOT}" && -z ${ACCT_IGNORE_ROOT} ]]; then
+ 		local pgid=$(egetent passwd "$1" | cut -d: -f4)
+ 		local pgroup=$(egetent group "${pgid}" | cut -d: -f1)
+ 		local sgroups=( $(grep -E ":([^:]*,)?$1(,[^:]*)?$" "${ROOT}/etc/group" | cut -d: -f1) )
+-- 
+2.55.0
+

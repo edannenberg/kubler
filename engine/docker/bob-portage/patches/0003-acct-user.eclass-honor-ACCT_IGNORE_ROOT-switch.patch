@@ -1,0 +1,58 @@
+From 993b901f87b8de3ab524d7c862eb3dde4471dd97 Mon Sep 17 00:00:00 2001
+From: Erik Dannenberg <github@reshape.de>
+Date: Tue, 15 Sep 2026 00:57:09 +0200
+Subject: [PATCH] acct-user.eclass: honor ACCT_IGNORE_ROOT switch
+
+If set, useradd/usermod run without --prefix ROOT. The home directory
+owner is still resolved to uid:gid when ROOT is set, as Portage's
+fowners resolves names via ROOT's account database, while egetent with
+ACCT_IGNORE_ROOT answers from the build host's database.
+---
+ eclass/acct-user.eclass | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/eclass/acct-user.eclass b/eclass/acct-user.eclass
+index 7604698..1e5a636 100644
+--- a/eclass/acct-user.eclass
++++ b/eclass/acct-user.eclass
+@@ -339,7 +339,7 @@ acct-user_pkg_preinst() {
+ 			opts+=( --uid "${_ACCT_USER_ID}" )
+ 		fi
+ 
+-		if [[ -n ${ROOT} ]]; then
++		if [[ -n ${ROOT} && -z ${ACCT_IGNORE_ROOT} ]]; then
+ 			opts+=( --prefix "${ROOT}" )
+ 		fi
+ 
+@@ -353,7 +353,9 @@ acct-user_pkg_preinst() {
+ 		local user=${ACCT_USER_NAME}
+ 		local group=${groups[0]}
+ 		if [[ -n ${ROOT} ]]; then
+-			# resolve user:group to uid:gid
++			# resolve user:group to uid:gid, with ACCT_IGNORE_ROOT this
++			# still has to happen as fowners resolves names via ROOT
++			# while egetent answers from the build host's database
+ 			if [[ ${_ACCT_USER_HOME_OWNER} == *:* ]]; then
+ 				user=${_ACCT_USER_HOME_OWNER%:*}
+ 				group=${_ACCT_USER_HOME_OWNER#*:}
+@@ -428,7 +430,7 @@ acct-user_pkg_postinst() {
+ 		opts+=( --unlock )
+ 	fi
+ 
+-	if [[ -n ${ROOT} ]]; then
++	if [[ -n ${ROOT} && -z ${ACCT_IGNORE_ROOT} ]]; then
+ 		opts+=( --prefix "${ROOT}" )
+ 	fi
+ 
+@@ -508,7 +510,7 @@ acct-user_pkg_prerm() {
+ 		--shell /sbin/nologin
+ 	)
+ 
+-	if [[ -n ${ROOT} ]]; then
++	if [[ -n ${ROOT} && -z ${ACCT_IGNORE_ROOT} ]]; then
+ 		opts+=( --prefix "${ROOT}" )
+ 	fi
+ 
+-- 
+2.55.0
+

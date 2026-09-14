@@ -24,3 +24,12 @@ export EMERGE_DEFAULT_OPTS="${BOB_EMERGE_DEFAULT_OPTS:--b -k}"
 export GENTOO_MIRRORS="${BOB_GENTOO_MIRRORS:-ftp://ftp.wh2.tu-dresden.de/pub/mirrors/gentoo ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/gentoo/}"
 
 export DISTDIR="/distfiles"
+
+# Create users/groups on the builder instead of at ROOT. Portage used to do this by accident, which happened to suit
+# kubler's build chain, upstream fixed it in 2022. ACCT_IGNORE_ROOT is a kubler addition to the user-info/acct-user/
+# acct-group eclasses that restores the old behaviour, see the eclass patches in bob-portage. Any non-null value enables it
+if [[ "${BOB_ACCT_IGNORE_ROOT:-true}" == 'true' ]]; then
+    export ACCT_IGNORE_ROOT='true'
+else
+    unset ACCT_IGNORE_ROOT
+fi

@@ -1,0 +1,26 @@
+From cabc4388a8964e6426886a9d04c9629ec5ed17b6 Mon Sep 17 00:00:00 2001
+From: Erik Dannenberg <github@reshape.de>
+Date: Tue, 15 Sep 2026 00:57:09 +0200
+Subject: [PATCH] acct-group.eclass: honor ACCT_IGNORE_ROOT switch
+
+If set, groupadd runs without --prefix ROOT.
+---
+ eclass/acct-group.eclass | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eclass/acct-group.eclass b/eclass/acct-group.eclass
+index 487d80e..e43654a 100644
+--- a/eclass/acct-group.eclass
++++ b/eclass/acct-group.eclass
+@@ -180,7 +180,7 @@ acct-group_pkg_preinst() {
+ 		opts+=( --gid "${_ACCT_GROUP_ID}" )
+ 	fi
+ 
+-	if [[ -n ${ROOT} ]]; then
++	if [[ -n ${ROOT} && -z ${ACCT_IGNORE_ROOT} ]]; then
+ 		opts+=( --prefix "${ROOT}" )
+ 	fi
+ 
+-- 
+2.55.0
+
