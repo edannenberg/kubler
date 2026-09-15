@@ -772,7 +772,7 @@ function add_documentation_header() {
     # (podman used to report an image size line per image tag)
     if [[ -f "${doc_file}" ]]; then
         grep -q "^${header}" "${doc_file}" \
-            && sed -i'' -e '1,4d' -e '/^[0-9.,]\+[[:space:]]*[kKMG]\?i\?B[[:space:]]*$/d' -e '/./,$!d' "${doc_file}"
+            && sed -i'' -e '1,4d' -e '/^[0-9.,][0-9.,]*[[:space:]]*[kKMGi]*B[[:space:]]*$/d' -e '/./,$!d' "${doc_file}"
     else
         echo -e "" > "${doc_file}"
     fi

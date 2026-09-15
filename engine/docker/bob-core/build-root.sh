@@ -269,7 +269,7 @@ function generate_doc_package_installed() {
     # generate installed package list with use flags
     # shellcheck disable=SC2086,SC2068
     "${_emerge_bin}" ${_emerge_opt} --binpkg-respect-use=y -p ${packages[@]} \
-        | perl -nle 'print "$1 | `$3`" if /\[.*\] (.*) to \/.*\/( USE=")?([a-zA-Z0-9\- (){}]*)?/' \
+        | perl -nle 'print "$1 | `$2`" if /\[.*\] (.*) to \/.*\/(?: USE="([a-zA-Z0-9\- (){}]*))?/' \
         | sed /^virtual/d | sort -u >> "${_DOC_PACKAGE_INSTALLED}"
     # enable binary package features again
     export EMERGE_DEFAULT_OPTS="${current_emerge_opts}"
