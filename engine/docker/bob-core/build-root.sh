@@ -577,7 +577,8 @@ function build_rootfs() {
     source /etc/profile
 
     # remove existing binary package cache file(s) if specified
-    local no_cache_var no_cache_package current_tag cache_tag cache_tag_base bin_package_path
+    local no_cache_var no_cache_package current_tag cache_tag cache_tag_base bin_package_path removed_bin_package
+    removed_bin_package='false'
     for no_cache_var in ${!_no_cache*}; do
         current_tag=
         [[ "${no_cache_var}" != '_no_cache' ]] && current_tag="${no_cache_var##*_}"
@@ -587,7 +588,7 @@ function build_rootfs() {
             [[ -n ${current_tag} ]] && cache_tag="${PKGDIR}/.no-cache-tags/${current_tag}/${no_cache_package%.xpak}"
             if [[ -n ${current_tag} && ! -e ${cache_tag} || -z ${current_tag} ]]; then
                 bin_package_path="${PKGDIR}/${no_cache_package}"
-                [[ -e "${bin_package_path}" ]] && rm -r "${bin_package_path}"
+                [[ -e "${bin_package_path}" ]] && rm -r "${bin_package_path}" && removed_bin_package='true'
                 if [[ -n "${current_tag}" ]]; then
                     cache_tag_base="${cache_tag}"
                     [[ "${no_cache_package}" == *'.xpak' ]] && cache_tag_base="${cache_tag%/*}"
@@ -597,6 +598,12 @@ function build_rootfs() {
             fi
         done
     done
+    # with FEATURES=pkgdir-index-trusted Portage doesn't notice removed binary packages, rebuild the index in that case.
+    # not required with the kubler default of -pkgdir-index-trusted, see BOB_FEATURES in kubler.conf
+    if [[ "${removed_bin_package}" == 'true' && " $(portageq envvar FEATURES) " == *' pkgdir-index-trusted '* ]]; then
+        echo "--> FEATURES=pkgdir-index-trusted is active, rebuilding binary package index"
+        emaint binhost --fix || die "Failed to rebuild the binary package index at ${PKGDIR}"
+    fi
 
     # call configure_builder hook if declared in build.sh
     if declare -F configure_builder &>/dev/null; then
