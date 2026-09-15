@@ -768,9 +768,11 @@ function add_documentation_header() {
     doc_file="${image_path}/PACKAGES.md"
     header="### ${image}:${IMAGE_TAG}"
     get_image_size "${image}" "${IMAGE_TAG}"
-    # remove existing header
+    # remove existing header, incl. any orphan image size lines and empty lines from previous builds
+    # (podman used to report an image size line per image tag)
     if [[ -f "${doc_file}" ]]; then
-        grep -q "^${header}" "${doc_file}" && sed -i'' '1,4d' "${doc_file}"
+        grep -q "^${header}" "${doc_file}" \
+            && sed -i'' -e '1,4d' -e '/^[0-9.,][0-9.,]*[[:space:]]*[kKMGi]*B[[:space:]]*$/d' -e '/./,$!d' "${doc_file}"
     else
         echo -e "" > "${doc_file}"
     fi
