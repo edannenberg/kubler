@@ -508,8 +508,9 @@ function get_image_size() {
     image_size="$(${DOCKER} images "${image_id}:${image_tag}" --format '{{.Size}}')"
     # shellcheck disable=2181
     [[ $? -ne 0 ]] && die "Couldn't determine image size for ${image_id}:${image_tag}: ${image_size}"
+    # podman lists an image once per tag, an image has at least two tags (latest + version), keep only the first value
     # shellcheck disable=SC2034
-    __get_image_size="${image_size}"
+    __get_image_size="${image_size%%$'\n'*}"
 }
 
 # Sets __get_image_label for given image_id, image_tag and label_name
@@ -865,6 +866,8 @@ function push_image() {
         docker_image_id="$("${DOCKER}" images "${image_id}:${IMAGE_TAG}" --format '{{.ID}}')"
         # shellcheck disable=SC2181
         [[ $? -ne 0 ]] && die "Couldn't determine image id for ${image_id}:${IMAGE_TAG}: ${docker_image_id}"
+        # podman lists an image once per tag, keep only the first value
+        docker_image_id="${docker_image_id%%$'\n'*}"
         push_id="${repository_url}/${image_id}"
         for pid in "${push_id}:${IMAGE_TAG}" "${push_id}:latest"; do
             _status_msg="${DOCKER} tag ${docker_image_id} ${pid}"
